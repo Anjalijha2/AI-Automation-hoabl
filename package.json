@@ -1,0 +1,40 @@
+{
+  "name": "xrportal-qa-framework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "discover":            "npx ts-node ai-agents/discovery-agent.ts",
+    "docs:generate":       "npx ts-node ai-agents/page-doc-agent.ts",
+    "testcases:generate":  "npx ts-node ai-agents/testcase-agent.ts",
+    "automation:generate": "npx ts-node ai-agents/automation-agent.ts",
+    "execute":             "npx ts-node ai-agents/execution-agent.ts",
+    "execute:login":       "npx ts-node ai-agents/execution-agent.ts login",
+    "execute:customers":   "npx ts-node ai-agents/execution-agent.ts customers",
+    "defects:log":         "npx ts-node ai-agents/defect-agent.ts",
+    "heal:analyze":        "npx ts-node ai-agents/healing-agent.ts",
+    "sprint:status":       "npx ts-node ai-agents/sprint-manager.ts status",
+    "sprint:update":       "npx ts-node ai-agents/sprint-manager.ts update",
+    "sprint:plan-brd":     "npx ts-node ai-agents/sprint-manager.ts plan-brd",
+    "test:login":          "npx playwright test automation/tests/login.spec.ts --project=login-tests --headed --workers=1",
+    "test:login:positive": "npx playwright test automation/tests/login.spec.ts --project=login-tests --headed --workers=1 -g \"POSITIVE\"",
+    "test:login:negative": "npx playwright test automation/tests/login.spec.ts --project=login-tests --headed --workers=1 -g \"NEGATIVE\"",
+    "test:login:debug":    "npx playwright test --project=login-tests --debug automation/tests/login.spec.ts",
+    "test:customers":      "npx playwright test automation/tests/customers.spec.ts --project=regression --headed --workers=1",
+    "test:regression":     "npx playwright test --project=regression --headed --workers=1",
+    "test:smoke":          "npx playwright test --project=smoke",
+    "report":              "npx playwright show-report reports/html-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^17.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "xlsx": "^0.18.5"
+  }
+}

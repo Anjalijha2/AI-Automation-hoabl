@@ -1,0 +1,1031 @@
+{
+  "headings": [
+    {
+      "tag": "H5",
+      "text": "Configurations",
+      "classes": "",
+      "parentClasses": "header-admin new-header-text"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower Configuration",
+      "classes": "",
+      "parentClasses": "data-content-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 8 - Crest",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 9 - Triumph",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 10 - Crown",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 13 - Prestige",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 14 - Horizon",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 15 - Radiance",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 6 - Aspire",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 7 - Blossom",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 12 - Pinnacle",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 16 - Fortune",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 17 - Bright",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 18 - Grand",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 1 - Dawn",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 2 - Aura",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 3 - Glory",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 4 - Pride",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 5 - Grace",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Tower 11 - Prime",
+      "classes": "",
+      "parentClasses": "tower-configuration-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Registration Status",
+      "classes": "",
+      "parentClasses": "data-content-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Unit Status",
+      "classes": "",
+      "parentClasses": "data-content-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Unit Cost Update",
+      "classes": "",
+      "parentClasses": "data-content-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Bulk Booking Cancellation",
+      "classes": "",
+      "parentClasses": "data-content-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Bulk Registration Cancellation",
+      "classes": "",
+      "parentClasses": "data-content-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Sales Managers",
+      "classes": "",
+      "parentClasses": "data-content-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Customer Actions Card",
+      "classes": "",
+      "parentClasses": "data-content-header"
+    },
+    {
+      "tag": "H5",
+      "text": "Allow Additional Registrations:",
+      "classes": "",
+      "parentClasses": "tower-configuration-section d-flex align-items-center gap-5 "
+    },
+    {
+      "tag": "H6",
+      "text": "Allow 1 Bed Growth Home",
+      "classes": "",
+      "parentClasses": "ant-checkbox-label"
+    },
+    {
+      "tag": "H6",
+      "text": "Allow 2 Bed Growth Home",
+      "classes": "",
+      "parentClasses": "ant-checkbox-label"
+    },
+    {
+      "tag": "H6",
+      "text": "Allow 2 Bed Rise Home",
+      "classes": "",
+      "parentClasses": "ant-checkbox-label"
+    },
+    {
+      "tag": "H5",
+      "text": "Max Preferences Per Unit",
+      "classes": "",
+      "parentClasses": "data-content-header"
+    },
+    {
+      "tag": "H6",
+      "text": "Max Preferences Per Unit",
+      "classes": "",
+      "parentClasses": ""
+    }
+  ],
+  "buttons": [
+    {
+      "text": "Logout",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-button",
+      "nearestHeading": "Configurations"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 8 - Crest"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh ant-switch-checked",
+      "nearestHeading": "Tower 8 - Crest"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 9 - Triumph"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 9 - Triumph"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 10 - Crown"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh ant-switch-checked",
+      "nearestHeading": "Tower 10 - Crown"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 13 - Prestige"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 13 - Prestige"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 14 - Horizon"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 14 - Horizon"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 15 - Radiance"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 15 - Radiance"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 6 - Aspire"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 6 - Aspire"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 7 - Blossom"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 7 - Blossom"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 12 - Pinnacle"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 12 - Pinnacle"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 16 - Fortune"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 16 - Fortune"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 17 - Bright"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 17 - Bright"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 18 - Grand"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 18 - Grand"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 1 - Dawn"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 1 - Dawn"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 2 - Aura"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 2 - Aura"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 3 - Glory"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 3 - Glory"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 4 - Pride"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 4 - Pride"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 5 - Grace"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 5 - Grace"
+    },
+    {
+      "text": "View Tower",
+      "classes": "",
+      "nearestHeading": "Tower 11 - Prime"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh",
+      "nearestHeading": "Tower 11 - Prime"
+    },
+    {
+      "text": "Update Tower Configuration",
+      "classes": "ant-btn css-1lwudrh ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+      "nearestHeading": "Tower Configuration"
+    },
+    {
+      "text": "Sample File Download",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-btn-outline green-text-color",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "text": "Upload File",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "text": "Submit",
+      "classes": "ant-btn css-1lwudrh ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "text": "Sample File Download",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-btn-outline green-text-color",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "text": "Upload File",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "text": "Submit",
+      "classes": "ant-btn css-1lwudrh ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "text": "Available Unit Inventory Download",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-btn-outline green-text-color",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "text": "Upload File",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "text": "Submit",
+      "classes": "ant-btn css-1lwudrh ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "text": "Sample File Download",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-btn-outline green-text-color",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "text": "Upload File",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "text": "Submit",
+      "classes": "ant-btn css-1lwudrh ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "text": "Sample File Download",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-btn-outline green-text-color",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "text": "Upload File",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "text": "Submit",
+      "classes": "ant-btn css-1lwudrh ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "text": "Sample File Download",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-btn-outline green-text-color",
+      "nearestHeading": "Sales Managers"
+    },
+    {
+      "text": "Upload File",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "nearestHeading": "Sales Managers"
+    },
+    {
+      "text": "Submit",
+      "classes": "ant-btn css-1lwudrh ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+      "nearestHeading": "Sales Managers"
+    },
+    {
+      "text": "ActiveInactive",
+      "classes": "ant-switch css-1lwudrh ant-switch-checked",
+      "nearestHeading": "Allow Additional Registrations:"
+    },
+    {
+      "text": "Submit",
+      "classes": "ant-btn css-1lwudrh ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+      "nearestHeading": "Customer Actions Card"
+    },
+    {
+      "text": "Update",
+      "classes": "ant-btn css-1lwudrh ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+      "nearestHeading": "Max Preferences Per Unit"
+    }
+  ],
+  "fileInputs": [
+    {
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx,.csv",
+      "classes": "",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx,.csv",
+      "classes": "",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx,.csv",
+      "classes": "",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx",
+      "classes": "",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx",
+      "classes": "",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx",
+      "classes": "",
+      "nearestHeading": "Sales Managers"
+    }
+  ],
+  "allInputs": [
+    {
+      "type": "file",
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx,.csv",
+      "classes": "",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "type": "file",
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx,.csv",
+      "classes": "",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "type": "file",
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx,.csv",
+      "classes": "",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "type": "file",
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx",
+      "classes": "",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "type": "file",
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx",
+      "classes": "",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "type": "file",
+      "id": "",
+      "name": "file",
+      "accept": ".xlsx",
+      "classes": "",
+      "nearestHeading": "Sales Managers"
+    },
+    {
+      "type": "checkbox",
+      "id": "",
+      "name": "",
+      "accept": "",
+      "classes": "ant-checkbox-input",
+      "nearestHeading": "Allow 1 Bed Growth Home"
+    },
+    {
+      "type": "search",
+      "id": "rc_select_0",
+      "name": "",
+      "accept": "",
+      "classes": "ant-select-selection-search-input",
+      "nearestHeading": "Allow 1 Bed Growth Home"
+    },
+    {
+      "type": "checkbox",
+      "id": "",
+      "name": "",
+      "accept": "",
+      "classes": "ant-checkbox-input",
+      "nearestHeading": "Allow 2 Bed Growth Home"
+    },
+    {
+      "type": "search",
+      "id": "rc_select_1",
+      "name": "",
+      "accept": "",
+      "classes": "ant-select-selection-search-input",
+      "nearestHeading": "Allow 2 Bed Growth Home"
+    },
+    {
+      "type": "checkbox",
+      "id": "",
+      "name": "",
+      "accept": "",
+      "classes": "ant-checkbox-input",
+      "nearestHeading": "Allow 2 Bed Rise Home"
+    },
+    {
+      "type": "search",
+      "id": "rc_select_2",
+      "name": "",
+      "accept": "",
+      "classes": "ant-select-selection-search-input",
+      "nearestHeading": "Allow 2 Bed Rise Home"
+    },
+    {
+      "type": "search",
+      "id": "rc_select_3",
+      "name": "",
+      "accept": "",
+      "classes": "ant-select-selection-search-input",
+      "nearestHeading": "Max Preferences Per Unit"
+    }
+  ],
+  "uploadTriggers": [
+    {
+      "tag": "DIV",
+      "classes": "d-flex align-items-start gap-5 justify-content-between upload-wrap-input",
+      "text": "Upload FileSubmitTotal active registration : 8536Total inactive registration : 6",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload-wrapper css-1lwudrh",
+      "text": "Upload File",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload ant-upload-select",
+      "text": "Upload File",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload",
+      "text": "Upload File",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "text": "Upload File",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "anticon anticon-upload",
+      "text": "",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload-list ant-upload-list-text",
+      "text": "",
+      "nearestHeading": "Registration Status"
+    },
+    {
+      "tag": "DIV",
+      "classes": "d-flex align-items-start gap-5 justify-content-between upload-wrap-input",
+      "text": "Upload FileSubmitTotal active unit : 3909Total inactive unit : 697",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload-wrapper css-1lwudrh",
+      "text": "Upload File",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload ant-upload-select",
+      "text": "Upload File",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload",
+      "text": "Upload File",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "text": "Upload File",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "anticon anticon-upload",
+      "text": "",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload-list ant-upload-list-text",
+      "text": "",
+      "nearestHeading": "Unit Status"
+    },
+    {
+      "tag": "DIV",
+      "classes": "d-flex align-items-start gap-5 justify-content-between upload-wrap-input",
+      "text": "Upload FileSubmitTotal active unit : 3909Total inactive unit : 697",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload-wrapper css-1lwudrh",
+      "text": "Upload File",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload ant-upload-select",
+      "text": "Upload File",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload",
+      "text": "Upload File",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "text": "Upload File",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "anticon anticon-upload",
+      "text": "",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload-list ant-upload-list-text",
+      "text": "",
+      "nearestHeading": "Unit Cost Update"
+    },
+    {
+      "tag": "DIV",
+      "classes": "d-flex align-items-start gap-5 justify-content-between upload-wrap-input",
+      "text": "Upload FileSubmit",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload-wrapper css-1lwudrh",
+      "text": "Upload File",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload ant-upload-select",
+      "text": "Upload File",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload",
+      "text": "Upload File",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "text": "Upload File",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "anticon anticon-upload",
+      "text": "",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload-list ant-upload-list-text",
+      "text": "",
+      "nearestHeading": "Bulk Booking Cancellation"
+    },
+    {
+      "tag": "DIV",
+      "classes": "d-flex align-items-start gap-5 justify-content-between upload-wrap-input",
+      "text": "Upload FileSubmit",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload-wrapper css-1lwudrh",
+      "text": "Upload File",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload ant-upload-select",
+      "text": "Upload File",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload",
+      "text": "Upload File",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "text": "Upload File",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "anticon anticon-upload",
+      "text": "",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload-list ant-upload-list-text",
+      "text": "",
+      "nearestHeading": "Bulk Registration Cancellation"
+    },
+    {
+      "tag": "DIV",
+      "classes": "d-flex align-items-start gap-5 justify-content-between upload-wrap-input",
+      "text": "Upload FileSubmit",
+      "nearestHeading": "Sales Managers"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload-wrapper css-1lwudrh",
+      "text": "Upload File",
+      "nearestHeading": "Sales Managers"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-upload ant-upload-select",
+      "text": "Upload File",
+      "nearestHeading": "Sales Managers"
+    },
+    {
+      "tag": "SPAN",
+      "classes": "ant-upload",
+      "text": "Upload File",
+      "nearestHeading": "Sales Managers"
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "ant-btn css-1lwudrh ant-btn-default ant-btn-color-default ant-btn-variant-outlined upload-icon-file",
+      "text": "Upload File",
+      "nearestHeading": "Sales Managers"
+    }
+  ],
+  "switches": [
+    {
+      "index": 0,
+      "checked": true,
+      "nearestHeading": "Tower 8 - Crest",
+      "ariaLabel": ""
+    },
+    {
+      "index": 1,
+      "checked": false,
+      "nearestHeading": "Tower 9 - Triumph",
+      "ariaLabel": ""
+    },
+    {
+      "index": 2,
+      "checked": true,
+      "nearestHeading": "Tower 10 - Crown",
+      "ariaLabel": ""
+    },
+    {
+      "index": 3,
+      "checked": false,
+      "nearestHeading": "Tower 13 - Prestige",
+      "ariaLabel": ""
+    },
+    {
+      "index": 4,
+      "checked": false,
+      "nearestHeading": "Tower 14 - Horizon",
+      "ariaLabel": ""
+    },
+    {
+      "index": 5,
+      "checked": false,
+      "nearestHeading": "Tower 15 - Radiance",
+      "ariaLabel": ""
+    },
+    {
+      "index": 6,
+      "checked": false,
+      "nearestHeading": "Tower 6 - Aspire",
+      "ariaLabel": ""
+    },
+    {
+      "index": 7,
+      "checked": false,
+      "nearestHeading": "Tower 7 - Blossom",
+      "ariaLabel": ""
+    },
+    {
+      "index": 8,
+      "checked": false,
+      "nearestHeading": "Tower 12 - Pinnacle",
+      "ariaLabel": ""
+    },
+    {
+      "index": 9,
+      "checked": false,
+      "nearestHeading": "Tower 16 - Fortune",
+      "ariaLabel": ""
+    },
+    {
+      "index": 10,
+      "checked": false,
+      "nearestHeading": "Tower 17 - Bright",
+      "ariaLabel": ""
+    },
+    {
+      "index": 11,
+      "checked": false,
+      "nearestHeading": "Tower 18 - Grand",
+      "ariaLabel": ""
+    },
+    {
+      "index": 12,
+      "checked": false,
+      "nearestHeading": "Tower 1 - Dawn",
+      "ariaLabel": ""
+    },
+    {
+      "index": 13,
+      "checked": false,
+      "nearestHeading": "Tower 2 - Aura",
+      "ariaLabel": ""
+    },
+    {
+      "index": 14,
+      "checked": false,
+      "nearestHeading": "Tower 3 - Glory",
+      "ariaLabel": ""
+    },
+    {
+      "index": 15,
+      "checked": false,
+      "nearestHeading": "Tower 4 - Pride",
+      "ariaLabel": ""
+    },
+    {
+      "index": 16,
+      "checked": false,
+      "nearestHeading": "Tower 5 - Grace",
+      "ariaLabel": ""
+    },
+    {
+      "index": 17,
+      "checked": false,
+      "nearestHeading": "Tower 11 - Prime",
+      "ariaLabel": ""
+    },
+    {
+      "index": 18,
+      "checked": true,
+      "nearestHeading": "Allow Additional Registrations:",
+      "ariaLabel": ""
+    }
+  ],
+  "selects": [
+    {
+      "tag": "DIV",
+      "classes": "ant-select ant-select-outlined css-1lwudrh ant-select-single ant-select-show-arrow",
+      "nearestHeading": "Allow 1 Bed Growth Home"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-select ant-select-outlined css-1lwudrh ant-select-single ant-select-show-arrow",
+      "nearestHeading": "Allow 2 Bed Growth Home"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-select ant-select-outlined css-1lwudrh ant-select-single ant-select-show-arrow",
+      "nearestHeading": "Allow 2 Bed Rise Home"
+    },
+    {
+      "tag": "DIV",
+      "classes": "ant-select ant-select-outlined css-1lwudrh ant-select-single ant-select-show-arrow",
+      "nearestHeading": "Max Preferences Per Unit"
+    }
+  ],
+  "cards": [],
+  "links": []
+}

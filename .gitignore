@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.env
+discovery/videos/
+reports/
+automation/fixtures/.auth/

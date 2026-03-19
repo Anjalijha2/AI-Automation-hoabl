@@ -1,0 +1,15 @@
+{
+    "mcp": {
+        "servers": {
+            "playwright": {
+                "command": "npx",
+                "args": [
+                    "@playwright/mcp@latest"
+                ]
+            }
+        }
+    },
+    "github.copilot.chat.agent.enabled": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "typescript.preferences.importModuleSpecifier": "relative"
+}
