@@ -145,3 +145,16 @@
 | TC_CFG_028 | TC_CFG_017 | Bulk Booking download |
 | TC_CFG_032 | TC_CFG_018 | Bulk Reg download |
 | TC_CFG_041 | TC_CFG_019 | Sales Mgr download |
+
+---
+
+## Section 10 — Integration Tests: Tower Configuration (TC-1.1 to TC-1.6)
+
+| TC ID | Module | Type | Test Case Title | Detailed Steps | Expected Result | Actual Result | Status | Screenshot Path |
+|-------|--------|------|-----------------|----------------|-----------------|---------------|--------|-----------------|
+| TC-1.1 | Tower Config | POSITIVE | Deactivate Active Tower → Verify Success + Persistence | 1. Open browser → Navigate to UAT CMS<br>2. Find "Tower 8 - Crest" (Active)<br>3. Take BEFORE screenshot (TC-1.1_before_toggle.png)<br>4. Click toggle (GREEN to GRAY)<br>5. Take AFTER screenshot (TC-1.1_after_toggle.png)<br>6. Click "Update Tower Configuration"<br>7. Verify success message & take screenshot<br>8. Refresh page and verify state persists | 1. Toggle changes to GRAY<br>2. Success message appears<br>3. Toggle remains GRAY after refresh | Toggle stayed GRAY after refresh | PASS | [Video](file:///C:/Users/Anjali/.gemini/antigravity/brain/0ed3cd93-4479-42b6-84a1-47db8474d177/tower_toggle_tests_1773943314193.webp) |
+| TC-1.2 | Tower Config | POSITIVE | Activate Inactive Tower → Verify Success + Persistence | 1. Find inactive tower (e.g. Tower 17 - Bright)<br>2. Take BEFORE screenshot<br>3. Click toggle to turn ON (GRAY to GREEN)<br>4. Take AFTER screenshot<br>5. Click "Update Tower Configuration"<br>6. Verify success message & take screenshot<br>7. Refresh page to verify persistence<br>8. Revert back to inactive | 1. Toggle changes to GREEN<br>2. Success message appears<br>3. Toggle remains GREEN after refresh | Toggle stayed GREEN after refresh | PASS | [Video](file:///C:/Users/Anjali/.gemini/antigravity/brain/0ed3cd93-4479-42b6-84a1-47db8474d177/tower_toggle_tests_1773943314193.webp) |
+| TC-1.3 | Tower Config | NEGATIVE | Toggle Without Saving → Changes Revert on Refresh | 1. Find "Tower 5 - Grace" (Inactive)<br>2. Click toggle to turn ON<br>3. DO NOT click update button<br>4. Refresh the page<br>5. Check status | 1. Toggle reverts to GRAY (Inactive) on reload | | | |
+| TC-1.4 | Tower Config | POSITIVE | Click 'View Tower >' Link → Verify Navigation | 1. Find "Tower 8 - Crest"<br>2. Click "View Tower >" link<br>3. Verify navigation or details opening | 1. Navigates to tower detail page OR details expand inline without error | | | |
+| TC-1.5 | Tower Config | NEGATIVE | Verify 18 Towers Displayed + Default Active State | 1. Count tower cards<br>2. Verify total 18 towers in grid<br>3. Verify default active towers | 1. Total 18 tower cards displayed<br>2. Active/Inactive state matches defaults | | | |
+| TC-1.6 | Tower Config | NEGATIVE | Toggle Multiple Towers + Single Save → All Changes Applied | 1. Note state of 3 towers (e.g. Tower 12, 17, 7)<br>2. Toggle all 3 towers<br>3. Click Update once<br>4. Verify success & refresh | 1. All 3 toggles save successfully with one API call | | | |
