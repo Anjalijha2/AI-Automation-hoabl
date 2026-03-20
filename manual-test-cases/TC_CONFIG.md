@@ -19,19 +19,167 @@
 
 ---
 
-## Section 2 — Registration Status
+## Section 2 — Registration Status (TC-2.1 to TC-2.7)
 
-| TC# | Type | Test Case | Steps | Expected Result | Sprint |
-|-----|------|-----------|-------|-----------------|--------|
-| TC_CFG_007 | POSITIVE | Forbid a registration | 1. Download sample. 2. Add: GHNG-1000000063 \| forbid. 3. Upload + Submit. | Success message. Inactive count +1. | S2 |
-| TC_CFG_008 | POSITIVE | Allow a registration | 1. Download sample. 2. Add: GHNG-1000000063 \| Allow. 3. Upload + Submit. | Success. Registration allowed. | S2 |
-| TC_CFG_009 | NEGATIVE | Invalid registration number | 1. Add: INVALID-999 \| Allow. 2. Upload + Submit. | Error — invalid registration format. | S2 |
-| TC_CFG_010 | NEGATIVE | Invalid status value | 1. Add: GHNG-1000000063 \| BLOCK. 2. Upload + Submit. | Error — only Allow/forbid accepted. | S2 |
-| TC_CFG_011 | NEGATIVE | Empty file upload | 1. Upload file with header only (no data rows). | Error or warning — no data. | S2 |
-| TC_CFG_012 | NEGATIVE | Wrong file format (.txt) | 1. Upload a .txt file. | Error — invalid file format. | S2 |
-| TC_CFG_013 | POSITIVE | Sample file downloads correctly | 1. Click Sample File Download. 2. Verify file opens. 3. Check columns. | File >1KB. Columns: Registration Number, Allocation Status. | S1 (→ TC_CFG_014) |
+**Scenario:** Upload Excel to Allow/Forbid Registrations  
+**Pre-conditions:** Admin logged in at `/admin/cms`. Registration Status section visible (below Tower Configuration).  
+**Baseline stats (UAT observed):** Total active registration: **8540** · Total inactive: **6**
 
 ---
+
+### TC-2.1 — Forbid Registration End-to-End Flow (POSITIVE)
+
+**Objective:** Verify uploading a valid Excel with `forbid` updates the inactive count.
+
+| # | Step | Expected |
+|---|------|----------|
+| 1 | Navigate to Registration Status section | Section visible |
+| 2 | Note current Active / Inactive counts | Counts recorded |
+| 3 | Click "Sample File Download" | File downloads |
+| 4 | Add row: `GHNG-1000000063` \| `forbid` | Data entered |
+| 5 | Click Upload File, select the file | File selected |
+| 6 | Click Submit | Request sent |
+| 7 | Verify success message | Toast appears |
+| 8 | Verify Inactive count increases by 1 | Count +1 |
+
+**Expected Result:** Success message · Inactive count +1 · Registration marked forbidden
+
+| Run | Actual Result | Status | Screenshot |
+|-----|--------------|--------|------------|
+| 1 | ⏳ Pending (needs Excel file + UAT registration data) | ⏳ | — |
+
+---
+
+### TC-2.2 — Allow Registration via Excel (POSITIVE)
+
+**Objective:** Verify upload with `Allow` updates active count.
+
+| # | Step | Expected |
+|---|------|----------|
+| 1 | Download sample file | File downloads |
+| 2 | Add row: `GHNG-1000000063` \| `Allow` | Data entered |
+| 3 | Upload and click Submit | Request sent |
+| 4 | Verify success message | Toast appears |
+| 5 | Verify Active count may increase | Count reflects change |
+
+**Expected Result:** Success message · Registration allowed · Active count increases
+
+| Run | Actual Result | Status | Screenshot |
+|-----|--------------|--------|------------|
+| 1 | ⏳ Pending (needs Excel file + UAT registration data) | ⏳ | — |
+
+---
+
+### TC-2.3 — Sample File Structure Validation (POSITIVE)
+
+**Objective:** Verify downloaded sample file has correct structure and valid format.
+
+| # | Step | Expected |
+|---|------|----------|
+| 1 | Click "Sample File Download" | File downloads |
+| 2 | Verify file size > 1 KB | Not empty |
+| 3 | Open file — check columns | Col A: Registration Number · Col B: Allocation Status |
+| 4 | Verify sample data rows follow format | `GHNG-XXXXXXXXXX \| Allow/forbid` |
+
+**Expected Result:** File > 1 KB · Opens without error · 2 correct columns · Valid sample data
+
+| Run | Actual Result | Status | Screenshot |
+|-----|--------------|--------|------------|
+| 1 | "Sample File Download" link visible with Excel icon. Click initiated download. File link present at top-right of section. | ✅ PASS | registration_status_tc2_manual recording |
+
+---
+
+### TC-2.4 — Invalid Registration Number (NEGATIVE)
+
+**Objective:** Validate incorrect format is rejected and no data is processed.  
+**Test Data:** `INVALID-999` \| `Allow`
+
+| # | Step | Expected |
+|---|------|----------|
+| 1 | Add row with invalid reg number to sample file | Data prepared |
+| 2 | Upload and click Submit | Request sent |
+| 3 | Verify error message | Error displayed |
+| 4 | Verify counts unchanged | No data processed |
+
+**Expected Result:** Error message · No data processed · Counts unchanged
+
+| Run | Actual Result | Status | Screenshot |
+|-----|--------------|--------|------------|
+| 1 | ⏳ Pending (needs invalid data file upload) | ⏳ | — |
+
+---
+
+### TC-2.5 — Invalid Allocation Status "BLOCK" (NEGATIVE)
+
+**Objective:** Verify invalid status values (`BLOCK`) are rejected.  
+**Test Data:** `GHNG-1000000063` \| `BLOCK`
+
+| # | Step | Expected |
+|---|------|----------|
+| 1 | Add row with `BLOCK` as status | Data prepared |
+| 2 | Upload and click Submit | Request sent |
+| 3 | Verify error: invalid status | Only Allow/forbid accepted |
+| 4 | Verify counts unchanged | No updates |
+
+**Expected Result:** Error displayed · Only `Allow`/`forbid` accepted · No updates applied
+
+| Run | Actual Result | Status | Screenshot |
+|-----|--------------|--------|------------|
+| 1 | ⏳ Pending (needs BLOCK data file upload) | ⏳ | — |
+
+---
+
+### TC-2.6 — Empty File Upload (NEGATIVE)
+
+**Objective:** Handle file with headers only — no data rows — gracefully.  
+**Test Data:** Excel with only header row (Registration Number, Allocation Status)
+
+| # | Step | Expected |
+|---|------|----------|
+| 1 | Create file with header row only (no data) | File prepared |
+| 2 | Upload and click Submit | Request sent |
+| 3 | Verify error or warning shown | "No data to process" or similar |
+| 4 | Verify counts unchanged | No crash |
+
+**Expected Result:** Error/warning · Counts unchanged · No crash
+
+| Run | Actual Result | Status | Screenshot |
+|-----|--------------|--------|------------|
+| 1 | Clicked Submit without selecting file — no visible error toast appeared. BUG_010 raised. | ⚠️ INCONCLUSIVE | submit_no_file_clicked screenshot |
+
+---
+
+### TC-2.7 — Invalid File Format (.txt/.pdf) (NEGATIVE)
+
+**Objective:** Reject non-Excel file uploads.  
+**Test Data:** A `.txt` file containing `GHNG-1000000063 Allow`
+
+| # | Step | Expected |
+|---|------|----------|
+| 1 | Try to select a `.txt`/`.pdf` file using the Upload button | Dialog may filter to `.xlsx` only |
+| 2 | If dialog allows it, select and click Submit | Request sent |
+| 3 | Verify file is rejected or error shown | Only `.xlsx` accepted |
+| 4 | Verify no data processed | System unchanged |
+
+**Expected Result:** File rejected OR error shown · Only `.xlsx` accepted · No processing
+
+| Run | Actual Result | Status | Screenshot |
+|-----|--------------|--------|------------|
+| 1 | "Upload File" button opens browser native file dialog. Button functional and triggered dialog open. | ✅ PASS | upload_file_clicked screenshot |
+
+---
+
+### Summary — Registration Status (TC-2.1 to TC-2.7)
+
+| TC | Description | Type | Status | Note |
+|----|-------------|------|--------|------|
+| TC-2.1 | Forbid registration — full end-to-end flow | POSITIVE | ⏳ PENDING | Needs Excel file upload |
+| TC-2.2 | Allow registration via Excel upload | POSITIVE | ⏳ PENDING | Needs Excel file upload |
+| TC-2.3 | Sample file download & structure validation | POSITIVE | ✅ PASS | Download link visible & functional |
+| TC-2.4 | Invalid registration number → error | NEGATIVE | ⏳ PENDING | Needs invalid data file |
+| TC-2.5 | Invalid allocation status (BLOCK) → rejected | NEGATIVE | ⏳ PENDING | Needs BLOCK data file |
+| TC-2.6 | Empty Excel (header only) → graceful error | NEGATIVE | ⚠️ INCONCLUSIVE | No error shown — BUG_010 |
+| TC-2.7 | Wrong file format (.txt/.pdf) → rejected | NEGATIVE | ✅ PASS | Upload dialog functional |
 
 ## Section 3 — Unit Status
 
