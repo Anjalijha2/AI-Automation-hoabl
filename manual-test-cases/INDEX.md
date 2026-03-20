@@ -28,6 +28,8 @@
 |---|---|---|---|
 | Login | [login.page.ts](../automation/pages/login.page.ts) | [login.spec.ts](../automation/tests/login.spec.ts) | [LOGIN.md](pages/LOGIN.md) |
 | Customers | [customers.page.ts](../automation/pages/customers.page.ts) | [customers.spec.ts](../automation/tests/customers.spec.ts) | [CUSTOMERS.md](pages/CUSTOMERS.md) |
+| Config — Tower Config | — | [tower-config.spec.ts](../automation/tests/tower-config.spec.ts) | [TC_CONFIG.md](../manual-test-cases/TC_CONFIG.md) |
+| Config — Reg Status | — | [registration-status.spec.ts](../automation/tests/registration-status.spec.ts) | [TC_REGISTRATION_STATUS.md](../manual-test-cases/TC_REGISTRATION_STATUS.md) |
 
 ---
 
@@ -125,3 +127,6 @@ xrportal-qa-framework/
 | Date | Change | Updated By |
 |---|---|---|
 | 2026-03-11 | Initial docs created from project analysis | Claude |
+| 2026-03-19 | Tower Config integration tests + Playwright automation added | QA Agent |
+| 2026-03-20 | Registration Status TC-2.1 to TC-2.7 + automation + BUG_010 logged | QA Agent |
+| 2026-03-20 | Full docs audit: test-coverage, execution-summary, CHANGELOG, SPRINT_LOG, TASK_TRACKER updated | QA Agent |
