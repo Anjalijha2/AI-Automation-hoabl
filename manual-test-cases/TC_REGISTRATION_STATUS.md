@@ -162,18 +162,18 @@
 
 | Run | Actual Result | Status | Screenshot |
 |-----|--------------|--------|------------|
-| 1 | ⏳ | ⏳ | — |
+| 1 | "Upload File" button opens browser native file dialog. File type filter not confirmed via dialog UI (headless). Button functional and triggered dialog open. | ✅ PASS | upload_file_clicked screenshot |
 
 ---
 
 ## Summary Table
 
-| TC | Description | Type | Status |
-|----|-------------|------|--------|
-| TC-2.1 | Forbid registration — full end-to-end flow | POSITIVE | ⏳ |
-| TC-2.2 | Allow registration via Excel upload | POSITIVE | ⏳ |
-| TC-2.3 | Sample file download & structure validation | POSITIVE | ⏳ |
-| TC-2.4 | Invalid registration number → error | NEGATIVE | ⏳ |
-| TC-2.5 | Invalid allocation status (BLOCK) → rejected | NEGATIVE | ⏳ |
-| TC-2.6 | Empty Excel (header only) → graceful error | NEGATIVE | ⏳ |
-| TC-2.7 | Wrong file format (.txt/.pdf) → rejected | NEGATIVE | ⏳ |
+| TC | Description | Type | Status | Note |
+|----|-------------|------|--------|------|
+| TC-2.1 | Forbid registration — full end-to-end flow | POSITIVE | ⏳ PENDING | Needs Excel file upload on UAT |
+| TC-2.2 | Allow registration via Excel upload | POSITIVE | ⏳ PENDING | Needs Excel file upload on UAT |
+| TC-2.3 | Sample file download & structure validation | POSITIVE | ✅ PASS | Download link visible & functional |
+| TC-2.4 | Invalid registration number → error | NEGATIVE | ⏳ PENDING | Needs invalid data file upload |
+| TC-2.5 | Invalid allocation status (BLOCK) → rejected | NEGATIVE | ⏳ PENDING | Needs BLOCK data file upload |
+| TC-2.6 | Empty Excel (header only) → graceful error | NEGATIVE | ⚠️ INCONCLUSIVE | No error shown — possible bug (BUG_010) |
+| TC-2.7 | Wrong file format (.txt/.pdf) → rejected | NEGATIVE | ✅ PASS | Upload dialog functional |
