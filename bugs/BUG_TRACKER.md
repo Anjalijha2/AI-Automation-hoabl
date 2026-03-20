@@ -141,3 +141,19 @@
 
 ---
 
+## BUG_010
+
+| Field              | Value |
+|--------------------|-------|
+| **TC_ID**          | TC-2.6 |
+| **Module**         | CONFIG — Registration Status |
+| **Severity**       | Medium |
+| **Status**         | Open |
+| **Reported**       | 20/3/2026 |
+| **Steps**          | 1. Go to `/admin/cms`. 2. Scroll to Registration Status section. 3. Do NOT select any file. 4. Click the green **Submit** button. |
+| **Expected**       | A validation message should appear (e.g., "Please select a file before submitting") |
+| **Actual**         | No error or warning is displayed. Submit completes silently with no user feedback. |
+| **Impact**         | Users can submit without a file with no indication that nothing was processed. |
+| **Fix Suggestion** | Add client-side validation to check if a file is selected before Submit. Show an error toast or inline message if not. |
+
+---
