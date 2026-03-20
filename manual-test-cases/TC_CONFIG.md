@@ -165,7 +165,7 @@
 
 | Run | Actual Result | Status | Screenshot |
 |-----|--------------|--------|------------|
-| 1 | "Upload File" button opens browser native file dialog. Button functional and triggered dialog open. | ✅ PASS | upload_file_clicked screenshot |
+| 1 | When a `.txt` file is selected, system generates immediate toast validation: "You can only upload Excel (.xlsx) or CSV (.csv) files!" and rejects upload. | ✅ PASS (Automated) | `reports/screenshots/TC-2.7_format_check_success.png` |
 
 ---
 
@@ -179,7 +179,7 @@
 | TC-2.4 | Invalid registration number → error | NEGATIVE | ⏳ PENDING | Needs invalid data file |
 | TC-2.5 | Invalid allocation status (BLOCK) → rejected | NEGATIVE | ⏳ PENDING | Needs BLOCK data file |
 | TC-2.6 | Empty Excel (header only) → graceful error | NEGATIVE | ⚠️ INCONCLUSIVE | No error shown — BUG_010 |
-| TC-2.7 | Wrong file format (.txt/.pdf) → rejected | NEGATIVE | ✅ PASS | Upload dialog functional |
+| TC-2.7 | Wrong file format (.txt/.pdf) → rejected | NEGATIVE | ✅ PASS | Error: "You can only upload..." |
 
 ## Section 3 — Unit Status
 

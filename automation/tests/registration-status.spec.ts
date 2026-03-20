@@ -226,25 +226,24 @@ test.describe('Registration Status — TC-2.1 to TC-2.7', () => {
 
         const input = await getRegistrationUploadInput(page);
 
-        let rejectedAtInput = false;
-        try {
-            await input.setInputFiles(filePath);
-        } catch {
-            rejectedAtInput = true; // browser-level filter blocked it
-        }
+        // Upload component often shows error immediately on file selection
+        await input.setInputFiles(filePath).catch(() => console.log('[TC-2.7] File rejected natively by input accept attribute.'));
 
-        if (!rejectedAtInput) {
+        // Check for the specific validation toast message
+        const errorToast = page.locator('.ant-message-notice').filter({ hasText: /You can only upload Excel/i });
+
+        // Wait for either the immediate error toast or try clicking submit
+        try {
+            await expect(errorToast).toBeVisible({ timeout: 4000 });
+            console.log('[TC-2.7] Error appeared immediately upon file selection.');
+        } catch {
             const submit = await getRegistrationSubmitButton(page);
             await submit.click();
-            await page.waitForTimeout(3000);
+            await expect(errorToast).toBeVisible({ timeout: 5000 });
+            console.log('[TC-2.7] Error appeared after clicking Submit.');
         }
 
-        await page.screenshot({ path: 'reports/screenshots/TC-2.7_format_check.png' });
-
-        // Either rejected at input OR an error message shows
-        const errorShown = await page.locator('.ant-message-error, .ant-message-notice').first().isVisible().catch(() => false);
-        console.log(`[TC-2.7] Rejected at input: ${rejectedAtInput} | Error shown: ${errorShown}`);
-        expect(rejectedAtInput || errorShown).toBe(true);
+        await page.screenshot({ path: 'reports/screenshots/TC-2.7_format_check_success.png' });
     });
 
 });
