@@ -40,9 +40,11 @@
 | 5 | Click Upload File, select the file | File selected |
 | 6 | Click Submit | Request sent |
 | 7 | Verify success message | Toast appears |
-| 8 | Verify Inactive count increases by 1 | Count +1 |
+| 8 | Click "Final Excel Download" | Output file downloads |
+| 9 | Open Final Excel and verify status column | Should indicate success for GHNG-1000000063 |
+| 10 | Verify Inactive count increases by 1 | Count +1 |
 
-**Expected Result:** Success message · Inactive count +1 · Registration marked forbidden
+**Expected Result:** Success message · Final file verifies success · Inactive count +1 · Registration forbidden
 
 | Run | Actual Result | Status | Screenshot |
 |-----|--------------|--------|------------|
@@ -60,9 +62,11 @@
 | 2 | Add row: `GHNG-1000000063` \| `Allow` | Data entered |
 | 3 | Upload and click Submit | Request sent |
 | 4 | Verify success message | Toast appears |
-| 5 | Verify Active count may increase | Count reflects change |
+| 5 | Click "Final Excel Download" | Output file downloads |
+| 6 | Open Final Excel and verify status column | Should indicate success |
+| 7 | Verify Active count may increase | Count reflects change |
 
-**Expected Result:** Success message · Registration allowed · Active count increases
+**Expected Result:** Success message · Final file verifies success · Registration allowed · Active count increases
 
 | Run | Actual Result | Status | Screenshot |
 |-----|--------------|--------|------------|

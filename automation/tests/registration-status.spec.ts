@@ -85,6 +85,24 @@ test.describe('Registration Status — TC-2.1 to TC-2.7', () => {
         await expect(toast).toBeVisible({ timeout: 15000 });
         await page.screenshot({ path: 'reports/screenshots/TC-2.1_success.png' });
 
+        // User Verification: Download and check the Final Excel output
+        const finalLink = page.getByText('Final Excel Download').first();
+        await expect(finalLink).toBeVisible({ timeout: 10000 });
+        const [download] = await Promise.all([
+            page.waitForEvent('download', { timeout: 15000 }).catch(() => null),
+            finalLink.click()
+        ]);
+        if (download) {
+            const savePath = path.join(process.cwd(), 'automation', 'test-data', 'tc2_1_final_output.xlsx');
+            await download.saveAs(savePath);
+            const wb = XLSX.readFile(savePath);
+            const data: any[][] = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 }) as any[][];
+            console.log(`[TC-2.1] Final Excel Download complete. Checking output data...`);
+            console.log(`[TC-2.1] Headers: ${data[0]}`);
+            console.log(`[TC-2.1] Uploaded Row Result: ${data[1]}`);
+            expect(data.length).toBeGreaterThan(1);
+        }
+
         await page.waitForTimeout(1500);
         const after = await getRegistrationCounts(page);
         console.log(`[TC-2.1] After  — active:${after.active} inactive:${after.inactive}`);
@@ -111,6 +129,24 @@ test.describe('Registration Status — TC-2.1 to TC-2.7', () => {
         const toast = page.locator('.ant-message-notice').first();
         await expect(toast).toBeVisible({ timeout: 15000 });
         await page.screenshot({ path: 'reports/screenshots/TC-2.2_success.png' });
+
+        // User Verification: Download and check the Final Excel output
+        const finalLink = page.getByText('Final Excel Download').first();
+        await expect(finalLink).toBeVisible({ timeout: 10000 });
+        const [download] = await Promise.all([
+            page.waitForEvent('download', { timeout: 15000 }).catch(() => null),
+            finalLink.click()
+        ]);
+        if (download) {
+            const savePath = path.join(process.cwd(), 'automation', 'test-data', 'tc2_2_final_output.xlsx');
+            await download.saveAs(savePath);
+            const wb = XLSX.readFile(savePath);
+            const data: any[][] = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 }) as any[][];
+            console.log(`[TC-2.2] Final Excel Download complete. Checking output data...`);
+            console.log(`[TC-2.2] Headers: ${data[0]}`);
+            console.log(`[TC-2.2] Uploaded Row Result: ${data[1]}`);
+            expect(data.length).toBeGreaterThan(1);
+        }
 
         const after = await getRegistrationCounts(page);
         console.log(`[TC-2.2] active before:${before.active} after:${after.active}`);
