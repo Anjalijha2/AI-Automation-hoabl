@@ -4,7 +4,35 @@ All notable changes to the XR Portal QA Framework are documented here.
 
 ---
 
-## [2026-03-20] — Sprint 2 (Config Module)
+## [2026-03-28] — Sprint 2 Complete
+
+### Added
+- **Unit Status automation** — TC_CFG_025–030 (6 tests: RESERVED↔AVAILABLE, Update flag, invalid status)
+- **Unit Cost Update automation** — TC_CFG_031–034 (4 tests: agreement value, mixed rows, skip, invalid)
+- **Bulk Booking Cancellation** — TC_CFG_035–037 (3 tests: positive, non-existent, already-processed)
+- **Bulk Registration Cancellation** — TC_CFG_038–040 (3 tests: positive, Update=0 skip, invalid reg)
+- **Sales Managers** — TC_CFG_041–048 (8 tests: add, unavailable, inactive, email update, search, duplicate)
+- **Customer Portal** — TC_CFG_049–053 (5 tests: full payment, failure, cancel, session timeout, GHNG reg verify)
+- **Max Preferences & Customer Actions S1** — TC_CFG_007–013 (7 tests)
+- **Sample Downloads** — TC_CFG_014–019 (6 tests, one per upload section)
+
+### Changed
+- Merged all Config test cases into unified `docs/manual-test-cases/TC_CONFIG.md` (52 TCs total)
+- Updated SPRINT_LOG, TASK_TRACKER, test-coverage to reflect Sprint 2 ✅ Complete
+- **Total automated tests: 94** across Login, Customers, Config modules
+
+### Sprint 2 Final Counts
+| Module | Tests | Status |
+|--------|-------|--------|
+| Login | 22 | ✅ All pass |
+| Customers | 17 | ✅ All pass |
+| Config (combined) | 53 | ✅ 46 pass · 7 ENV skip |
+| Smoke | 1 | ✅ Pass |
+| **Total** | **93** | ✅ |
+
+---
+
+## [2026-03-20] — Sprint 2 (Config Module — initial)
 
 ### Added
 - **Tower Configuration Integration Tests** (TC-1.1 to TC-1.6) in `manual-test-cases/TC_CONFIG.md` Section 10

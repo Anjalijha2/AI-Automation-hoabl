@@ -4,3 +4,5 @@ dist/
 discovery/videos/
 reports/
 automation/fixtures/.auth/
+test-results/
+

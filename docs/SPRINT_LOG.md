@@ -1,6 +1,6 @@
 # Sprint Log
 
-**Last updated:** 20/3/2026
+**Last updated:** 28/3/2026
 
 ---
 
@@ -26,30 +26,32 @@
 
 ## Sprint 2 — Config Module Test Coverage
 
-**Goal:** Automate Config module test cases — Tower Configuration and Registration Status.
+**Goal:** Automate Config module test cases — Tower Configuration, Registration Status, Unit Status, Unit Cost Update, Bulk Booking/Reg Cancellation, Sales Managers, Customer Portal.
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 ### Completed
 - [x] Transcribed Admin CMS manual test cases → `manual-test-cases/TC_ADMIN_CMS.md`
 - [x] Added Section 10 integration tests (TC-1.1 to TC-1.6) to `TC_CONFIG.md`
 - [x] Executed TC-1.1, TC-1.2 manually via browser agent — **both PASS**
-- [x] Created `automation/tests/tower-config.spec.ts` — 6 tests, all ✅ PASS
+- [x] Created Tower Config automation — 6 tests, all ✅ PASS
   - Fixed URL routing bug (`/cms` → `/admin/cms`)
   - Fixed locator bug (`.ant-card` → `.tower-configuration-section`)
   - Fixed TC-1.5 count assertion (exact 18 → ≥ 18)
-- [x] Created `manual-test-cases/TC_REGISTRATION_STATUS.md` (TC-2.1 to TC-2.7)
-- [x] Executed TC-2.3, TC-2.6, TC-2.7 manually via browser agent
-- [x] Created `automation/tests/registration-status.spec.ts` — 7 tests with xlsx-based test data
+- [x] Created Registration Status test cases (TC-2.1 to TC-2.7)
+- [x] Executed TC-2.3, TC-2.6, TC-2.7 manually — PASS; TC-2.1, TC-2.2, TC-2.4, TC-2.5 ENV SKIP (campaign active on UAT)
+- [x] Registration Status automation — TC_CFG_020–024 (5 upload flow tests, xlsx-based)
 - [x] Logged **BUG_010** — No validation on empty Submit in Registration Status
-
-### In Progress
-- [ ] Execute TC-2.1, TC-2.2, TC-2.4, TC-2.5 manually (require Excel file upload on UAT)
-
-### Pending (Sprint 2 Remaining)
-- [ ] Config — Unit Status (Scenario 3)
-- [ ] Config — Unit Cost Update (Scenario 4)
-- [ ] Config — Bulk Booking (Scenario 5)
+- [x] Unit Status automation — TC_CFG_025–030 (6 tests: RESERVED↔AVAILABLE, Update flag, invalid status)
+- [x] Unit Cost Update automation — TC_CFG_031–034 (4 tests: agreement value update, mixed rows, skip, invalid)
+- [x] Bulk Booking Cancellation — TC_CFG_035–037 (3 tests: positive, non-existent, already-processed)
+- [x] Bulk Registration Cancellation — TC_CFG_038–040 (3 tests: positive, Update=0 skip, invalid reg number)
+- [x] Sales Managers — TC_CFG_041–048 (8 tests: add, unavailable, inactive, update email, search by name/phone, invalid phone, duplicate email)
+- [x] Customer Portal — TC_CFG_049–053 (5 tests: full payment flow, failure, cancel, session timeout, GHNG reg verification)
+- [x] Max Preferences — TC_CFG_007–010 (4 tests: update value, persist, change, click without change)
+- [x] Customer Actions S1 — TC_CFG_011–013 (3 tests: disable/enable registrations, dropdown counts)
+- [x] Sample Downloads — TC_CFG_014–019 (6 tests: one per upload section)
+- [x] Merged all Config test cases into `docs/manual-test-cases/TC_CONFIG.md` (52 TCs total)
 
 ---
 

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@base/*":      ["src/base/*"],
+      "@pages/*":     ["src/pages/*"],
+      "@utils/*":     ["src/utils/*"],
+      "@fixtures/*":  ["src/fixtures/*"],
+      "@constants/*": ["src/constants/*"],
+      "@agents/*":    ["src/agents/*"]
+    },
+    "checkJs": false
+  },
+  "include": ["src/**/*.js", "tests/**/*.js", "config/**/*.js"],
+  "exclude": ["node_modules", "test-results", "reports"]
+}
