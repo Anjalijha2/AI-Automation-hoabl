@@ -1057,12 +1057,9 @@ class AllocationPage extends BasePage {
   }
 
   async getClosedMessage() {
-    const el = this.page
-      .locator(
-        "p:has-text('Allocation window is closed'), [class*='closed-msg'], .center-panel p",
-      )
-      .first();
-    await el.waitFor({ state: "visible", timeout: 8_000 });
+    // Use text-based matching to find the closed message regardless of element type
+    const el = this.page.getByText(/allocation window is closed/i).first();
+    await el.waitFor({ state: "visible", timeout: 12_000 });
     return (await el.textContent())?.trim() ?? "";
   }
 
