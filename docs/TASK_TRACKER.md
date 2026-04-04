@@ -41,7 +41,15 @@
 
 ## 🔄 In Progress
 
+<<<<<<< HEAD
 *None — Sprint 3 Allocation complete.*
+=======
+| Selectors — docs/selectors/allocation.json | Allocation | QA Agent | ✅ Done |
+| Page docs — docs/pages/ALLOCATION.md | Allocation | QA Agent | ✅ Done |
+| Manual TCs — docs/manual-test-cases/TC_ALLOCATION.md (44 TCs) | Allocation | QA Agent | ✅ Done |
+| Page object — src/pages/AllocationPage.js | Allocation | QA Agent | ✅ Done |
+| Playwright spec — tests/ui/allocation.spec.js (44 tests) | Allocation | QA Agent | ✅ Done |
+>>>>>>> c4c0485 (docs(sprint3): Update CHANGELOG, SPRINT_LOG, TASK_TRACKER, test-coverage + fix playwright.config customer project storageState)
 
 ---
 
@@ -49,7 +57,11 @@
 
 | Task | Module | Priority | Agent |
 |------|--------|----------|-------|
+<<<<<<< HEAD
 | Automate Towers module | Towers | P1 | Agent 3 |
+=======
+| Automate Towers module | Towers | P2 | Agent 3 |
+>>>>>>> c4c0485 (docs(sprint3): Update CHANGELOG, SPRINT_LOG, TASK_TRACKER, test-coverage + fix playwright.config customer project storageState)
 | Automate Channel Partners | Channel Partners | P2 | Agent 3 |
 | Automate JBP Management | JBP Mgmt | P3 | Agent 3 |
 | Integration / Regression Suite | All | P1 | Agent 4 |

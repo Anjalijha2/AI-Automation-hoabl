@@ -59,6 +59,7 @@
 
 **Goal:** Expand coverage to Allocation, Towers, Channel Partners, JBP Management.
 
+<<<<<<< HEAD
 **Status:** 🔄 In Progress — Allocation ✅ Complete
 
 ### Completed
@@ -73,6 +74,17 @@
     - TC-CST-009 (no Sold units on UAT), TC-CST-013 (no Available registration)
     - TC-CST-016, TC-CST-028 (live Easebuzz gateway — manual only)
     - TC-ADM-008 (no auto-completed campaign on UAT), TC-ADM-010 (no campaigns in list)
+=======
+**Status:** 🔄 In Progress
+
+### Completed
+- [x] Allocation module — 44 TCs (source: Static_Allocation_E2E_TestCases.pdf)
+  - `docs/selectors/allocation.json` — 90+ selectors across 10 sections
+  - `docs/pages/ALLOCATION.md` — full page documentation (Admin + 4 Customer pages); 7 status values
+  - `docs/manual-test-cases/TC_ALLOCATION.md` — 44 TCs (3 Setup + 10 Admin + 31 Customer) in 11 phases
+  - `src/pages/AllocationPage.js` — page object (Admin + Customer portal, KYC, milestones)
+  - `tests/ui/allocation.spec.js` — 44 automated tests across 7 describe blocks
+>>>>>>> c4c0485 (docs(sprint3): Update CHANGELOG, SPRINT_LOG, TASK_TRACKER, test-coverage + fix playwright.config customer project storageState)
 
 ### Pending
 - [ ] Towers module
