@@ -773,6 +773,17 @@ class AllocationPage extends BasePage {
     return text;
   }
 
+  // Status shown on the /alloted page registration cards (list item layout, not table)
+  async getAllotmentCardStatus(regNumber) {
+    console.log(`[getAllotmentCardStatus] Looking for card: ${regNumber}`);
+    const card = this.page.locator("li").filter({ hasText: regNumber }).first();
+    await card.scrollIntoViewIfNeeded();
+    await card.waitFor({ state: "attached", timeout: 10_000 });
+    const text = (await card.locator("p").first().textContent())?.trim() ?? "";
+    console.log(`[getAllotmentCardStatus] Found status: ${text}`);
+    return text;
+  }
+
   async getAvailableRegistration() {
     // Find any registration row with "Proceed to Confirm" button and extract reg number
     const rows = await this.page
