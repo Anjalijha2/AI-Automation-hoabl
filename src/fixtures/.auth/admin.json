@@ -2,30 +2,30 @@
   "cookies": [
     {
       "name": "CLID",
-      "value": "8ce9f5b435504c178ae1fab628040366.20260326.20270326",
+      "value": "361d7ecd8d7349c1885cc7034a826586.20260404.20270404",
       "domain": "www.clarity.ms",
       "path": "/",
-      "expires": 1806085313.841863,
+      "expires": 1806859640.205009,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
     },
     {
       "name": "_clck",
-      "value": "bwqe9b%5E2%5Eg4o%5E0%5E2276",
+      "value": "u0bnj4%5E2%5Eg4x%5E0%5E2285",
       "domain": ".xrportal.in",
       "path": "/",
-      "expires": 1806085314,
+      "expires": 1806859640,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "MUID",
-      "value": "3B853CD1C7AD63F729D12BF9C61F6203",
+      "value": "1A10E96536BC6836346BFE54372769A0",
       "domain": ".bing.com",
       "path": "/",
-      "expires": 1808245314.599377,
+      "expires": 1809019641.336762,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -35,17 +35,17 @@
       "value": "0",
       "domain": ".c.bing.com",
       "path": "/",
-      "expires": 1775154114.599531,
+      "expires": 1775928441.336898,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     },
     {
       "name": "SRM_B",
-      "value": "3B853CD1C7AD63F729D12BF9C61F6203",
+      "value": "1A10E96536BC6836346BFE54372769A0",
       "domain": ".c.bing.com",
       "path": "/",
-      "expires": 1808245314.599582,
+      "expires": 1809019641.336983,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -62,10 +62,10 @@
     },
     {
       "name": "MUID",
-      "value": "3B853CD1C7AD63F729D12BF9C61F6203",
+      "value": "1A10E96536BC6836346BFE54372769A0",
       "domain": ".clarity.ms",
       "path": "/",
-      "expires": 1808245314.723591,
+      "expires": 1809019641.462676,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -75,7 +75,7 @@
       "value": "0",
       "domain": ".c.clarity.ms",
       "path": "/",
-      "expires": 1775154114.723665,
+      "expires": 1775928441.462784,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -85,17 +85,17 @@
       "value": "0",
       "domain": ".c.clarity.ms",
       "path": "/",
-      "expires": 1774549914.723702,
+      "expires": 1775324241.462823,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     },
     {
       "name": "_clsk",
-      "value": "hrg6br%5E1774549315125%5E1%5E1%5Ej.clarity.ms%2Fcollect",
+      "value": "1twy3y7%5E1775323641804%5E1%5E1%5Ej.clarity.ms%2Fcollect",
       "domain": ".xrportal.in",
       "path": "/",
-      "expires": 1774635715,
+      "expires": 1775410041,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -107,7 +107,7 @@
       "localStorage": [
         {
           "name": "permission_check",
-          "value": "{\"5\":[1,2,3,4,5],\"6\":[1,2,3,4,5],\"7\":[1,2,3,4,5],\"8\":[2],\"10\":[1,2,3,4],\"12\":[1,2,3,4,5]}"
+          "value": "{\"5\":[1,2,3,4,5],\"6\":[1,2,3,4,5],\"7\":[1,2,3,4,5],\"8\":[2],\"10\":[1,2,3,4],\"12\":[1,2,3,4,5],\"14\":[1,2,4]}"
         },
         {
           "name": "persist:xanadu_0.0.1",
@@ -119,11 +119,11 @@
         },
         {
           "name": "user",
-          "value": "{\"name\":\"Suyash D\",\"firstName\":\"Suyash D\",\"lastName\":null,\"panNumber\":\"SDFVS1234D\",\"pincode\":null,\"address\":\"501, Lotus Apartments, MG Road, Pune 411001 Pune Maharashtra\",\"email\":\"bhushafdfdn@test.com\",\"phone\":\"8888888888\",\"countryCode\":\"+91\",\"isNri\":false,\"permissions\":{\"5\":[1,2,3,4,5],\"6\":[1,2,3,4,5],\"7\":[1,2,3,4,5],\"8\":[2],\"10\":[1,2,3,4],\"12\":[1,2,3,4,5]},\"isAdmin\":true,\"role\":\"admin\"}"
+          "value": "{\"name\":\"Suyash D\",\"firstName\":\"Suyash D\",\"lastName\":null,\"panNumber\":\"SDFVS1234D\",\"pincode\":null,\"address\":\"501, Lotus Apartments, MG Road, Pune 411001 Pune Maharashtra\",\"email\":\"bhushafdfdn@test.com\",\"phone\":\"8888888888\",\"countryCode\":\"+91\",\"isNri\":false,\"permissions\":{\"5\":[1,2,3,4,5],\"6\":[1,2,3,4,5],\"7\":[1,2,3,4,5],\"8\":[2],\"10\":[1,2,3,4],\"12\":[1,2,3,4,5],\"14\":[1,2,4]},\"isAdmin\":true,\"role\":\"admin\"}"
         },
         {
           "name": "AUTH_TOKEN",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUyODQsImlhdCI6MTc3NDU0OTMyNiwiZXhwIjoxNzc0NjM1NzI2fQ.ob7DWFoxYB1FYt0gHPFjIkbQ8jYqL4gVN_GIb6TTnx8"
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUyODQsImlhdCI6MTc3NTMyMzY1MSwiZXhwIjoxNzc1NDEwMDUxfQ.RbgLwC4MIy6MKwY5_RRHUecSP147fcE_dLFL2gqIgt4"
         }
       ]
     }
