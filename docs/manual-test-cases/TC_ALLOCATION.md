@@ -4,7 +4,7 @@
 **Sprint:** 3
 **Last updated:** 2026-04-04
 **Source:** Static_Allocation_E2E_TestCases.pdf
-**Total TCs:** 45 (3 Setup + 11 Admin + 31 Customer)
+**Total TCs:** 44 (3 Setup + 11 Admin + 30 Customer)
 **Execution Order:** Follow phases 0 → 10 in strict order. Do NOT skip any phase.
 
 ---
@@ -22,9 +22,9 @@
 | Phase 6 — Home: Booked Status & KYC Alert | TC-CST-024 | 1 | ✅ Automated |
 | Phase 7 — Milestone Payments | TC-CST-025 to TC-CST-028 | 4 | ✅ Automated (TC-CST-028 manual-only — live gateway) |
 | Phase 8 — Stop Campaign & Post-Stop | TC-ADM-007, TC-ADM-PHASE8, TC-CST-029, TC-CST-030 | 4 | ✅ Automated |
-| Phase 9 — Auto-Completed Campaign | TC-ADM-008, TC-CST-031 | 2 | ✅ Automated (TC-ADM-008 ENV SKIP — no completed campaign on UAT) |
+| Phase 9 — Auto-Completed Campaign | TC-ADM-008 | 1 | ✅ Automated (TC-ADM-008 ENV SKIP — no completed campaign on UAT) |
 | Phase 10 — Final Filter & List Validation | TC-ADM-009, TC-ADM-010 | 2 | ✅ Automated (TC-ADM-010 ENV SKIP — UAT state) |
-| **TOTAL** | | **45** | ✅ Sprint 3 — Allocation Complete |
+| **TOTAL** | | **44** | ✅ Sprint 3 — Allocation Complete |
 
 ---
 
@@ -967,25 +967,7 @@
 
 ---
 
-### TC-CST-031 — After auto-completed campaign, customer portal shows same closed state as after manual stop
-
-| Field | Value |
-|-------|-------|
-| **TC ID** | TC-CST-031 |
-| **Type** | POSITIVE |
-| **Pre-conditions** | Campaign status = Completed (auto-ended). Customer is logged in. |
-
-| # | Step | Expected |
-|---|------|----------|
-| 1 | Login to customer portal | Home dashboard loads |
-| 2 | Check Home dashboard registration statuses | Booked (063-A) unchanged · All others Waitlisted |
-| 3 | Click **Allotment** in left navigation menu | Allotment page loads |
-| 4 | Verify center panel message | RED text: *Allocation window is closed for now.* |
-| 5 | Verify Select Unit button is NOT visible | No Select Unit |
-
-> **Confirms:** Whether campaign is Stopped (manual) or Completed (auto), customer sees the exact same closed state.
-
-**Status:** ⏳ Planned
+> **Note:** `TC-CST-031` was removed from the final accepted suite on 2026-04-04 because it duplicated the already-covered closed-state verification after campaign stop. The accepted allocation suite total remains **44**.
 
 ---
 

@@ -4,7 +4,7 @@ End-to-end QA automation for XR Portal Admin (UAT) using an 8-agent AI pipeline 
 
 **Target:** `https://uat-web.xrportal.in/admin`
 **Language:** JavaScript (CommonJS)
-**Sprint:** 2 Complete ✅ · Sprint 3 In Progress 🔄 (Allocation ✅)
+**Sprint:** Sprint 1-2 Complete ✅ · Sprint 3 In Progress (Allocation ✅, Towers ✅)
 
 ---
 
@@ -74,14 +74,13 @@ The `login-tests` project is **standalone** — tests the auth flow directly wit
 | Config — Bulk Reg Cancellation | `tests/ui/config.spec.js` | 3 | ✅ All passing |
 | Config — Sales Managers | `tests/ui/config.spec.js` | 8 | ✅ All passing |
 | Config — Customer Portal | `tests/ui/config.spec.js` | 5 | ✅ ENV skip on UAT |
-| Smoke | `tests/smoke/smoke.spec.js` | 1 | ✅ Passing |
-| Allocation — Admin Mgmt | `tests/ui/allocation.spec.js` | 11 | ✅ Automated (2 ENV SKIP) |
-| Allocation — Customer Flow | `tests/ui/allocation.spec.js` | 34 | ✅ Automated (4 ENV SKIP / Manual gateway) |
-| Towers | — | — | ⏳ Sprint 3 |
+| Smoke | `tests/smoke/smoke.spec.js` | 2 | ✅ All passing |
+| Allocation | `tests/ui/allocation.spec.js` | 44 | ✅ Automated (ENV skip guards on UAT/live gateway flows) |
+| Towers | `tests/ui/towers.spec.js` | 13 | ✅ All passing |
 | Channel Partners | — | — | ⏳ Sprint 3 |
 | JBP Management | — | — | ⏳ Sprint 3 |
 
-**Total: 140 automated tests · 1 open bug (BUG_010 — medium)**
+**Total: 151 automated tests · 1 open bug (BUG_010 — medium)**
 
 ---
 
@@ -105,12 +104,12 @@ The `login-tests` project is **standalone** — tests the auth flow directly wit
 - 53 Config tests automated (TC_CFG_001–053)
 - BUG_010 logged — missing submit validation on Registration Status
 
-**Sprint 3 — In Progress 🔄**
-- Allocation module ✅ (45 tests automated — Admin Campaign + full Customer flow TC-CST-001 to TC-CST-031)
-- Towers module ⏳
-- Channel Partners module ⏳
-- JBP Management module ⏳
-- Full regression suite + CI pipeline setup ⏳
+**Sprint 3 — In Progress**
+- Allocation module — 44 automated tests complete
+- Towers module — 13 automated tests complete
+- Channel Partners module
+- JBP Management module
+- Full regression suite + CI pipeline setup
 
 ---
 
@@ -237,8 +236,7 @@ xanadu/
 │   ├── pages/                            # Page Object Models
 │   │   ├── LoginPage.js
 │   │   ├── CustomersPage.js
-│   │   ├── ConfigPage.js
-│   │   └── AllocationPage.js
+│   │   └── ConfigPage.js
 │   └── utils/
 │       ├── dataGenerator.js
 │       ├── playwrightHelpers.js
@@ -255,7 +253,6 @@ xanadu/
 │       ├── login.spec.js                 # 22 login tests
 │       ├── customers.spec.js             # 17 customers tests
 │       ├── config.spec.js                # 53 config tests (TC_CFG_001–053)
-│       ├── allocation.spec.js            # 45 allocation tests (SETUP + TC-ADM + TC-CST-001–031)
 │       ├── registration-status.spec.js   # Standalone registration status
 │       └── tower-config.spec.js          # Standalone tower config
 │
@@ -324,7 +321,7 @@ xanadu/
 | Config Page | `docs/pages/CONFIG.md` | Selectors, methods, test case breakdown |
 | Config Test Cases | `docs/manual-test-cases/TC_CONFIG.md` | 52 TCs across 10 sections |
 | Test Coverage | `docs/test-coverage.md` | Coverage status per module |
-| Sprint Log | `docs/SPRINT_LOG.md` | Sprint 1–2 complete, Sprint 3 planned |
+| Sprint Log | `docs/SPRINT_LOG.md` | Sprint 1–2 complete, Sprint 3 Allocation/Towers complete |
 | Changelog | `docs/CHANGELOG.md` | All changes by date |
 | Task Tracker | `docs/TASK_TRACKER.md` | Completed / pending tasks |
 | Bug Tracker | `bugs/BUG_TRACKER.md` | BUG_001–BUG_010 |

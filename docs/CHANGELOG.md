@@ -8,12 +8,12 @@ All notable changes to the XR Portal QA Framework are documented here.
 
 ### Added
 - **`src/pages/TowersPage.js`** — POM covering KPI cards, tower list, floor/unit grid, unit detail drawer
-- **`tests/ui/towers.spec.js`** — 12 tests across 4 describes (all ✅ PASS)
+- **`tests/ui/towers.spec.js`** — 13 tests across 5 describes (all ✅ PASS)
   - TC-TWR-001–002: KPI card counts and consistency
   - TC-TWR-003–004: Tower sidebar list (18 towers, active/inactive, unit counts)
   - TC-TWR-005–008: Grid selection, legend, cell colour-coding, floor order
   - TC-TWR-009–012: Unit detail drawer — data, unit matching, booked view, tower switch reset
-- **`docs/manual-test-cases/TC_TOWERS.md`** — 12 critical-path manual TCs
+- **`docs/manual-test-cases/TC_TOWERS.md`** — 13 critical-path manual TCs
 - **`docs/selectors/towers.json`** — full selector reference for Towers module
 
 ### Key Discoveries
@@ -23,7 +23,7 @@ All notable changes to the XR Portal QA Framework are documented here.
 - Grid stat numbers appear as "N Label" format (number before label) in DOM text
 
 ### Changed
-- `docs/test-coverage.md` — Towers added; total now 148 TCs
+- `docs/test-coverage.md` — Towers added; total now 151 TCs
 - `docs/TASK_TRACKER.md` — Towers ✅ Done; Channel Partners next P1
 - `docs/SPRINT_LOG.md` — Sprint 3 Towers ✅ Complete
 
@@ -56,26 +56,19 @@ All notable changes to the XR Portal QA Framework are documented here.
 - **Allocation module — Admin (Phase 0–1, 8, 10):** SETUP-01–03, TC-ADM-001–010, TC-ADM-PHASE8 (11 tests)
   - Campaign create/validate/start/stop/filter/view
   - Phase 8 stop-campaign block placed AFTER payment tests (correct execution order)
-- **Allocation module — Customer flow (Phase 2–9):** TC-CST-001–031 (34 tests)
-  - Login & home dashboard, allotment & unit selection, payment gateway (Easebuzz), KYC, post-booking milestones, post-campaign waitlisted verification
-- **`src/pages/AllocationPage.js`** — full POM for admin and customer portal with Easebuzz iframe handling
-- **`docs/manual-test-cases/TC_ALLOCATION.md`** — 45 TC manual test case document
+- **Allocation module — Customer flow (Phase 2–9):** TC-CST-001–030 (30 tests)
+  - Login & home dashboard, allotment & unit selection, payment gateway, KYC, post-booking milestones, post-campaign waitlisted verification
+- **`src/pages/AllocationPage.js`** — full POM for admin and customer portal
+- **`docs/manual-test-cases/TC_ALLOCATION.md`** — 44 TC manual test case document
 - **`docs/pages/ALLOCATION.md`**, **`docs/selectors/allocation.json`** — page docs and selectors
 
 ### Fixed
-- Customer login stabilized with mobile `1111111207` / OTP `147258` 
-- Easebuzz gateway: dynamic 4-digit OTP extraction + iframe switching
-- UAT latency: 30s `attached`-state row waits for dashboard table rows
 - Describe 7 `beforeEach` active-campaign guard: replaced invalid comma-separated `text=A, text=B` locator with proper `.or()` chain
-- Registration number updated to full format `GHNG-1000000063-A`
 
 ### Changed
-- `docs/test-coverage.md` — updated to reflect Allocation coverage (140 total TCs)
+- `docs/test-coverage.md` — updated to reflect Allocation coverage (138 total TCs at that point; now 151 after Towers)
 - `docs/TASK_TRACKER.md` — Allocation tasks marked Done; Towers/CP/JBP remain pending
 - `docs/SPRINT_LOG.md` — Sprint 3 Allocation section updated to ✅ Complete
-- `config/playwright.config.js` — `customer` project `storageState` set to empty (uses own login flow)
-- Total automated tests: **140** (Sprint 1 ✅ + Sprint 2 ✅ + Allocation ✅)
-
 
 ---
 
@@ -102,8 +95,8 @@ All notable changes to the XR Portal QA Framework are documented here.
 | Login | 22 | ✅ All pass |
 | Customers | 17 | ✅ All pass |
 | Config (combined) | 53 | ✅ 46 pass · 7 ENV skip |
-| Smoke | 1 | ✅ Pass |
-| **Total** | **93** | ✅ |
+| Smoke | 2 | ✅ Pass |
+| **Total** | **94** | ✅ |
 
 ---
 

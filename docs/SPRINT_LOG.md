@@ -1,6 +1,6 @@
 # Sprint Log
 
-**Last updated:** 04/04/2026
+**Last updated:** 04/4/2026
 
 ---
 
@@ -59,18 +59,17 @@
 
 **Goal:** Expand coverage to Allocation, Towers, Channel Partners, JBP Management.
 
-**Status:** 🔄 In Progress — Allocation ✅ Complete
+**Status:** 🔄 In Progress — Allocation ✅ Complete · Towers ✅ Complete
 
 ### Completed
-- [x] Allocation module — 45 tests (3 Setup + 11 Admin + 31 Customer)
-  - `src/pages/AllocationPage.js` — full page object (admin + customer portal, KYC, Easebuzz gateway)
-  - `tests/ui/allocation.spec.js` — all phases automated (SETUP, TC-ADM-001–010, TC-CST-001–031)
-  - `docs/manual-test-cases/TC_ALLOCATION.md` — 45 TC documentation
+- [x] Allocation module — 44 tests (3 Setup + 11 Admin + 30 Customer)
+  - `src/pages/AllocationPage.js` — full page object (admin + customer portal)
+  - `tests/ui/allocation.spec.js` — all phases 0–10 automated
+  - `docs/manual-test-cases/TC_ALLOCATION.md` — 44 TC documentation
   - `docs/pages/ALLOCATION.md` + `docs/selectors/allocation.json`
-  - Customer login stabilized with mobile `1111111207` / OTP `147258`
-  - Dynamic Easebuzz gateway payment — handles 4-digit OTP extraction and iframe switching
-  - UAT latency handling — 30s `attached`-state row waits for dashboard table
-  - ENV SKIP guards for:
+  - Phase 8 TC-ADM-PHASE8 added (stop campaign after payments, correct execution order)
+  - Fixed Describe 7 beforeEach active-campaign guard locator (`.or()` chain)
+  - ENV SKIP guards for tests requiring live gateway or specific UAT state:
     - TC-CST-009 (no Sold units on UAT), TC-CST-013 (no Available registration)
     - TC-CST-016, TC-CST-028 (live Easebuzz gateway — manual only)
     - TC-ADM-008 (no auto-completed campaign on UAT), TC-ADM-010 (no campaigns in list)
@@ -84,10 +83,10 @@
 - [x] Retrospective completed — all trackers updated
 
 ### Completed (continued)
-- [x] Towers module — 12 tests, all ✅ PASS
+- [x] Towers module — 13 tests, all ✅ PASS
   - `src/pages/TowersPage.js` — full POM (KPIs, tower list, grid, drawer)
-  - `tests/ui/towers.spec.js` — 12 tests across 4 describes
-  - `docs/manual-test-cases/TC_TOWERS.md` — 12 critical-path TCs
+  - `tests/ui/towers.spec.js` — 13 tests across 5 describes
+  - `docs/manual-test-cases/TC_TOWERS.md` — 13 critical-path TCs
   - `docs/selectors/towers.json` — full selector map
 
 ### Pending
