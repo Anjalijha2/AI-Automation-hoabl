@@ -1,7 +1,7 @@
 # Task Tracker
 
-**Maintained by:** Agent 7 — Sprint & Knowledge Manager  
-**Last updated:** 04/4/2026
+**Maintained by:** Scrum Master  
+**Last updated:** 04/4/2026 — Post-Retrospective
 
 ---
 
@@ -11,8 +11,8 @@
 |------|--------|-------|--------|
 | Project setup | All | Setup | ✅ Done |
 | Auth session caching | Login | Agent 3 | ✅ Done |
-| Login automation (18 tests) | Login | Agent 3 | ✅ Done |
-| Customers automation (16 tests) | Customers | Agent 3 | ✅ Done |
+| Login automation (22 tests) | Login | Agent 3 | ✅ Done |
+| Customers automation (17 tests) | Customers | Agent 3 | ✅ Done |
 | Page Documentation | Login, Customers | Agent 1 | ✅ Done |
 | Manual Test Cases | Login, Customers | Agent 2 | ✅ Done |
 | All 8 Agent scripts created | Framework | Agent 7 | ✅ Done |
@@ -33,15 +33,28 @@
 | Customer Portal automation (TC_CFG_049–053) | Config | QA Agent | ✅ Done |
 | TC_CONFIG.md — full merged manual test case doc (52 TCs) | Config | QA Agent | ✅ Done |
 | Allocation — Admin campaign mgmt (SETUP-01–03, TC-ADM-001–007, TC-ADM-PHASE8) | Allocation | QA Agent | ✅ Done |
-| Allocation — Customer flow (TC-CST-001–031) | Allocation | QA Agent | ✅ Done |
-| TC_ALLOCATION.md — 45 TC manual test case doc | Allocation | QA Agent | ✅ Done |
+| Allocation — Customer flow (TC-CST-001–030) | Allocation | QA Agent | ✅ Done |
+| TC_ALLOCATION.md — 44 TC manual test case doc | Allocation | QA Agent | ✅ Done |
 | Phase 8 stop-campaign block (TC-ADM-PHASE8) + beforeEach locator fix | Allocation | QA Agent | ✅ Done |
+| TC-ADM-002 fix — picker disabled-cell assertion (not backend banner) | Allocation | QA Agent | ✅ Done |
+| TC-ADM-007 fix — reuse TC-ADM-006 Active campaign (1-Active UAT limit) | Allocation | QA Agent | ✅ Done |
+| TC-CST-029 fix — allotment card layout + ENV_SKIP guard + getAllotmentCardStatus() | Allocation | QA Agent | ✅ Done |
+| TC-CST-030 fix — click Waitlisted card before asserting buttons hidden | Allocation | QA Agent | ✅ Done |
+| TC-CST-031 removed — not required per current business requirements | Allocation | QA Agent | ✅ Done |
+| AllocationPage.getClosedMessage() — getByText regex, getAllotmentCardStatus() new | Allocation | QA Agent | ✅ Done |
+
+---
+
+| Towers — TowersPage.js POM (KPIs, tower list, grid, drawer) | Towers | QA Agent | ✅ Done |
+| Towers — TC_TOWERS.md (12 critical-path TCs) | Towers | QA Agent | ✅ Done |
+| Towers — towers.spec.js (12 tests, all PASS) | Towers | QA Agent | ✅ Done |
+| Towers — docs/selectors/towers.json | Towers | QA Agent | ✅ Done |
 
 ---
 
 ## 🔄 In Progress
 
-*None — Sprint 3 Allocation complete.*
+*None — Towers complete.*
 
 ---
 
@@ -49,8 +62,7 @@
 
 | Task | Module | Priority | Agent |
 |------|--------|----------|-------|
-| Automate Towers module | Towers | P1 | Agent 3 |
-| Automate Channel Partners | Channel Partners | P2 | Agent 3 |
-| Automate JBP Management | JBP Mgmt | P3 | Agent 3 |
-| Integration / Regression Suite | All | P1 | Agent 4 |
-| Fix BUG_010 — client-side Submit validation | Config | P2 | Dev Team |
+| Automate Channel Partners | Channel Partners | P1 | QA Agent |
+| Automate JBP Management | JBP Mgmt | P2 | QA Agent |
+| Full regression suite + CI pipeline | All | P1 | Agent 4 |
+| Fix BUG_010 — client-side Submit validation | Config | P3 | Dev Team |

@@ -22,13 +22,13 @@
 | Config — Customer Portal | 5 | 5 (TC_CFG_049–053) | `config.spec.js` | ✅ Full Coverage (ENV SKIP on UAT) |
 | Allocation — Admin Campaign Mgmt | 11 | 11 (SETUP-01–03, TC-ADM-001–007, TC-ADM-PHASE8) | `allocation.spec.js` | ✅ Automated (TC-ADM-008, 010 ENV SKIP) |
 | Allocation — Customer Flow | 34 | 34 (TC-CST-001–031) | `allocation.spec.js` | ✅ Automated (TC-CST-009, 013, 016, 028 ENV SKIP/Manual) |
-| Towers | — | — | `—` | ⏳ Not Started |
+| Towers | 12 | 12 (TC-TWR-001–012) | `towers.spec.js` | ✅ Full Coverage |
 | Channel Partners | — | — | `—` | ⏳ Not Started |
 | JBP Management | — | — | `—` | ⏳ Not Started |
 
 ---
 
-**Summary:** 136 manual test cases | 136 automated | Sprint 1 ✅ · Sprint 2 ✅ · Sprint 3 Allocation ✅ | 3 modules pending (Towers, Channel Partners, JBP Mgmt)
+**Summary:** 148 manual test cases | 148 automated | Sprint 1 ✅ · Sprint 2 ✅ · Sprint 3 Allocation ✅ · Sprint 3 Towers ✅ | 2 modules pending (Channel Partners, JBP Mgmt)
 
 ---
 

@@ -74,8 +74,22 @@
     - TC-CST-016, TC-CST-028 (live Easebuzz gateway — manual only)
     - TC-ADM-008 (no auto-completed campaign on UAT), TC-ADM-010 (no campaigns in list)
 
+### Hardening (this session)
+- [x] TC-ADM-002 fix — picker disabled-cell assertion
+- [x] TC-ADM-007 fix — reuse existing Active campaign
+- [x] TC-CST-029 fix — allotment card layout + ENV_SKIP guard
+- [x] TC-CST-030 fix — click Waitlisted card before assertion
+- [x] TC-CST-031 removed — not required
+- [x] Retrospective completed — all trackers updated
+
+### Completed (continued)
+- [x] Towers module — 12 tests, all ✅ PASS
+  - `src/pages/TowersPage.js` — full POM (KPIs, tower list, grid, drawer)
+  - `tests/ui/towers.spec.js` — 12 tests across 4 describes
+  - `docs/manual-test-cases/TC_TOWERS.md` — 12 critical-path TCs
+  - `docs/selectors/towers.json` — full selector map
+
 ### Pending
-- [ ] Towers module
 - [ ] Channel Partners module
 - [ ] JBP Management module
 - [ ] Full regression suite + CI pipeline setup

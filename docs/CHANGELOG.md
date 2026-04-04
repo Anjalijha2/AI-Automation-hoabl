@@ -4,6 +4,52 @@ All notable changes to the XR Portal QA Framework are documented here.
 
 ---
 
+## [2026-04-04] — Sprint 3 Towers Module Complete
+
+### Added
+- **`src/pages/TowersPage.js`** — POM covering KPI cards, tower list, floor/unit grid, unit detail drawer
+- **`tests/ui/towers.spec.js`** — 12 tests across 4 describes (all ✅ PASS)
+  - TC-TWR-001–002: KPI card counts and consistency
+  - TC-TWR-003–004: Tower sidebar list (18 towers, active/inactive, unit counts)
+  - TC-TWR-005–008: Grid selection, legend, cell colour-coding, floor order
+  - TC-TWR-009–012: Unit detail drawer — data, unit matching, booked view, tower switch reset
+- **`docs/manual-test-cases/TC_TOWERS.md`** — 12 critical-path manual TCs
+- **`docs/selectors/towers.json`** — full selector reference for Towers module
+
+### Key Discoveries
+- Grid uses virtual scroll — DOM renders subset of cells; `stats.available` (header) ≥ rendered cell count
+- Unit detail drawer reveals customer name/reg for booked units (read-only admin view)
+- `.allocation-details-drawer-content` gets `.visibility-hidden` class when no unit selected
+- Grid stat numbers appear as "N Label" format (number before label) in DOM text
+
+### Changed
+- `docs/test-coverage.md` — Towers added; total now 148 TCs
+- `docs/TASK_TRACKER.md` — Towers ✅ Done; Channel Partners next P1
+- `docs/SPRINT_LOG.md` — Sprint 3 Towers ✅ Complete
+
+---
+
+## [2026-04-04] — Sprint 3 Allocation Hardening + Retrospective
+
+### Fixed (this session)
+- **TC-ADM-002**: Rewrote from "submit invalid form → check banner" to "open picker → verify disabled time cells" (UAT enforces 3-min minimum at picker level, no backend error banner)
+- **TC-ADM-007**: Rewrote to reuse TC-ADM-006's Active campaign — UAT only allows 1 Active campaign at a time
+- **TC-CST-029**: Rewrote to navigate to `/alloted` card layout; checks REG_A=Booked, REG_G=Waitlisted; ENV_SKIP guard when campaign still active
+- **TC-CST-030**: Fixed to click any Waitlisted card before asserting Select Unit/Book Now hidden
+- **TC-CST-031**: Removed — not required per current business requirements
+- **`AllocationPage.getAllotmentCardStatus()`**: New method for `/alloted` card-layout status reads (different from home-page table)
+- **`AllocationPage.getClosedMessage()`**: Switched from narrow CSS selector to `getByText()` regex — finds element regardless of HTML tag type
+
+### Changed
+- Allocation test count revised to **44** (TC-CST-031 removed; was 45)
+- All 44 allocation tests: 29 pass in isolation, 15 are ENV_SKIP (require full suite campaign lifecycle to execute)
+
+### Retrospective Decisions
+- Expert tester mindset adopted: lean critical-path TCs, ENV_SKIP over brittle assertions, reuse POM
+- Next: Towers → Channel Partners → JBP Management
+
+---
+
 ## [2026-04-04] — Sprint 3 Allocation Complete
 
 ### Added
