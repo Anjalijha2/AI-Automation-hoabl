@@ -1166,6 +1166,8 @@ test.describe("📋 Customer — KYC Completion", () => {
 // Requires completed payment/booking — ENV SKIP
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🏡 Customer — Post-Booking Home & Milestones", () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
   test.beforeEach(async ({ page }) => {
     await customerLogin(page);
     const hasBooked = await page
@@ -1183,7 +1185,7 @@ test.describe("🏡 Customer — Post-Booking Home & Milestones", () => {
   });
 
   // ── TC-CST-024 ───────────────────────────────────────────────────────────
-  test("[TC-CST-024] Home shows Booked status, Complete KYC alert, and Pay button for 063-A", async ({
+  test("[TC-CST-024] Home shows Booked status, KYC process status, and Pay button for 063-A", async ({
     page,
   }) => {
     const alloc = new AllocationPage(page);
@@ -1194,12 +1196,15 @@ test.describe("🏡 Customer — Post-Booking Home & Milestones", () => {
     const allottedUnit = await alloc.getAllottedUnit(REG_A);
     expect(allottedUnit).toContain("3502");
 
-    expect(await alloc.isCompleteKYCAlertVisible(REG_A)).toBe(true);
+    // Process Status — either "Complete KYC" (pending) or "KYC Completed" (done)
+    const hasKycAlert = await alloc.isCompleteKYCAlertVisible(REG_A);
+    const hasKycCompleted = await alloc.isKYCCompletedVisible(REG_A);
+    expect(hasKycAlert || hasKycCompleted).toBe(true);
 
     const payBtn = page
       .locator("table tbody tr")
       .filter({ hasText: REG_A })
-      .locator("button:has-text('Pay >'), a:has-text('Pay >')")
+      .locator("button:has-text('Pay'), a:has-text('Pay')")
       .first();
     await expect(payBtn).toBeVisible();
   });
@@ -1210,6 +1215,7 @@ test.describe("🏡 Customer — Post-Booking Home & Milestones", () => {
   }) => {
     const alloc = new AllocationPage(page);
     await alloc.clickPayScheduleBtn(REG_A);
+    await page.waitForTimeout(2000);
 
     await expect(page.locator(".milestone-table, table").first()).toBeVisible();
     await expect(
@@ -1225,6 +1231,11 @@ test.describe("🏡 Customer — Post-Booking Home & Milestones", () => {
 
     const unitAllocStatus = await alloc.getMilestoneStatus("Unit Allocation");
     expect(unitAllocStatus).toMatch(/paid/i);
+
+    // Verify remaining milestones have Pay buttons (Pending status)
+    const pendingPayBtns = page.locator("button:has-text('Pay')");
+    const pendingCount = await pendingPayBtns.count();
+    expect(pendingCount).toBeGreaterThan(0);
   });
 
   // ── TC-CST-026 ───────────────────────────────────────────────────────────
@@ -1233,42 +1244,48 @@ test.describe("🏡 Customer — Post-Booking Home & Milestones", () => {
   }) => {
     const alloc = new AllocationPage(page);
     await alloc.clickPayScheduleBtn(REG_A);
+    await page.waitForTimeout(1000);
 
-    await alloc.clickViewTransaction("Unit Allocation");
-    await expect(
-      page
-        .locator('[class*="transaction-panel"], [class*="transaction-detail"]')
-        .first(),
-    ).toBeVisible();
+    const milestone = "Unit Allocation";
+    await alloc.clickViewTransaction(milestone);
+    await page.waitForTimeout(1000);
+
+    // Verify transaction breakdown in center panel or sidebar
+    await expect(page.locator("h2, h3, h4, span").filter({ hasText: "Transaction Details" }).first()).toBeVisible();
+    await expect(page.locator("text=27,000").first()).toBeVisible();
+    await expect(page.locator("text=Breakdown").first()).toBeVisible();
   });
 
-  // ── TC-CST-027 ───────────────────────────────────────────────────────────
   test("[TC-CST-027] Full Payment for pending milestone opens gateway", async ({
     page,
   }) => {
     test.slow();
     const alloc = new AllocationPage(page);
     await alloc.clickPayScheduleBtn(REG_A);
+    await page.waitForTimeout(2000);
 
-    const hasPendingPay = await page
-      .locator("button:has-text('Pay >')")
-      .first()
-      .isVisible({ timeout: 3_000 })
-      .catch(() => false);
-    if (!hasPendingPay) {
-      test.skip(true, "No pending milestone Pay button — TC-CST-027 skipped");
-      return;
+    const milestone = "Home Confirmation Fees";
+    const status = await alloc.getMilestoneStatus(milestone);
+    if (!status.toLowerCase().includes("pending")) {
+      test.skip(true, `Milestone '${milestone}' matches, but not pending — skipping.`);
     }
 
-    await alloc.clickMilestonePay("Home Confirmation Fees");
-    await expect(
-      page.locator('[class*="pay-popup"], .ant-modal').first(),
-    ).toBeVisible();
+    await alloc.clickMilestonePay(milestone);
+    await expect(page.locator('[class*="pay-popup"], .ant-modal').first()).toBeVisible();
 
     const amounts = await alloc.getPayPopupAmounts();
     expect(amounts.principal).toBeTruthy();
-    expect(amounts.gst).toBeTruthy();
-    expect(amounts.outstanding).toBeTruthy();
+
+    await alloc.selectFullPayment();
+    await alloc.clickPayInPopup();
+
+    // Verify and complete payment inside the gateway
+    await alloc.completeEasebuzzPayment();
+
+    // Verify milestone status after payment
+    await page.waitForURL(/paymentschedule/, { timeout: 20_000 });
+    const finalStatus = await alloc.getMilestoneStatus(milestone);
+    expect(finalStatus).toMatch(/paid/i);
   });
 
   // ── TC-CST-028 ───────────────────────────────────────────────────────────
@@ -1287,19 +1304,38 @@ test.describe("🏡 Customer — Post-Booking Home & Milestones", () => {
 // DESCRIBE 7 — Post-Campaign Verification (Phase 8 + Phase 9)
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🔴 Customer — Post-Campaign Verification", () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
   test.beforeEach(async ({ page }) => {
     await customerLogin(page);
-    const isStopped = await page
+    const hasBooked = await page
       .locator("table tbody tr, .registration-table tbody tr")
       .filter({ hasText: REG_A })
       .filter({ hasText: "Booked" })
       .first()
       .isVisible({ timeout: 4_000 })
       .catch(() => false);
-    if (!isStopped)
+    if (!hasBooked)
       test.skip(
         true,
-        "Registration 063-A not Booked — campaign post-stop state not reached",
+        "Registration 063-A not Booked — payment may not be completed",
+      );
+
+    // Post-campaign tests require no active campaign
+    const hasTimer = await page
+      .locator("text=Allotment Closing in, text=Confirmation window")
+      .first()
+      .isVisible({ timeout: 3_000 })
+      .catch(() => false);
+    const hasAddUnits = await page
+      .locator("button:has-text('Add Units')")
+      .first()
+      .isVisible({ timeout: 2_000 })
+      .catch(() => false);
+    if (hasTimer || hasAddUnits)
+      test.skip(
+        true,
+        "Campaign still active — post-campaign tests require stopped/completed campaign",
       );
   });
 

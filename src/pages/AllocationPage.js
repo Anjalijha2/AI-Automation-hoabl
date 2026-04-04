@@ -762,18 +762,15 @@ class AllocationPage extends BasePage {
   // ─── CUSTOMER — Home Dashboard ────────────────────────────────────────────────
 
   async getRegistrationStatus(regNumber) {
+    console.log(`[getRegistrationStatus] Looking for row: ${regNumber}`);
     const row = this.page
       .locator("table tbody tr, .registration-table tbody tr")
       .filter({ hasText: regNumber })
       .first();
-    return (
-      (
-        await row
-          .locator('.status-badge, .badge, [class*="status"]')
-          .first()
-          .textContent()
-      )?.trim() ?? ""
-    );
+    await row.waitFor({ state: "attached", timeout: 30_000 });
+    const text = (await row.locator("td:nth-child(4)").first().textContent())?.trim() ?? "";
+    console.log(`[getRegistrationStatus] Found status: ${text}`);
+    return text;
   }
 
   async getAvailableRegistration() {
@@ -863,12 +860,7 @@ class AllocationPage extends BasePage {
       .filter({ hasText: regNumber })
       .first();
     return (
-      (
-        await row
-          .locator('[class*="process-status"], [class*="process"]')
-          .first()
-          .textContent()
-      )?.trim() ?? ""
+      (await row.locator("td:nth-child(5)").first().textContent())?.trim() ?? ""
     );
   }
 
@@ -888,7 +880,33 @@ class AllocationPage extends BasePage {
     return await row
       .locator("button:has-text('Complete KYC'), [class*='complete-kyc']")
       .first()
-      .isVisible({ timeout: 3_000 })
+      .isVisible({ timeout: 4_000 })
+      .catch(() => false);
+  }
+
+  async isKYCCompletedVisible(regNumber) {
+    const row = this.page
+      .locator("table tbody tr, .registration-table tbody tr")
+      .filter({ hasText: regNumber })
+      .first();
+    await row.waitFor({ state: "attached", timeout: 30_000 });
+    return await row
+      .locator(':has-text("KYC Completed")')
+      .first()
+      .isVisible({ timeout: 5_000 })
+      .catch(() => false);
+  }
+
+  async isPayBtnVisible(regNumber) {
+    const row = this.page
+      .locator("table tbody tr, .registration-table tbody tr")
+      .filter({ hasText: regNumber })
+      .first();
+    await row.waitFor({ state: "attached", timeout: 30_000 });
+    return await row
+      .locator("button:has-text('Pay'), a:has-text('Pay')")
+      .first()
+      .isVisible({ timeout: 5_000 })
       .catch(() => false);
   }
 
@@ -897,10 +915,7 @@ class AllocationPage extends BasePage {
       .locator("table tbody tr, .registration-table tbody tr")
       .filter({ hasText: regNumber })
       .first();
-    await row
-      .locator("button:has-text('Pay >'), a:has-text('Pay >')")
-      .first()
-      .click();
+    await row.locator("button:has-text('Pay'), a:has-text('Pay')").first().click();
     await this.waitForNetworkIdle();
   }
 
@@ -1256,78 +1271,60 @@ class AllocationPage extends BasePage {
   }
 
   async completeEasebuzzPayment() {
-    // Step 1: Wait for Easebuzz iframe to load
-    const iframe = this.page.frameLocator(
-      "iframe[src*='easebuzz'], iframe[src*='payment']",
-    ).first();
-    await iframe
-      .locator("text=Select Payment Method")
-      .waitFor({ state: "visible", timeout: 15_000 });
-
-    // Step 2: Click "Wallets" payment method
-    await iframe.locator("text=Wallets").click();
+    console.log("[completeEasebuzzPayment] Starting Easebuzz flow...");
+    const iframeLoc = "iframe[src*='easebuzz'], iframe[src*='payment'], .ant-modal-content iframe, .ant-drawer-content iframe";
+    const iframe = this.page.frameLocator(iframeLoc).first();
+    
+    console.log("[completeEasebuzzPayment] Waiting for 'Select Payment Method' overlay (up to 60s)...");
+    await iframe.locator("text=Select Payment Method").waitFor({ state: "visible", timeout: 60_000 });
+ 
+    console.log("[completeEasebuzzPayment] Clicking 'Wallets'...");
+    await iframe.locator("text=Wallets, .list-item:has-text('Wallets')").first().click();
     await this.page.waitForTimeout(2000);
-
-    // Step 3: Click "Easebuzz Wallet" radio/option
-    await iframe.locator("text=Easebuzz Wallet").click();
+ 
+    console.log("[completeEasebuzzPayment] Clicking 'Easebuzz Wallet'...");
+    await iframe.locator("text=Easebuzz Wallet, .list-item:has-text('Easebuzz Wallet')").first().click();
     await this.page.waitForTimeout(1000);
-
-    // Step 4: Click the "Pay" button (amount varies)
-    // Listen for popup BEFORE clicking Pay (new window opens)
-    const popupPromise = this.page.context().waitForEvent("page", {
-      timeout: 20_000,
-    });
-    await iframe
-      .locator("button:has-text('Pay')")
-      .first()
-      .click();
-
-    // Step 5: New window opens (testbank.easebuzz.in)
+ 
+    console.log("[completeEasebuzzPayment] Clicking final 'Pay' button...");
+    const popupPromise = this.page.context().waitForEvent("page", { timeout: 60_000 });
+    await iframe.locator("button:has-text('Pay'), .pay-btn").filter({ visible: true }).first().click();
+ 
     const popup = await popupPromise;
-    await popup.waitForLoadState("domcontentloaded");
+    console.log("[completeEasebuzzPayment] Test bank popup opened");
+    await popup.waitForLoadState("load");
+    await popup.waitForTimeout(5000);
+ 
+    console.log("[completeEasebuzzPayment] Generating OTP...");
+    await popup.locator("button:has-text('Generate OTP'), input[value='Generate OTP']").first().click();
     await popup.waitForTimeout(3000);
-
-    // Step 6: Click "Generate OTP" on the test bank page
-    await popup
-      .locator("button:has-text('Generate OTP'), a:has-text('Generate OTP'), input[value='Generate OTP']")
-      .first()
-      .click();
-    await popup.waitForTimeout(3000);
-
-    // Step 7: Read the 4-digit OTP from the page
+ 
     const otpText = await popup.locator("body").textContent();
     const otpMatch = otpText.match(/(\d{4})/);
     if (!otpMatch) throw new Error("Could not find 4-digit OTP on test bank page");
     const otp = otpMatch[1];
-    console.log("[completeEasebuzzPayment] OTP:", otp);
-
-    // Step 8: Enter OTP digits in 4 separate boxes
-    const otpInputs = popup.locator("input[type='text'], input[type='number'], input[type='tel'], input[type='password']");
-    const inputCount = await otpInputs.count();
-    if (inputCount >= 4) {
+    console.log("[completeEasebuzzPayment] OTP Found:", otp);
+ 
+    console.log("[completeEasebuzzPayment] Entering OTP...");
+    const otpInputs = popup.locator("input.otp-input, input[maxlength='1'], input[type='text'], input[type='tel']");
+    if (await otpInputs.count() >= 4) {
       for (let i = 0; i < 4; i++) {
+        await otpInputs.nth(i).waitFor({ state: 'visible' });
         await otpInputs.nth(i).fill(otp[i]);
       }
     } else {
-      // Fallback: type OTP sequentially
       await otpInputs.first().click();
       await popup.keyboard.type(otp, { delay: 100 });
     }
-    await popup.waitForTimeout(1000);
-
-    // Step 9: Click "Success" button
-    await popup
-      .locator("button:has-text('Success'), a:has-text('Success'), input[value='Success']")
-      .first()
-      .click();
-
-    // Step 10: Wait for redirect back to app
-    await popup.waitForTimeout(3000);
-    // The popup may close — wait for main page to update
-    await this.page.waitForTimeout(5000);
-    await this.waitForNetworkIdle();
+    await popup.waitForTimeout(2000);
+ 
+    console.log("[completeEasebuzzPayment] Clicking 'Success'...");
+    await popup.locator("button:has-text('Success'), input[value='Success']").first().click();
+    
+    console.log("[completeEasebuzzPayment] Waiting for redirect...");
+    await this.page.waitForURL(/paymentschedule/, { timeout: 30_000 });
+    await this.page.waitForTimeout(3000);
   }
-
   async getPaymentSuccessMessage() {
     const el = this.page
       .locator(
@@ -1698,10 +1695,11 @@ class AllocationPage extends BasePage {
   }
 
   async clickPayInPopup() {
-    await this.page
-      .locator("button:has-text('Pay >'), button:has-text('Pay')")
-      .last()
-      .click();
+    console.log("[clickPayInPopup] Clicking 'Pay' button in the modal...");
+    const btn = this.page.locator(".ant-modal-content button:has-text('Pay')").first();
+    await btn.waitFor({ state: "visible", timeout: 8_000 });
+    await btn.click({ force: true });
+    await this.page.waitForTimeout(3000);
     await this.waitForNetworkIdle();
   }
 
