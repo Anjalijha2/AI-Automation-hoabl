@@ -1301,7 +1301,77 @@ test.describe("🏡 Customer — Post-Booking Home & Milestones", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DESCRIBE 7 — Post-Campaign Verification (Phase 8 + Phase 9)
+// DESCRIBE 7a — Phase 8: Admin — Stop Active Campaign
+// Runs AFTER payment tests, BEFORE post-campaign customer verification.
+// ─────────────────────────────────────────────────────────────────────────────
+test.describe("🛑 Phase 8 — Admin: Stop Active Campaign", () => {
+  test.use({
+    storageState: path.join(__dirname, "../../src/fixtures/.auth/admin.json"),
+  });
+
+  test("[TC-ADM-PHASE8] Stop active Xanadu Test Project campaign → status becomes Stopped", async ({
+    page,
+  }) => {
+    const alloc = new AllocationPage(page);
+    await alloc.navigateToAdminAllocation();
+    await alloc.filterCampaigns({ project: PROJECT, status: "Active" });
+    await alloc.clickRefresh();
+
+    const activeRow = page
+      .locator(".ant-table-tbody tr, tbody tr")
+      .filter({ hasText: "Active" })
+      .first();
+    const hasActive = await activeRow
+      .isVisible({ timeout: 6_000 })
+      .catch(() => false);
+
+    if (!hasActive) {
+      console.log("[Phase 8] No active campaign — already stopped. Skipping.");
+      expect(true).toBe(true);
+      return;
+    }
+
+    const campaignNameText =
+      (await activeRow.locator("td").first().textContent())?.trim() ?? "";
+    console.log(`[Phase 8] Stopping campaign: ${campaignNameText}`);
+
+    await activeRow.locator("button:has-text('Stop')").click();
+
+    await expect(
+      page.locator(".ant-modal, .ant-modal-confirm").first(),
+    ).toBeVisible({ timeout: 8_000 });
+
+    const title = await alloc.getStopPopupTitle();
+    expect(title).toContain("Stop Allocation Now");
+
+    const msgText = await alloc.getStopPopupMessage();
+    expect(msgText).toContain("Campaign will move to Stopped");
+
+    expect(await alloc.isStopPopupButtonVisible("Yes, Stop Now")).toBe(true);
+    expect(await alloc.isStopPopupButtonVisible("Close")).toBe(true);
+
+    await alloc.clickConfirmStop();
+
+    await expect
+      .poll(
+        async () => {
+          await alloc.navigateToAdminAllocation();
+          return await alloc.getCampaignStatus(campaignNameText);
+        },
+        {
+          message: "Campaign did not transition to Stopped within 30s",
+          intervals: [3_000],
+          timeout: 30_000,
+        },
+      )
+      .toMatch(/stopped/i);
+
+    console.log(`[Phase 8] Campaign '${campaignNameText}' successfully stopped.`);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DESCRIBE 7 — Post-Campaign Verification (Phase 9)
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🔴 Customer — Post-Campaign Verification", () => {
   test.use({ storageState: { cookies: [], origins: [] } });
@@ -1323,7 +1393,8 @@ test.describe("🔴 Customer — Post-Campaign Verification", () => {
 
     // Post-campaign tests require no active campaign
     const hasTimer = await page
-      .locator("text=Allotment Closing in, text=Confirmation window")
+      .locator("text=Allotment Closing in")
+      .or(page.locator("text=Confirmation window"))
       .first()
       .isVisible({ timeout: 3_000 })
       .catch(() => false);
