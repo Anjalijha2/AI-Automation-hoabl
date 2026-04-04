@@ -4,7 +4,7 @@ End-to-end QA automation for XR Portal Admin (UAT) using an 8-agent AI pipeline 
 
 **Target:** `https://uat-web.xrportal.in/admin`
 **Language:** JavaScript (CommonJS)
-**Sprint:** 2 Complete ✅ · Sprint 3 Planned
+**Sprint:** 2 Complete ✅ · Sprint 3 In Progress 🔄 (Allocation ✅)
 
 ---
 
@@ -75,12 +75,13 @@ The `login-tests` project is **standalone** — tests the auth flow directly wit
 | Config — Sales Managers | `tests/ui/config.spec.js` | 8 | ✅ All passing |
 | Config — Customer Portal | `tests/ui/config.spec.js` | 5 | ✅ ENV skip on UAT |
 | Smoke | `tests/smoke/smoke.spec.js` | 1 | ✅ Passing |
-| Allocation | — | — | ⏳ Sprint 3 |
+| Allocation — Admin Mgmt | `tests/ui/allocation.spec.js` | 11 | ✅ Automated (2 ENV SKIP) |
+| Allocation — Customer Flow | `tests/ui/allocation.spec.js` | 34 | ✅ Automated (4 ENV SKIP / Manual gateway) |
 | Towers | — | — | ⏳ Sprint 3 |
 | Channel Partners | — | — | ⏳ Sprint 3 |
 | JBP Management | — | — | ⏳ Sprint 3 |
 
-**Total: 95 automated tests · 1 open bug (BUG_010 — medium)**
+**Total: 140 automated tests · 1 open bug (BUG_010 — medium)**
 
 ---
 
@@ -104,12 +105,12 @@ The `login-tests` project is **standalone** — tests the auth flow directly wit
 - 53 Config tests automated (TC_CFG_001–053)
 - BUG_010 logged — missing submit validation on Registration Status
 
-**Sprint 3 — Planned**
-- Allocation module
-- Towers module
-- Channel Partners module
-- JBP Management module
-- Full regression suite + CI pipeline setup
+**Sprint 3 — In Progress 🔄**
+- Allocation module ✅ (45 tests automated — Admin Campaign + full Customer flow TC-CST-001 to TC-CST-031)
+- Towers module ⏳
+- Channel Partners module ⏳
+- JBP Management module ⏳
+- Full regression suite + CI pipeline setup ⏳
 
 ---
 
@@ -236,7 +237,8 @@ xanadu/
 │   ├── pages/                            # Page Object Models
 │   │   ├── LoginPage.js
 │   │   ├── CustomersPage.js
-│   │   └── ConfigPage.js
+│   │   ├── ConfigPage.js
+│   │   └── AllocationPage.js
 │   └── utils/
 │       ├── dataGenerator.js
 │       ├── playwrightHelpers.js
@@ -253,6 +255,7 @@ xanadu/
 │       ├── login.spec.js                 # 22 login tests
 │       ├── customers.spec.js             # 17 customers tests
 │       ├── config.spec.js                # 53 config tests (TC_CFG_001–053)
+│       ├── allocation.spec.js            # 45 allocation tests (SETUP + TC-ADM + TC-CST-001–031)
 │       ├── registration-status.spec.js   # Standalone registration status
 │       └── tower-config.spec.js          # Standalone tower config
 │

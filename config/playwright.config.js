@@ -119,27 +119,15 @@ module.exports = defineConfig({
             },
         },
 
-        // ── Cross-Browser: Firefox ───────────────────────────────────
+        // ── Customer Portal Tests (No Admin Auth Dependency) ───────
         {
-            name: 'firefox',
+            name: 'customer',
             testMatch: /.*\.spec\.js/,
             testIgnore: [/.*smoke\.spec\.js/, /.*login\.spec\.js/],
-            dependencies: ['auth-setup'],
             use: {
-                browserName: 'firefox',
-                storageState: path.join(__dirname, '../src/fixtures/.auth/admin.json'),
-            },
-        },
-
-        // ── Cross-Browser: WebKit ────────────────────────────────────
-        {
-            name: 'webkit',
-            testMatch: /.*\.spec\.js/,
-            testIgnore: [/.*smoke\.spec\.js/, /.*login\.spec\.js/],
-            dependencies: ['auth-setup'],
-            use: {
-                browserName: 'webkit',
-                storageState: path.join(__dirname, '../src/fixtures/.auth/admin.json'),
+                browserName: 'chromium',
+                // Customer tests use their own login flow in beforeEach
+                storageState: { cookies: [], origins: [] },
             },
         },
     ],

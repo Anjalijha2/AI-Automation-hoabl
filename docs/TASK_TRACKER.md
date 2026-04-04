@@ -32,8 +32,7 @@
 | Sales Managers automation (TC_CFG_041–048) | Config | QA Agent | ✅ Done |
 | Customer Portal automation (TC_CFG_049–053) | Config | QA Agent | ✅ Done |
 | TC_CONFIG.md — full merged manual test case doc (52 TCs) | Config | QA Agent | ✅ Done |
-| Allocation — Admin campaign mgmt (SETUP-01–03, TC-ADM-001–007, TC-ADM-PHASE8) | Allocation | QA Agent | ✅ Done |
-| Allocation — Customer flow (TC-CST-001–030) | Allocation | QA Agent | ✅ Done |
+| Allocation — Full E2E automation (SETUP-01–03, TC-ADM-001–010, TC-ADM-PHASE8, TC-CST-001–030) | Allocation | QA Agent | ✅ Done |
 | TC_ALLOCATION.md — 44 TC manual test case doc | Allocation | QA Agent | ✅ Done |
 | Phase 8 stop-campaign block (TC-ADM-PHASE8) + beforeEach locator fix | Allocation | QA Agent | ✅ Done |
 | TC-ADM-002 fix — picker disabled-cell assertion (not backend banner) | Allocation | QA Agent | ✅ Done |
@@ -46,8 +45,8 @@
 ---
 
 | Towers — TowersPage.js POM (KPIs, tower list, grid, drawer) | Towers | QA Agent | ✅ Done |
-| Towers — TC_TOWERS.md (12 critical-path TCs) | Towers | QA Agent | ✅ Done |
-| Towers — towers.spec.js (12 tests, all PASS) | Towers | QA Agent | ✅ Done |
+| Towers — TC_TOWERS.md (13 critical-path TCs) | Towers | QA Agent | ✅ Done |
+| Towers — towers.spec.js (13 tests, all PASS) | Towers | QA Agent | ✅ Done |
 | Towers — docs/selectors/towers.json | Towers | QA Agent | ✅ Done |
 
 ---
