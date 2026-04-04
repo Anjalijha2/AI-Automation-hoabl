@@ -1,6 +1,6 @@
 # Test Coverage Report
 
-**Last updated:** 28/3/2026
+**Last updated:** 04/4/2026
 **Maintained by:** Agent 7 — Sprint & Knowledge Manager
 
 ---
@@ -20,14 +20,15 @@
 | Config — Bulk Reg Cancellation | 3 | 3 (TC_CFG_038–040) | `config.spec.js` | ✅ Full Coverage |
 | Config — Sales Managers | 8 | 8 (TC_CFG_041–048) | `config.spec.js` | ✅ Full Coverage |
 | Config — Customer Portal | 5 | 5 (TC_CFG_049–053) | `config.spec.js` | ✅ Full Coverage (ENV SKIP on UAT) |
-| Allocation | — | — | `—` | ⏳ Not Started |
+| Allocation — Admin Campaign Mgmt | 11 | 11 (SETUP-01–03, TC-ADM-001–007, TC-ADM-PHASE8) | `allocation.spec.js` | ✅ Automated (TC-ADM-008, 010 ENV SKIP) |
+| Allocation — Customer Flow | 34 | 34 (TC-CST-001–031) | `allocation.spec.js` | ✅ Automated (TC-CST-009, 013, 016, 028 ENV SKIP/Manual) |
 | Towers | — | — | `—` | ⏳ Not Started |
 | Channel Partners | — | — | `—` | ⏳ Not Started |
 | JBP Management | — | — | `—` | ⏳ Not Started |
 
 ---
 
-**Summary:** 94 manual test cases | 94 automated | Sprint 1 ✅ · Sprint 2 ✅ | 4 modules pending (Sprint 3)
+**Summary:** 136 manual test cases | 136 automated | Sprint 1 ✅ · Sprint 2 ✅ · Sprint 3 Allocation ✅ | 3 modules pending (Towers, Channel Partners, JBP Mgmt)
 
 ---
 

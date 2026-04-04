@@ -1,6 +1,6 @@
 # Sprint Log
 
-**Last updated:** 28/3/2026
+**Last updated:** 04/4/2026
 
 ---
 
@@ -55,11 +55,26 @@
 
 ---
 
-## Sprint 3 — Remaining Modules (Planned)
+## Sprint 3 — Remaining Modules
 
 **Goal:** Expand coverage to Allocation, Towers, Channel Partners, JBP Management.
 
-- [ ] Allocation module
+**Status:** 🔄 In Progress — Allocation ✅ Complete
+
+### Completed
+- [x] Allocation module — 45 tests (3 Setup + 11 Admin + 31 Customer)
+  - `src/pages/AllocationPage.js` — full page object (admin + customer portal)
+  - `tests/ui/allocation.spec.js` — all phases 0–10 automated
+  - `docs/manual-test-cases/TC_ALLOCATION.md` — 45 TC documentation
+  - `docs/pages/ALLOCATION.md` + `docs/selectors/allocation.json`
+  - Phase 8 TC-ADM-PHASE8 added (stop campaign after payments, correct execution order)
+  - Fixed Describe 7 beforeEach active-campaign guard locator (`.or()` chain)
+  - ENV SKIP guards for tests requiring live gateway or specific UAT state:
+    - TC-CST-009 (no Sold units on UAT), TC-CST-013 (no Available registration)
+    - TC-CST-016, TC-CST-028 (live Easebuzz gateway — manual only)
+    - TC-ADM-008 (no auto-completed campaign on UAT), TC-ADM-010 (no campaigns in list)
+
+### Pending
 - [ ] Towers module
 - [ ] Channel Partners module
 - [ ] JBP Management module

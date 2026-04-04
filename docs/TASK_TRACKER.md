@@ -1,7 +1,7 @@
 # Task Tracker
 
 **Maintained by:** Agent 7 — Sprint & Knowledge Manager  
-**Last updated:** 28/3/2026
+**Last updated:** 04/4/2026
 
 ---
 
@@ -32,12 +32,16 @@
 | Sales Managers automation (TC_CFG_041–048) | Config | QA Agent | ✅ Done |
 | Customer Portal automation (TC_CFG_049–053) | Config | QA Agent | ✅ Done |
 | TC_CONFIG.md — full merged manual test case doc (52 TCs) | Config | QA Agent | ✅ Done |
+| Allocation — Admin campaign mgmt (SETUP-01–03, TC-ADM-001–007, TC-ADM-PHASE8) | Allocation | QA Agent | ✅ Done |
+| Allocation — Customer flow (TC-CST-001–031) | Allocation | QA Agent | ✅ Done |
+| TC_ALLOCATION.md — 45 TC manual test case doc | Allocation | QA Agent | ✅ Done |
+| Phase 8 stop-campaign block (TC-ADM-PHASE8) + beforeEach locator fix | Allocation | QA Agent | ✅ Done |
 
 ---
 
 ## 🔄 In Progress
 
-*None — Sprint 2 complete.*
+*None — Sprint 3 Allocation complete.*
 
 ---
 
@@ -45,8 +49,7 @@
 
 | Task | Module | Priority | Agent |
 |------|--------|----------|-------|
-| Automate Allocation module | Allocation | P1 | Agent 3 |
-| Automate Towers module | Towers | P2 | Agent 3 |
+| Automate Towers module | Towers | P1 | Agent 3 |
 | Automate Channel Partners | Channel Partners | P2 | Agent 3 |
 | Automate JBP Management | JBP Mgmt | P3 | Agent 3 |
 | Integration / Regression Suite | All | P1 | Agent 4 |

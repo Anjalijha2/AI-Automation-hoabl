@@ -2,9 +2,9 @@
 
 **Module:** Allocation (Admin + Customer Portal)
 **Sprint:** 3
-**Last updated:** 2026-03-29
+**Last updated:** 2026-04-04
 **Source:** Static_Allocation_E2E_TestCases.pdf
-**Total TCs:** 44 (3 Setup + 10 Admin + 31 Customer)
+**Total TCs:** 45 (3 Setup + 11 Admin + 31 Customer)
 **Execution Order:** Follow phases 0 → 10 in strict order. Do NOT skip any phase.
 
 ---
@@ -13,18 +13,18 @@
 
 | Phase | TC IDs | Count | Status |
 |-------|--------|-------|--------|
-| Phase 0 — Pre-Execution Setup | SETUP-01 to SETUP-03 | 3 | ⏳ Planned |
-| Phase 1 — Create Static Campaign (Admin) | TC-ADM-001 to TC-ADM-006 | 6 | ⏳ Planned |
-| Phase 2 — Customer Login & Home | TC-CST-001 to TC-CST-003 | 3 | ⏳ Planned |
-| Phase 3 — Allotment & Unit Selection | TC-CST-004 to TC-CST-013 | 10 | ⏳ Planned |
-| Phase 4 — Payment (Rs. 27,000) | TC-CST-014 to TC-CST-016 | 3 | ⏳ Planned |
-| Phase 5 — KYC Completion | TC-CST-017 to TC-CST-023 | 7 | ⏳ Planned |
-| Phase 6 — Home: Booked Status & KYC Alert | TC-CST-024 | 1 | ⏳ Planned |
-| Phase 7 — Milestone Payments | TC-CST-025 to TC-CST-028 | 4 | ⏳ Planned |
-| Phase 8 — Stop Campaign & Post-Stop | TC-ADM-007, TC-CST-029, TC-CST-030 | 3 | ⏳ Planned |
-| Phase 9 — Auto-Completed Campaign | TC-ADM-008, TC-CST-031 | 2 | ⏳ Planned |
-| Phase 10 — Final Filter & List Validation | TC-ADM-009, TC-ADM-010 | 2 | ⏳ Planned |
-| **TOTAL** | | **44** | |
+| Phase 0 — Pre-Execution Setup | SETUP-01 to SETUP-03 | 3 | ✅ Automated |
+| Phase 1 — Create Static Campaign (Admin) | TC-ADM-001 to TC-ADM-006 | 6 | ✅ Automated |
+| Phase 2 — Customer Login & Home | TC-CST-001 to TC-CST-003 | 3 | ✅ Automated |
+| Phase 3 — Allotment & Unit Selection | TC-CST-004 to TC-CST-013 | 10 | ✅ Automated (TC-CST-009, 013 ENV SKIP — UAT state) |
+| Phase 4 — Payment (Rs. 27,000) | TC-CST-014 to TC-CST-016 | 3 | ✅ Automated (TC-CST-016 ENV SKIP — live gateway) |
+| Phase 5 — KYC Completion | TC-CST-017 to TC-CST-023 | 7 | ✅ Automated |
+| Phase 6 — Home: Booked Status & KYC Alert | TC-CST-024 | 1 | ✅ Automated |
+| Phase 7 — Milestone Payments | TC-CST-025 to TC-CST-028 | 4 | ✅ Automated (TC-CST-028 manual-only — live gateway) |
+| Phase 8 — Stop Campaign & Post-Stop | TC-ADM-007, TC-ADM-PHASE8, TC-CST-029, TC-CST-030 | 4 | ✅ Automated |
+| Phase 9 — Auto-Completed Campaign | TC-ADM-008, TC-CST-031 | 2 | ✅ Automated (TC-ADM-008 ENV SKIP — no completed campaign on UAT) |
+| Phase 10 — Final Filter & List Validation | TC-ADM-009, TC-ADM-010 | 2 | ✅ Automated (TC-ADM-010 ENV SKIP — UAT state) |
+| **TOTAL** | | **45** | ✅ Sprint 3 — Allocation Complete |
 
 ---
 

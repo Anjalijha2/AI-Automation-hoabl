@@ -4,6 +4,28 @@ All notable changes to the XR Portal QA Framework are documented here.
 
 ---
 
+## [2026-04-04] — Sprint 3 Allocation Complete
+
+### Added
+- **Allocation module — Admin (Phase 0–1, 8, 10):** SETUP-01–03, TC-ADM-001–010, TC-ADM-PHASE8 (11 tests)
+  - Campaign create/validate/start/stop/filter/view
+  - Phase 8 stop-campaign block placed AFTER payment tests (correct execution order)
+- **Allocation module — Customer flow (Phase 2–9):** TC-CST-001–031 (31 tests)
+  - Login & home dashboard, allotment & unit selection, payment gateway, KYC, post-booking milestones, post-campaign waitlisted verification
+- **`src/pages/AllocationPage.js`** — full POM for admin and customer portal
+- **`docs/manual-test-cases/TC_ALLOCATION.md`** — 45 TC manual test case document
+- **`docs/pages/ALLOCATION.md`**, **`docs/selectors/allocation.json`** — page docs and selectors
+
+### Fixed
+- Describe 7 `beforeEach` active-campaign guard: replaced invalid comma-separated `text=A, text=B` locator with proper `.or()` chain
+
+### Changed
+- `docs/test-coverage.md` — updated to reflect Allocation coverage (136 total TCs)
+- `docs/TASK_TRACKER.md` — Allocation tasks marked Done; Towers/CP/JBP remain pending
+- `docs/SPRINT_LOG.md` — Sprint 3 Allocation section updated to ✅ Complete
+
+---
+
 ## [2026-03-28] — Sprint 2 Complete
 
 ### Added
