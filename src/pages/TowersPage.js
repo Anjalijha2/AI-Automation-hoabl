@@ -110,6 +110,25 @@ class TowersPage extends BasePage {
     return text.includes(towerName);
   }
 
+  // ── Download Excel ────────────────────────────────────────────────────────────
+
+  /**
+   * Click the download button in the grid header and wait for the file download.
+   * Returns the downloaded file's suggested filename.
+   * Must be called AFTER selectTower() so the grid + download button are visible.
+   */
+  async downloadTowerExcel() {
+    const downloadBtn = this.page.locator('.unit-wrap button, .floors-index-wrap button').first();
+    await downloadBtn.waitFor({ state: 'visible', timeout: 8_000 });
+
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download', { timeout: 20_000 }),
+      downloadBtn.click(),
+    ]);
+
+    return download.suggestedFilename();
+  }
+
   // ── Floor / Unit Grid ─────────────────────────────────────────────────────────
 
   /** Get the per-tower stats shown above the grid: { total, available, sold, payingNow, refuge, disabled, pbt } */

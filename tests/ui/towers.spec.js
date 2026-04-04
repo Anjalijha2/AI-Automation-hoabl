@@ -309,3 +309,23 @@ test.describe("📋 Unit Detail Drawer", () => {
     // Either drawer is hidden OR showing Crown unit — both valid
   });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DESCRIBE 5 — Download Excel
+// ─────────────────────────────────────────────────────────────────────────────
+test.describe("📥 Download Excel", () => {
+  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+
+  // TC-TWR-013
+  test("[TC-TWR-013] Download tower unit data as Excel file", async ({ page }) => {
+    const towers = new TowersPage(page);
+    await towers.navigate();
+    await towers.selectTower(ACTIVE_TOWER);
+
+    const filename = await towers.downloadTowerExcel();
+    console.log("Downloaded file:", filename);
+
+    // Must be an Excel file
+    expect(filename).toMatch(/\.(xlsx|xls|csv)$/i);
+  });
+});

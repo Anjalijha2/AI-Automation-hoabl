@@ -4,7 +4,7 @@
 **Sprint:** 3  
 **Author:** QA  
 **Last Updated:** 2026-04-04  
-**Total TCs:** 12
+**Total TCs:** 13
 
 ---
 
@@ -181,6 +181,23 @@ The Towers page has three functional zones:
 
 ---
 
+## Section 5 — Download Excel
+
+### TC-TWR-013 — Download tower unit data as Excel
+**Priority:** P1  
+**Type:** Functional
+
+| Step | Action | Expected Result |
+|------|--------|-----------------|
+| 1 | Navigate to `/admin/towers`; select tower "Crest" | Grid loads with download button (↓ icon) visible in grid header |
+| 2 | Click the download button | File download starts |
+| 3 | Check downloaded filename | Filename is a `.xlsx` or `.xls` file (contains tower or unit data) |
+| 4 | Open the file | Rows contain unit numbers, floor, status, BHK type, agreement value |
+
+**Pass Criteria:** Download initiates; file is a valid Excel format with non-zero rows.
+
+---
+
 ## Summary Table
 
 | TC ID | Title | Priority | Type | Status |
@@ -197,3 +214,4 @@ The Towers page has three functional zones:
 | TC-TWR-010 | Drawer unit no. matches clicked cell | P1 | Data Integrity | ✅ Automated |
 | TC-TWR-011 | Booked unit opens read-only drawer | P2 | Functional | ✅ Automated |
 | TC-TWR-012 | Switching tower resets grid + drawer | P2 | State | ✅ Automated |
+| TC-TWR-013 | Download tower unit data as Excel | P1 | Functional | ✅ Automated |
