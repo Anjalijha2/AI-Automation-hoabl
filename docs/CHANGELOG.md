@@ -4,6 +4,32 @@ All notable changes to the XR Portal QA Framework are documented here.
 
 ---
 
+## [2026-04-06] — Sprint 3 Channel Partners Module Complete
+
+### Added
+- **`src/pages/ChannelPartnersPage.js`** — POM covering total count, search, view drawer, more dropdown, map master CP, refresh
+- **`tests/ui/channel-partners.spec.js`** — 10 tests across 6 describes (all ✅ PASS)
+  - TC-CP-001–002: Page load — total count (2705) and column headers
+  - TC-CP-003–004: Search by phone, Reset Filters clears input + restores count
+  - TC-CP-005–006: Eye icon drawer — title, key fields, section headings, KYC status
+  - TC-CP-007: More (…) dropdown contains "Mark as Master"
+  - TC-CP-008–009: Map Master CP — disabled/enabled state, modal title + body
+  - TC-CP-010: Refresh preserves total count
+- **`docs/manual-test-cases/TC_CHANNEL_PARTNERS.md`** — 10 critical-path manual TCs
+- **`docs/selectors/channel-partners.json`** — full selector reference for Channel Partners module
+
+### Key Discoveries
+- Phone search filters rows but the `h3.table-title` count always shows the full total (2705) — use `getPhoneInputValue()` to verify filter state, not row count
+- More (…) dropdown items include sidebar nav links (Customers, Config, etc.) plus "Mark as Master" — test must check `items.includes("Mark as Master")` not `items.length`
+- Reset Filters clears the phone input back to empty string and restores baseline count
+
+### Changed
+- `docs/test-coverage.md` — Channel Partners added; total now 161 TCs
+- `docs/TASK_TRACKER.md` — Channel Partners ✅ Done; JBP Mgmt next
+- `docs/SPRINT_LOG.md` — Sprint 3 Channel Partners ✅ Complete
+
+---
+
 ## [2026-04-04] — Sprint 3 Towers Module Complete
 
 ### Added

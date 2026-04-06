@@ -59,7 +59,7 @@
 
 **Goal:** Expand coverage to Allocation, Towers, Channel Partners, JBP Management.
 
-**Status:** 🔄 In Progress — Allocation ✅ Complete · Towers ✅ Complete
+**Status:** 🔄 In Progress — Allocation ✅ Complete · Towers ✅ Complete · Channel Partners ✅ Complete
 
 ### Completed
 - [x] Allocation module — 44 tests (3 Setup + 11 Admin + 30 Customer)
@@ -89,7 +89,14 @@
   - `docs/manual-test-cases/TC_TOWERS.md` — 13 critical-path TCs
   - `docs/selectors/towers.json` — full selector map
 
+### Completed (continued)
+- [x] Channel Partners module — 10 tests, all ✅ PASS
+  - `src/pages/ChannelPartnersPage.js` — full POM (total count, search, view drawer, more dropdown, map master CP, refresh)
+  - `tests/ui/channel-partners.spec.js` — 10 tests across 6 describes
+  - `docs/manual-test-cases/TC_CHANNEL_PARTNERS.md` — 10 critical-path TCs
+  - `docs/selectors/channel-partners.json` — full selector map
+  - Key discoveries: phone search filters rows but header count stays at total; dropdown menu includes nav items (filter for "Mark as Master"); Reset Filters clears input + restores baseline count
+
 ### Pending
-- [ ] Channel Partners module
 - [ ] JBP Management module
 - [ ] Full regression suite + CI pipeline setup

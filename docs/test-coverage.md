@@ -1,6 +1,6 @@
 # Test Coverage Report
 
-**Last updated:** 04/4/2026
+**Last updated:** 06/4/2026
 **Maintained by:** Agent 7 — Sprint & Knowledge Manager
 
 ---
@@ -22,12 +22,12 @@
 | Config — Customer Portal | 5 | 5 (TC_CFG_049–053) | `config.spec.js` | ✅ Full Coverage (ENV SKIP on UAT) |
 | Allocation | 44 | 44 (SETUP-01–03, TC-ADM-001–010, TC-ADM-PHASE8, TC-CST-001–030) | `allocation.spec.js` | ✅ Automated (ENV SKIP guards on UAT/live gateway flows) |
 | Towers | 13 | 13 (TC-TWR-001–013) | `towers.spec.js` | ✅ Full Coverage |
-| Channel Partners | — | — | `—` | ⏳ Not Started |
+| Channel Partners | 10 | 10 (TC-CP-001–009, TC-CP-011) | `channel-partners.spec.js` | ✅ Full Coverage |
 | JBP Management | — | — | `—` | ⏳ Not Started |
 
 ---
 
-**Summary:** 151 manual test cases | 151 automated | Sprint 1 ✅ · Sprint 2 ✅ · Sprint 3 Allocation ✅ · Sprint 3 Towers ✅ | 2 modules pending (Channel Partners, JBP Mgmt)
+**Summary:** 161 manual test cases | 161 automated | Sprint 1 ✅ · Sprint 2 ✅ · Sprint 3 Allocation ✅ · Sprint 3 Towers ✅ · Sprint 3 Channel Partners ✅ | 1 module pending (JBP Mgmt)
 
 ---
 

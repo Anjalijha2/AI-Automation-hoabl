@@ -49,11 +49,16 @@
 | Towers — towers.spec.js (13 tests, all PASS) | Towers | QA Agent | ✅ Done |
 | Towers — docs/selectors/towers.json | Towers | QA Agent | ✅ Done |
 
+| Channel Partners — ChannelPartnersPage.js POM | Channel Partners | QA Agent | ✅ Done |
+| Channel Partners — TC_CHANNEL_PARTNERS.md (10 TCs) | Channel Partners | QA Agent | ✅ Done |
+| Channel Partners — channel-partners.spec.js (10 tests, all PASS) | Channel Partners | QA Agent | ✅ Done |
+| Channel Partners — docs/selectors/channel-partners.json | Channel Partners | QA Agent | ✅ Done |
+
 ---
 
 ## 🔄 In Progress
 
-*None — Towers complete.*
+*None — Channel Partners complete.*
 
 ---
 
@@ -61,7 +66,6 @@
 
 | Task | Module | Priority | Agent |
 |------|--------|----------|-------|
-| Automate Channel Partners | Channel Partners | P1 | QA Agent |
 | Automate JBP Management | JBP Mgmt | P2 | QA Agent |
 | Full regression suite + CI pipeline | All | P1 | Agent 4 |
 | Fix BUG_010 — client-side Submit validation | Config | P3 | Dev Team |
