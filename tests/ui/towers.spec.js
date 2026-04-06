@@ -24,6 +24,14 @@ const KNOWN_AVAILABLE_UNIT = "3504";   // Available unit in Crest (floor 35)
 const KNOWN_BOOKED_UNIT    = "3502";   // Booked unit in Crest (floor 35)
 const TOTAL_TOWERS = 18;
 
+// Pinned KPI baselines — captured from UAT on 2026-04-04.
+// If these change it means real data changed (booking / tower activation).
+// Update these when UAT data is intentionally changed.
+const KPI_BASELINE = {
+  towers: { total: 18, active: 5, inactive: 13 },
+  units:  { total: 4708 },   // total is stable; sold/available shift with bookings
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // DESCRIBE 1 — KPI Cards
 // ─────────────────────────────────────────────────────────────────────────────
@@ -37,17 +45,30 @@ test.describe("📊 KPI Cards", () => {
 
     const tKPIs = await towers.getTowerKPIs();
     console.log("Tower KPIs:", tKPIs);
+
+    // ── Structure checks (always valid) ──
     expect(tKPIs.total).toBeGreaterThan(0);
     expect(tKPIs.active).toBeGreaterThan(0);
     expect(tKPIs.inactive).toBeGreaterThanOrEqual(0);
+    // Math integrity: total must equal active + inactive
     expect(tKPIs.total).toBe(tKPIs.active + tKPIs.inactive);
+
+    // ── Pinned baseline (catches silent data regression) ──
+    expect(tKPIs.total).toBe(KPI_BASELINE.towers.total);      // 18 towers
+    expect(tKPIs.active).toBe(KPI_BASELINE.towers.active);    // 5 active
+    expect(tKPIs.inactive).toBe(KPI_BASELINE.towers.inactive); // 13 inactive
 
     const uKPIs = await towers.getUnitKPIs();
     console.log("Unit KPIs:", uKPIs);
+
+    // ── Structure checks ──
     expect(uKPIs.total).toBeGreaterThan(0);
     expect(uKPIs.available).toBeGreaterThan(0);
-    // Total must be ≥ sum of its parts (some units may be in other states)
+    // Total must be ≥ sum of its parts (some units may be in intermediate states)
     expect(uKPIs.total).toBeGreaterThanOrEqual(uKPIs.sold + uKPIs.available + uKPIs.disabled);
+
+    // ── Pinned baseline ──
+    expect(uKPIs.total).toBe(KPI_BASELINE.units.total);       // 4708 total units
   });
 
   // TC-TWR-002
