@@ -176,6 +176,33 @@ class ChannelPartnersPage extends BasePage {
   }
 
   /**
+   * Filter by Master HV Code using the column header filter dropdown.
+   * Types the HV code into the search box, selects the matching checkbox, clicks OK.
+   */
+  async filterByMasterHVCode(hvCode) {
+    const th = this.page.locator('thead th').filter({ hasText: /Master HV Code/ }).first();
+    await th.locator('.ant-table-filter-trigger').click();
+    await this.page.waitForTimeout(600);
+
+    const dropdown = this.page.locator('.ant-table-filter-dropdown').filter({ isVisible: true }).first();
+    await dropdown.waitFor({ state: 'visible', timeout: 5_000 });
+
+    // Search for the HV code
+    const searchInput = dropdown.locator('input[type="text"], input[placeholder*="Search" i]').first();
+    await searchInput.fill(hvCode);
+    await this.page.waitForTimeout(500);
+
+    // Select the matching checkbox
+    const option = dropdown.locator('.ant-dropdown-menu-item, li').filter({ hasText: hvCode }).first();
+    await option.click();
+    await this.page.waitForTimeout(300);
+
+    // Click OK to apply
+    await dropdown.locator('button:has-text("OK"), button:has-text("Filter")').first().click();
+    await this.waitForNetworkIdle();
+  }
+
+  /**
    * Filter by CP Type using the column header dropdown.
    * type: 'Master CP' | 'Member CP' | 'Standalone'
    */

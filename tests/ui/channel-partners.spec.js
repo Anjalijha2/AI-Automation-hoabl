@@ -17,6 +17,7 @@
 
 const { test, expect } = require("@playwright/test");
 const { ChannelPartnersPage } = require("../../src/pages/ChannelPartnersPage.js");
+const { CPPortalPage } = require("../../src/pages/CPPortalPage.js");
 
 // ── Test Data ──────────────────────────────────────────────────────────────────
 // CP 1 — Master CP (phone: 8888888888)
@@ -31,7 +32,7 @@ const CP2_OWNER  = "Test CP";
 const CP2_HV     = "HV00026050";
 const CP2_TYPE   = "Member CP";
 
-const TOTAL_CP_COUNT  = 2706;                // Pinned baseline — update if UAT data changes
+const TOTAL_CP_COUNT  = 2707;                // Pinned baseline — update if UAT data changes
 
 const EXPECTED_COLUMNS = [
   "Owner Name", "Firm Name", "HV Code", "Master HV Code",
@@ -282,8 +283,109 @@ test.describe("🔽 Column Filters", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DESCRIBE 6 — Refresh
+// DESCRIBE 6 — Master HV Code Filter + CP Portal End-to-End
 // ─────────────────────────────────────────────────────────────────────────────
+test.describe("🔗 Master HV Filter + CP Portal", () => {
+  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+
+  // TC-CP-012
+  test("[TC-CP-012] Filter by Master HV Code, verify CPs, login to CP portal and check All Team Leads", async ({ page, context }) => {
+    test.setTimeout(120_000);
+
+    // ── STEP 1: Admin — filter by Master HV Code HV00025808 ──────────────────
+    const cp = new ChannelPartnersPage(page);
+    await cp.navigate();
+
+    await cp.filterByMasterHVCode("HV00025808");
+    console.log("✅ Master HV Code filter applied: HV00025808");
+
+    // ── STEP 2: Verify both Member CP and Master CP appear in results ─────────
+    const rows = await page.locator('tbody tr').all();
+    const cpData = [];
+    for (const row of rows) {
+      const cells = await row.locator('td').allTextContents();
+      if (cells.length > 1) {
+        cpData.push({ phone: cells[7]?.trim(), cpType: cells[8]?.trim(), masterHV: cells[4]?.trim() });
+      }
+    }
+    console.log("Filtered CP rows:", cpData);
+
+    // Both phones must appear
+    const phones = cpData.map(r => r.phone);
+    expect(phones).toContain(CP1_PHONE);  // 8888888888 — Master CP
+    expect(phones).toContain(CP2_PHONE);  // 7888888888 — Member CP
+
+    // All rows must have Master HV Code = HV00025808
+    for (const row of cpData.filter(r => r.masterHV)) {
+      expect(row.masterHV).toBe("HV00025808");
+    }
+
+    // CP Types must be correct
+    const masterRow = cpData.find(r => r.phone === CP1_PHONE);
+    const memberRow = cpData.find(r => r.phone === CP2_PHONE);
+    expect(masterRow.cpType).toMatch(/Master CP/i);
+    expect(memberRow.cpType).toMatch(/Member CP/i);
+    console.log(`✅ Master CP: ${CP1_PHONE} | Member CP: ${CP2_PHONE} — both under HV00025808`);
+
+    // ── STEP 3: Open CP Portal in a new tab and login as Master CP ────────────
+    const cpPortalTab = await context.newPage();
+    const portal = new CPPortalPage(cpPortalTab);
+    await portal.navigateToLogin();
+    await portal.login("8888888888", "147258");
+    console.log("✅ CP Portal login successful (8888888888)");
+
+    // ── STEP 4: Verify dashboard loaded with correct HV Code ──────────────────
+    const hvCode = await cpPortalTab.locator('text=HV00025808').first().isVisible({ timeout: 8_000 }).catch(() => false);
+    expect(hvCode).toBe(true);
+    console.log("✅ Dashboard shows HV Code: HV00025808");
+
+    // ── STEP 5: Check All Team Leads dropdown — open and get all options ──────
+    const teamLeadsDropdown = cpPortalTab.locator('text=All Team Leads').first();
+    await teamLeadsDropdown.waitFor({ state: 'visible', timeout: 8_000 });
+    await teamLeadsDropdown.click();
+    await cpPortalTab.waitForTimeout(700);
+
+    const options = await cpPortalTab
+      .locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option-content, [class*="dropdown"]:visible li')
+      .allTextContents();
+    const optionTexts = options.map(o => o.trim()).filter(Boolean);
+    console.log("All Team Leads dropdown options:", optionTexts);
+
+    // Must have at least: "All Team Leads", "My Leads", and the Member CP entry
+    expect(optionTexts.some(o => /All Team Leads/i.test(o))).toBe(true);
+    expect(optionTexts.some(o => /My Leads/i.test(o))).toBe(true);
+    expect(optionTexts.some(o => /HV00026050|7888888888/i.test(o))).toBe(true);
+    console.log("✅ All dropdown options verified");
+
+    // ── STEP 6: Select "My Leads" and verify table updates ────────────────────
+    const myLeadsOption = cpPortalTab
+      .locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option-content')
+      .filter({ hasText: /^My Leads$/i }).first();
+    await myLeadsOption.click();
+    await cpPortalTab.waitForTimeout(1000);
+    const myLeadsRows = await cpPortalTab.locator('table tbody tr').count();
+    console.log(`My Leads rows: ${myLeadsRows}`);
+
+    // ── STEP 7: Switch back to "All Team Leads" and verify all rows show ──────
+    await cpPortalTab.locator('.ant-select-selector').first().click();
+    await cpPortalTab.waitForTimeout(500);
+    const allLeadsOption = cpPortalTab
+      .locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option-content')
+      .filter({ hasText: /^All Team Leads$/i }).first();
+    await allLeadsOption.click();
+    await cpPortalTab.waitForTimeout(1000);
+    const allLeadsRows = await cpPortalTab.locator('table tbody tr').count();
+    console.log(`All Team Leads rows: ${allLeadsRows}`);
+
+    expect(allLeadsRows).toBeGreaterThanOrEqual(myLeadsRows);
+    console.log("✅ All Team Leads shows ≥ rows than My Leads");
+
+    await cpPortalTab.close();
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DESCRIBE 7 — Refresh
 test.describe("🔄 Refresh", () => {
   test.use({ storageState: "src/fixtures/.auth/admin.json" });
 
