@@ -357,7 +357,7 @@ test.describe("🔗 Master HV Filter + CP Portal", () => {
     expect(optionTexts.some(o => /HV00026050|7888888888/i.test(o))).toBe(true);
     console.log("✅ All dropdown options verified");
 
-    // ── STEP 6: Select "My Leads" and verify table updates ────────────────────
+    // ── STEP 6: Select "My Leads" and record row count ────────────────────────
     const myLeadsOption = cpPortalTab
       .locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option-content')
       .filter({ hasText: /^My Leads$/i }).first();
@@ -366,7 +366,20 @@ test.describe("🔗 Master HV Filter + CP Portal", () => {
     const myLeadsRows = await cpPortalTab.locator('table tbody tr').count();
     console.log(`My Leads rows: ${myLeadsRows}`);
 
-    // ── STEP 7: Switch back to "All Team Leads" and verify all rows show ──────
+    // ── STEP 7: Select Member CP option "Test CP (HV00026050) - 7888888888" ──
+    await cpPortalTab.locator('.ant-select-selector').first().click();
+    await cpPortalTab.waitForTimeout(500);
+    const memberCPOption = cpPortalTab
+      .locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option-content')
+      .filter({ hasText: /HV00026050|7888888888/i }).first();
+    await memberCPOption.click();
+    await cpPortalTab.waitForTimeout(1000);
+    const memberCPRows = await cpPortalTab.locator('table tbody tr').count();
+    console.log(`Member CP (7888888888) rows: ${memberCPRows}`);
+    expect(memberCPRows).toBeGreaterThan(0);
+    console.log("✅ Member CP option shows its own leads");
+
+    // ── STEP 8: Switch back to "All Team Leads" and verify all rows show ──────
     await cpPortalTab.locator('.ant-select-selector').first().click();
     await cpPortalTab.waitForTimeout(500);
     const allLeadsOption = cpPortalTab
@@ -378,7 +391,8 @@ test.describe("🔗 Master HV Filter + CP Portal", () => {
     console.log(`All Team Leads rows: ${allLeadsRows}`);
 
     expect(allLeadsRows).toBeGreaterThanOrEqual(myLeadsRows);
-    console.log("✅ All Team Leads shows ≥ rows than My Leads");
+    expect(allLeadsRows).toBeGreaterThanOrEqual(memberCPRows);
+    console.log("✅ All Team Leads shows ≥ rows than My Leads and Member CP filter");
 
     await cpPortalTab.close();
   });
