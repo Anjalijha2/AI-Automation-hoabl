@@ -1,82 +1,73 @@
 # XR Portal QA Framework — Documentation Index
 
-> **How to use this docs folder**
-> Each file here is a living memory document. When any change is made to
-> a page, selector, test case, or config — update the corresponding MD file
-> and add an entry to its `## Changelog` section.
+> Living document. Update this file whenever a module is added, a TC is changed, or a bug is logged.
 
 ---
 
-## Project Summary
+## Project Info
 
 | Property | Value |
-|---|---|
-| **App Under Test** | XR Portal Admin (UAT) |
-| **URL** | https://uat-web.xrportal.in/admin |
+|----------|-------|
+| **App Under Test** | XR Portal Admin + CP Portal (UAT) |
+| **Admin URL** | `https://uat-web.xrportal.in/admin` |
+| **CP Portal URL** | `https://uat-web.xrportal.in` |
 | **Auth Method** | Mobile OTP (2-step, no password) |
-| **Framework** | Playwright + TypeScript (Page Object Model) |
+| **Framework** | Playwright v1.58.2 · JavaScript (CommonJS) · Page Object Model |
 | **Test Runner** | `npx playwright test` |
-| **Workers** | 1 (sequential) |
-| **Valid Mobile** | `8888888888` |
-| **Static OTP** | `258369` (UAT-only, update if changed) |
+| **Workers** | 1 (sequential — UAT state-dependent) |
+| **Admin Mobile** | `8888888888` |
+| **Admin OTP (UAT)** | `258369` (static UAT-only OTP) |
+| **CP Portal OTP** | `147258` (static UAT-only OTP) |
 
 ---
 
-## Pages
+## Module Index
 
-| Page | Source File | Tests | Documentation |
-|---|---|---|---|
-| Login | [login.page.ts](../automation/pages/login.page.ts) | [login.spec.ts](../automation/tests/login.spec.ts) | [LOGIN.md](pages/LOGIN.md) |
-| Customers | [customers.page.ts](../automation/pages/customers.page.ts) | [customers.spec.ts](../automation/tests/customers.spec.ts) | [CUSTOMERS.md](pages/CUSTOMERS.md) |
-| Config — Tower Config | — | [tower-config.spec.ts](../automation/tests/tower-config.spec.ts) | [TC_CONFIG.md](../manual-test-cases/TC_CONFIG.md) |
-| Config — Reg Status | — | [registration-status.spec.ts](../automation/tests/registration-status.spec.ts) | [TC_REGISTRATION_STATUS.md](../manual-test-cases/TC_REGISTRATION_STATUS.md) |
-
----
-
-## Other Documents
-
-| Document | Purpose |
-|---|---|
-| [PROCESS-FLOW.md](PROCESS-FLOW.md) | End-to-end flow: Discovery → Test Gen → Automation → Execution |
-| [FRAMEWORK-CONFIG.md](FRAMEWORK-CONFIG.md) | Playwright config, projects, scripts, env vars |
+| Module | Spec File | TC Doc | POM File | TCs | Status |
+|--------|-----------|--------|----------|-----|--------|
+| Login | [login.spec.js](../../tests/ui/login.spec.js) | [TC_LOGIN.md](TC_LOGIN.md) | [LoginPage.js](../../src/pages/LoginPage.js) | 22 | ✅ |
+| Customers | [customers.spec.js](../../tests/ui/customers.spec.js) | [TC_CUSTOMERS.md](TC_CUSTOMERS.md) | [CustomersPage.js](../../src/pages/CustomersPage.js) | 17 | ✅ |
+| Config | [config.spec.js](../../tests/ui/config.spec.js) | [TC_CONFIG.md](TC_CONFIG.md) | — | 53 | ✅ |
+| Allocation | [allocation.spec.js](../../tests/ui/allocation.spec.js) | [TC_ALLOCATION.md](TC_ALLOCATION.md) | [AllocationPage.js](../../src/pages/AllocationPage.js) | 44 | ✅ |
+| Towers | [towers.spec.js](../../tests/ui/towers.spec.js) | [TC_TOWERS.md](TC_TOWERS.md) | [TowersPage.js](../../src/pages/TowersPage.js) | 13 | ✅ |
+| Channel Partners | [channel-partners.spec.js](../../tests/ui/channel-partners.spec.js) | [TC_CHANNEL_PARTNERS.md](TC_CHANNEL_PARTNERS.md) | [ChannelPartnersPage.js](../../src/pages/ChannelPartnersPage.js) | 13 | ✅ |
+| JBP Management | [jbp-management.spec.js](../../tests/ui/jbp-management.spec.js) | [TC_JBP.md](TC_JBP.md) | [JBPManagementPage.js](../../src/pages/JBPManagementPage.js) | 4 | ✅ |
+| **TOTAL** | | | | **166** | |
 
 ---
 
-## Quick Commands
+## Quick Run Commands
 
 ```bash
-# Run all tests
-npx playwright test --headed --workers=1
+# ── Individual Modules ─────────────────────────────────────────────────────────
 
-# Login tests only
-npx playwright test --project=login-tests --headed --workers=1
+# Login (standalone project)
+npx playwright test tests/ui/login.spec.js --project=login-tests --config config/playwright.config.js --headed --workers=1
 
-# Login positive only
-npx playwright test --project=login-tests --headed --workers=1 -g "POSITIVE"
+# Customers
+npx playwright test tests/ui/customers.spec.js --project=chromium --config config/playwright.config.js --headed --workers=1
 
-# Login negative only
-npx playwright test --project=login-tests --headed --workers=1 -g "NEGATIVE"
+# Config (all 53 tests)
+npx playwright test tests/ui/config.spec.js --project=chromium --config config/playwright.config.js --headed --workers=1
 
-# Customers tests
-npx playwright test automation/tests/customers.spec.ts --project=regression --headed --workers=1
+# Allocation
+npx playwright test tests/ui/allocation.spec.js --project=chromium --config config/playwright.config.js --headed --workers=1
 
-# Smoke suite
-npx playwright test --project=smoke
+# Towers
+npx playwright test tests/ui/towers.spec.js --project=chromium --config config/playwright.config.js --headed --workers=1
 
-# Full regression
-npx playwright test --project=regression
+# Channel Partners
+npx playwright test tests/ui/channel-partners.spec.js --project=chromium --config config/playwright.config.js --headed --workers=1
 
-# View HTML report
-npx playwright show-report reports/html-report
+# JBP Management
+npx playwright test tests/ui/jbp-management.spec.js --project=chromium --config config/playwright.config.js --headed --workers=1
 
-# Run AI discovery
-npx ts-node ai-agent/discovery-crawler.ts
+# ── Full Suite ─────────────────────────────────────────────────────────────────
+npm run test:regression    # headless
+npm run test:headed        # headed
 
-# Generate test cases from discovery
-npx ts-node ai-agent/test-case-generator.ts
-
-# Generate Playwright code from test cases
-npx ts-node ai-agent/automation-generator.ts
+# ── Reports ────────────────────────────────────────────────────────────────────
+npm run report             # open HTML report
 ```
 
 ---
@@ -84,49 +75,54 @@ npx ts-node ai-agent/automation-generator.ts
 ## Directory Structure
 
 ```
-xrportal-qa-framework/
-├── docs/                       ← YOU ARE HERE
-│   ├── INDEX.md                ← Master index (this file)
-│   ├── PROCESS-FLOW.md         ← 3-phase AI pipeline + auth flow
-│   ├── FRAMEWORK-CONFIG.md     ← Config, scripts, env vars
+xanadu/
+├── config/
+│   └── playwright.config.js        ← Playwright configuration
+├── docs/
+│   ├── manual-test-cases/
+│   │   ├── INDEX.md                ← THIS FILE
+│   │   ├── TC_LOGIN.md
+│   │   ├── TC_CUSTOMERS.md
+│   │   ├── TC_CONFIG.md
+│   │   ├── TC_ALLOCATION.md
+│   │   ├── TC_TOWERS.md
+│   │   ├── TC_CHANNEL_PARTNERS.md
+│   │   └── TC_JBP.md              ← NEW
+│   ├── execution/
+│   │   └── run-commands.md
+│   ├── test-coverage.md
+│   └── CHANGELOG.md
+├── src/
+│   ├── base/BasePage.js
+│   ├── fixtures/.auth/admin.json   ← Saved admin session (git-ignored)
 │   └── pages/
-│       ├── LOGIN.md            ← Login page memory
-│       └── CUSTOMERS.md        ← Customers page memory
-│
-├── ai-agent/                   ← AI Discovery & Generation
-│   ├── discovery-crawler.ts
-│   ├── test-case-generator.ts
-│   └── automation-generator.ts
-│
-├── automation/
-│   ├── pages/                  ← Page Object Model
-│   │   ├── login.page.ts
-│   │   └── customers.page.ts
-│   ├── tests/
-│   │   ├── auth.setup.ts       ← Global session caching
-│   │   ├── login.spec.ts
-│   │   └── customers.spec.ts
-│   └── fixtures/.auth/
-│       └── admin.json          ← Saved session (git-ignored)
-│
-├── discovery/
-│   ├── reports/
-│   │   ├── portal-map.json
-│   │   └── discovery-report.md
-│   └── screenshots/
-│
-├── manual-test-cases/          ← AI-generated test case docs
-├── reports/                    ← Playwright execution reports
-└── playwright.config.ts
+│       ├── LoginPage.js
+│       ├── CustomersPage.js
+│       ├── AllocationPage.js
+│       ├── TowersPage.js
+│       ├── ChannelPartnersPage.js
+│       ├── CPPortalPage.js         ← CP Portal + JBP form
+│       └── JBPManagementPage.js
+└── tests/
+    ├── auth.setup.js               ← Global session caching
+    └── ui/
+        ├── login.spec.js
+        ├── customers.spec.js
+        ├── config.spec.js
+        ├── allocation.spec.js
+        ├── towers.spec.js
+        ├── channel-partners.spec.js
+        └── jbp-management.spec.js
 ```
 
 ---
 
 ## Changelog
 
-| Date | Change | Updated By |
-|---|---|---|
-| 2026-03-11 | Initial docs created from project analysis | Claude |
-| 2026-03-19 | Tower Config integration tests + Playwright automation added | QA Agent |
-| 2026-03-20 | Registration Status TC-2.1 to TC-2.7 + automation + BUG_010 logged | QA Agent |
-| 2026-03-20 | Full docs audit: test-coverage, execution-summary, CHANGELOG, SPRINT_LOG, TASK_TRACKER updated | QA Agent |
+| Date | Change |
+|------|--------|
+| 2026-03-11 | Initial docs created |
+| 2026-03-19 | Tower Config + Playwright automation added |
+| 2026-03-20 | Registration Status TCs + BUG_010 logged |
+| 2026-04-06 | Channel Partners module complete (13 TCs, TC-CP-001–012) |
+| 2026-04-14 | JBP Management module complete (4 TCs, TC-JBP-001–004); INDEX rebuilt; test-coverage updated to 166 total |

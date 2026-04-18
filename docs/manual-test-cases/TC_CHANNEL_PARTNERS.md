@@ -3,8 +3,8 @@
 **Module:** Channel Partners (`/admin/channel-partners`)  
 **Sprint:** 3  
 **Author:** QA  
-**Last Updated:** 2026-04-06  
-**Total TCs:** 10
+**Last Updated:** 2026-04-14  
+**Total TCs:** 13 (TC-CP-001–006, 008–012; TC-CP-007 removed — Mark as Master deferred)
 
 ---
 
