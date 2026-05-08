@@ -1,6 +1,6 @@
 # Sprint Log
 
-**Last updated:** 04/4/2026
+**Last updated:** 08/5/2026
 
 ---
 
@@ -59,7 +59,7 @@
 
 **Goal:** Expand coverage to Allocation, Towers, Channel Partners, JBP Management.
 
-**Status:** 🔄 In Progress — Allocation ✅ Complete · Towers ✅ Complete · Channel Partners ✅ Complete
+**Status:** ✅ Complete
 
 ### Completed
 - [x] Allocation module — 44 tests (3 Setup + 11 Admin + 30 Customer)
@@ -97,6 +97,20 @@
   - `docs/selectors/channel-partners.json` — full selector map
   - Key discoveries: phone search filters rows but header count stays at total; dropdown menu includes nav items (filter for "Mark as Master"); Reset Filters clears input + restores baseline count
 
-### Pending
-- [ ] JBP Management module
-- [ ] Full regression suite + CI pipeline setup
+### Completed (continued)
+- [x] JBP Management module — 4 tests, all ✅ PASS
+  - `src/pages/JBPManagementPage.js` — full POM (tabs, table, date filter, create cycle, close cycle)
+  - `src/pages/CPPortalPage.js` — CP portal POM (login, JBP nav, form fill, submit)
+  - `tests/ui/jbp-management.spec.js` — TC-JBP-001 through TC-JBP-004
+  - `docs/manual-test-cases/TC_JBP.md` — 4 TC documentation
+  - TC-JBP-001: page structure (tabs + columns) ✅
+  - TC-JBP-002: date range filter + clear ✅
+  - TC-JBP-003: create cycle with today's date, verify OPEN status ✅
+  - TC-JBP-004: CP Portal login → JBP form fill + submit ✅
+  - Probe specs removed (probe_cp_numbers, probe_cp_portal, probe_jbp)
+
+### Retrospective
+- 166 automated tests across 7 modules — all green
+- 1 open bug: BUG_010 (Config — Registration Status empty submit)
+- Probe specs deleted — were exploration artifacts, not production tests
+- Sprint 4 begins: Offers, Sales Managers, Payment Transactions, CMS/Config (full)

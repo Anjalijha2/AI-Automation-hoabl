@@ -1,7 +1,7 @@
 # Task Tracker
 
 **Maintained by:** Scrum Master  
-**Last updated:** 04/4/2026 — Post-Retrospective
+**Last updated:** 08/5/2026 — Sprint 3 Retrospective Complete
 
 ---
 
@@ -53,12 +53,18 @@
 | Channel Partners — TC_CHANNEL_PARTNERS.md (10 TCs) | Channel Partners | QA Agent | ✅ Done |
 | Channel Partners — channel-partners.spec.js (10 tests, all PASS) | Channel Partners | QA Agent | ✅ Done |
 | Channel Partners — docs/selectors/channel-partners.json | Channel Partners | QA Agent | ✅ Done |
+| JBP Management — JBPManagementPage.js POM | JBP Mgmt | QA Agent | ✅ Done |
+| JBP Management — CPPortalPage.js POM | JBP Mgmt | QA Agent | ✅ Done |
+| JBP Management — TC_JBP.md (4 TCs) | JBP Mgmt | QA Agent | ✅ Done |
+| JBP Management — jbp-management.spec.js (4 tests, all PASS) | JBP Mgmt | QA Agent | ✅ Done |
+| Probe spec cleanup (probe_cp_numbers, probe_cp_portal, probe_jbp) | JBP Mgmt | QA Agent | ✅ Done |
+| Sprint 3 retrospective | All | QA Agent | ✅ Done |
 
 ---
 
 ## 🔄 In Progress
 
-*None — Channel Partners complete.*
+*None.*
 
 ---
 
@@ -66,6 +72,6 @@
 
 | Task | Module | Priority | Agent |
 |------|--------|----------|-------|
-| Automate JBP Management | JBP Mgmt | P2 | QA Agent |
-| Full regression suite + CI pipeline | All | P1 | Agent 4 |
+| Manual QA Phase 1 — Discovery (Offers module) | Sprint 4 | P1 | Manual QA Agent |
+| BRD → TC generation (Offers, Sales Managers, Transactions, CMS full) | Sprint 4 | P1 | Manual QA Agent |
 | Fix BUG_010 — client-side Submit validation | Config | P3 | Dev Team |
