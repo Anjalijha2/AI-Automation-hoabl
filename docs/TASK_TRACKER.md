@@ -1,7 +1,7 @@
 # Task Tracker
 
 **Maintained by:** Scrum Master  
-**Last updated:** 08/5/2026 — Sprint 3 Retrospective Complete
+**Last updated:** 2026-05-08 — Sprint 4 Offers Complete
 
 ---
 
@@ -62,6 +62,16 @@
 
 ---
 
+| Offers — Discovery (docs/selectors/offers.json) | Offers | BA/QA Agent | ✅ Done |
+| Offers — Screen Docs (docs/pages/OFFERS.md) | Offers | BA/QA Agent | ✅ Done |
+| Offers — Test Cases (TC_OFFERS.md, 12 TCs) | Offers | BA/QA Agent | ✅ Done |
+| Offers — OffersPage.js POM | Offers | BA/QA Agent | ✅ Done |
+| Offers — offers.spec.js (12 tests, all PASS) | Offers | BA/QA Agent | ✅ Done |
+| Offers — Selector healing (anticon aria-label fix) | Offers | BA/QA Agent | ✅ Done |
+| Offers — Sprint 4 retrospective + tracker updates | Offers | BA/QA Agent | ✅ Done |
+
+---
+
 ## 🔄 In Progress
 
 *None.*
@@ -72,6 +82,7 @@
 
 | Task | Module | Priority | Agent |
 |------|--------|----------|-------|
-| Manual QA Phase 1 — Discovery (Offers module) | Sprint 4 | P1 | Manual QA Agent |
-| BRD → TC generation (Offers, Sales Managers, Transactions, CMS full) | Sprint 4 | P1 | Manual QA Agent |
+| Sales Managers — full pipeline | Sprint 4 | P1 | BA/QA Agent |
+| Payment Transactions — full pipeline | Sprint 4 | P1 | BA/QA Agent |
+| CMS/Config full — full pipeline | Sprint 4 | P1 | BA/QA Agent |
 | Fix BUG_010 — client-side Submit validation | Config | P3 | Dev Team |

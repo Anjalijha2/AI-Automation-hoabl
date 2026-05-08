@@ -1,6 +1,6 @@
 # Sprint Log
 
-**Last updated:** 08/5/2026
+**Last updated:** 2026-05-08
 
 ---
 
@@ -114,3 +114,49 @@
 - 1 open bug: BUG_010 (Config — Registration Status empty submit)
 - Probe specs deleted — were exploration artifacts, not production tests
 - Sprint 4 begins: Offers, Sales Managers, Payment Transactions, CMS/Config (full)
+
+---
+
+## Sprint 4 — Offers Module
+
+**Goal:** Full pipeline coverage of the Offers Management module.
+
+**Status:** ✅ Complete (Offers module — 12 TCs, all pass)
+
+### Completed
+- [x] BRD analysis — `brd/offers.md` — 6 clarifications raised, domain red flags identified
+- [x] Phase 1 — Discovery — `docs/selectors/offers.json` — full selector map via live portal inspection
+- [x] Phase 2 — Screen Docs — `docs/pages/OFFERS.md` — 12-dimension documentation
+- [x] Phase 3 — Test Cases — `docs/manual-test-cases/TC_OFFERS.md` — 12 TCs (P1+P2 coverage)
+- [x] Phase 4 — POM — `src/pages/OffersPage.js` — full page object (navigate, header, table, drawer, toggle, typology)
+- [x] Phase 5 — Spec — `tests/ui/offers.spec.js` — 12 tests across 6 describes
+- [x] Phase 6 — Execution — 12/12 tests pass; 2-pass healing cycle completed
+- [x] Retrospective — all trackers updated
+
+### Healing Events
+1. **Selector fix (edit/delete buttons):** Initial selector `button:has(img[alt="edit"])` was wrong — Ant Design uses anticon spans with `aria-label`, not `<img alt>`. Fixed to `button:has([aria-label="edit"])`.
+2. **Delete confirmation dialog:** CLARIFICATION-OFFERS-005 resolved — delete shows "Are you sure you want to delete this offer?" with "Yes, delete" button. Cleanup code in TC-005 updated.
+3. **Test contamination:** First run left 2 orphaned "QA Test Offer Sprint4" rows (cleanup delete failed due to wrong selector). Manually cleaned UAT data; second run passed cleanly.
+
+### Key Domain Discoveries
+- Offers module uses `.ant-drawer` (side drawer), NOT `.ant-modal` (centered modal)
+- Ant Design icon buttons use `aria-label` on inner `<span role="img">`, NOT `img[alt]`
+- Delete has confirmation: "Are you sure you want to delete this offer?" / "Yes, delete"
+- Toggle has NO confirmation dialog — HIGH risk flag confirmed
+- 4 typology options confirmed: 1 Bed Growth Home, 2 Bed Growth Home, 2 Bed Peak Home, 2 Bed Rise Home
+- Sr.No values are DB primary keys — gaps (2,4,5,6 missing) confirm hard deletes
+- All UAT offers are Amount Based — Percentage column always shows "-"
+
+### Test Results
+- TC-OFFERS-001 — Page Load ✅
+- TC-OFFERS-002 — Table Columns ✅
+- TC-OFFERS-003 — Sr.No Non-Contiguous ✅
+- TC-OFFERS-004 — Add Drawer Fields ✅
+- TC-OFFERS-005 — Create Valid Offer + Cleanup ✅
+- TC-OFFERS-006 — Validation (Empty Submit) ✅
+- TC-OFFERS-007 — Edit Pre-Fill ✅
+- TC-OFFERS-008 — Edit Round-Trip ✅
+- TC-OFFERS-009 — Toggle OFF + Persistence ✅
+- TC-OFFERS-010 — Toggle ON ✅
+- TC-OFFERS-011 — Typology Dropdown ✅
+- TC-OFFERS-012 — Refresh ✅

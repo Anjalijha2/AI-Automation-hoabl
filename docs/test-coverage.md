@@ -1,6 +1,6 @@
 # Test Coverage Report
 
-**Last updated:** 2026-04-14  
+**Last updated:** 2026-05-08  
 **Framework:** Playwright v1.58.2 · JavaScript · CommonJS · Page Object Model
 
 ---
@@ -26,6 +26,7 @@
 | **Towers** | `tests/ui/towers.spec.js` | TC-TWR-001 – 013 | 13 | ✅ Full |
 | **Channel Partners** | `tests/ui/channel-partners.spec.js` | TC-CP-001–006, 008–012 | 13 | ✅ Full |
 | **JBP Management** | `tests/ui/jbp-management.spec.js` | TC-JBP-001 – 004 | 4 | ✅ Full |
+| **Offers** | `tests/ui/offers.spec.js` | TC-OFFERS-001 – 012 | 12 | ✅ Full |
 
 ---
 
@@ -33,8 +34,8 @@
 
 | Metric | Count |
 |--------|-------|
-| **Total Automated Tests** | **166** |
-| **Modules Covered** | 7 (Login, Customers, Config, Allocation, Towers, Channel Partners, JBP Mgmt) |
+| **Total Automated Tests** | **178** |
+| **Modules Covered** | 8 (Login, Customers, Config, Allocation, Towers, Channel Partners, JBP Mgmt, Offers) |
 | **ENV SKIP guards** | ~8 (UAT-state-dependent — expected, not bugs) |
 | **Open Bugs** | 1 (BUG_010) |
 
@@ -47,6 +48,7 @@
 | Sprint 1 | Login, Customers | ✅ Complete |
 | Sprint 2 | Config (all sub-sections) | ✅ Complete |
 | Sprint 3 | Allocation, Towers, Channel Partners, JBP Management | ✅ Complete |
+| Sprint 4 | Offers | ✅ Complete (12 TCs, all pass) |
 
 ---
 

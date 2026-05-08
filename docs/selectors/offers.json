@@ -1,0 +1,96 @@
+{
+  "page": "/admin/offers",
+  "description": "Offers Management module — selector reference",
+
+  "header": {
+    "heading": "h5",
+    "headingText": "Offers Management",
+    "offerCountBadge": "div:has-text('Offers'):not(:has(*))",
+    "offerCountPattern": "/(\\d+)\\s*Offers/",
+    "refreshButton": "button:has-text('Refresh')",
+    "addNewOfferButton": "button:has-text('Add New Offer')"
+  },
+
+  "table": {
+    "columnHeaders": "table thead th",
+    "bodyRows": "table tbody tr",
+    "firstDataRow": "table tbody tr:first-child"
+  },
+
+  "rowActions": {
+    "toggleSwitch": ".ant-switch",
+    "toggleChecked": ".ant-switch[aria-checked='true'], .ant-switch.ant-switch-checked",
+    "editButton": "button:has([aria-label='edit'])",
+    "deleteButton": "button:has([aria-label='delete'])",
+    "note": "Ant Design anticon spans use aria-label on inner span, NOT img[alt]. Use :has([aria-label='edit']) NOT :has(img[alt='edit'])"
+  },
+
+  "pagination": {
+    "container": ".ant-pagination",
+    "prevButton": "button[aria-label='left'], .ant-pagination-prev button",
+    "nextButton": "button[aria-label='right'], .ant-pagination-next button",
+    "pageItem": ".ant-pagination-item"
+  },
+
+  "addOfferDrawer": {
+    "container": ".ant-drawer-body",
+    "title": ".ant-drawer-header-title",
+    "closeButton": "button[aria-label='Close'], .ant-drawer-close",
+    "offerNameInput": "input[placeholder='Please enter offer name']",
+    "offerNameCounter": ".ant-drawer-body .ant-input-show-count-suffix",
+    "offerTypeAmountRadio": "input[type='radio']:nth-of-type(1), .ant-radio-button-wrapper:has-text('Amount Based')",
+    "offerTypePercentageRadio": "input[type='radio']:nth-of-type(2), .ant-radio-button-wrapper:has-text('Percentage Based')",
+    "amountInput": "input[placeholder='Please enter amount'], .ant-input-number-input",
+    "descriptionInput": "textarea[placeholder='Please enter description']",
+    "startDateInput": "input[placeholder='Start date']",
+    "endDateInput": "input[placeholder='End date']",
+    "typologyDropdown": ".ant-select",
+    "typologyDropdownTrigger": ".ant-drawer-body .ant-select-selector",
+    "typologyOptions": ".ant-select-dropdown .ant-select-item-option",
+    "cancelButton": ".ant-drawer-footer button:has-text('Cancel'), button:has-text('Cancel')",
+    "createButton": "button:has-text('Create Offer')",
+    "updateButton": "button:has-text('Update Offer')"
+  },
+
+  "editOfferDrawer": {
+    "container": ".ant-drawer-body",
+    "title": ".ant-drawer-header-title",
+    "closeButton": "button[aria-label='Close'], .ant-drawer-close",
+    "offerNameInput": "input[placeholder='Please enter offer name']",
+    "amountSpinbutton": ".ant-input-number-input",
+    "descriptionInput": "textarea[placeholder='Please enter description']",
+    "startDateInput": "input[placeholder='Start date']",
+    "endDateInput": "input[placeholder='End date']",
+    "typologyDropdown": ".ant-select",
+    "cancelButton": "button:has-text('Cancel')",
+    "updateButton": "button:has-text('Update Offer')"
+  },
+
+  "typologyValues": [
+    "1 Bed Growth Home",
+    "2 Bed Growth Home",
+    "2 Bed Peak Home",
+    "2 Bed Rise Home"
+  ],
+
+  "deleteConfirmDialog": {
+    "container": "[role='dialog']",
+    "title": "Are you sure you want to delete this offer?",
+    "body": "This action cannot be undone.",
+    "confirmButton": "button:has-text('Yes, delete')",
+    "cancelButton": "button:has-text('Cancel')"
+  },
+
+  "notes": [
+    "Modal uses .ant-drawer not .ant-modal — this is a side drawer, not a centered modal",
+    "dialog[name='Add New Offer'] and dialog[name='Edit Offer'] are accessible via role=dialog",
+    "Amount input placeholder is 'Please enter amount' (NOT ₹ prefix in the raw input)",
+    "Toggle is .ant-switch — checked state = aria-checked='true' or class ant-switch-checked",
+    "6 active offers in UAT (IDs 1,3,7,8,9,10 — non-contiguous due to hard deletes)",
+    "Table has 7 tbody rows (6 data + occasional header artifact) — use :has(td) to filter",
+    "Typology dropdown is optional — when empty, offer applies to all typologies",
+    "All 4 typology options confirmed: 1 Bed Growth Home, 2 Bed Growth Home, 2 Bed Peak Home, 2 Bed Rise Home",
+    "Offer count badge selector: text node inside div matching /\\d+ Offers/",
+    "No search, no filter on the list page — Refresh is the only list control"
+  ]
+}

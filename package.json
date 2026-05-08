@@ -27,6 +27,7 @@
     "test:login:positive": "npx playwright test --config config/playwright.config.js tests/ui/login.spec.js --project=login-tests --headed --workers=1 -g \"POSITIVE\"",
     "test:login:negative": "npx playwright test --config config/playwright.config.js tests/ui/login.spec.js --project=login-tests --headed --workers=1 -g \"NEGATIVE\"",
     "test:customers": "npx playwright test --config config/playwright.config.js tests/ui/customers.spec.js --project=regression --headed --workers=1",
+    "test:offers": "npx playwright test --config config/playwright.config.js tests/ui/offers.spec.js --project=regression --workers=1",
     "test:regression": "npx playwright test --config config/playwright.config.js --project=regression --headed --workers=1",
     "test:report": "npx playwright show-report reports/html-report",
     "report": "npx playwright show-report reports/html-report"
