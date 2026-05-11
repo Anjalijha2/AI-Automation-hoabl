@@ -1,1 +1,8 @@
-{}
+{
+  "cssTheme": "AnuPpuccin",
+  "theme": "moonstone",
+  "baseFontSize": 16,
+  "interfaceFontFamily": "Inter",
+  "monospaceFontFamily": "Fira Code",
+  "textFontFamily": "Inter"
+}

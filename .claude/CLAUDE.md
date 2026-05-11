@@ -179,11 +179,14 @@ const { VALID_MOBILE, VALID_OTP, DEFAULT_TIMEOUT } = require('../../src/constant
 ```
 .claude/
 ├── agents/
-│   ├── ba-agent.md              # BA Agent — orchestrator, domain expert, pipeline governor
-│   ├── manual-qa-agent.md       # Manual QA Agent — discovery, screen docs, TCs, defects
-│   ├── automation-qa-agent.md   # Automation QA Agent — script gen, execution, healing
-│   ├── qa-reviewer.md           # Claude Code subagent — spec file reviewer
-│   └── test-healer.md           # Claude Code subagent — failing test diagnoser
+│   ├── ba-agent.md                   # Antigravity system prompt — BA Agent session
+│   ├── manual-qa-agent.md            # Antigravity system prompt — Manual QA session
+│   ├── automation-qa-agent.md        # Antigravity system prompt — Automation QA session
+│   ├── ba-pipeline-orchestrator.md   # Claude Code subagent — BA orchestrator (Agent tool)
+│   ├── xr-manual-qa.md              # Claude Code subagent — Manual QA (Agent tool)
+│   ├── automation-qa-engineer.md     # Claude Code subagent — Automation QA (Agent tool)
+│   ├── qa-reviewer.md               # Claude Code subagent — spec file reviewer
+│   └── test-healer.md               # Claude Code subagent — failing test diagnoser
 ├── commands/
 │   ├── ba-commands.md           # /ba:* command reference
 │   ├── manual-qa-commands.md    # /mqa:* command reference
@@ -200,10 +203,10 @@ const { VALID_MOBILE, VALID_OTP, DEFAULT_TIMEOUT } = require('../../src/constant
 
 3 Antigravity sessions map to 3 agents. See `.claude/setup/antigravity-setup.md` for full wiring.
 
-| Session | System Prompt Source | Role |
-|---------|---------------------|------|
-| `XR — BA Agent` | `.claude/agents/ba-agent.md` | Orchestrator |
-| `XR — Manual QA` | `.claude/agents/manual-qa-agent.md` | Discovery + TCs + Bugs |
-| `XR — Automation QA` | `.claude/agents/automation-qa-agent.md` | Scripts + Execution + Healing |
+| Session | Antigravity System Prompt | Claude Code Subagent | Role |
+|---------|--------------------------|---------------------|------|
+| `XR — BA Agent` | `ba-agent.md` | `ba-pipeline-orchestrator.md` | Orchestrator |
+| `XR — Manual QA` | `manual-qa-agent.md` | `xr-manual-qa.md` | Discovery + TCs + Bugs |
+| `XR — Automation QA` | `automation-qa-agent.md` | `automation-qa-engineer.md` | Scripts + Execution + Healing |
 
 Always start from BA Agent session. BA Agent triggers the others.

@@ -1,0 +1,156 @@
+# Admin Portal — Login BRD
+
+**Module:** Login
+**URL:** `https://uat-web.xrportal.in/admin`
+**Created:** 2026-05-11
+**Status:** Complete — Automated (Sprint 1)
+
+---
+
+## 1. Purpose
+
+The Login module is the entry point to the Admin Portal. It authenticates the internal operations team using a mobile phone number and a one-time password (OTP) — no traditional username and password is used. This approach ensures only registered mobile numbers can access the portal, even if the phone is shared.
+
+---
+
+## 2. Who Uses This
+
+| User | What They Do Here |
+|------|------------------|
+| Admin | Log in to access all admin portal features |
+| Sales Manager Admin | Log in to access admin and SM portal features |
+
+---
+
+## 3. How to Access
+
+Direct URL: `https://uat-web.xrportal.in/admin`
+
+There is no other way to reach the login page — it is the default page for the admin portal when not logged in.
+
+---
+
+## 4. Screen Layout
+
+### Step 1 — Mobile Number Screen
+
+| Element | Description |
+|---------|-------------|
+| Logo | HoABL logo at top |
+| Banner image | Side banner graphic |
+| Heading | "Admin Login" |
+| Mobile Number field | Text box with "+91" country code prefix |
+| Terms & Conditions link | Links to terms of service |
+| Privacy Policy link | Links to privacy policy |
+| **Send OTP** button | Submits the mobile number |
+| Copyright footer | "Copyright 2026 Growwithhoabl All Rights Reserved" |
+
+### Step 2 — OTP Entry Screen
+
+| Element | Description |
+|---------|-------------|
+| Back button | Returns to mobile number entry |
+| Heading | "ENTER OTP" |
+| Sub-text | "Enter the OTP sent to your phone number" |
+| OTP boxes | Six individual input boxes, one digit each |
+| Countdown timer | Shows seconds remaining before OTP expires (e.g. "57s") |
+| Re-Send OTP button | Disabled until timer expires; allows requesting a new OTP |
+| **Submit OTP** button | Verifies the entered OTP |
+
+---
+
+## 5. Feature Walkthrough
+
+### Logging In Successfully
+
+1. Open a browser and go to `https://uat-web.xrportal.in/admin`
+2. The login page appears with a mobile number field
+3. Enter your registered 10-digit Indian mobile number (the field already shows "+91")
+4. Click **Send OTP**
+5. The screen changes to show six OTP input boxes
+6. Enter each digit of the 6-digit OTP — the cursor moves to the next box automatically
+7. Click **Submit OTP**
+8. If correct: you are taken directly to the Customers page
+
+### If You Need to Re-Send the OTP
+
+1. On the OTP screen, wait for the countdown timer to reach zero
+2. The **Re-Send OTP** button becomes active
+3. Click it to request a new OTP
+4. A new 6-digit OTP is sent to your mobile
+
+### Going Back to Change Your Mobile Number
+
+1. Click the **back arrow** at the top of the OTP screen
+2. The mobile number entry screen reappears
+3. Enter a different number and click **Send OTP** again
+
+### Entering the Wrong OTP
+
+1. Enter an incorrect OTP in the boxes
+2. Click **Submit OTP**
+3. An error message appears; you remain on the OTP screen
+4. You can try again without being locked out
+
+---
+
+## 6. Business Rules
+
+1. The mobile number must be exactly 10 digits
+2. The mobile field accepts only numbers — letters and special characters are blocked by the field itself
+3. OTP is 6 digits entered one per box; focus moves to the next box automatically
+4. The Re-Send OTP button is disabled until the countdown timer expires
+5. Entering the wrong OTP shows an error but does not lock the account
+6. Successful OTP entry redirects to `/admin/customers`
+7. The session lasts 1 day — after that, the admin must log in again
+8. On UAT (testing environment): mobile `8888888888` with OTP `258369` always works
+
+---
+
+## 7. Validations
+
+| Input | Invalid Scenario | System Response |
+|-------|-----------------|-----------------|
+| Mobile number | Empty | Clicking Send OTP does nothing; stays on login page |
+| Mobile number | Fewer than 10 digits | OTP is not sent |
+| Mobile number | Letters or special characters | Characters are blocked from being typed |
+| Mobile number | All zeros (0000000000) | OTP rejected |
+| OTP | Empty | Submit OTP does not proceed |
+| OTP | Wrong 6 digits | Error message shown; stays on OTP screen |
+| OTP | Fewer than 6 digits | Login rejected |
+
+---
+
+## 8. Dependencies
+
+| Dependency | Why |
+|-----------|-----|
+| [Admin Portal Overview](BRD-Admin-Overview.md) | Login is the gateway to all admin modules |
+| SMS / OTP delivery service | The system sends the OTP via SMS or WhatsApp |
+
+---
+
+## 9. User Journey Map
+
+| Step | Actor | Action | System Response | Next Step |
+|------|-------|--------|----------------|-----------|
+| 1 | Admin | Navigates to `/admin` | Login page shown | Step 2 |
+| 2 | Admin | Enters 10-digit mobile number | Field validates format | Step 3 |
+| 3 | Admin | Clicks **Send OTP** | OTP sent via SMS; OTP entry screen shown | Step 4 |
+| 4 | Admin | Enters 6-digit OTP (one box per digit) | Each digit entered; focus advances | Step 5 |
+| 5 | Admin | Clicks **Submit OTP** | OTP verified | Step 6 |
+| 6 | System | Validates OTP | Creates session | Step 7 |
+| 7 | System | Redirects | `/admin/customers` page loads | Done |
+
+**Failure path (wrong OTP):**
+
+| Step | Actor | Action | System Response | Next Step |
+|------|-------|--------|----------------|-----------|
+| 5 | Admin | Clicks **Submit OTP** (wrong code) | Error message shown | Step 4 (retry) |
+| — | Admin | Waits for timer to expire | Re-Send OTP enabled | Clicks Re-Send → Step 4 |
+
+---
+
+## 10. Open Questions / Gaps
+
+None. All login behavior confirmed through automated testing (22 tests passing as of Sprint 1).

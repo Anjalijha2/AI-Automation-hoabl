@@ -1,0 +1,47 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx playwright test*)",
+      "Bash(npm run test*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run report*)",
+      "Bash(npm run discover*)",
+      "Bash(npm run docs:*)",
+      "Bash(npm run testcases:*)",
+      "Bash(npm run automation:*)",
+      "Bash(npm run execute*)",
+      "Bash(npm run defects:*)",
+      "Bash(npm run heal:*)",
+      "Bash(npm run sprint:*)",
+      "Bash(node src/agents/*)",
+      "Bash(node -e *)",
+      "Bash(node --check *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const f=process.env.TOOL_INPUT_FILE_PATH||''; if(f.includes('.env')){console.error('BLOCKED: .env contains credentials. Edit manually if needed.');process.exit(2);}\"",
+            "description": "Block .env edits — contains credentials"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const f=process.env.TOOL_INPUT_FILE_PATH||''; if(f.endsWith('.js')&&!f.includes('node_modules')){const {execSync}=require('child_process');try{execSync('node --check '+f,{stdio:'pipe'});}catch(e){console.error('Syntax error in '+f+':\\n'+e.stderr.toString());process.exit(1);}}\"",
+            "description": "Syntax check JS files after edit"
+          }
+        ]
+      }
+    ]
+  }
+}
