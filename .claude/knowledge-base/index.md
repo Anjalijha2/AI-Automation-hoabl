@@ -8,10 +8,10 @@ Portal-first structure. Each portal folder contains BRD/, FRD/, and Workflows/ s
 
 | Portal | Overview | Purpose |
 |--------|----------|---------|
-| [Admin Portal](Admin-Portal/_overview.md) | Internal back-office | Towers, Allocation, Customers, Offers, Payments, Config |
-| [SM Portal](SM-Portal/_overview.md) | Sales Manager field tool | Physical Allocation, Callback Requests, VC Management |
-| [CP Portal](CP-Portal/_overview.md) | Channel Partner agents | Leads, Customer Registration, KYC Assist, JBP |
-| [Buyer Portal](Buyer-Portal/_overview.md) | Customer-facing app | Allocation, KYC, Payments, Home Loan, Support |
+| [[Admin Portal]] | Internal back-office | Towers, Allocation, Customers, Offers, Payments, Config |
+| [[SM Portal]] | Sales Manager field tool | Physical Allocation, Callback Requests, VC Management |
+| [[CP Portal]] | Channel Partner agents | Leads, Customer Registration, KYC Assist, JBP |
+| [[Buyer Portal]] | Customer-facing app | Allocation, KYC, Payments, Home Loan, Support |
 
 ---
 

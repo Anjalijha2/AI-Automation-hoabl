@@ -6,6 +6,7 @@
       {
         "id": "15f5d5b4a7a254d8",
         "type": "tabs",
+        "dimension": 21.931407942238266,
         "children": [
           {
             "id": "8a9c1d3eb0b04dad",
@@ -15,7 +16,53 @@
               "state": {},
               "icon": "lucide-git-fork",
               "title": "Graph view"
-            }
+            },
+            "group": "cd635f3ea41834be"
+          }
+        ]
+      },
+      {
+        "id": "026598400c6934ec",
+        "type": "tabs",
+        "dimension": 78.06859205776173,
+        "children": [
+          {
+            "id": "f5a92c570e357261",
+            "type": "leaf",
+            "state": {
+              "type": "localgraph",
+              "state": {
+                "file": "Admin-Portal/Admin Portal.md",
+                "options": {
+                  "collapse-filter": true,
+                  "search": "",
+                  "localJumps": 1,
+                  "localBacklinks": true,
+                  "localForelinks": true,
+                  "localInterlinks": false,
+                  "showTags": false,
+                  "showAttachments": false,
+                  "hideUnresolved": false,
+                  "collapse-color-groups": true,
+                  "colorGroups": [],
+                  "collapse-display": true,
+                  "showArrow": false,
+                  "textFadeMultiplier": 0,
+                  "nodeSizeMultiplier": 1,
+                  "lineSizeMultiplier": 1,
+                  "collapse-forces": true,
+                  "centerStrength": 0.518713248970312,
+                  "repelStrength": 10,
+                  "linkStrength": 1,
+                  "linkDistance": 250,
+                  "scale": 1,
+                  "close": false
+                }
+              },
+              "icon": "lucide-git-fork",
+              "title": "Graph of Admin Portal"
+            },
+            "group": "cd635f3ea41834be"
           }
         ]
       }
@@ -177,12 +224,19 @@
       "bases:Create new base": false
     }
   },
-  "active": "8a9c1d3eb0b04dad",
+  "active": "f5a92c570e357261",
   "lastOpenFiles": [
-    "_Shared/Reference/SHARED-BR-Backend-Technical.md",
-    "backend-technical.md",
-    "_Shared/Reference/SHARED-BR-Backend.md",
+    "_Shared/Reference/SHARED-WF-payment-workflow.md",
+    "Admin-Portal/Admin Portal.md",
+    "Admin-Portal/Workflows/ADMIN-WF-Allocation.md",
     "index.md",
+    "SM-Portal/SM Portal.md",
+    "CP-Portal/CP Portal.md",
+    "Buyer-Portal/Buyer Portal.md",
+    "backend-technical.md",
+    "Admin-Portal/BRD/ADMIN-BRD-Channel-Partners.md",
+    "_Shared/Reference/SHARED-BR-Backend-Technical.md",
+    "_Shared/Reference/SHARED-BR-Backend.md",
     "_Shared/Sprint-Records/SHARED-SR-Sprint-5-Overview.md",
     "Admin-Portal/FRD/ADMIN-FS-Towers.md",
     "Admin-Portal/FRD/ADMIN-FRD-Towers.md",
@@ -194,17 +248,10 @@
     "Feature-Spec - Customer Registration.md",
     "Admin-Portal/Workflows/ADMIN-WF-Registration.md",
     "Admin-Portal/Workflows/ADMIN-WF-Payment.md",
-    "Admin-Portal/Workflows/ADMIN-WF-Allocation.md",
-    "Admin-Portal/_overview.md",
     "SM-Portal/BRD/SM-BRD-SM-Portal.md",
     "Admin-Portal/BRD/ADMIN-BRD-Admin-Portal.md",
-    "Buyer-Portal/_overview.md",
-    "CP-Portal/_overview.md",
-    "SM-Portal/_overview.md",
     "SM-Portal/Workflows/SM-WF-Allocation.md",
     "Buyer-Portal/Workflows/BUYER-WF-Allocation.md",
-    "BRD/backend.md",
-    "BRD-Login.md",
     "Master-BRD/Workflows",
     "Master-BRD",
     "BRD/workflows",
