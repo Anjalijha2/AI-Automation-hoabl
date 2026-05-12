@@ -1,61 +1,86 @@
 # XR Portal Knowledge Base
 
-## Structure
-
-### BRD/ — Business Requirements (client-readable summaries)
-Portal overviews and module-level business requirements.
-
-- [XR Portal Overview](BRD/xr-portal-overview.md)
-- [Admin Portal BRD](BRD/admin-portal.md)
-- [CP Portal BRD](BRD/cp-portal.md)
-- [SM Portal BRD](BRD/sm-portal.md)
-- [Buyer Portal BRD](BRD/buyer-portal.md)
-- [Backend BRD](BRD/backend.md)
-
-**BRD/modules/** — Admin Portal module-level BRDs
-- [Login](BRD/modules/login.md) | [Customers](BRD/modules/customers.md) | [Towers](BRD/modules/towers.md) | [Allocation](BRD/modules/allocation.md) | [Channel Partners](BRD/modules/channel-partners.md)
-- [Sales Managers](BRD/modules/sales-managers.md) | [Offers](BRD/modules/offers.md) | [Payment Transactions](BRD/modules/payment-transactions.md) | [JBP Management](BRD/modules/jbp-management.md) | [Config CMS](BRD/modules/config-cms.md)
+Portal-first structure. Each portal folder contains BRD/, FRD/, and Workflows/ subfolders with files named `{PORTAL}-{DOCTYPE}-{Module}.md`.
 
 ---
 
-### FRD/ — Functional Requirements (detailed feature specs)
+## Portals
 
-**FRD/admin-portal/**
-- [Admin Portal Source](FRD/admin-portal/admin-portal-source.md)
-- modules/: [Login](FRD/admin-portal/modules/login.md) | [Customers](FRD/admin-portal/modules/customers.md) | [Towers](FRD/admin-portal/modules/towers.md) | [Allocation](FRD/admin-portal/modules/allocation.md) | [Channel Partners](FRD/admin-portal/modules/channel-partners.md) | [Sales Managers](FRD/admin-portal/modules/sales-managers.md) | [Offers](FRD/admin-portal/modules/offers.md) | [Payment Transactions](FRD/admin-portal/modules/payment-transactions.md) | [JBP Management](FRD/admin-portal/modules/jbp-management.md) | [Config CMS](FRD/admin-portal/modules/config-cms.md)
-- feature-specs/: [Login](FRD/admin-portal/feature-specs/login.md) | [Customers](FRD/admin-portal/feature-specs/customers.md) | [Towers](FRD/admin-portal/feature-specs/towers.md) | [Allocation](FRD/admin-portal/feature-specs/allocation.md) | [Channel Partners](FRD/admin-portal/feature-specs/channel-partners.md) | [Sales Managers](FRD/admin-portal/feature-specs/sales-managers.md) | [Offers](FRD/admin-portal/feature-specs/offers.md) | [Payment Transactions](FRD/admin-portal/feature-specs/payment-transactions.md) | [JBP Management](FRD/admin-portal/feature-specs/jbp-management.md) | [Config CMS](FRD/admin-portal/feature-specs/config-cms.md)
-
-**FRD/cp-portal/**
-- [CP Portal Source](FRD/cp-portal/cp-portal-source.md)
-- feature-specs/: [Login](FRD/cp-portal/feature-specs/login.md) | [Leads Management](FRD/cp-portal/feature-specs/leads-management.md) | [Customer Registration](FRD/cp-portal/feature-specs/customer-registration.md) | [KYC Assistance](FRD/cp-portal/feature-specs/kyc-assistance.md) | [JBP Submission](FRD/cp-portal/feature-specs/jbp-submission.md) | [Project Information](FRD/cp-portal/feature-specs/project-information.md)
-
-**FRD/sm-portal/**
-- [SM Portal Source](FRD/sm-portal/sm-portal-source.md)
-- feature-specs/: [Login](FRD/sm-portal/feature-specs/login.md) | [Physical Allocation](FRD/sm-portal/feature-specs/physical-allocation.md) | [Tower Heatmap](FRD/sm-portal/feature-specs/tower-heatmap.md) | [Callback Requests](FRD/sm-portal/feature-specs/callback-requests.md)
-
-**FRD/buyer-portal/**
-- [Buyer Portal Source](FRD/buyer-portal/buyer-portal-source.md)
-- feature-specs/: [Registration & Login](FRD/buyer-portal/feature-specs/registration-and-login.md) | [Home Dashboard](FRD/buyer-portal/feature-specs/home-dashboard.md) | [Unit Details](FRD/buyer-portal/feature-specs/unit-details.md) | [Allocation Experience](FRD/buyer-portal/feature-specs/allocation-experience.md) | [Payment Schedule](FRD/buyer-portal/feature-specs/payment-schedule.md) | [Home Loan](FRD/buyer-portal/feature-specs/home-loan.md) | [KYC](FRD/buyer-portal/feature-specs/kyc.md) | [Support Tickets](FRD/buyer-portal/feature-specs/support-tickets.md) | [Callback Request](FRD/buyer-portal/feature-specs/callback-request.md) | [Project Information](FRD/buyer-portal/feature-specs/project-information.md) | [Work Progress](FRD/buyer-portal/feature-specs/work-progress.md)
+| Portal | Overview | Purpose |
+|--------|----------|---------|
+| [Admin Portal](Admin-Portal/_overview.md) | Internal back-office | Towers, Allocation, Customers, Offers, Payments, Config |
+| [SM Portal](SM-Portal/_overview.md) | Sales Manager field tool | Physical Allocation, Callback Requests, VC Management |
+| [CP Portal](CP-Portal/_overview.md) | Channel Partner agents | Leads, Customer Registration, KYC Assist, JBP |
+| [Buyer Portal](Buyer-Portal/_overview.md) | Customer-facing app | Allocation, KYC, Payments, Home Loan, Support |
 
 ---
 
-### Reference/ — Cross-cutting technical reference (full versions)
-- [Business Rules](Reference/business-rules.md) | [Glossary](Reference/glossary.md) | [Roles & Permissions](Reference/roles-and-permissions.md) | [Status Flows](Reference/status-flows.md)
-- [Backend Technical](Reference/backend-technical.md) | [CMS Strapi](Reference/cms-strapi.md) | [Integrations](Reference/integrations.md) | [WebSocket](Reference/websocket.md) | [Realtime Events](Reference/realtime-events.md)
+## Admin Portal
+
+**BRD/** — [Admin Portal](Admin-Portal/BRD/ADMIN-BRD-Admin-Portal.md) | [Login](Admin-Portal/BRD/ADMIN-BRD-Login.md) | [Customers](Admin-Portal/BRD/ADMIN-BRD-Customers.md) | [Towers](Admin-Portal/BRD/ADMIN-BRD-Towers.md) | [Allocation](Admin-Portal/BRD/ADMIN-BRD-Allocation.md) | [Channel Partners](Admin-Portal/BRD/ADMIN-BRD-Channel-Partners.md) | [Sales Managers](Admin-Portal/BRD/ADMIN-BRD-Sales-Managers.md) | [Offers](Admin-Portal/BRD/ADMIN-BRD-Offers.md) | [Payment Transactions](Admin-Portal/BRD/ADMIN-BRD-Payment-Transactions.md) | [JBP Management](Admin-Portal/BRD/ADMIN-BRD-JBP-Management.md) | [Config CMS](Admin-Portal/BRD/ADMIN-BRD-Config-CMS.md)
+
+**FRD/** — [Admin Portal](Admin-Portal/FRD/ADMIN-FRD-Admin-Portal.md) | [Login](Admin-Portal/FRD/ADMIN-FRD-Login.md) | [Customers](Admin-Portal/FRD/ADMIN-FRD-Customers.md) | [Towers](Admin-Portal/FRD/ADMIN-FRD-Towers.md) | [Allocation](Admin-Portal/FRD/ADMIN-FRD-Allocation.md) | [Channel Partners](Admin-Portal/FRD/ADMIN-FRD-Channel-Partners.md) | [Sales Managers](Admin-Portal/FRD/ADMIN-FRD-Sales-Managers.md) | [Offers](Admin-Portal/FRD/ADMIN-FRD-Offers.md) | [Payment Transactions](Admin-Portal/FRD/ADMIN-FRD-Payment-Transactions.md) | [JBP Management](Admin-Portal/FRD/ADMIN-FRD-JBP-Management.md) | [Config CMS](Admin-Portal/FRD/ADMIN-FRD-Config-CMS.md)
+
+**Feature Specs/** — [Login](Admin-Portal/FRD/ADMIN-FS-Login.md) | [Customers](Admin-Portal/FRD/ADMIN-FS-Customers.md) | [Towers](Admin-Portal/FRD/ADMIN-FS-Towers.md) | [Allocation](Admin-Portal/FRD/ADMIN-FS-Allocation.md) | [Channel Partners](Admin-Portal/FRD/ADMIN-FS-Channel-Partners.md) | [Sales Managers](Admin-Portal/FRD/ADMIN-FS-Sales-Managers.md) | [Offers](Admin-Portal/FRD/ADMIN-FS-Offers.md) | [Payment Transactions](Admin-Portal/FRD/ADMIN-FS-Payment-Transactions.md) | [JBP Management](Admin-Portal/FRD/ADMIN-FS-JBP-Management.md) | [Config CMS](Admin-Portal/FRD/ADMIN-FS-Config-CMS.md)
+
+**Workflows/** — [Allocation](Admin-Portal/Workflows/ADMIN-WF-Allocation.md) | [Registration](Admin-Portal/Workflows/ADMIN-WF-Registration.md) | [Payment](Admin-Portal/Workflows/ADMIN-WF-Payment.md)
 
 ---
 
-### Workflows/ — End-to-end technical workflow docs
-- [Allocation](Workflows/allocation-workflow.md) | [Registration](Workflows/registration-workflow.md) | [KYC](Workflows/kyc-workflow.md) | [Payment](Workflows/payment-workflow.md)
-- [Milestone Payments](Workflows/milestone-payments.md) | [Home Loan](Workflows/home-loan-workflow.md) | [Callback Request](Workflows/callback-request-workflow.md) | [Support Ticket](Workflows/support-ticket-workflow.md)
+## SM Portal
 
-### Business-Flows/ — Cross-portal business process flows
-- [BF-001 Allocation Campaign Lifecycle](Business-Flows/bf-001-allocation-campaign-lifecycle.md)
-- [BF-006 Sales Manager Assignment Flow](Business-Flows/bf-006-sales-manager-assignment-flow.md)
+**BRD/** — [SM Portal](SM-Portal/BRD/SM-BRD-SM-Portal.md)
 
-### Open-Questions/
-- [Open Questions](Open-Questions/open-questions.md)
+**FRD/** — [SM Portal](SM-Portal/FRD/SM-FRD-SM-Portal.md)
 
-### Sprint-Records/
-- [Sprint 5 Overview](Sprint-Records/sprint-5-overview.md)
-- [Sprint 5 Pipeline Status](Sprint-Records/sprint-5-pipeline-status.md)
+**Feature Specs/** — [Login](SM-Portal/FRD/SM-FS-Login.md) | [Physical Allocation](SM-Portal/FRD/SM-FS-Physical-Allocation.md) | [Tower Heatmap](SM-Portal/FRD/SM-FS-Tower-Heatmap.md) | [Callback Requests](SM-Portal/FRD/SM-FS-Callback-Requests.md)
+
+**Workflows/** — [Callback Requests](SM-Portal/Workflows/SM-WF-Callback-Requests.md) | [Allocation (cross-portal)](SM-Portal/Workflows/SM-WF-Allocation.md)
+
+---
+
+## CP Portal
+
+**BRD/** — [CP Portal](CP-Portal/BRD/CP-BRD-CP-Portal.md)
+
+**FRD/** — [CP Portal](CP-Portal/FRD/CP-FRD-CP-Portal.md)
+
+**Feature Specs/** — [Login](CP-Portal/FRD/CP-FS-Login.md) | [Leads Management](CP-Portal/FRD/CP-FS-Leads-Management.md) | [Customer Registration](CP-Portal/FRD/CP-FS-Customer-Registration.md) | [KYC Assistance](CP-Portal/FRD/CP-FS-KYC-Assistance.md) | [JBP Submission](CP-Portal/FRD/CP-FS-JBP-Submission.md) | [Project Information](CP-Portal/FRD/CP-FS-Project-Information.md)
+
+---
+
+## Buyer Portal
+
+**BRD/** — [Buyer Portal](Buyer-Portal/BRD/BUYER-BRD-Buyer-Portal.md)
+
+**FRD/** — [Buyer Portal](Buyer-Portal/FRD/BUYER-FRD-Buyer-Portal.md)
+
+**Feature Specs/** — [Registration & Login](Buyer-Portal/FRD/BUYER-FS-Registration-and-Login.md) | [Home Dashboard](Buyer-Portal/FRD/BUYER-FS-Home-Dashboard.md) | [Unit Details](Buyer-Portal/FRD/BUYER-FS-Unit-Details.md) | [Allocation Experience](Buyer-Portal/FRD/BUYER-FS-Allocation-Experience.md) | [Payment Schedule](Buyer-Portal/FRD/BUYER-FS-Payment-Schedule.md) | [Home Loan](Buyer-Portal/FRD/BUYER-FS-Home-Loan.md) | [KYC](Buyer-Portal/FRD/BUYER-FS-KYC.md) | [Support Tickets](Buyer-Portal/FRD/BUYER-FS-Support-Tickets.md) | [Callback Request](Buyer-Portal/FRD/BUYER-FS-Callback-Request.md) | [Project Information](Buyer-Portal/FRD/BUYER-FS-Project-Information.md) | [Work Progress](Buyer-Portal/FRD/BUYER-FS-Work-Progress.md)
+
+**Workflows/** — [KYC](Buyer-Portal/Workflows/BUYER-WF-KYC.md) | [Milestone Payments](Buyer-Portal/Workflows/BUYER-WF-Milestone-Payments.md) | [Home Loan](Buyer-Portal/Workflows/BUYER-WF-Home-Loan.md) | [Support Tickets](Buyer-Portal/Workflows/BUYER-WF-Support-Tickets.md) | [Allocation (cross-portal)](Buyer-Portal/Workflows/BUYER-WF-Allocation.md)
+
+---
+
+## _Shared
+
+**Reference/** — [XR Portal Overview](_Shared/Reference/SHARED-BR-XR-Portal-Overview.md) | [Business Rules](_Shared/Reference/SHARED-BR-Business-Rules.md) | [Glossary](_Shared/Reference/SHARED-BR-Glossary.md) | [Roles & Permissions](_Shared/Reference/SHARED-BR-Roles-and-Permissions.md) | [Status Flows](_Shared/Reference/SHARED-BR-Status-Flows.md) | [Backend Technical](_Shared/Reference/SHARED-BR-Backend-Technical.md) | [CMS Strapi](_Shared/Reference/SHARED-BR-CMS-Strapi.md) | [Integrations](_Shared/Reference/SHARED-BR-Integrations.md) | [WebSocket](_Shared/Reference/SHARED-BR-WebSocket.md) | [Realtime Events](_Shared/Reference/SHARED-BR-Realtime-Events.md) | [Backend](_Shared/Reference/SHARED-BR-Backend.md)
+
+**Business Flows/** — [Allocation Campaign Lifecycle](_Shared/Business-Flows/SHARED-BF-Allocation-Campaign-Lifecycle.md) | [Sales Manager Assignment](_Shared/Business-Flows/SHARED-BF-Sales-Manager-Assignment.md)
+
+**Open Questions/** — [All Modules](_Shared/Open-Questions/SHARED-OQ-All-Modules.md)
+
+**Sprint Records/** — [Sprint 5 Overview](_Shared/Sprint-Records/SHARED-SR-Sprint-5-Overview.md) | [Sprint 5 Pipeline Status](_Shared/Sprint-Records/SHARED-SR-Sprint-5-Pipeline-Status.md)
+
+---
+
+## Obsidian Graph Coloring
+
+Settings → Graph View → Groups:
+
+| Group | Path Filter | Color |
+|-------|-------------|-------|
+| Admin Portal | `path:Admin-Portal` | `#378ADD` (blue) |
+| SM Portal | `path:SM-Portal` | `#1D9E75` (teal) |
+| CP Portal | `path:CP-Portal` | `#7F77DD` (purple) |
+| Buyer Portal | `path:Buyer-Portal` | `#BA7517` (amber) |
+| Shared | `path:_Shared` | `#888780` (gray) |
