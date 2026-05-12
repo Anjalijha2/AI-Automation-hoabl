@@ -1,0 +1,295 @@
+- generic [ref=e1]:
+  - generic:
+    - region "Notifications Alt+T"
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - img "logo" [ref=e8]
+        - generic [ref=e9]:
+          - menu [ref=e10]:
+            - menuitem "Customers" [ref=e11] [cursor=pointer]:
+              - img [ref=e12]
+              - link "Customers" [ref=e16]:
+                - /url: /admin/customers
+            - menuitem "Config" [ref=e17] [cursor=pointer]:
+              - img [ref=e18]
+              - link "Config" [ref=e23]:
+                - /url: /admin/cms
+            - menuitem "bars Allocation" [ref=e24] [cursor=pointer]:
+              - img "bars" [ref=e25]:
+                - img [ref=e26]
+              - link "Allocation" [ref=e29]:
+                - /url: /admin/allocation
+            - menuitem "gift Offers" [ref=e30] [cursor=pointer]:
+              - img "gift" [ref=e31]:
+                - img [ref=e32]
+              - link "Offers" [ref=e35]:
+                - /url: /admin/offers
+            - menuitem "Towers" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - link "Towers" [ref=e41]:
+                - /url: /admin/towers
+            - menuitem "JBP Mgmt" [ref=e42] [cursor=pointer]:
+              - img [ref=e43]
+              - link "JBP Mgmt" [ref=e47]:
+                - /url: /admin/jbp-management
+            - menuitem "team Channel Partners" [ref=e48] [cursor=pointer]:
+              - img "team" [ref=e49]:
+                - img [ref=e50]
+              - link "Channel Partners" [ref=e53]:
+                - /url: /admin/channel-partners
+            - menuitem "solution Sales Managers" [ref=e54] [cursor=pointer]:
+              - img "solution" [ref=e55]:
+                - img [ref=e56]
+              - link "Sales Managers" [ref=e59]:
+                - /url: /admin/sales-managers
+            - menuitem "bank Transactions" [ref=e60] [cursor=pointer]:
+              - img "bank" [ref=e61]:
+                - img [ref=e62]
+              - link "Transactions" [ref=e65]:
+                - /url: /admin/payment-transactions
+            - menuitem "CMS" [ref=e66] [cursor=pointer]:
+              - img [ref=e67]
+              - link "CMS" [ref=e70]:
+                - /url: https://manage-uat.xrportal.in/admin/auth/login
+          - button "Logout" [ref=e72] [cursor=pointer]:
+            - img [ref=e73]
+            - generic [ref=e76]: Logout
+    - generic [ref=e77]:
+      - banner [ref=e78]
+      - main [ref=e80]:
+        - generic [ref=e81]:
+          - heading "Offers Management" [level=5] [ref=e83]
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - generic [ref=e88]: 6 Offers
+              - generic [ref=e89]:
+                - button "Refresh" [ref=e90] [cursor=pointer]:
+                  - generic [ref=e91]: Refresh
+                  - img [ref=e92]
+                - button "plus Add New Offer" [ref=e95] [cursor=pointer]:
+                  - img "plus" [ref=e97]:
+                    - img [ref=e98]
+                  - generic [ref=e101]: Add New Offer
+            - generic [ref=e104]:
+              - table [ref=e108]:
+                - rowgroup [ref=e119]:
+                  - row "Sr.no Offer Name Description Amount Percentage Start Date End Date Created By Action" [ref=e120]:
+                    - columnheader "Sr.no" [ref=e121]
+                    - columnheader "Offer Name" [ref=e122]
+                    - columnheader "Description" [ref=e123]
+                    - columnheader "Amount" [ref=e124]
+                    - columnheader "Percentage" [ref=e125]
+                    - columnheader "Start Date" [ref=e126]
+                    - columnheader "End Date" [ref=e127]
+                    - columnheader "Created By" [ref=e128]
+                    - columnheader "Action" [ref=e129]
+                - rowgroup [ref=e130]:
+                  - row "10 VK test Booking ₹ 10,000 - 06 May 2026 30 May 2026 Vignesh UAT Admin ON OFF edit delete" [ref=e131]:
+                    - cell "10" [ref=e132]
+                    - cell "VK test" [ref=e133]
+                    - cell "Booking" [ref=e134]
+                    - cell "₹ 10,000" [ref=e135]
+                    - cell "-" [ref=e136]
+                    - cell "06 May 2026" [ref=e137]
+                    - cell "30 May 2026" [ref=e138]
+                    - cell "Vignesh UAT Admin" [ref=e139]
+                    - cell "ON OFF edit delete" [ref=e140]:
+                      - generic [ref=e141]:
+                        - switch "ON OFF" [ref=e142] [cursor=pointer]:
+                          - generic [ref=e144]:
+                            - generic: "ON"
+                            - generic: "OFF"
+                        - button "edit" [ref=e145] [cursor=pointer]:
+                          - img "edit" [ref=e147]:
+                            - img [ref=e148]
+                        - button "delete" [ref=e150] [cursor=pointer]:
+                          - img "delete" [ref=e152]:
+                            - img [ref=e153]
+                  - row "9 VC request 2 bed peak home offer ₹ 75,000 - 26 Apr 2026 31 May 2026 Suyash D ON OFF edit delete" [ref=e155]:
+                    - cell "9" [ref=e156]
+                    - cell "VC request" [ref=e157]
+                    - cell "2 bed peak home offer" [ref=e158]
+                    - cell "₹ 75,000" [ref=e159]
+                    - cell "-" [ref=e160]
+                    - cell "26 Apr 2026" [ref=e161]
+                    - cell "31 May 2026" [ref=e162]
+                    - cell "Suyash D" [ref=e163]
+                    - cell "ON OFF edit delete" [ref=e164]:
+                      - generic [ref=e165]:
+                        - switch "ON OFF" [checked] [ref=e166] [cursor=pointer]:
+                          - generic [ref=e168]:
+                            - generic: "ON"
+                            - generic: "OFF"
+                        - button "edit" [ref=e169] [cursor=pointer]:
+                          - img "edit" [ref=e171]:
+                            - img [ref=e172]
+                        - button "delete" [ref=e174] [cursor=pointer]:
+                          - img "delete" [ref=e176]:
+                            - img [ref=e177]
+                  - row "8 VC request 2 bed rise home offer ₹ 75,000 - 26 Apr 2026 31 May 2026 Suyash D ON OFF edit delete" [ref=e179]:
+                    - cell "8" [ref=e180]
+                    - cell "VC request" [ref=e181]
+                    - cell "2 bed rise home offer" [ref=e182]
+                    - cell "₹ 75,000" [ref=e183]
+                    - cell "-" [ref=e184]
+                    - cell "26 Apr 2026" [ref=e185]
+                    - cell "31 May 2026" [ref=e186]
+                    - cell "Suyash D" [ref=e187]
+                    - cell "ON OFF edit delete" [ref=e188]:
+                      - generic [ref=e189]:
+                        - switch "ON OFF" [checked] [ref=e190] [cursor=pointer]:
+                          - generic [ref=e192]:
+                            - generic: "ON"
+                            - generic: "OFF"
+                        - button "edit" [ref=e193] [cursor=pointer]:
+                          - img "edit" [ref=e195]:
+                            - img [ref=e196]
+                        - button "delete" [ref=e198] [cursor=pointer]:
+                          - img "delete" [ref=e200]:
+                            - img [ref=e201]
+                  - row "7 VC request 2 Bed Growth Home ₹ 75,000 - 27 Apr 2026 31 May 2026 Suyash D ON OFF edit delete" [ref=e203]:
+                    - cell "7" [ref=e204]
+                    - cell "VC request" [ref=e205]
+                    - cell "2 Bed Growth Home" [ref=e206]
+                    - cell "₹ 75,000" [ref=e207]
+                    - cell "-" [ref=e208]
+                    - cell "27 Apr 2026" [ref=e209]
+                    - cell "31 May 2026" [ref=e210]
+                    - cell "Suyash D" [ref=e211]
+                    - cell "ON OFF edit delete" [ref=e212]:
+                      - generic [ref=e213]:
+                        - switch "ON OFF" [checked] [ref=e214] [cursor=pointer]:
+                          - generic [ref=e216]:
+                            - generic: "ON"
+                            - generic: "OFF"
+                        - button "edit" [ref=e217] [cursor=pointer]:
+                          - img "edit" [ref=e219]:
+                            - img [ref=e220]
+                        - button "delete" [ref=e222] [cursor=pointer]:
+                          - img "delete" [ref=e224]:
+                            - img [ref=e225]
+                  - row "3 VC request 1 Bed Growth Home ₹ 50,000 - 14 Apr 2026 30 May 2026 Supriya Dubey ON OFF edit delete" [ref=e227]:
+                    - cell "3" [ref=e228]
+                    - cell "VC request" [ref=e229]
+                    - cell "1 Bed Growth Home" [ref=e230]
+                    - cell "₹ 50,000" [ref=e231]
+                    - cell "-" [ref=e232]
+                    - cell "14 Apr 2026" [ref=e233]
+                    - cell "30 May 2026" [ref=e234]
+                    - cell "Supriya Dubey" [ref=e235]
+                    - cell "ON OFF edit delete" [ref=e236]:
+                      - generic [ref=e237]:
+                        - switch "ON OFF" [checked] [ref=e238] [cursor=pointer]:
+                          - generic [ref=e240]:
+                            - generic: "ON"
+                            - generic: "OFF"
+                        - button "edit" [ref=e241] [cursor=pointer]:
+                          - img "edit" [ref=e243]:
+                            - img [ref=e244]
+                        - button "delete" [ref=e246] [cursor=pointer]:
+                          - img "delete" [ref=e248]:
+                            - img [ref=e249]
+                  - row "1 Home Loan Discount Home Loan Discount ₹ 10,000 - 13 Apr 2026 30 Jun 2026 Supriya Dubey ON OFF edit delete" [ref=e251]:
+                    - cell "1" [ref=e252]
+                    - cell "Home Loan Discount" [ref=e253]
+                    - cell "Home Loan Discount" [ref=e254]
+                    - cell "₹ 10,000" [ref=e255]
+                    - cell "-" [ref=e256]
+                    - cell "13 Apr 2026" [ref=e257]
+                    - cell "30 Jun 2026" [ref=e258]
+                    - cell "Supriya Dubey" [ref=e259]
+                    - cell "ON OFF edit delete" [ref=e260]:
+                      - generic [ref=e261]:
+                        - switch "ON OFF" [ref=e262] [cursor=pointer]:
+                          - generic [ref=e264]:
+                            - generic: "ON"
+                            - generic: "OFF"
+                        - button "edit" [ref=e265] [cursor=pointer]:
+                          - img "edit" [ref=e267]:
+                            - img [ref=e268]
+                        - button "delete" [ref=e270] [cursor=pointer]:
+                          - img "delete" [ref=e272]:
+                            - img [ref=e273]
+              - list [ref=e275]:
+                - listitem "Previous Page" [ref=e276]:
+                  - button "left" [disabled] [ref=e277]:
+                    - img "left" [ref=e278]:
+                      - img [ref=e279]
+                - listitem "1" [ref=e281] [cursor=pointer]:
+                  - generic [ref=e282]: "1"
+                - listitem "Next Page" [ref=e283]:
+                  - button "right" [disabled] [ref=e284]:
+                    - img "right" [ref=e285]:
+                      - img [ref=e286]
+      - contentinfo [ref=e288]:
+        - generic [ref=e289]: Copyright © 2026 House of Abhinandan Lodha. All Rights Reserved.
+  - dialog "Add New Offer" [ref=e291]:
+    - generic [ref=e292]:
+      - generic [ref=e293]:
+        - button "Close" [ref=e294] [cursor=pointer]:
+          - img "close" [ref=e295]:
+            - img [ref=e296]
+        - generic [ref=e298]: Add New Offer
+      - generic [ref=e300]:
+        - button "Cancel" [active] [ref=e302] [cursor=pointer]:
+          - generic [ref=e303]: Cancel
+        - button "Create Offer" [ref=e305] [cursor=pointer]:
+          - generic [ref=e306]: Create Offer
+    - generic [ref=e308]:
+      - generic [ref=e389]:
+        - generic "Offer Name" [ref=e391]: "* Offer Name"
+        - generic [ref=e395]:
+          - textbox "* Offer Name" [ref=e396]:
+            - /placeholder: Please enter offer name
+          - generic [ref=e398]: 0 / 100
+      - generic [ref=e400]:
+        - generic "Offer Type" [ref=e402]: "* Offer Type"
+        - generic [ref=e406]:
+          - generic [ref=e407] [cursor=pointer]:
+            - generic [ref=e408]:
+              - radio "Amount Based" [checked]
+            - text: Amount Based
+          - generic [ref=e409] [cursor=pointer]:
+            - generic [ref=e410]:
+              - radio "Percentage Based"
+            - text: Percentage Based
+      - generic [ref=e412]:
+        - generic "Amount" [ref=e414]: "* Amount"
+        - generic [ref=e418]:
+          - generic:
+            - button "Increase Value" [ref=e419] [cursor=pointer]:
+              - img "up" [ref=e420]:
+                - img [ref=e421]
+            - button "Decrease Value" [ref=e423] [cursor=pointer]:
+              - img "down" [ref=e424]:
+                - img [ref=e425]
+          - spinbutton "* Amount" [ref=e428]: ₹
+      - generic [ref=e430]:
+        - generic "Description" [ref=e432]
+        - generic [ref=e436]:
+          - textbox "Description" [ref=e437]:
+            - /placeholder: Please enter description
+          - generic:
+            - generic: 0 / 500
+      - generic [ref=e439]:
+        - generic "Offer Validity (Start - End Date)" [ref=e441]: "* Offer Validity (Start - End Date)"
+        - generic [ref=e445]:
+          - textbox "* Offer Validity (Start - End Date)" [ref=e447]:
+            - /placeholder: Start date
+          - generic "to" [ref=e449]:
+            - img "swap-right" [ref=e450]:
+              - img [ref=e451]
+          - textbox "End date" [ref=e454]
+          - generic:
+            - img "calendar":
+              - img
+      - generic [ref=e456]:
+        - generic "Select Typology (if applicable)" [ref=e458]
+        - generic [ref=e462] [cursor=pointer]:
+          - generic [ref=e464]:
+            - combobox "Select Typology (if applicable)" [ref=e466]
+            - generic: Please select typology
+          - generic:
+            - img:
+              - img

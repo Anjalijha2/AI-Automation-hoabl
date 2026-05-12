@@ -2,30 +2,30 @@
   "cookies": [
     {
       "name": "CLID",
-      "value": "f57753f4d5044d3abf70514637f65ac6.20260418.20270418",
+      "value": "28494ae5b6f54b8eba237b38db451c01.20260508.20270508",
       "domain": "www.clarity.ms",
       "path": "/",
-      "expires": 1808046873.575706,
+      "expires": 1809776594.96217,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
     },
     {
       "name": "_clck",
-      "value": "1oe8yz5%5E2%5Eg5b%5E0%5E2299",
+      "value": "1137m6m%5E2%5Eg5v%5E0%5E2319",
       "domain": ".xrportal.in",
       "path": "/",
-      "expires": 1808046874,
+      "expires": 1809776595,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "MUID",
-      "value": "16A4E6773F056A072E98F1483E9E6B34",
+      "value": "10217192CA93677D3B9D66C1CB08661E",
       "domain": ".bing.com",
       "path": "/",
-      "expires": 1810206874.809141,
+      "expires": 1811936598.122938,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -35,17 +35,17 @@
       "value": "0",
       "domain": ".c.bing.com",
       "path": "/",
-      "expires": 1777115674.809356,
+      "expires": 1778845398.123263,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     },
     {
       "name": "SRM_B",
-      "value": "16A4E6773F056A072E98F1483E9E6B34",
+      "value": "10217192CA93677D3B9D66C1CB08661E",
       "domain": ".c.bing.com",
       "path": "/",
-      "expires": 1810206874.809594,
+      "expires": 1811936598.123332,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -62,10 +62,10 @@
     },
     {
       "name": "MUID",
-      "value": "16A4E6773F056A072E98F1483E9E6B34",
+      "value": "10217192CA93677D3B9D66C1CB08661E",
       "domain": ".clarity.ms",
       "path": "/",
-      "expires": 1810206874.940124,
+      "expires": 1811936597.369778,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -75,7 +75,7 @@
       "value": "0",
       "domain": ".c.clarity.ms",
       "path": "/",
-      "expires": 1777115674.940656,
+      "expires": 1778845397.370628,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -85,17 +85,17 @@
       "value": "0",
       "domain": ".c.clarity.ms",
       "path": "/",
-      "expires": 1776511474.940727,
+      "expires": 1778241197.370748,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     },
     {
       "name": "_clsk",
-      "value": "d3f0hv%5E1776510891994%5E2%5E1%5Ez.clarity.ms%2Fcollect",
+      "value": "6fyku7%5E1778240611045%5E2%5E1%5Ev.clarity.ms%2Fcollect",
       "domain": ".xrportal.in",
       "path": "/",
-      "expires": 1776597291,
+      "expires": 1778327011,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -123,7 +123,7 @@
         },
         {
           "name": "AUTH_TOKEN",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUyODQsImlhdCI6MTc3NjUxMDg5MCwiZXhwIjoxNzc2NTk3MjkwfQ.EuLpwlWSjOFqfZP8nLDwz7yQEKtF_9Gu5Or0yPGxmvk"
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUyODQsImlhdCI6MTc3ODI0MDYxMCwiZXhwIjoxNzc4MzI3MDEwfQ.uyo89Yj5RzpzWCubas2NLbmSyG5Uq_4H0EaQl8w1J3w"
         }
       ]
     }

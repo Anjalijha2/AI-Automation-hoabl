@@ -1,0 +1,707 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - region "Notifications Alt+T"
+  - generic [ref=e63]:
+    - banner [ref=e64]
+    - generic [ref=e65]:
+      - generic [ref=e67]:
+        - img "Logo" [ref=e69]
+        - button "Logout" [ref=e71] [cursor=pointer]:
+          - img [ref=e72]
+          - generic [ref=e75]: Logout
+      - main [ref=e76]:
+        - heading "Welcome, Suyash D" [level=5] [ref=e78]
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]:
+              - img [ref=e83]
+              - heading "Registered" [level=5] [ref=e86]
+            - paragraph [ref=e88]: "8670"
+          - generic [ref=e89]:
+            - generic [ref=e90]:
+              - img [ref=e92]
+              - heading "Inactive Registrations" [level=5] [ref=e95]
+            - paragraph [ref=e97]: "5"
+          - generic [ref=e98]:
+            - generic [ref=e99]:
+              - img [ref=e101]
+              - heading "Cancelled Registrations" [level=5] [ref=e104]
+            - paragraph [ref=e106]: "999"
+          - generic [ref=e107]:
+            - generic [ref=e108]:
+              - img [ref=e110]
+              - heading "KYC Pending (Booked)" [level=5] [ref=e113]
+            - paragraph [ref=e115]: "93"
+          - generic [ref=e116]:
+            - generic [ref=e117]:
+              - img [ref=e119]
+              - heading "Confirmed (Paid+KYC)" [level=5] [ref=e122]
+            - paragraph [ref=e124]: "84"
+          - generic [ref=e125]:
+            - generic [ref=e126]:
+              - img [ref=e128]
+              - heading "Active Towers" [level=5] [ref=e131]
+            - paragraph [ref=e133]: "18"
+        - generic [ref=e134]:
+          - heading "9669 Registration Records" [level=3] [ref=e135]
+          - generic [ref=e136]:
+            - button "Cancel Bulk Units delete" [ref=e137] [cursor=pointer]:
+              - generic [ref=e138]: Cancel Bulk Units
+              - img "delete" [ref=e139]:
+                - img [ref=e140]
+            - button "Filter" [ref=e142] [cursor=pointer]:
+              - generic [ref=e143]:
+                - text: Filter
+                - img [ref=e144]
+            - button "Refresh" [ref=e147] [cursor=pointer]:
+              - generic [ref=e148]: Refresh
+              - img [ref=e149]
+            - button "Download" [ref=e152] [cursor=pointer]:
+              - generic [ref=e153]: Download
+              - img [ref=e154]
+            - generic [ref=e157]:
+              - textbox "Search by Phone" [ref=e159]
+              - img [ref=e161]
+        - generic [ref=e166]:
+          - generic [ref=e167]:
+            - generic [ref=e169]: Allocation Opened
+            - table [ref=e172]:
+              - rowgroup [ref=e177]:
+                - row "Registration Details Growth Partner Phone Home Loan Details Confirmation Number Alloted Unit Allocation Status Confirmation Process Status Actions" [ref=e178]:
+                  - columnheader "Registration Details" [ref=e179] [cursor=pointer]:
+                    - generic [ref=e180]:
+                      - generic [ref=e184]: Registration Details
+                      - generic [ref=e186]:
+                        - img [ref=e187]:
+                          - img [ref=e188]
+                        - img [ref=e190]:
+                          - img [ref=e191]
+                  - columnheader "Growth Partner" [ref=e193] [cursor=pointer]:
+                    - generic [ref=e194]:
+                      - generic [ref=e198]: Growth Partner
+                      - generic [ref=e200]:
+                        - img [ref=e201]:
+                          - img [ref=e202]
+                        - img [ref=e204]:
+                          - img [ref=e205]
+                  - columnheader "Phone" [ref=e207] [cursor=pointer]:
+                    - generic [ref=e208]:
+                      - generic [ref=e212]: Phone
+                      - generic [ref=e214]:
+                        - img [ref=e215]:
+                          - img [ref=e216]
+                        - img [ref=e218]:
+                          - img [ref=e219]
+                  - columnheader "Home Loan Details" [ref=e221] [cursor=pointer]:
+                    - generic [ref=e222]:
+                      - generic [ref=e224]:
+                        - generic [ref=e225]: Home Loan Details
+                        - generic [ref=e227]:
+                          - img [ref=e228]:
+                            - img [ref=e229]
+                          - img [ref=e231]:
+                            - img [ref=e232]
+                      - button "filter" [ref=e234]:
+                        - img "filter" [ref=e235]:
+                          - img [ref=e236]
+                  - columnheader "Confirmation Number" [ref=e238] [cursor=pointer]:
+                    - generic [ref=e239]:
+                      - generic [ref=e241]: Confirmation Number
+                      - generic [ref=e243]:
+                        - img [ref=e244]:
+                          - img [ref=e245]
+                        - img [ref=e247]:
+                          - img [ref=e248]
+                  - columnheader "Alloted Unit" [ref=e250] [cursor=pointer]:
+                    - generic [ref=e251]:
+                      - generic [ref=e254]:
+                        - text: Alloted Unit
+                        - img [ref=e255]
+                      - generic [ref=e259]:
+                        - img [ref=e260]:
+                          - img [ref=e261]
+                        - img [ref=e263]:
+                          - img [ref=e264]
+                  - columnheader "Allocation Status" [ref=e266] [cursor=pointer]:
+                    - generic [ref=e267]:
+                      - generic [ref=e269]:
+                        - generic [ref=e270]: Allocation Status
+                        - generic [ref=e272]:
+                          - img [ref=e273]:
+                            - img [ref=e274]
+                          - img [ref=e276]:
+                            - img [ref=e277]
+                      - button "filter" [ref=e279]:
+                        - img "filter" [ref=e280]:
+                          - img [ref=e281]
+                  - columnheader "Confirmation" [ref=e283] [cursor=pointer]:
+                    - generic [ref=e284]:
+                      - generic [ref=e286]:
+                        - generic [ref=e287]: Confirmation
+                        - generic [ref=e289]:
+                          - img [ref=e290]:
+                            - img [ref=e291]
+                          - img [ref=e293]:
+                            - img [ref=e294]
+                      - button "filter" [ref=e296]:
+                        - img "filter" [ref=e297]:
+                          - img [ref=e298]
+                  - columnheader "Process Status" [ref=e300] [cursor=pointer]:
+                    - generic [ref=e301]:
+                      - generic [ref=e303]:
+                        - generic [ref=e304]: Process Status
+                        - generic [ref=e306]:
+                          - img [ref=e307]:
+                            - img [ref=e308]
+                          - img [ref=e310]:
+                            - img [ref=e311]
+                      - button "filter" [ref=e313]:
+                        - img "filter" [ref=e314]:
+                          - img [ref=e315]
+                  - columnheader "Actions" [ref=e317]:
+                    - generic [ref=e320]: Actions
+              - rowgroup [ref=e321]:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: Registration Details
+                  - generic:
+                    - generic:
+                      - img:
+                        - img
+                      - img:
+                        - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: Growth Partner
+                  - generic:
+                    - generic:
+                      - img:
+                        - img
+                      - img:
+                        - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: Phone
+                  - generic:
+                    - generic:
+                      - img:
+                        - img
+                      - img:
+                        - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Home Loan Details
+                      - generic:
+                        - generic:
+                          - img:
+                            - img
+                          - img:
+                            - img
+                  - button:
+                    - img:
+                      - img
+                - generic:
+                  - generic:
+                    - generic: Confirmation Number
+                  - generic:
+                    - generic:
+                      - img:
+                        - img
+                      - img:
+                        - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - text: Alloted Unit
+                        - img
+                  - generic:
+                    - generic:
+                      - img:
+                        - img
+                      - img:
+                        - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Allocation Status
+                      - generic:
+                        - generic:
+                          - img:
+                            - img
+                          - img:
+                            - img
+                  - button:
+                    - img:
+                      - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Confirmation
+                      - generic:
+                        - generic:
+                          - img:
+                            - img
+                          - img:
+                            - img
+                  - button:
+                    - img:
+                      - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Process Status
+                      - generic:
+                        - generic:
+                          - img:
+                            - img
+                          - img:
+                            - img
+                  - button:
+                    - img:
+                      - img
+                - generic:
+                  - generic:
+                    - generic: Actions
+                - row "GHNG-2000000043-C 06-05-2026 05:13 PM - 9561044783 - - - 1 Bed Growth Home (323 sq.ft.) Registered - - delete more" [ref=e322]:
+                  - cell "GHNG-2000000043-C 06-05-2026 05:13 PM" [ref=e323]:
+                    - generic [ref=e324]:
+                      - img [ref=e325] [cursor=pointer]
+                      - generic [ref=e329]:
+                        - generic [ref=e330]: GHNG-2000000043-C
+                        - generic [ref=e331]: 06-05-2026 05:13 PM
+                  - cell "-" [ref=e332]:
+                    - generic [ref=e335]: "-"
+                  - cell "9561044783" [ref=e336]
+                  - cell "-" [ref=e337]:
+                    - generic [ref=e338]: "-"
+                  - cell "-" [ref=e339]:
+                    - generic [ref=e341]: "-"
+                  - cell "- 1 Bed Growth Home (323 sq.ft.)" [ref=e342]:
+                    - generic [ref=e343]:
+                      - generic [ref=e344]: "-"
+                      - generic [ref=e345]: 1 Bed Growth Home (323 sq.ft.)
+                  - cell "Registered" [ref=e346]:
+                    - generic [ref=e348]:
+                      - img [ref=e349]
+                      - text: Registered
+                  - cell "-" [ref=e351]:
+                    - generic [ref=e352]: "-"
+                  - cell "-" [ref=e353]:
+                    - generic [ref=e354]: "-"
+                  - cell "delete more" [ref=e355]:
+                    - generic [ref=e356]:
+                      - button "delete" [ref=e357] [cursor=pointer]:
+                        - img "delete" [ref=e358]:
+                          - img [ref=e359]
+                      - button "more" [ref=e361] [cursor=pointer]:
+                        - img "more" [ref=e363]:
+                          - img [ref=e364]
+                - row "GHNG-2000000043-B 06-05-2026 05:11 PM - 9561044783 - - - 2 Bed Growth Home (485 sq.ft.) Registered - - delete more" [ref=e366]:
+                  - cell "GHNG-2000000043-B 06-05-2026 05:11 PM" [ref=e367]:
+                    - generic [ref=e368]:
+                      - img [ref=e369] [cursor=pointer]
+                      - generic [ref=e373]:
+                        - generic [ref=e374]: GHNG-2000000043-B
+                        - generic [ref=e375]: 06-05-2026 05:11 PM
+                  - cell "-" [ref=e376]:
+                    - generic [ref=e379]: "-"
+                  - cell "9561044783" [ref=e380]
+                  - cell "-" [ref=e381]:
+                    - generic [ref=e382]: "-"
+                  - cell "-" [ref=e383]:
+                    - generic [ref=e385]: "-"
+                  - cell "- 2 Bed Growth Home (485 sq.ft.)" [ref=e386]:
+                    - generic [ref=e387]:
+                      - generic [ref=e388]: "-"
+                      - generic [ref=e389]: 2 Bed Growth Home (485 sq.ft.)
+                  - cell "Registered" [ref=e390]:
+                    - generic [ref=e392]:
+                      - img [ref=e393]
+                      - text: Registered
+                  - cell "-" [ref=e395]:
+                    - generic [ref=e396]: "-"
+                  - cell "-" [ref=e397]:
+                    - generic [ref=e398]: "-"
+                  - cell "delete more" [ref=e399]:
+                    - generic [ref=e400]:
+                      - button "delete" [ref=e401] [cursor=pointer]:
+                        - img "delete" [ref=e402]:
+                          - img [ref=e403]
+                      - button "more" [ref=e405] [cursor=pointer]:
+                        - img "more" [ref=e407]:
+                          - img [ref=e408]
+                - row "GHNG-2000000043-A 06-05-2026 05:11 PM - 9561044783 - GHNG-2000000043-A-BKD 2404-Crown 2 Bed Growth Home (485 sq.ft.) Booked Online Paid KYC Pending Required to complete KYC from Customer! delete more" [ref=e410]:
+                  - cell "GHNG-2000000043-A 06-05-2026 05:11 PM" [ref=e411]:
+                    - generic [ref=e412]:
+                      - img [ref=e413] [cursor=pointer]
+                      - generic [ref=e417]:
+                        - generic [ref=e418]: GHNG-2000000043-A
+                        - generic [ref=e419]: 06-05-2026 05:11 PM
+                  - cell "-" [ref=e420]:
+                    - generic [ref=e423]: "-"
+                  - cell "9561044783" [ref=e424]
+                  - cell "-" [ref=e425]:
+                    - generic [ref=e426]: "-"
+                  - cell "GHNG-2000000043-A-BKD" [ref=e427]:
+                    - generic [ref=e429]: GHNG-2000000043-A-BKD
+                  - cell "2404-Crown 2 Bed Growth Home (485 sq.ft.)" [ref=e430]:
+                    - generic [ref=e431]:
+                      - generic [ref=e432]: 2404-Crown
+                      - generic [ref=e433]: 2 Bed Growth Home (485 sq.ft.)
+                  - cell "Booked Online" [ref=e434]:
+                    - generic [ref=e436]:
+                      - img [ref=e437]
+                      - text: Booked Online
+                  - cell "Paid" [ref=e439]:
+                    - generic [ref=e442]:
+                      - img [ref=e443]
+                      - text: Paid
+                  - cell "KYC Pending Required to complete KYC from Customer!" [ref=e445]:
+                    - generic [ref=e446]:
+                      - generic [ref=e447]: KYC Pending
+                      - paragraph [ref=e448]: Required to complete KYC from Customer!
+                  - cell "delete more" [ref=e449]:
+                    - generic [ref=e450]:
+                      - button "delete" [ref=e451] [cursor=pointer]:
+                        - img "delete" [ref=e452]:
+                          - img [ref=e453]
+                      - button "more" [ref=e455] [cursor=pointer]:
+                        - img "more" [ref=e457]:
+                          - img [ref=e458]
+                - row "GHNG-1000008347-B 04-05-2026 11:24 AM - 8888888885 GHNG-1000008347-SL ₹10000 Discount Availed! - - 1 Bed Growth Home (323 sq.ft.) Registered - - delete more" [ref=e460]:
+                  - cell "GHNG-1000008347-B 04-05-2026 11:24 AM" [ref=e461]:
+                    - generic [ref=e462]:
+                      - img [ref=e463] [cursor=pointer]
+                      - generic [ref=e467]:
+                        - generic [ref=e468]: GHNG-1000008347-B
+                        - generic [ref=e469]: 04-05-2026 11:24 AM
+                  - cell "-" [ref=e470]:
+                    - generic [ref=e473]: "-"
+                  - cell "8888888885" [ref=e474]
+                  - cell "GHNG-1000008347-SL ₹10000 Discount Availed!" [ref=e475]:
+                    - generic [ref=e476]:
+                      - generic [ref=e477]: GHNG-1000008347-SL
+                      - generic [ref=e478]: ₹10000 Discount Availed!
+                  - cell "-" [ref=e479]:
+                    - generic [ref=e481]: "-"
+                  - cell "- 1 Bed Growth Home (323 sq.ft.)" [ref=e482]:
+                    - generic [ref=e483]:
+                      - generic [ref=e484]: "-"
+                      - generic [ref=e485]: 1 Bed Growth Home (323 sq.ft.)
+                  - cell "Registered" [ref=e486]:
+                    - generic [ref=e488]:
+                      - img [ref=e489]
+                      - text: Registered
+                  - cell "-" [ref=e491]:
+                    - generic [ref=e492]: "-"
+                  - cell "-" [ref=e493]:
+                    - generic [ref=e494]: "-"
+                  - cell "delete more" [ref=e495]:
+                    - generic [ref=e496]:
+                      - button "delete" [ref=e497] [cursor=pointer]:
+                        - img "delete" [ref=e498]:
+                          - img [ref=e499]
+                      - button "more" [ref=e501] [cursor=pointer]:
+                        - img "more" [ref=e503]:
+                          - img [ref=e504]
+                - row "GHNG-1000008563-AR 28-04-2026 11:52 AM - 7499097796 GHNG-1000008563-EL ₹10000 Discount Availed! - - 2 Bed Growth Home (485 sq.ft.) Registered - - delete more" [ref=e506]:
+                  - cell "GHNG-1000008563-AR 28-04-2026 11:52 AM" [ref=e507]:
+                    - generic [ref=e508]:
+                      - img [ref=e509] [cursor=pointer]
+                      - generic [ref=e513]:
+                        - generic [ref=e514]: GHNG-1000008563-AR
+                        - generic [ref=e515]: 28-04-2026 11:52 AM
+                  - cell "-" [ref=e516]:
+                    - generic [ref=e519]: "-"
+                  - cell "7499097796" [ref=e520]
+                  - cell "GHNG-1000008563-EL ₹10000 Discount Availed!" [ref=e521]:
+                    - generic [ref=e522]:
+                      - generic [ref=e523]: GHNG-1000008563-EL
+                      - generic [ref=e524]: ₹10000 Discount Availed!
+                  - cell "-" [ref=e525]:
+                    - generic [ref=e527]: "-"
+                  - cell "- 2 Bed Growth Home (485 sq.ft.)" [ref=e528]:
+                    - generic [ref=e529]:
+                      - generic [ref=e530]: "-"
+                      - generic [ref=e531]: 2 Bed Growth Home (485 sq.ft.)
+                  - cell "Registered" [ref=e532]:
+                    - generic [ref=e534]:
+                      - img [ref=e535]
+                      - text: Registered
+                  - cell "-" [ref=e537]:
+                    - generic [ref=e538]: "-"
+                  - cell "-" [ref=e539]:
+                    - generic [ref=e540]: "-"
+                  - cell "delete more" [ref=e541]:
+                    - generic [ref=e542]:
+                      - button "delete" [ref=e543] [cursor=pointer]:
+                        - img "delete" [ref=e544]:
+                          - img [ref=e545]
+                      - button "more" [ref=e547] [cursor=pointer]:
+                        - img "more" [ref=e549]:
+                          - img [ref=e550]
+                - row "GHNG-2000000017-Y 27-04-2026 03:47 PM - 7558628142 GHNG-2000000017 ₹10000 Discount Availed! - - 1 Bed Growth Home (323 sq.ft.) Registered - - delete more" [ref=e552]:
+                  - cell "GHNG-2000000017-Y 27-04-2026 03:47 PM" [ref=e553]:
+                    - generic [ref=e554]:
+                      - img [ref=e555] [cursor=pointer]
+                      - generic [ref=e559]:
+                        - generic [ref=e560]: GHNG-2000000017-Y
+                        - generic [ref=e561]: 27-04-2026 03:47 PM
+                  - cell "-" [ref=e562]:
+                    - generic [ref=e565]: "-"
+                  - cell "7558628142" [ref=e566]
+                  - cell "GHNG-2000000017 ₹10000 Discount Availed!" [ref=e567]:
+                    - generic [ref=e568]:
+                      - generic [ref=e569]: GHNG-2000000017
+                      - generic [ref=e570]: ₹10000 Discount Availed!
+                  - cell "-" [ref=e571]:
+                    - generic [ref=e573]: "-"
+                  - cell "- 1 Bed Growth Home (323 sq.ft.)" [ref=e574]:
+                    - generic [ref=e575]:
+                      - generic [ref=e576]: "-"
+                      - generic [ref=e577]: 1 Bed Growth Home (323 sq.ft.)
+                  - cell "Registered" [ref=e578]:
+                    - generic [ref=e580]:
+                      - img [ref=e581]
+                      - text: Registered
+                  - cell "-" [ref=e583]:
+                    - generic [ref=e584]: "-"
+                  - cell "-" [ref=e585]:
+                    - generic [ref=e586]: "-"
+                  - cell "delete more" [ref=e587]:
+                    - generic [ref=e588]:
+                      - button "delete" [ref=e589] [cursor=pointer]:
+                        - img "delete" [ref=e590]:
+                          - img [ref=e591]
+                      - button "more" [ref=e593] [cursor=pointer]:
+                        - img "more" [ref=e595]:
+                          - img [ref=e596]
+                - row "GHNG-2000000041-B 27-04-2026 03:47 PM - 8888888889 - - - 2 Bed Growth Home (485 sq.ft.) Registered - - delete more" [ref=e598]:
+                  - cell "GHNG-2000000041-B 27-04-2026 03:47 PM" [ref=e599]:
+                    - generic [ref=e600]:
+                      - img [ref=e601] [cursor=pointer]
+                      - generic [ref=e605]:
+                        - generic [ref=e606]: GHNG-2000000041-B
+                        - generic [ref=e607]: 27-04-2026 03:47 PM
+                  - cell "-" [ref=e608]:
+                    - generic [ref=e611]: "-"
+                  - cell "8888888889" [ref=e612]
+                  - cell "-" [ref=e613]:
+                    - generic [ref=e614]: "-"
+                  - cell "-" [ref=e615]:
+                    - generic [ref=e617]: "-"
+                  - cell "- 2 Bed Growth Home (485 sq.ft.)" [ref=e618]:
+                    - generic [ref=e619]:
+                      - generic [ref=e620]: "-"
+                      - generic [ref=e621]: 2 Bed Growth Home (485 sq.ft.)
+                  - cell "Registered" [ref=e622]:
+                    - generic [ref=e624]:
+                      - img [ref=e625]
+                      - text: Registered
+                  - cell "-" [ref=e627]:
+                    - generic [ref=e628]: "-"
+                  - cell "-" [ref=e629]:
+                    - generic [ref=e630]: "-"
+                  - cell "delete more" [ref=e631]:
+                    - generic [ref=e632]:
+                      - button "delete" [ref=e633] [cursor=pointer]:
+                        - img "delete" [ref=e634]:
+                          - img [ref=e635]
+                      - button "more" [ref=e637] [cursor=pointer]:
+                        - img "more" [ref=e639]:
+                          - img [ref=e640]
+                - row "GHNG-2000000041-A 27-04-2026 03:47 PM - 8888888889 - - - 1 Bed Growth Home (323 sq.ft.) Registered - - delete more" [ref=e642]:
+                  - cell "GHNG-2000000041-A 27-04-2026 03:47 PM" [ref=e643]:
+                    - generic [ref=e644]:
+                      - img [ref=e645] [cursor=pointer]
+                      - generic [ref=e649]:
+                        - generic [ref=e650]: GHNG-2000000041-A
+                        - generic [ref=e651]: 27-04-2026 03:47 PM
+                  - cell "-" [ref=e652]:
+                    - generic [ref=e655]: "-"
+                  - cell "8888888889" [ref=e656]
+                  - cell "-" [ref=e657]:
+                    - generic [ref=e658]: "-"
+                  - cell "-" [ref=e659]:
+                    - generic [ref=e661]: "-"
+                  - cell "- 1 Bed Growth Home (323 sq.ft.)" [ref=e662]:
+                    - generic [ref=e663]:
+                      - generic [ref=e664]: "-"
+                      - generic [ref=e665]: 1 Bed Growth Home (323 sq.ft.)
+                  - cell "Registered" [ref=e666]:
+                    - generic [ref=e668]:
+                      - img [ref=e669]
+                      - text: Registered
+                  - cell "-" [ref=e671]:
+                    - generic [ref=e672]: "-"
+                  - cell "-" [ref=e673]:
+                    - generic [ref=e674]: "-"
+                  - cell "delete more" [ref=e675]:
+                    - generic [ref=e676]:
+                      - button "delete" [ref=e677] [cursor=pointer]:
+                        - img "delete" [ref=e678]:
+                          - img [ref=e679]
+                      - button "more" [ref=e681] [cursor=pointer]:
+                        - img "more" [ref=e683]:
+                          - img [ref=e684]
+                - row "GHNG-2000000017-X 27-04-2026 03:46 PM - 7558628142 GHNG-2000000017 ₹10000 Discount Availed! - - 2 Bed Growth Home (485 sq.ft.) Registered - - delete more" [ref=e686]:
+                  - cell "GHNG-2000000017-X 27-04-2026 03:46 PM" [ref=e687]:
+                    - generic [ref=e688]:
+                      - img [ref=e689] [cursor=pointer]
+                      - generic [ref=e693]:
+                        - generic [ref=e694]: GHNG-2000000017-X
+                        - generic [ref=e695]: 27-04-2026 03:46 PM
+                  - cell "-" [ref=e696]:
+                    - generic [ref=e699]: "-"
+                  - cell "7558628142" [ref=e700]
+                  - cell "GHNG-2000000017 ₹10000 Discount Availed!" [ref=e701]:
+                    - generic [ref=e702]:
+                      - generic [ref=e703]: GHNG-2000000017
+                      - generic [ref=e704]: ₹10000 Discount Availed!
+                  - cell "-" [ref=e705]:
+                    - generic [ref=e707]: "-"
+                  - cell "- 2 Bed Growth Home (485 sq.ft.)" [ref=e708]:
+                    - generic [ref=e709]:
+                      - generic [ref=e710]: "-"
+                      - generic [ref=e711]: 2 Bed Growth Home (485 sq.ft.)
+                  - cell "Registered" [ref=e712]:
+                    - generic [ref=e714]:
+                      - img [ref=e715]
+                      - text: Registered
+                  - cell "-" [ref=e717]:
+                    - generic [ref=e718]: "-"
+                  - cell "-" [ref=e719]:
+                    - generic [ref=e720]: "-"
+                  - cell "delete more" [ref=e721]:
+                    - generic [ref=e722]:
+                      - button "delete" [ref=e723] [cursor=pointer]:
+                        - img "delete" [ref=e724]:
+                          - img [ref=e725]
+                      - button "more" [ref=e727] [cursor=pointer]:
+                        - img "more" [ref=e729]:
+                          - img [ref=e730]
+                - row "GHNG-1000008368-U 27-04-2026 12:15 PM - 9820622438 GHNG-1000008368-SL ₹10000 Discount Availed! - - 2 Bed Rise Home (621 sq.ft.) Registered - - delete more" [ref=e732]:
+                  - cell "GHNG-1000008368-U 27-04-2026 12:15 PM" [ref=e733]:
+                    - generic [ref=e734]:
+                      - img [ref=e735] [cursor=pointer]
+                      - generic [ref=e739]:
+                        - generic [ref=e740]: GHNG-1000008368-U
+                        - generic [ref=e741]: 27-04-2026 12:15 PM
+                  - cell "-" [ref=e742]:
+                    - generic [ref=e745]: "-"
+                  - cell "9820622438" [ref=e746]
+                  - cell "GHNG-1000008368-SL ₹10000 Discount Availed!" [ref=e747]:
+                    - generic [ref=e748]:
+                      - generic [ref=e749]: GHNG-1000008368-SL
+                      - generic [ref=e750]: ₹10000 Discount Availed!
+                  - cell "-" [ref=e751]:
+                    - generic [ref=e753]: "-"
+                  - cell "- 2 Bed Rise Home (621 sq.ft.)" [ref=e754]:
+                    - generic [ref=e755]:
+                      - generic [ref=e756]: "-"
+                      - generic [ref=e757]: 2 Bed Rise Home (621 sq.ft.)
+                  - cell "Registered" [ref=e758]:
+                    - generic [ref=e760]:
+                      - img [ref=e761]
+                      - text: Registered
+                  - cell "-" [ref=e763]:
+                    - generic [ref=e764]: "-"
+                  - cell "-" [ref=e765]:
+                    - generic [ref=e766]: "-"
+                  - cell "delete more" [ref=e767]:
+                    - generic [ref=e768]:
+                      - button "delete" [ref=e769] [cursor=pointer]:
+                        - img "delete" [ref=e770]:
+                          - img [ref=e771]
+                      - button "more" [ref=e773] [cursor=pointer]:
+                        - img "more" [ref=e775]:
+                          - img [ref=e776]
+          - list [ref=e778]:
+            - listitem [ref=e779]: Showing 1-10 of 9669 items
+            - listitem "Previous Page" [ref=e780]:
+              - button "left" [disabled] [ref=e781]:
+                - img "left" [ref=e782]:
+                  - img [ref=e783]
+            - listitem "1" [ref=e785] [cursor=pointer]:
+              - generic [ref=e786]: "1"
+            - listitem "2" [ref=e787] [cursor=pointer]:
+              - generic [ref=e788]: "2"
+            - listitem "3" [ref=e789] [cursor=pointer]:
+              - generic [ref=e790]: "3"
+            - listitem "4" [ref=e791] [cursor=pointer]:
+              - generic [ref=e792]: "4"
+            - listitem "Next 5 Pages" [ref=e793] [cursor=pointer]:
+              - generic [ref=e795]:
+                - img "double-right" [ref=e796]:
+                  - img [ref=e797]
+                - generic [ref=e799]: •••
+            - listitem "967" [ref=e800] [cursor=pointer]:
+              - generic [ref=e801]: "967"
+            - listitem "Next Page" [ref=e802] [cursor=pointer]:
+              - button "right" [ref=e803]:
+                - img "right" [ref=e804]:
+                  - img [ref=e805]
+            - listitem [ref=e807]:
+              - generic "Page Size" [ref=e808] [cursor=pointer]:
+                - generic [ref=e810]:
+                  - combobox "Page Size" [ref=e812]
+                  - generic "10 / page" [ref=e813]
+                - generic:
+                  - img:
+                    - img
+      - menu [ref=e815]:
+        - menuitem "Customers" [ref=e816] [cursor=pointer]:
+          - img [ref=e817]
+          - link "Customers" [ref=e821]:
+            - /url: /admin/customers
+        - menuitem "Config" [ref=e822] [cursor=pointer]:
+          - img [ref=e823]
+          - link "Config" [ref=e828]:
+            - /url: /admin/cms
+        - menuitem "bars Allocation" [ref=e829] [cursor=pointer]:
+          - img "bars" [ref=e830]:
+            - img [ref=e831]
+          - link "Allocation" [ref=e834]:
+            - /url: /admin/allocation
+        - menuitem "gift Offers" [ref=e835] [cursor=pointer]:
+          - img "gift" [ref=e836]:
+            - img [ref=e837]
+          - link "Offers" [ref=e840]:
+            - /url: /admin/offers
+        - menuitem "Towers" [ref=e841] [cursor=pointer]:
+          - img [ref=e842]
+          - link "Towers" [ref=e846]:
+            - /url: /admin/towers
+        - menuitem "JBP Mgmt" [ref=e847] [cursor=pointer]:
+          - img [ref=e848]
+          - link "JBP Mgmt" [ref=e852]:
+            - /url: /admin/jbp-management
+        - menuitem "team Partners" [ref=e853] [cursor=pointer]:
+          - img "team" [ref=e854]:
+            - img [ref=e855]
+          - link "Partners" [ref=e858]:
+            - /url: /admin/channel-partners
+        - menuitem "solution Managers" [ref=e859] [cursor=pointer]:
+          - img "solution" [ref=e860]:
+            - img [ref=e861]
+          - link "Managers" [ref=e864]:
+            - /url: /admin/sales-managers
+        - menuitem "bank Transactions" [ref=e865] [cursor=pointer]:
+          - img "bank" [ref=e866]:
+            - img [ref=e867]
+          - link "Transactions" [ref=e870]:
+            - /url: /admin/payment-transactions
+        - menuitem "CMS" [ref=e871] [cursor=pointer]:
+          - img [ref=e872]
+          - link "CMS" [ref=e875]:
+            - /url: https://manage-uat.xrportal.in/admin/auth/login
+    - contentinfo [ref=e876]:
+      - generic [ref=e877]: Copyright © 2026 House of Abhinandan Lodha. All Rights Reserved.

@@ -1,0 +1,441 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - region "Notifications Alt+T"
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - img "logo" [ref=e8]
+        - generic [ref=e9]:
+          - menu [ref=e10]:
+            - menuitem "Customers" [ref=e11] [cursor=pointer]:
+              - img [ref=e12]
+              - link "Customers" [ref=e16]:
+                - /url: /admin/customers
+            - menuitem "Config" [ref=e17] [cursor=pointer]:
+              - img [ref=e18]
+              - link "Config" [ref=e23]:
+                - /url: /admin/cms
+            - menuitem "bars Allocation" [ref=e24] [cursor=pointer]:
+              - img "bars" [ref=e25]:
+                - img [ref=e26]
+              - link "Allocation" [ref=e29]:
+                - /url: /admin/allocation
+            - menuitem "gift Offers" [ref=e30] [cursor=pointer]:
+              - img "gift" [ref=e31]:
+                - img [ref=e32]
+              - link "Offers" [ref=e35]:
+                - /url: /admin/offers
+            - menuitem "Towers" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - link "Towers" [ref=e41]:
+                - /url: /admin/towers
+            - menuitem "JBP Mgmt" [ref=e42] [cursor=pointer]:
+              - img [ref=e43]
+              - link "JBP Mgmt" [ref=e47]:
+                - /url: /admin/jbp-management
+            - menuitem "team Channel Partners" [ref=e48] [cursor=pointer]:
+              - img "team" [ref=e49]:
+                - img [ref=e50]
+              - link "Channel Partners" [ref=e53]:
+                - /url: /admin/channel-partners
+            - menuitem "solution Sales Managers" [ref=e54] [cursor=pointer]:
+              - img "solution" [ref=e55]:
+                - img [ref=e56]
+              - link "Sales Managers" [ref=e59]:
+                - /url: /admin/sales-managers
+            - menuitem "bank Transactions" [ref=e60] [cursor=pointer]:
+              - img "bank" [ref=e61]:
+                - img [ref=e62]
+              - link "Transactions" [ref=e65]:
+                - /url: /admin/payment-transactions
+            - menuitem "CMS" [ref=e66] [cursor=pointer]:
+              - img [ref=e67]
+              - link "CMS" [ref=e70]:
+                - /url: https://manage-uat.xrportal.in/admin/auth/login
+          - button "Logout" [ref=e72] [cursor=pointer]:
+            - img [ref=e73]
+            - generic [ref=e76]: Logout
+    - generic [ref=e77]:
+      - banner [ref=e78]
+      - main [ref=e80]:
+        - generic [ref=e81]:
+          - heading "Transactions" [level=5] [ref=e83]
+          - generic [ref=e85]:
+            - tablist [ref=e86]:
+              - tab "Payment Transactions" [selected] [ref=e90] [cursor=pointer]
+            - tabpanel "Payment Transactions" [ref=e93]:
+              - generic [ref=e94]:
+                - generic [ref=e95]: Total 10228 Payment Transactions
+                - generic [ref=e97]:
+                  - generic [ref=e98]:
+                    - textbox "Start Date" [ref=e100]
+                    - generic "to" [ref=e102]:
+                      - img "swap-right" [ref=e103]:
+                        - img [ref=e104]
+                    - textbox "End Date" [ref=e107]
+                    - generic:
+                      - img "calendar":
+                        - img
+                  - textbox "Search by Name, Phone, Registration No." [ref=e109]
+                  - generic [ref=e111]:
+                    - button "Refresh" [ref=e112] [cursor=pointer]:
+                      - generic [ref=e113]: Refresh
+                      - img [ref=e114]
+                    - button "Export" [ref=e117] [cursor=pointer]:
+                      - generic [ref=e118]: Export
+                      - img [ref=e119]
+                    - button "setting Settings" [ref=e122] [cursor=pointer]:
+                      - img "setting" [ref=e124]:
+                        - img [ref=e125]
+                      - generic [ref=e127]: Settings
+              - generic [ref=e130]:
+                - table [ref=e134]:
+                  - rowgroup [ref=e150]:
+                    - row "Sr. No. Registration No. Transaction ID Source filter Status filter Unit Reg No. Customer Name Phone Payment Type filter Amount Paid Payment Date Method filter Created By Actions" [ref=e151]:
+                      - columnheader "Sr. No." [ref=e152] [cursor=pointer]:
+                        - generic [ref=e153]:
+                          - generic [ref=e154]: Sr. No.
+                          - generic [ref=e156]:
+                            - img [ref=e157]:
+                              - img [ref=e158]
+                            - img [ref=e160]:
+                              - img [ref=e161]
+                      - columnheader "Registration No." [ref=e163]
+                      - columnheader "Transaction ID" [ref=e164]
+                      - columnheader "Source filter" [ref=e165]:
+                        - generic [ref=e166]:
+                          - generic [ref=e167]: Source
+                          - button "filter" [ref=e168] [cursor=pointer]:
+                            - img "filter" [ref=e169]:
+                              - img [ref=e170]
+                      - columnheader "Status filter" [ref=e172]:
+                        - generic [ref=e173]:
+                          - generic [ref=e174]: Status
+                          - button "filter" [ref=e175] [cursor=pointer]:
+                            - img "filter" [ref=e176]:
+                              - img [ref=e177]
+                      - columnheader "Unit Reg No." [ref=e179]
+                      - columnheader "Customer Name" [ref=e180]
+                      - columnheader "Phone" [ref=e181]
+                      - columnheader "Payment Type filter" [ref=e182]:
+                        - generic [ref=e183]:
+                          - generic [ref=e184]: Payment Type
+                          - button "filter" [ref=e185] [cursor=pointer]:
+                            - img "filter" [ref=e186]:
+                              - img [ref=e187]
+                      - columnheader "Amount Paid" [ref=e189] [cursor=pointer]:
+                        - generic [ref=e190]:
+                          - generic [ref=e191]: Amount Paid
+                          - generic [ref=e193]:
+                            - img [ref=e194]:
+                              - img [ref=e195]
+                            - img [ref=e197]:
+                              - img [ref=e198]
+                      - columnheader "Payment Date" [ref=e200] [cursor=pointer]:
+                        - generic [ref=e201]:
+                          - generic [ref=e202]: Payment Date
+                          - generic [ref=e204]:
+                            - img [ref=e205]:
+                              - img [ref=e206]
+                            - img [ref=e208]:
+                              - img [ref=e209]
+                      - columnheader "Method filter" [ref=e211]:
+                        - generic [ref=e212]:
+                          - generic [ref=e213]: Method
+                          - button "filter" [ref=e214] [cursor=pointer]:
+                            - img "filter" [ref=e215]:
+                              - img [ref=e216]
+                      - columnheader "Created By" [ref=e218]
+                      - columnheader "Actions" [ref=e219]
+                  - rowgroup [ref=e220]:
+                    - generic:
+                      - generic: Sr. No.
+                      - generic:
+                        - generic:
+                          - img:
+                            - img
+                          - img:
+                            - img
+                    - generic:
+                      - generic: Source
+                      - button:
+                        - img:
+                          - img
+                    - generic:
+                      - generic: Status
+                      - button:
+                        - img:
+                          - img
+                    - generic:
+                      - generic: Payment Type
+                      - button:
+                        - img:
+                          - img
+                    - generic:
+                      - generic: Amount Paid
+                      - generic:
+                        - generic:
+                          - img:
+                            - img
+                          - img:
+                            - img
+                    - generic:
+                      - generic: Payment Date
+                      - generic:
+                        - generic:
+                          - img:
+                            - img
+                          - img:
+                            - img
+                    - generic:
+                      - generic: Method
+                      - button:
+                        - img:
+                          - img
+                    - row "PT-0015306 GHNG-2000000034 S260511075FEPA Online easebuzz completed - Kashish Malhotra 9818516048 Registration ₹ 2,997 11 May 2026, 12:02 PM Mobile Wallet - eye" [ref=e221]:
+                      - cell "PT-0015306" [ref=e222]
+                      - cell "GHNG-2000000034" [ref=e223]
+                      - cell "S260511075FEPA" [ref=e224]
+                      - cell "Online easebuzz" [ref=e225]:
+                        - generic [ref=e226]:
+                          - generic [ref=e227]: Online
+                          - generic [ref=e228]: easebuzz
+                      - cell "completed" [ref=e229]:
+                        - generic [ref=e230]: completed
+                      - cell "-" [ref=e231]
+                      - cell "Kashish Malhotra" [ref=e232]
+                      - cell "9818516048" [ref=e233]
+                      - cell "Registration" [ref=e234]
+                      - cell "₹ 2,997" [ref=e235]
+                      - cell "11 May 2026, 12:02 PM" [ref=e236]
+                      - cell "Mobile Wallet" [ref=e237]
+                      - cell "-" [ref=e238]
+                      - cell "eye" [ref=e239]:
+                        - img "eye" [ref=e240]:
+                          - img [ref=e241]
+                    - row "PT-0015305 GHNG-1000008364 S260508075FBFR Online easebuzz completed GHNG-1000008364-F ishaaaaan karnik 8888888888 Allocation ₹ 3,23,869 08 May 2026, 05:01 PM Mobile Wallet - eye" [ref=e243]:
+                      - cell "PT-0015305" [ref=e244]
+                      - cell "GHNG-1000008364" [ref=e245]
+                      - cell "S260508075FBFR" [ref=e246]
+                      - cell "Online easebuzz" [ref=e247]:
+                        - generic [ref=e248]:
+                          - generic [ref=e249]: Online
+                          - generic [ref=e250]: easebuzz
+                      - cell "completed" [ref=e251]:
+                        - generic [ref=e252]: completed
+                      - cell "GHNG-1000008364-F" [ref=e253]
+                      - cell "ishaaaaan karnik" [ref=e254]
+                      - cell "8888888888" [ref=e255]
+                      - cell "Allocation" [ref=e256]
+                      - cell "₹ 3,23,869" [ref=e257]
+                      - cell "08 May 2026, 05:01 PM" [ref=e258]
+                      - cell "Mobile Wallet" [ref=e259]
+                      - cell "-" [ref=e260]
+                      - cell "eye" [ref=e261]:
+                        - img "eye" [ref=e262]:
+                          - img [ref=e263]
+                    - row "PT-0015304 GHNG-1000008563 S260508075F9CF Online easebuzz completed GHNG-1000008563-X Anjali RegressionOfUAT 7499097796 Allocation ₹ 6,97,961 08 May 2026, 10:46 AM Mobile Wallet - eye" [ref=e265]:
+                      - cell "PT-0015304" [ref=e266]
+                      - cell "GHNG-1000008563" [ref=e267]
+                      - cell "S260508075F9CF" [ref=e268]
+                      - cell "Online easebuzz" [ref=e269]:
+                        - generic [ref=e270]:
+                          - generic [ref=e271]: Online
+                          - generic [ref=e272]: easebuzz
+                      - cell "completed" [ref=e273]:
+                        - generic [ref=e274]: completed
+                      - cell "GHNG-1000008563-X" [ref=e275]
+                      - cell "Anjali RegressionOfUAT" [ref=e276]
+                      - cell "7499097796" [ref=e277]
+                      - cell "Allocation" [ref=e278]
+                      - cell "₹ 6,97,961" [ref=e279]
+                      - cell "08 May 2026, 10:46 AM" [ref=e280]
+                      - cell "Mobile Wallet" [ref=e281]
+                      - cell "-" [ref=e282]
+                      - cell "eye" [ref=e283]:
+                        - img "eye" [ref=e284]:
+                          - img [ref=e285]
+                    - row "PT-0015303 GHNG-1000008364 S260507075F8SN Online easebuzz completed GHNG-1000008364-E ishaaaaan karnik 8888888888 Allocation ₹ 3,28,868 07 May 2026, 06:49 PM Mobile Wallet - eye" [ref=e287]:
+                      - cell "PT-0015303" [ref=e288]
+                      - cell "GHNG-1000008364" [ref=e289]
+                      - cell "S260507075F8SN" [ref=e290]
+                      - cell "Online easebuzz" [ref=e291]:
+                        - generic [ref=e292]:
+                          - generic [ref=e293]: Online
+                          - generic [ref=e294]: easebuzz
+                      - cell "completed" [ref=e295]:
+                        - generic [ref=e296]: completed
+                      - cell "GHNG-1000008364-E" [ref=e297]
+                      - cell "ishaaaaan karnik" [ref=e298]
+                      - cell "8888888888" [ref=e299]
+                      - cell "Allocation" [ref=e300]
+                      - cell "₹ 3,28,868" [ref=e301]
+                      - cell "07 May 2026, 06:49 PM" [ref=e302]
+                      - cell "Mobile Wallet" [ref=e303]
+                      - cell "-" [ref=e304]
+                      - cell "eye" [ref=e305]:
+                        - img "eye" [ref=e306]:
+                          - img [ref=e307]
+                    - row "PT-0015302 GHNG-1000008364 S260507075F8SM Online easebuzz cancelled GHNG-1000008364-E ishaaaaan karnik 8888888888 Allocation ₹ 45,000 07 May 2026, 06:49 PM NA - eye" [ref=e309]:
+                      - cell "PT-0015302" [ref=e310]
+                      - cell "GHNG-1000008364" [ref=e311]
+                      - cell "S260507075F8SM" [ref=e312]
+                      - cell "Online easebuzz" [ref=e313]:
+                        - generic [ref=e314]:
+                          - generic [ref=e315]: Online
+                          - generic [ref=e316]: easebuzz
+                      - cell "cancelled" [ref=e317]:
+                        - generic [ref=e318]: cancelled
+                      - cell "GHNG-1000008364-E" [ref=e319]
+                      - cell "ishaaaaan karnik" [ref=e320]
+                      - cell "8888888888" [ref=e321]
+                      - cell "Allocation" [ref=e322]
+                      - cell "₹ 45,000" [ref=e323]
+                      - cell "07 May 2026, 06:49 PM" [ref=e324]
+                      - cell "NA" [ref=e325]
+                      - cell "-" [ref=e326]
+                      - cell "eye" [ref=e327]:
+                        - img "eye" [ref=e328]:
+                          - img [ref=e329]
+                    - row "PT-0015301 GHNG-1000008563 S260507075F8RU Online easebuzz cancelled GHNG-1000008563-X Anjali RegressionOfUAT 7499097796 Allocation ₹ 6,97,961 07 May 2026, 06:40 PM NA - eye" [ref=e331]:
+                      - cell "PT-0015301" [ref=e332]
+                      - cell "GHNG-1000008563" [ref=e333]
+                      - cell "S260507075F8RU" [ref=e334]
+                      - cell "Online easebuzz" [ref=e335]:
+                        - generic [ref=e336]:
+                          - generic [ref=e337]: Online
+                          - generic [ref=e338]: easebuzz
+                      - cell "cancelled" [ref=e339]:
+                        - generic [ref=e340]: cancelled
+                      - cell "GHNG-1000008563-X" [ref=e341]
+                      - cell "Anjali RegressionOfUAT" [ref=e342]
+                      - cell "7499097796" [ref=e343]
+                      - cell "Allocation" [ref=e344]
+                      - cell "₹ 6,97,961" [ref=e345]
+                      - cell "07 May 2026, 06:40 PM" [ref=e346]
+                      - cell "NA" [ref=e347]
+                      - cell "-" [ref=e348]
+                      - cell "eye" [ref=e349]:
+                        - img "eye" [ref=e350]:
+                          - img [ref=e351]
+                    - row "PT-0015300 GHNG-1000008364 S260507075F8RQ Online easebuzz completed GHNG-1000008364-D ishaaaaan karnik 8888888888 Allocation ₹ 45,000 07 May 2026, 06:39 PM Mobile Wallet - eye" [ref=e353]:
+                      - cell "PT-0015300" [ref=e354]
+                      - cell "GHNG-1000008364" [ref=e355]
+                      - cell "S260507075F8RQ" [ref=e356]
+                      - cell "Online easebuzz" [ref=e357]:
+                        - generic [ref=e358]:
+                          - generic [ref=e359]: Online
+                          - generic [ref=e360]: easebuzz
+                      - cell "completed" [ref=e361]:
+                        - generic [ref=e362]: completed
+                      - cell "GHNG-1000008364-D" [ref=e363]
+                      - cell "ishaaaaan karnik" [ref=e364]
+                      - cell "8888888888" [ref=e365]
+                      - cell "Allocation" [ref=e366]
+                      - cell "₹ 45,000" [ref=e367]
+                      - cell "07 May 2026, 06:39 PM" [ref=e368]
+                      - cell "Mobile Wallet" [ref=e369]
+                      - cell "-" [ref=e370]
+                      - cell "eye" [ref=e371]:
+                        - img "eye" [ref=e372]:
+                          - img [ref=e373]
+                    - row "PT-0015299 GHNG-1000008364 - Online razorpay cancelled GHNG-1000008364-D ishaaaaan karnik 8888888888 Allocation ₹ 45,000 07 May 2026, 06:39 PM - - eye" [ref=e375]:
+                      - cell "PT-0015299" [ref=e376]
+                      - cell "GHNG-1000008364" [ref=e377]
+                      - cell "-" [ref=e378]
+                      - cell "Online razorpay" [ref=e379]:
+                        - generic [ref=e380]:
+                          - generic [ref=e381]: Online
+                          - generic [ref=e382]: razorpay
+                      - cell "cancelled" [ref=e383]:
+                        - generic [ref=e384]: cancelled
+                      - cell "GHNG-1000008364-D" [ref=e385]
+                      - cell "ishaaaaan karnik" [ref=e386]
+                      - cell "8888888888" [ref=e387]
+                      - cell "Allocation" [ref=e388]
+                      - cell "₹ 45,000" [ref=e389]
+                      - cell "07 May 2026, 06:39 PM" [ref=e390]
+                      - cell "-" [ref=e391]
+                      - cell "-" [ref=e392]
+                      - cell "eye" [ref=e393]:
+                        - img "eye" [ref=e394]:
+                          - img [ref=e395]
+                    - row "PT-0015298 GHNG-1000008364 S260507075F8RO Online easebuzz cancelled GHNG-1000008364-D ishaaaaan karnik 8888888888 Allocation ₹ 45,000 07 May 2026, 06:39 PM NA - eye" [ref=e397]:
+                      - cell "PT-0015298" [ref=e398]
+                      - cell "GHNG-1000008364" [ref=e399]
+                      - cell "S260507075F8RO" [ref=e400]
+                      - cell "Online easebuzz" [ref=e401]:
+                        - generic [ref=e402]:
+                          - generic [ref=e403]: Online
+                          - generic [ref=e404]: easebuzz
+                      - cell "cancelled" [ref=e405]:
+                        - generic [ref=e406]: cancelled
+                      - cell "GHNG-1000008364-D" [ref=e407]
+                      - cell "ishaaaaan karnik" [ref=e408]
+                      - cell "8888888888" [ref=e409]
+                      - cell "Allocation" [ref=e410]
+                      - cell "₹ 45,000" [ref=e411]
+                      - cell "07 May 2026, 06:39 PM" [ref=e412]
+                      - cell "NA" [ref=e413]
+                      - cell "-" [ref=e414]
+                      - cell "eye" [ref=e415]:
+                        - img "eye" [ref=e416]:
+                          - img [ref=e417]
+                    - row "PT-0015297 GHNG-2000000014 - Online easebuzz initiated GHNG-2000000014-C Anjali WhatsAppTemp 7666470638 Allocation ₹ 5,10,851 07 May 2026, 06:38 PM - - eye" [ref=e419]:
+                      - cell "PT-0015297" [ref=e420]
+                      - cell "GHNG-2000000014" [ref=e421]
+                      - cell "-" [ref=e422]
+                      - cell "Online easebuzz" [ref=e423]:
+                        - generic [ref=e424]:
+                          - generic [ref=e425]: Online
+                          - generic [ref=e426]: easebuzz
+                      - cell "initiated" [ref=e427]:
+                        - generic [ref=e428]: initiated
+                      - cell "GHNG-2000000014-C" [ref=e429]
+                      - cell "Anjali WhatsAppTemp" [ref=e430]
+                      - cell "7666470638" [ref=e431]
+                      - cell "Allocation" [ref=e432]
+                      - cell "₹ 5,10,851" [ref=e433]
+                      - cell "07 May 2026, 06:38 PM" [ref=e434]
+                      - cell "-" [ref=e435]
+                      - cell "-" [ref=e436]
+                      - cell "eye" [ref=e437]:
+                        - img "eye" [ref=e438]:
+                          - img [ref=e439]
+                - list [ref=e441]:
+                  - listitem [ref=e442]: 1-10 of 10228 records
+                  - listitem "Previous Page" [ref=e443]:
+                    - button "left" [disabled] [ref=e444]:
+                      - img "left" [ref=e445]:
+                        - img [ref=e446]
+                  - listitem "1" [ref=e448] [cursor=pointer]:
+                    - generic [ref=e449]: "1"
+                  - listitem "2" [ref=e450] [cursor=pointer]:
+                    - generic [ref=e451]: "2"
+                  - listitem "3" [ref=e452] [cursor=pointer]:
+                    - generic [ref=e453]: "3"
+                  - listitem "4" [ref=e454] [cursor=pointer]:
+                    - generic [ref=e455]: "4"
+                  - listitem "5" [ref=e456] [cursor=pointer]:
+                    - generic [ref=e457]: "5"
+                  - listitem "Next 5 Pages" [ref=e458] [cursor=pointer]:
+                    - generic [ref=e460]:
+                      - img "double-right" [ref=e461]:
+                        - img [ref=e462]
+                      - generic [ref=e464]: •••
+                  - listitem "1023" [ref=e465] [cursor=pointer]:
+                    - generic [ref=e466]: "1023"
+                  - listitem "Next Page" [ref=e467] [cursor=pointer]:
+                    - button "right" [ref=e468]:
+                      - img "right" [ref=e469]:
+                        - img [ref=e470]
+                  - listitem [ref=e472]:
+                    - generic "Page Size" [ref=e473] [cursor=pointer]:
+                      - generic [ref=e475]:
+                        - combobox "Page Size" [ref=e477]
+                        - generic "10 / page" [ref=e478]
+                      - generic:
+                        - img:
+                          - img
+      - contentinfo [ref=e479]:
+        - generic [ref=e480]: Copyright © 2026 House of Abhinandan Lodha. All Rights Reserved.

@@ -1,0 +1,355 @@
+- generic [ref=e1]:
+  - generic:
+    - region "Notifications Alt+T"
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - img "logo" [ref=e8]
+        - generic [ref=e9]:
+          - menu [ref=e10]:
+            - menuitem "Customers" [ref=e11] [cursor=pointer]:
+              - img [ref=e12]
+              - link "Customers" [ref=e16]:
+                - /url: /admin/customers
+            - menuitem "Config" [ref=e17] [cursor=pointer]:
+              - img [ref=e18]
+              - link "Config" [ref=e23]:
+                - /url: /admin/cms
+            - menuitem "bars Allocation" [ref=e24] [cursor=pointer]:
+              - img "bars" [ref=e25]:
+                - img [ref=e26]
+              - link "Allocation" [ref=e29]:
+                - /url: /admin/allocation
+            - menuitem "gift Offers" [ref=e30] [cursor=pointer]:
+              - img "gift" [ref=e31]:
+                - img [ref=e32]
+              - link "Offers" [ref=e35]:
+                - /url: /admin/offers
+            - menuitem "Towers" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - link "Towers" [ref=e41]:
+                - /url: /admin/towers
+            - menuitem "JBP Mgmt" [ref=e42] [cursor=pointer]:
+              - img [ref=e43]
+              - link "JBP Mgmt" [ref=e47]:
+                - /url: /admin/jbp-management
+            - menuitem "team Channel Partners" [ref=e48] [cursor=pointer]:
+              - img "team" [ref=e49]:
+                - img [ref=e50]
+              - link "Channel Partners" [ref=e53]:
+                - /url: /admin/channel-partners
+            - menuitem "solution Sales Managers" [ref=e54] [cursor=pointer]:
+              - img "solution" [ref=e55]:
+                - img [ref=e56]
+              - link "Sales Managers" [ref=e59]:
+                - /url: /admin/sales-managers
+            - menuitem "bank Transactions" [ref=e60] [cursor=pointer]:
+              - img "bank" [ref=e61]:
+                - img [ref=e62]
+              - link "Transactions" [ref=e65]:
+                - /url: /admin/payment-transactions
+            - menuitem "CMS" [ref=e66] [cursor=pointer]:
+              - img [ref=e67]
+              - link "CMS" [ref=e70]:
+                - /url: https://manage-uat.xrportal.in/admin/auth/login
+          - button "Logout" [ref=e72] [cursor=pointer]:
+            - img [ref=e73]
+            - generic [ref=e76]: Logout
+    - generic [ref=e77]:
+      - banner [ref=e78]
+      - main [ref=e80]:
+        - generic [ref=e81]:
+          - heading "Sales Managers" [level=5] [ref=e83]
+          - generic [ref=e84]:
+            - generic [ref=e85]:
+              - textbox "Search by name, email, or phone" [ref=e88]
+              - generic [ref=e90]:
+                - button "setting Settings" [ref=e91] [cursor=pointer]:
+                  - img "setting" [ref=e93]:
+                    - img [ref=e94]
+                  - generic [ref=e96]: Settings
+                - button "plus Add Sales Manager" [ref=e97] [cursor=pointer]:
+                  - img "plus" [ref=e99]:
+                    - img [ref=e100]
+                  - generic [ref=e103]: Add Sales Manager
+            - generic [ref=e105]: 26 Sales Managers
+            - generic [ref=e108]:
+              - table [ref=e112]:
+                - rowgroup [ref=e123]:
+                  - row "First Name Last Name Email Phone Role filter Assignable filter Is Active filter Created At Actions" [ref=e124]:
+                    - columnheader "First Name" [ref=e125]
+                    - columnheader "Last Name" [ref=e126]
+                    - columnheader "Email" [ref=e127]
+                    - columnheader "Phone" [ref=e128]
+                    - columnheader "Role filter" [ref=e129]:
+                      - generic [ref=e130]:
+                        - generic [ref=e131]: Role
+                        - button "filter" [ref=e132] [cursor=pointer]:
+                          - img "filter" [ref=e133]:
+                            - img [ref=e134]
+                    - columnheader "Assignable filter" [ref=e136]:
+                      - generic [ref=e137]:
+                        - generic [ref=e138]: Assignable
+                        - button "filter" [ref=e139] [cursor=pointer]:
+                          - img "filter" [ref=e140]:
+                            - img [ref=e141]
+                    - columnheader "Is Active filter" [ref=e143]:
+                      - generic [ref=e144]:
+                        - generic [ref=e145]: Is Active
+                        - button "filter" [ref=e146] [cursor=pointer]:
+                          - img "filter" [ref=e147]:
+                            - img [ref=e148]
+                    - columnheader "Created At" [ref=e150]
+                    - columnheader "Actions" [ref=e151]
+                - rowgroup [ref=e152]:
+                  - generic:
+                    - generic: Role
+                    - button:
+                      - img:
+                        - img
+                  - generic:
+                    - generic: Assignable
+                    - button:
+                      - img:
+                        - img
+                  - generic:
+                    - generic: Is Active
+                    - button:
+                      - img:
+                        - img
+                  - 'row "Load Test SM #10 apps@xde.ai 1111113120 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e362]':
+                    - 'cell "Load Test SM #10" [ref=e154]'
+                    - cell [ref=e155]
+                    - cell "apps@xde.ai" [ref=e156]
+                    - cell "1111113120" [ref=e157]
+                    - cell "Sales Manager" [ref=e158]:
+                      - generic [ref=e159]: Sales Manager
+                    - cell "Yes" [ref=e160]:
+                      - generic [ref=e161]: "Yes"
+                    - cell "Active" [ref=e162]:
+                      - generic [ref=e163]: Active
+                    - cell "08 May 2026, 15:27" [ref=e363]
+                    - cell "edit Edit" [ref=e165]:
+                      - button "edit Edit" [ref=e166] [cursor=pointer]:
+                        - img "edit" [ref=e168]:
+                          - img [ref=e169]
+                        - generic [ref=e171]: Edit
+                  - 'row "Load Test SM #9 apps@xde.ai 1111113119 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e364]':
+                    - 'cell "Load Test SM #9" [ref=e173]'
+                    - cell [ref=e174]
+                    - cell "apps@xde.ai" [ref=e175]
+                    - cell "1111113119" [ref=e176]
+                    - cell "Sales Manager" [ref=e177]:
+                      - generic [ref=e178]: Sales Manager
+                    - cell "Yes" [ref=e179]:
+                      - generic [ref=e180]: "Yes"
+                    - cell "Active" [ref=e181]:
+                      - generic [ref=e182]: Active
+                    - cell "08 May 2026, 15:27" [ref=e365]
+                    - cell "edit Edit" [ref=e184]:
+                      - button "edit Edit" [ref=e185] [cursor=pointer]:
+                        - img "edit" [ref=e187]:
+                          - img [ref=e188]
+                        - generic [ref=e190]: Edit
+                  - 'row "Load Test SM #8 apps@xde.ai 1111113118 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e366]':
+                    - 'cell "Load Test SM #8" [ref=e192]'
+                    - cell [ref=e193]
+                    - cell "apps@xde.ai" [ref=e194]
+                    - cell "1111113118" [ref=e195]
+                    - cell "Sales Manager" [ref=e196]:
+                      - generic [ref=e197]: Sales Manager
+                    - cell "Yes" [ref=e198]:
+                      - generic [ref=e199]: "Yes"
+                    - cell "Active" [ref=e200]:
+                      - generic [ref=e201]: Active
+                    - cell "08 May 2026, 15:27" [ref=e367]
+                    - cell "edit Edit" [ref=e203]:
+                      - button "edit Edit" [ref=e204] [cursor=pointer]:
+                        - img "edit" [ref=e206]:
+                          - img [ref=e207]
+                        - generic [ref=e209]: Edit
+                  - 'row "Load Test SM #6 apps@xde.ai 1111113116 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e368]':
+                    - 'cell "Load Test SM #6" [ref=e211]'
+                    - cell [ref=e212]
+                    - cell "apps@xde.ai" [ref=e213]
+                    - cell "1111113116" [ref=e214]
+                    - cell "Sales Manager" [ref=e215]:
+                      - generic [ref=e216]: Sales Manager
+                    - cell "Yes" [ref=e217]:
+                      - generic [ref=e218]: "Yes"
+                    - cell "Active" [ref=e219]:
+                      - generic [ref=e220]: Active
+                    - cell "08 May 2026, 15:27" [ref=e369]
+                    - cell "edit Edit" [ref=e222]:
+                      - button "edit Edit" [ref=e223] [cursor=pointer]:
+                        - img "edit" [ref=e225]:
+                          - img [ref=e226]
+                        - generic [ref=e228]: Edit
+                  - 'row "Load Test SM #7 apps@xde.ai 1111113117 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e370]':
+                    - 'cell "Load Test SM #7" [ref=e230]'
+                    - cell [ref=e231]
+                    - cell "apps@xde.ai" [ref=e232]
+                    - cell "1111113117" [ref=e233]
+                    - cell "Sales Manager" [ref=e234]:
+                      - generic [ref=e235]: Sales Manager
+                    - cell "Yes" [ref=e236]:
+                      - generic [ref=e237]: "Yes"
+                    - cell "Active" [ref=e238]:
+                      - generic [ref=e239]: Active
+                    - cell "08 May 2026, 15:27" [ref=e371]
+                    - cell "edit Edit" [ref=e241]:
+                      - button "edit Edit" [ref=e242] [cursor=pointer]:
+                        - img "edit" [ref=e244]:
+                          - img [ref=e245]
+                        - generic [ref=e247]: Edit
+                  - 'row "Load Test SM #5 apps@xde.ai 1111113115 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e372]':
+                    - 'cell "Load Test SM #5" [ref=e249]'
+                    - cell [ref=e250]
+                    - cell "apps@xde.ai" [ref=e251]
+                    - cell "1111113115" [ref=e252]
+                    - cell "Sales Manager" [ref=e253]:
+                      - generic [ref=e254]: Sales Manager
+                    - cell "Yes" [ref=e255]:
+                      - generic [ref=e256]: "Yes"
+                    - cell "Active" [ref=e257]:
+                      - generic [ref=e258]: Active
+                    - cell "08 May 2026, 15:27" [ref=e373]
+                    - cell "edit Edit" [ref=e260]:
+                      - button "edit Edit" [ref=e261] [cursor=pointer]:
+                        - img "edit" [ref=e263]:
+                          - img [ref=e264]
+                        - generic [ref=e266]: Edit
+                  - 'row "Load Test SM #4 apps@xde.ai 1111113114 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e374]':
+                    - 'cell "Load Test SM #4" [ref=e268]'
+                    - cell [ref=e269]
+                    - cell "apps@xde.ai" [ref=e270]
+                    - cell "1111113114" [ref=e271]
+                    - cell "Sales Manager" [ref=e272]:
+                      - generic [ref=e273]: Sales Manager
+                    - cell "Yes" [ref=e274]:
+                      - generic [ref=e275]: "Yes"
+                    - cell "Active" [ref=e276]:
+                      - generic [ref=e277]: Active
+                    - cell "08 May 2026, 15:27" [ref=e375]
+                    - cell "edit Edit" [ref=e279]:
+                      - button "edit Edit" [ref=e280] [cursor=pointer]:
+                        - img "edit" [ref=e282]:
+                          - img [ref=e283]
+                        - generic [ref=e285]: Edit
+                  - 'row "Load Test SM #1 apps@xde.ai 1111113111 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e376]':
+                    - 'cell "Load Test SM #1" [ref=e287]'
+                    - cell [ref=e288]
+                    - cell "apps@xde.ai" [ref=e289]
+                    - cell "1111113111" [ref=e290]
+                    - cell "Sales Manager" [ref=e291]:
+                      - generic [ref=e292]: Sales Manager
+                    - cell "Yes" [ref=e293]:
+                      - generic [ref=e294]: "Yes"
+                    - cell "Active" [ref=e295]:
+                      - generic [ref=e296]: Active
+                    - cell "08 May 2026, 15:27" [ref=e377]
+                    - cell "edit Edit" [ref=e298]:
+                      - button "edit Edit" [ref=e299] [cursor=pointer]:
+                        - img "edit" [ref=e301]:
+                          - img [ref=e302]
+                        - generic [ref=e304]: Edit
+                  - 'row "Load Test SM #3 apps@xde.ai 1111113113 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e378]':
+                    - 'cell "Load Test SM #3" [ref=e306]'
+                    - cell [ref=e307]
+                    - cell "apps@xde.ai" [ref=e308]
+                    - cell "1111113113" [ref=e309]
+                    - cell "Sales Manager" [ref=e310]:
+                      - generic [ref=e311]: Sales Manager
+                    - cell "Yes" [ref=e312]:
+                      - generic [ref=e313]: "Yes"
+                    - cell "Active" [ref=e314]:
+                      - generic [ref=e315]: Active
+                    - cell "08 May 2026, 15:27" [ref=e379]
+                    - cell "edit Edit" [ref=e317]:
+                      - button "edit Edit" [ref=e318] [cursor=pointer]:
+                        - img "edit" [ref=e320]:
+                          - img [ref=e321]
+                        - generic [ref=e323]: Edit
+                  - 'row "Load Test SM #2 apps@xde.ai 1111113112 Sales Manager Yes Active 08 May 2026, 15:27 edit Edit" [ref=e380]':
+                    - 'cell "Load Test SM #2" [ref=e325]'
+                    - cell [ref=e326]
+                    - cell "apps@xde.ai" [ref=e327]
+                    - cell "1111113112" [ref=e328]
+                    - cell "Sales Manager" [ref=e329]:
+                      - generic [ref=e330]: Sales Manager
+                    - cell "Yes" [ref=e331]:
+                      - generic [ref=e332]: "Yes"
+                    - cell "Active" [ref=e333]:
+                      - generic [ref=e334]: Active
+                    - cell "08 May 2026, 15:27" [ref=e381]
+                    - cell "edit Edit" [ref=e336]:
+                      - button "edit Edit" [ref=e337] [cursor=pointer]:
+                        - img "edit" [ref=e339]:
+                          - img [ref=e340]
+                        - generic [ref=e342]: Edit
+              - list [ref=e343]:
+                - listitem "Previous Page" [ref=e344]:
+                  - button "left" [disabled] [ref=e345]:
+                    - img "left" [ref=e346]:
+                      - img [ref=e347]
+                - listitem "1" [ref=e349] [cursor=pointer]:
+                  - generic [ref=e350]: "1"
+                - listitem "2" [ref=e351] [cursor=pointer]:
+                  - generic [ref=e352]: "2"
+                - listitem "3" [ref=e353] [cursor=pointer]:
+                  - generic [ref=e354]: "3"
+                - listitem "Next Page" [ref=e355] [cursor=pointer]:
+                  - button "right" [ref=e356]:
+                    - img "right" [ref=e357]:
+                      - img [ref=e358]
+      - contentinfo [ref=e360]:
+        - generic [ref=e361]: Copyright © 2026 House of Abhinandan Lodha. All Rights Reserved.
+  - dialog "Add Sales Manager" [ref=e383]:
+    - generic [ref=e385]:
+      - button "Close" [active] [ref=e386] [cursor=pointer]:
+        - img "close" [ref=e387]:
+          - img [ref=e388]
+      - generic [ref=e390]: Add Sales Manager
+    - generic [ref=e392]:
+      - generic [ref=e470]:
+        - generic "First Name" [ref=e472]: "* First Name"
+        - textbox "* First Name" [ref=e476]:
+          - /placeholder: Enter first name
+      - generic [ref=e478]:
+        - generic "Last Name" [ref=e480]: "* Last Name"
+        - textbox "* Last Name" [ref=e484]:
+          - /placeholder: Enter last name
+      - generic [ref=e486]:
+        - generic "Email" [ref=e488]: "* Email"
+        - textbox "* Email" [ref=e492]:
+          - /placeholder: Enter email address
+      - generic [ref=e494]:
+        - generic "Phone" [ref=e496]: "* Phone"
+        - textbox "* Phone" [ref=e500]:
+          - /placeholder: Enter 10 digit phone number
+      - generic [ref=e502]:
+        - generic "Role" [ref=e504]: "* Role"
+        - generic [ref=e508] [cursor=pointer]:
+          - generic [ref=e510]:
+            - combobox "* Role" [ref=e512]
+            - generic: Select role
+          - generic:
+            - img:
+              - img
+      - generic [ref=e514]:
+        - generic "Assignable" [ref=e516]
+        - switch "Assignable" [ref=e520] [cursor=pointer]:
+          - generic [ref=e522]:
+            - generic: "Yes"
+            - generic: "No"
+      - generic [ref=e524]:
+        - generic "Is Active" [ref=e526]
+        - switch "Is Active" [ref=e530] [cursor=pointer]:
+          - generic [ref=e532]:
+            - generic: Active
+            - generic: Inactive
+      - generic [ref=e462]:
+        - button "Create" [ref=e464] [cursor=pointer]:
+          - generic [ref=e465]: Create
+        - button "Cancel" [ref=e467] [cursor=pointer]:
+          - generic [ref=e468]: Cancel

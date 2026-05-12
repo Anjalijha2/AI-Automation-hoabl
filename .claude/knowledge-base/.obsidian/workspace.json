@@ -11,14 +11,10 @@
             "id": "8a9c1d3eb0b04dad",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Business-Flows/bf-006-sales-manager-assignment-flow.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "bf-006-sales-manager-assignment-flow"
+              "title": "New tab"
             }
           }
         ]
@@ -155,13 +151,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Business-Flows/bf-006-sales-manager-assignment-flow.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of bf-006-sales-manager-assignment-flow"
+              "title": "Outline"
             }
           }
         ],
@@ -184,33 +179,34 @@
   },
   "active": "8a9c1d3eb0b04dad",
   "lastOpenFiles": [
-    "Business-Flows/bf-001-allocation-campaign-lifecycle.md",
-    "Business-Flows/bf-006-sales-manager-assignment-flow.md",
-    "Business-Rules/Business-Rules.md",
-    "BRD/sm-portal.md",
-    "BRD/cp-portal.md",
-    "BRD/buyer-portal.md",
-    "BRD/backend.md",
-    "BRD/modules/payment-transactions.md",
-    "BRD/modules/towers.md",
-    "BRD/modules/sales-managers.md",
-    "BRD-Payment-Workflow.md",
-    "index.md.tmp.21600.1778570137660",
-    "Sprint-Records/sprint-5-pipeline-status.md",
-    "Sprint-Records/sprint-5-overview.md",
-    "Open-Questions/open-questions.md",
-    "Reference/backend-technical.md",
+    "BRD/workflows/support-ticket-workflow.md",
+    "BRD/workflows/callback-request-workflow.md",
+    "BRD/workflows/home-loan-workflow.md",
+    "BRD/workflows/milestone-payments.md",
+    "BRD/workflows/payment-workflow.md",
+    "BRD/workflows/kyc-workflow.md",
+    "BRD/workflows/registration-workflow.md",
+    "BRD/workflows/allocation-workflow.md",
+    "BRD/workflows",
+    "Portals/CP-Portal/CP-Portal-BRD.md",
+    "Portals/Buyer-Portal/Buyer-Portal-BRD.md",
+    "Portals/Admin-Portal/Admin-Portal-BRD.md",
+    "Support-Ticket-Module.md",
     "FRD/buyer-portal/buyer-portal-source.md",
-    "FRD/sm-portal/sm-portal-source.md",
-    "FRD/cp-portal/cp-portal-source.md",
-    "FRD/admin-portal/admin-portal-source.md",
-    "FRD/sm-portal/sm-portal-full.md",
-    "Workflows/callback-request-workflow.md",
-    "Workflows/home-loan-workflow.md",
-    "Workflows/milestone-payments.md",
-    "Workflows/payment-workflow.md",
-    "Workflows/kyc-workflow.md",
-    "Workflows/registration-workflow.md",
+    "Realtime-Events-BRD.md",
+    "FRD/buyer-portal/feature-specs/work-progress.md",
+    "FRD/buyer-portal/feature-specs/unit-details.md",
+    "FRD/buyer-portal/feature-specs/support-tickets.md",
+    "FRD/buyer-portal/feature-specs/registration-and-login.md",
+    "FRD/buyer-portal/feature-specs/project-information.md",
+    "FRD/buyer-portal/feature-specs/payment-schedule.md",
+    "FRD/buyer-portal/feature-specs/kyc.md",
+    "FRD/buyer-portal/feature-specs/home-loan.md",
+    "FRD/buyer-portal/feature-specs/home-dashboard.md",
+    "FRD/admin-portal/feature-specs/customers.md",
+    "Business-Flows/bf-006-sales-manager-assignment-flow.md",
+    "Business-Flows/bf-001-allocation-campaign-lifecycle.md",
+    "index.md.tmp.21600.1778570137660",
     "Reference",
     "FRD/sm-portal/feature-specs",
     "FRD/buyer-portal/feature-specs",
@@ -219,7 +215,6 @@
     "FRD/admin-portal/feature-specs",
     "FRD/sm-portal",
     "FRD/cp-portal",
-    "FRD/buyer-portal",
     "Untitled 1.canvas",
     "Untitled.canvas",
     "Untitled 3.canvas",

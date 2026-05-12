@@ -1,0 +1,25 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - region "Notifications Alt+T"
+  - generic [ref=e4]:
+    - img "Logo" [ref=e9]
+    - generic [ref=e10]:
+      - img "Banner" [ref=e12]
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - heading "Admin Login" [level=2] [ref=e17]
+          - generic [ref=e19]:
+            - generic [ref=e20]: Mobile Number*
+            - generic [ref=e21]:
+              - generic [ref=e22]: "+91"
+              - textbox "Enter Mobile Number" [ref=e23]
+          - paragraph [ref=e24]:
+            - text: By verifying, you accept the
+            - link "Terms & Conditions" [ref=e25] [cursor=pointer]:
+              - /url: /admin
+            - text: and
+            - link "Privacy Policy" [ref=e26] [cursor=pointer]:
+              - /url: https://growwithhoabl.com/privacy-policy
+            - text: .
+          - button "Send OTP" [ref=e27] [cursor=pointer]
+        - paragraph [ref=e29]: Copyright © 2026 Growwithhoabl All Rights Reserved.

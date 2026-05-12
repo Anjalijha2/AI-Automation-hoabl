@@ -1,0 +1,4 @@
+[ 4116997ms] [ERROR] WebSocket connection to 'wss://uat-api.xrportal.in/backend/api/xanadu/ws/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUyODQsImlhdCI6MTc3ODUwMDA0NCwiZXhwIjoxNzc4NTg2NDQ0fQ.Sf8qnirWZ5EfR4FzuiY86WThMW0wbEpKnAu2HMAiNj4' failed: Error in connection establishment: net::ERR_NAME_NOT_RESOLVED @ https://uat-web.xrportal.in/assets/index-Dr_yrWnY.js:135
+[ 4116998ms] [ERROR] WebSocket error: Event @ https://uat-web.xrportal.in/assets/index-Dr_yrWnY.js:135
+[ 4120028ms] [ERROR] WebSocket connection to 'wss://uat-api.xrportal.in/backend/api/xanadu/ws/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUyODQsImlhdCI6MTc3ODUwMDA0NCwiZXhwIjoxNzc4NTg2NDQ0fQ.Sf8qnirWZ5EfR4FzuiY86WThMW0wbEpKnAu2HMAiNj4' failed: Error in connection establishment: net::ERR_NAME_NOT_RESOLVED @ https://uat-web.xrportal.in/assets/index-Dr_yrWnY.js:135
+[ 4120028ms] [ERROR] WebSocket error: Event @ https://uat-web.xrportal.in/assets/index-Dr_yrWnY.js:135

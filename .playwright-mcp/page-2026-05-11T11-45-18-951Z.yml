@@ -1,0 +1,42 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - region "Notifications Alt+T"
+  - generic [ref=e4]:
+    - img "Logo" [ref=e9]
+    - generic [ref=e10]:
+      - img "Banner" [ref=e12]
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - button [ref=e30] [cursor=pointer]:
+            - img [ref=e31]
+          - heading "ENTER OTP" [level=2] [ref=e34]
+          - paragraph [ref=e35]: Enter the OTP sent to your phone number
+          - generic [ref=e37]:
+            - generic [ref=e38]: Enter OTP*
+            - generic [ref=e39]:
+              - group [ref=e40]:
+                - textbox "OTP Input 1" [ref=e41]
+                - textbox "OTP Input 2" [ref=e42]
+                - textbox "OTP Input 3" [ref=e43]
+                - textbox "OTP Input 4" [ref=e44]
+                - textbox "OTP Input 5" [ref=e45]
+                - textbox "OTP Input 6" [ref=e46]
+              - generic [ref=e47]:
+                - generic [ref=e48]:
+                  - img [ref=e49]
+                  - text: 59s
+                - button "Re-Send OTP" [disabled] [ref=e53]
+          - paragraph [ref=e24]:
+            - text: By verifying, you accept the
+            - link "Terms & Conditions" [ref=e25] [cursor=pointer]:
+              - /url: /admin
+            - text: and
+            - link "Privacy Policy" [ref=e26] [cursor=pointer]:
+              - /url: https://growwithhoabl.com/privacy-policy
+            - text: .
+          - button "Submit OTP" [ref=e54] [cursor=pointer]: Submit OTP
+        - paragraph [ref=e29]: Copyright © 2026 Growwithhoabl All Rights Reserved.
+  - generic [ref=e56]:
+    - img "check-circle" [ref=e57]:
+      - img [ref=e58]
+    - generic [ref=e60]: OTP sent successfully!
