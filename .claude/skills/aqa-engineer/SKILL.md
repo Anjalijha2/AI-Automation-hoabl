@@ -226,6 +226,27 @@ await this.selectOption(selector, value) // Select dropdown option
 await this.uploadFile(selector, filePath) // File upload
 ```
 
+---
+
+## Skill Domain 5 — Pipeline Tracker / Handoff Management
+
+### Reading the Tracker
+`docs/DOCUMENTATION-TRACKER.md` is the trigger source. Automation QA acts only on rows where `Automation QA Status` = `Pending Review` or `Auto-Triggered`.
+
+**On receiving Pending Review / Auto-Triggered:**
+1. Read `Change Type` set by BA:
+   - `New Feature` → generate new automation scripts from the new manual test cases in `docs/manual-test-cases/`
+   - `Logic Change` → detect which existing specs and page objects relate to this document → update selectors, assertions, and flows to match the updated TCs
+   - `Bug Fix` → re-run affected scripts; update if selector/assertion fix is needed
+   - `No Change` → row should be `Skipped` — confirm, no action needed
+2. Set `Automation QA Status` → `In Progress` immediately
+3. `Auto-Triggered` + `Logic Change`: diff the updated TCs against current spec file — apply only the delta, do not rewrite working tests
+4. `Auto-Triggered` + `New Feature`: scaffold new spec file + page object following existing conventions
+5. Set `Automation QA Status` → `Done` after scripts pass locally
+6. Update `Last Updated` column
+
+**Never auto-apply healing fixes or structural script changes without BA Agent approval** — this rule applies even when tracker shows `Auto-Triggered`.
+
 ### Prohibited Patterns
 ```javascript
 // ❌ Never hardcode selectors

@@ -8,52 +8,45 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "path:Sprint-Records  ",
+      "query": "path:Admin-Portal",
       "color": {
         "a": 1,
-        "rgb": 11845410
+        "rgb": 15731210
       }
     },
     {
-      "query": "file:BRD",
+      "query": "path:SM-Portal",
       "color": {
         "a": 1,
-        "rgb": 2295794
+        "rgb": 670197
       }
     },
     {
-      "query": "file:Sprint",
+      "query": "path:CP-Portal",
       "color": {
         "a": 1,
-        "rgb": 10434057
+        "rgb": 2092036
       }
     },
     {
-      "query": "file:Workflow",
+      "query": "path:Buyer-Portal",
       "color": {
         "a": 1,
-        "rgb": 690698
+        "rgb": 894722
       }
     },
     {
-      "query": "file:Module",
+      "query": "path:_Shared",
       "color": {
         "a": 1,
-        "rgb": 11605269
+        "rgb": 11869651
       }
     },
     {
-      "query": "file:Glossary",
+      "query": "file:index",
       "color": {
         "a": 1,
-        "rgb": 9836427
-      }
-    },
-    {
-      "query": "file:Master",
-      "color": {
-        "a": 1,
-        "rgb": 9264135
+        "rgb": 5704330
       }
     }
   ],
@@ -67,6 +60,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 363,
-  "scale": 0.4785965001747576,
+  "scale": 0.60917999647559,
   "close": true
 }

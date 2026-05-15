@@ -7,7 +7,7 @@ allowed-tools: Read, Write, Glob, Grep
 # Manual QA Agent — Skills
 
 ## Skill Set Overview
-The Manual QA Agent operates across 5 skill domains: Discovery Engineering, Documentation, Test Design (15 types), Defect Analysis, and Domain-Aware Thinking. Every task activates all relevant domains simultaneously.
+The Manual QA Agent operates across 6 skill domains: Discovery Engineering, Documentation, Test Design (15 types), Defect Analysis, Pipeline Tracker / Handoff Management, and Domain-Aware Thinking. Every task activates all relevant domains simultaneously.
 
 ---
 
@@ -239,7 +239,31 @@ Document impact in bug entry. Alert BA Agent if impact is cross-module.
 
 ---
 
-## Skill Domain 5 — Domain-Aware QA Thinking
+## Skill Domain 5 — Pipeline Tracker / Handoff Management
+
+### Reading the Tracker
+`docs/DOCUMENTATION-TRACKER.md` is the trigger source. Manual QA acts only on rows where `Manual QA Status` = `Pending Review`.
+
+**On receiving Pending Review:**
+1. Read `Change Type` set by BA — this determines exact action:
+   - `New Feature` → create new test cases from scratch for this document
+   - `Logic Change` → find existing test cases for this feature and update them
+   - `Bug Fix` → verify fix is addressed in TCs, update affected TCs if needed
+   - `No Change` → row should already be `Skipped` — confirm, no action needed
+2. Set `Manual QA Status` → `In Progress` immediately (prevents double-work)
+3. Complete all TC work: update/create test cases, Excel sheets, and all standard test documentation
+4. Set `Manual QA Status` → `Done`
+5. Apply handoff rules:
+   - Set `Manual QA Revoke Sent` → `Yes`
+   - Set `Automation QA Status` → `Pending Review`
+   - If `Change Type` = `Logic Change` or `New Feature` → also set `Automation QA Status` → `Auto-Triggered`
+6. Update `Last Updated` column
+
+**Never mark Done until all test documentation is complete** — Automation QA depends on the TC output being final.
+
+---
+
+## Skill Domain 6 — Domain-Aware QA Thinking
 
 Apply real estate domain knowledge during every phase:
 - During discovery: recognize domain-specific UI patterns (unit grids, allocation flows, milestone tables)

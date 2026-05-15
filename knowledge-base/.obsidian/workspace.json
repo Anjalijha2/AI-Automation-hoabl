@@ -6,63 +6,20 @@
       {
         "id": "15f5d5b4a7a254d8",
         "type": "tabs",
-        "dimension": 21.931407942238266,
         "children": [
           {
             "id": "8a9c1d3eb0b04dad",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
-            },
-            "group": "cd635f3ea41834be"
-          }
-        ]
-      },
-      {
-        "id": "026598400c6934ec",
-        "type": "tabs",
-        "dimension": 78.06859205776173,
-        "children": [
-          {
-            "id": "f5a92c570e357261",
-            "type": "leaf",
-            "state": {
-              "type": "localgraph",
+              "type": "markdown",
               "state": {
-                "file": "Admin-Portal/Admin Portal.md",
-                "options": {
-                  "collapse-filter": true,
-                  "search": "",
-                  "localJumps": 1,
-                  "localBacklinks": true,
-                  "localForelinks": true,
-                  "localInterlinks": false,
-                  "showTags": false,
-                  "showAttachments": false,
-                  "hideUnresolved": false,
-                  "collapse-color-groups": true,
-                  "colorGroups": [],
-                  "collapse-display": true,
-                  "showArrow": false,
-                  "textFadeMultiplier": 0,
-                  "nodeSizeMultiplier": 1,
-                  "lineSizeMultiplier": 1,
-                  "collapse-forces": true,
-                  "centerStrength": 0.518713248970312,
-                  "repelStrength": 10,
-                  "linkStrength": 1,
-                  "linkDistance": 250,
-                  "scale": 1,
-                  "close": false
-                }
+                "file": "_Shared/Reference/SHARED-BR-Integrations.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-git-fork",
-              "title": "Graph of Admin Portal"
-            },
-            "group": "cd635f3ea41834be"
+              "icon": "lucide-file",
+              "title": "SHARED-BR-Integrations"
+            }
           }
         ]
       }
@@ -198,12 +155,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "_Shared/Open-Questions/SHARED-OQ-All-Modules.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of SHARED-OQ-All-Modules"
             }
           }
         ],
@@ -211,7 +169,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -224,14 +183,25 @@
       "bases:Create new base": false
     }
   },
-  "active": "f5a92c570e357261",
+  "active": "8a9c1d3eb0b04dad",
   "lastOpenFiles": [
-    "_Shared/Reference/SHARED-WF-payment-workflow.md",
+    "Admin-Portal/FRD/ADMIN-FRD-Payment-Transactions.md",
     "Admin-Portal/Admin Portal.md",
-    "Admin-Portal/Workflows/ADMIN-WF-Allocation.md",
+    "_Shared/Open-Questions/SHARED-OQ-All-Modules.md",
+    "Admin-Portal/BRD/ADMIN-BRD-Admin-Portal.md",
+    "KYC-Workflow.md",
+    "SM-Portal/FRD/SM-FRD-SM-Portal.md",
+    "Admin-Portal/Workflows/ADMIN-WF-Payment.md",
+    "SM-Portal/Workflows/SM-WF-Allocation.md",
+    "SM-Portal/FRD/SM-FS-Login.md",
     "index.md",
-    "SM-Portal/SM Portal.md",
+    "_Shared/Reference/SHARED-BR-Integrations.md",
+    "_Shared/Reference/SHARED-BR-WebSocket.md",
+    "Admin-Portal/Workflows/ADMIN-WF-Allocation.md",
+    "CP-Portal/BRD/CP-BRD-CP-Portal.md",
     "CP-Portal/CP Portal.md",
+    "_Shared/Reference/SHARED-WF-payment-workflow.md",
+    "SM-Portal/SM Portal.md",
     "Buyer-Portal/Buyer Portal.md",
     "backend-technical.md",
     "Admin-Portal/BRD/ADMIN-BRD-Channel-Partners.md",
@@ -241,17 +211,6 @@
     "Admin-Portal/FRD/ADMIN-FS-Towers.md",
     "Admin-Portal/FRD/ADMIN-FRD-Towers.md",
     "Reference/integrations.md",
-    "Reference/websocket.md",
-    "_Shared/Open-Questions/SHARED-OQ-All-Modules.md",
-    "_Shared/Business-Flows/SHARED-BF-Sales-Manager-Assignment.md",
-    "_Shared/Business-Flows/SHARED-BF-Allocation-Campaign-Lifecycle.md",
-    "Feature-Spec - Customer Registration.md",
-    "Admin-Portal/Workflows/ADMIN-WF-Registration.md",
-    "Admin-Portal/Workflows/ADMIN-WF-Payment.md",
-    "SM-Portal/BRD/SM-BRD-SM-Portal.md",
-    "Admin-Portal/BRD/ADMIN-BRD-Admin-Portal.md",
-    "SM-Portal/Workflows/SM-WF-Allocation.md",
-    "Buyer-Portal/Workflows/BUYER-WF-Allocation.md",
     "Master-BRD/Workflows",
     "Master-BRD",
     "BRD/workflows",

@@ -15,7 +15,17 @@
       "Bash(npm run sprint:*)",
       "Bash(node src/agents/*)",
       "Bash(node -e *)",
-      "Bash(node --check *)"
+      "Bash(node --check *)",
+      "Write",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_network_requests",
+      "mcp__plugin_playwright_playwright__browser_wait_for",
+      "mcp__plugin_playwright_playwright__browser_tabs",
+      "mcp__plugin_playwright_playwright__browser_press_key",
+      "mcp__plugin_playwright_playwright__browser_hover",
+      "mcp__plugin_playwright_playwright__browser_select_option",
+      "mcp__plugin_playwright_playwright__browser_type",
+      "mcp__plugin_playwright_playwright__browser_console_messages"
     ]
   },
   "hooks": {

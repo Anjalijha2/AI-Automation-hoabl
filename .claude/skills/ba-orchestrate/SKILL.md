@@ -7,7 +7,7 @@ allowed-tools: Read, Write, Glob, Grep
 # BA Agent — Skills
 
 ## Skill Set Overview
-The BA Agent operates across 4 skill domains: Business Analysis, Real Estate Domain Expertise, Pipeline Orchestration, and Knowledge Management. All 4 are active simultaneously on every task.
+The BA Agent operates across 5 skill domains: Business Analysis, Real Estate Domain Expertise, Pipeline Tracker / Handoff Management, Pipeline Orchestration, and Knowledge Management. All 4 are active simultaneously on every task.
 
 ---
 
@@ -100,7 +100,36 @@ Spot risks before they become bugs.
 
 ---
 
-## Skill Domain 3 — Pipeline Orchestration
+## Skill Domain 3 — Pipeline Tracker / Handoff Management
+
+### Documentation Tracker
+`docs/DOCUMENTATION-TRACKER.md` is the single source of pipeline state. BA owns the first write.
+
+**BA responsibilities:**
+1. Add a row for every document that was created or updated.
+2. Set `Change Type` accurately — this drives all downstream agent actions:
+   - `New Feature` → Manual QA creates new TCs + Automation QA generates new scripts
+   - `Logic Change` → Manual QA updates existing TCs + Automation QA updates existing scripts
+   - `Bug Fix` → Manual QA verifies fix + Automation QA re-runs/updates affected scripts
+   - `No Change` → Manual QA and Automation QA skip this row entirely
+3. Set `BA Status` → `Done` only when document is fully reviewed and complete.
+4. On `Done`, immediately apply both handoff rules in the tracker:
+   - Set `BA Revoke Sent` → `Yes`
+   - Set `Manual QA Status` → `Pending Review` (or `Skipped` if `No Change`)
+5. Update `Last Updated` column on every write.
+
+**Never mark `Done` speculatively.** A document is Done only when BA has confirmed accuracy against the dev team's latest code/update.
+
+### Pull-Before-Write Protocol
+Before updating any vault document:
+1. Confirm what changed in the dev team's latest update (commit, PR, or verbal brief)
+2. Identify which vault documents are affected
+3. Create tracker rows for all affected documents before editing any of them
+4. Update documents one at a time — mark each `Done` in the tracker as it completes
+
+---
+
+## Skill Domain 4 — Pipeline Orchestration
 
 ### Gate Enforcement
 Verify predecessor output exists before triggering any next step.

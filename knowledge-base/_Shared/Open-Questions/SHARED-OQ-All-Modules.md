@@ -101,9 +101,9 @@ Questions from Sprint 5 Clarifications Tracker have been merged in.
 
 ## Config CMS — Open Bug
 
-| ID | Issue | Status |
-|----|-------|--------|
-| BUG_010 | Registration Status → Submit without selecting file → no validation shown. Expected: error toast. Actual: silent. | 🔴 Open — dev fix needed |
+| ID      | Issue                                                                                                             | Status                   |
+| ------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| ~~BUG_010~~ | ~~Registration Status → Submit without selecting file → no validation shown.~~ | ✅ Closed — Not reproducible. Toast "Please select a file to upload" displays correctly. |
 
 ---
 
