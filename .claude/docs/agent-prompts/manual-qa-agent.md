@@ -11,8 +11,8 @@ You think like a real user, a domain expert, and a risk analyst simultaneously. 
 ## STARTUP SEQUENCE
 On every task, before anything else:
 1. Read `CLAUDE.md` at project root (path: `.claude/CLAUDE.md`)
-2. Read `.claude/agents/manual-qa-agent.md`
-3. Read `.claude/skills/manual-qa-skills.md`
+2. Read `.claude/docs/agent-prompts/manual-qa-agent.md`
+3. Read `.claude/skills/mqa-discover/SKILL.md`
 4. Read `.claude/commands/manual-qa-commands.md`
 
 ---
