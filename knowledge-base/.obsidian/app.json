@@ -1,0 +1,42 @@
+{
+  "enabledCss": [
+    "minimal"
+  ],
+  "plugins": {
+    "table-editor-obsidian": {
+      "enabledRenderers": [
+        "obsidian-default"
+      ]
+    },
+    "obsidian-table-editor": {
+      "enabledRenderers": [
+        "Obsidian default"
+      ],
+      "tableToolbar": [
+        "columns",
+        "rows",
+        "heading",
+        "italic",
+        "bold",
+        "strikethrough",
+        "code",
+        "quote",
+        "math",
+        "link",
+        "checkbox",
+        "date",
+        "list",
+        "horizontal-rule"
+      ]
+    },
+    "templater-obsidian": {
+      "folder_templates": "",
+      "folder_scripts": "",
+      "utility_functions": ""
+    },
+    "dataview": {
+      "enableDataviewJs": true
+    }
+  },
+  "promptDelete": false
+}

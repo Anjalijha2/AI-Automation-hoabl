@@ -1,0 +1,270 @@
+{
+  "main": {
+    "id": "95eec4989294b975",
+    "type": "split",
+    "children": [
+      {
+        "id": "15f5d5b4a7a254d8",
+        "type": "tabs",
+        "dimension": 21.931407942238266,
+        "children": [
+          {
+            "id": "8a9c1d3eb0b04dad",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            },
+            "group": "cd635f3ea41834be"
+          }
+        ]
+      },
+      {
+        "id": "026598400c6934ec",
+        "type": "tabs",
+        "dimension": 78.06859205776173,
+        "children": [
+          {
+            "id": "f5a92c570e357261",
+            "type": "leaf",
+            "state": {
+              "type": "localgraph",
+              "state": {
+                "file": "Admin-Portal/Admin Portal.md",
+                "options": {
+                  "collapse-filter": true,
+                  "search": "",
+                  "localJumps": 1,
+                  "localBacklinks": true,
+                  "localForelinks": true,
+                  "localInterlinks": false,
+                  "showTags": false,
+                  "showAttachments": false,
+                  "hideUnresolved": false,
+                  "collapse-color-groups": true,
+                  "colorGroups": [],
+                  "collapse-display": true,
+                  "showArrow": false,
+                  "textFadeMultiplier": 0,
+                  "nodeSizeMultiplier": 1,
+                  "lineSizeMultiplier": 1,
+                  "collapse-forces": true,
+                  "centerStrength": 0.518713248970312,
+                  "repelStrength": 10,
+                  "linkStrength": 1,
+                  "linkDistance": 250,
+                  "scale": 1,
+                  "close": false
+                }
+              },
+              "icon": "lucide-git-fork",
+              "title": "Graph of Admin Portal"
+            },
+            "group": "cd635f3ea41834be"
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "00bb804cc342b2f8",
+    "type": "split",
+    "children": [
+      {
+        "id": "2fc52997b4dcbfe7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "44dff1ad4e53a158",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": true
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "f3f7f6503f337c61",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "b547bb71cc4a8262",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "afe235c1128ea4de",
+    "type": "split",
+    "children": [
+      {
+        "id": "a919e6b18db8bf6f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "29b48b1d1cc350cf",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "2959f4c16825af88",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Untitled.base",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Untitled"
+            }
+          },
+          {
+            "id": "1144d9a1d8052135",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "e9ee7ea9afbe44fa",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "6654bb452bed3ce0",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "f5a92c570e357261",
+  "lastOpenFiles": [
+    "_Shared/Reference/SHARED-WF-payment-workflow.md",
+    "Admin-Portal/Admin Portal.md",
+    "Admin-Portal/Workflows/ADMIN-WF-Allocation.md",
+    "index.md",
+    "SM-Portal/SM Portal.md",
+    "CP-Portal/CP Portal.md",
+    "Buyer-Portal/Buyer Portal.md",
+    "backend-technical.md",
+    "Admin-Portal/BRD/ADMIN-BRD-Channel-Partners.md",
+    "_Shared/Reference/SHARED-BR-Backend-Technical.md",
+    "_Shared/Reference/SHARED-BR-Backend.md",
+    "_Shared/Sprint-Records/SHARED-SR-Sprint-5-Overview.md",
+    "Admin-Portal/FRD/ADMIN-FS-Towers.md",
+    "Admin-Portal/FRD/ADMIN-FRD-Towers.md",
+    "Reference/integrations.md",
+    "Reference/websocket.md",
+    "_Shared/Open-Questions/SHARED-OQ-All-Modules.md",
+    "_Shared/Business-Flows/SHARED-BF-Sales-Manager-Assignment.md",
+    "_Shared/Business-Flows/SHARED-BF-Allocation-Campaign-Lifecycle.md",
+    "Feature-Spec - Customer Registration.md",
+    "Admin-Portal/Workflows/ADMIN-WF-Registration.md",
+    "Admin-Portal/Workflows/ADMIN-WF-Payment.md",
+    "SM-Portal/BRD/SM-BRD-SM-Portal.md",
+    "Admin-Portal/BRD/ADMIN-BRD-Admin-Portal.md",
+    "SM-Portal/Workflows/SM-WF-Allocation.md",
+    "Buyer-Portal/Workflows/BUYER-WF-Allocation.md",
+    "Master-BRD/Workflows",
+    "Master-BRD",
+    "BRD/workflows",
+    "index.md.tmp.21600.1778570137660",
+    "Reference",
+    "FRD/sm-portal/feature-specs",
+    "FRD/buyer-portal/feature-specs",
+    "FRD/cp-portal/feature-specs",
+    "FRD/admin-portal/modules",
+    "FRD/admin-portal/feature-specs",
+    "Untitled 1.canvas",
+    "Untitled.canvas",
+    "Untitled 3.canvas",
+    "Untitled 2.canvas"
+  ]
+}
