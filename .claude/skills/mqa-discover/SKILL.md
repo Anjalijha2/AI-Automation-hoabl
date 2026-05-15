@@ -1,3 +1,9 @@
+---
+name: mqa-discover
+description: Manual QA Agent skill domains — UI discovery, selector extraction, 12-dimension screen documentation, test case design across all 15 testing types, and defect root cause analysis for XR Portal. Use when a module needs discovery, screen docs, test cases, or bug logging.
+allowed-tools: Read, Write, Glob, Grep
+---
+
 # Manual QA Agent — Skills
 
 ## Skill Set Overview

@@ -1,3 +1,9 @@
+---
+name: ba-orchestrate
+description: BA Agent skill domains — business analysis, real estate domain expertise, pipeline orchestration, knowledge management. Use when orchestrating module sprints, reviewing BRDs, enforcing pipeline gates, managing vault, or identifying real estate domain risks for XR Portal.
+allowed-tools: Read, Write, Glob, Grep
+---
+
 # BA Agent — Skills
 
 ## Skill Set Overview

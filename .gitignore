@@ -4,5 +4,8 @@ dist/
 discovery/videos/
 reports/
 automation/fixtures/.auth/
+src/fixtures/.auth/
 test-results/
+.playwright-mcp/
+.claude/agent-memory/
 

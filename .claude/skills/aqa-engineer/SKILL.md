@@ -1,3 +1,9 @@
+---
+name: aqa-engineer
+description: Automation QA Agent skill domains — Playwright script engineering (POM), test execution, failure diagnosis and healing, code quality standards. Use when generating automation scripts, running test suites, diagnosing failures, or reviewing spec quality for XR Portal.
+allowed-tools: Read, Write, Glob, Grep, Bash
+---
+
 # Automation QA Agent — Skills
 
 ## Skill Set Overview
@@ -64,12 +70,6 @@ test.describe("<Module> Module", () => {
       await login.enterOtp('000000');
       await login.clickLogin();
       await expect(page.locator(login.s.errorMessage)).toBeVisible();
-    });
-  });
-
-  test.describe("E2E Tests", () => {
-    test("TC_ALLOC_E2E_001 — Full booking flow end to end", async ({ page }) => {
-      // full journey test
     });
   });
 
@@ -165,14 +165,6 @@ npm run auth:setup
 # - UAT credentials changed
 ```
 
-### Cross-Browser Execution
-```bash
-npm run test:chrome    # Chromium — primary
-npm run test:firefox   # Firefox — secondary
-npm run test:webkit    # WebKit/Safari — tertiary
-npm run test:all       # All three (1 worker, sequential)
-```
-
 ---
 
 ## Skill Domain 3 — Failure Diagnosis & Healing
@@ -199,15 +191,7 @@ Identify root cause category before recommending a fix:
 |---|-------|---------------|----------------|-----------|---------|
 | 1 | TC_LOGIN_NEG_005 | docs/selectors/login.json | errorMessage: ".toast-error" (was ".error-toast") | Selector change | High |
 | 2 | TC_CFG_INT_002 | src/pages/ConfigPage.js | Add waitForSelector before dropdown interaction | Dynamic rendering | Medium |
-| 3 | TC_ALLOC_E2E_001 | tests/ui/allocation.spec.js | Add waitForLoadState('networkidle') after submit | Timing issue | Medium |
 ```
-
-### Pattern Log Maintenance
-Track across sprints in `healing-reports/pattern-log.md`:
-- Which selectors break most frequently
-- Which modules have highest failure rates
-- Systemic issues (e.g., "login module selectors change every deploy")
-- Recommendations to dev team (e.g., "standardize data-testid on all interactive elements")
 
 ### Non-Destructive Principle
 Never apply any fix without explicit BA Agent approval.
@@ -219,8 +203,6 @@ Present → Await approval → Apply only approved items → Re-validate → Not
 
 ### Self-Validation Checklist (Run Before Every Phase 1 Completion Report)
 ```
-Before notifying BA Agent that scripts are ready, verify:
-
 [ ] All selectors loaded from docs/selectors/<module>.json — none hardcoded
 [ ] Every test() starts with TC_ID + type code in correct format
 [ ] All TC_IDs from approved TC file are represented in spec
