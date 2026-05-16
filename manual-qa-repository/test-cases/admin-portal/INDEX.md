@@ -1,6 +1,7 @@
-# Test Cases — Index
+# Admin Portal — Test Cases Index
 
-**Format:** `TC_MODULE_TYPE_NNN` (agent-generated) · `TC-MODULE-NNN` (hand-written)
+**Portal:** XR Portal Admin (`https://uat-web.xrportal.in/admin`)  
+**Back to master:** [../INDEX.md](../INDEX.md)
 
 ---
 
@@ -20,30 +21,16 @@
 
 ---
 
-## TC Type Codes
+## Sprint Mapping
 
-| Code | Type |
-|------|------|
-| `UI` | UI / Layout |
-| `FUNC` | Functional |
-| `VAL` | Validation |
-| `E2E` | End-to-End |
-| `API` | API Contract |
-| `DB` | Database |
-| `INT` | Integration |
-| `BIZ` | Business Rule |
-| `REG` | Regression |
-| `EXP` | Exploratory |
-| `NEG` | Negative |
-| `EDGE` | Edge Case |
-| `XMOD` | Cross-Module |
-| `DC` | Data Consistency |
-| `WF` | Workflow |
-
----
-
-## BA Sign-off Status
-
-- ✅ Approved — automation can proceed
-- ⏳ Pending — awaiting BA review
-- ❌ Rejected — needs rework
+| Module | Sprint | Phase |
+|--------|--------|-------|
+| Login | Sprint 1 | Phase 3 — Automation pending |
+| Towers | Sprint 2 | Phase 2 — TCs pending |
+| Allocation | Sprint 2 | Phase 2 — TCs pending |
+| Config/CMS | Sprint 3 | Phase 2 — TCs pending |
+| Customers | Sprint 4 | Phase 1 — Not started |
+| Channel Partners | TBD | — |
+| JBP | TBD | — |
+| Offers | TBD | — |
+| Admin CMS | TBD | — |

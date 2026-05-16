@@ -1,8 +1,0 @@
-{
-  "sqlInjection":  "' OR '1'='1",
-  "xssInjection":  "<script>alert('xss')</script>",
-  "longString":    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "specialChars":  "@#$%^&*()-+",
-  "emptyString":   "",
-  "whitespace":    "   "
-}

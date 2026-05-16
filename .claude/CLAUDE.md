@@ -125,13 +125,13 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fix
 ## Adding a New Portal (Sprint)
 
 1. Run discovery: `npm run discover`
-2. Document screens → `manual-qa-repository/03-user-manual/pages/<MODULE>.md`
-3. Design test cases → `manual-qa-repository/01-test-cases/<module>/TC_<MODULE>.md` (BA sign-off required)
+2. Document screens → `manual-qa-repository/user-manual/pages/<MODULE>.md`
+3. Design test cases → `manual-qa-repository/test-cases/<portal>/<module>/TC_<MODULE>.md` (BA sign-off required)
 4. Create `automation-repository/pages/<Portal>Page.js` extending `BasePage`
 5. Create `tests/e2e/<portal>.spec.js` using `base-test` fixtures
 6. Run auth-setup, then execute suite
-7. Log bugs → `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`
-8. Log execution summary → `manual-qa-repository/06-test-runs/<env>/sprint-N/`
+7. Log bugs → `manual-qa-repository/bug-reports/BUG_TRACKER.md`
+8. Log execution summary → `manual-qa-repository/test-runs/<env>/sprint-N/`
 
 ---
 
@@ -141,10 +141,10 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fix
 |------|-----------|---------|
 | Page object | `automation-repository/pages/<Portal>Page.js` | `LoginPage.js` |
 | Spec file | `tests/e2e/<portal>.spec.js` | `login.spec.js` |
-| Screen doc | `manual-qa-repository/03-user-manual/pages/<PORTAL>.md` | `LOGIN.md` |
-| TC file | `manual-qa-repository/01-test-cases/<module>/TC_<MODULE>.md` | `TC_LOGIN.md` |
-| Bug | `BUG_NNN` in `manual-qa-repository/04-bug-reports/BUG_TRACKER.md` | `BUG_001` |
-| Execution summary | `manual-qa-repository/06-test-runs/<env>/sprint-N/execution-summary.md` | — |
+| Screen doc | `manual-qa-repository/user-manual/pages/<PORTAL>.md` | `LOGIN.md` |
+| TC file | `manual-qa-repository/test-cases/<portal>/<module>/TC_<MODULE>.md` | `TC_LOGIN.md` |
+| Bug | `BUG_NNN` in `manual-qa-repository/bug-reports/BUG_TRACKER.md` | `BUG_001` |
+| Execution summary | `manual-qa-repository/test-runs/<env>/sprint-N/execution-summary.md` | — |
 
 ---
 
@@ -153,8 +153,8 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fix
 - HTML report: `reports/html-report/` — `npm run report`
 - JSON results: `reports/results.json`
 - Screenshots: `test-results/`
-- Bug tracker: `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`
-- Execution summaries: `manual-qa-repository/06-test-runs/`
+- Bug tracker: `manual-qa-repository/bug-reports/BUG_TRACKER.md`
+- Execution summaries: `manual-qa-repository/test-runs/`
 - Sprint log: `manual-qa-repository/SPRINT_LOG.md`
 - Task tracker: `manual-qa-repository/TASK_TRACKER.md`
 - Test coverage: `manual-qa-repository/test-coverage.md`

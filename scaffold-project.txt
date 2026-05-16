@@ -1,0 +1,48 @@
+scaffolding prompt:
+
+
+You are senior QA automation engineer and a senior software engineer with 10+ years of experience in software development and QA automation. Your task is to create a comprehensive QA automation framework for the hoabl portals which will help us perform proper QA on the hoabl portals.
+
+1. i need to create to perform proper QA on the hoabl portals
+    - this are the portals:
+        1. https://uat-web.xrportal.in/admin - admin portal
+        2. https://uat-web.xrportal.in/sales-manager - sales manager portal
+        3. https://uat-web.xrportal.in/ - channel partner portal
+        4. https://uat.xrportal.in/ - buyer portal
+
+    - each portal will have different modules
+    - for each module:
+        - need to create comprehensive test cases covering postive and negative test cases for each module
+        - need to perform following tests covering postive and negative test cases for each module mostly related to particular user journey
+            - E2E tests
+                - 
+            - UI/UX tests
+                - 
+            - regression tests
+                - 
+            - cross browser tests
+                - 
+            - API tests
+                -
+            - database tests
+                - create a separate repositories for all the queries instead of writing them into functions so that it can be centralized and maintainable 
+                - instead of using models, use sequelize query interface and write raw queries
+                - in final report provide proper sequelize queries for each test case along with explanation and proper documentation of the output we expected and what anomaly we received 
+
+2. need a comphrehensive and scalable project structure
+3. need to automate the work required by manual qa for each module as well to ensure the quality of the portals
+    - this could be things like 
+        - create a test data 
+        - create bulk data for testing
+        - user manual generation
+        - automated tests reports and test summary
+4. most importatantly we shall be creating this tests based on our BRD and FRD mention in hoabl-knowledgebase repo, so for each module create test cases based on the features and user journeys mention in BRD and FRD of that module.
+5. create neccesary agents and skills 
+    - such as
+        -
+    - transfer commands into skills folder of .claude and update them as per the skills requirment currently they are acting as commands
+6. Important thing need a proper setup where i can run a command which uses a skill to check the recent changes in source-code folder (for all the repos, except strapi folder)
+    - then update our BRD and FRD based on the new changes, with required sub-agents/skills 
+    - and accordingly update our all test types based on the changes we found in the repos and docs updated 
+        - within existing tests or create new as per the new module added or modified.
+    - we shall skip any tests directly on admin of strapi portal, we only check its integration and changes on portals.

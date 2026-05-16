@@ -1,9 +1,0 @@
-{
-  "validMobile":  "8888888888",
-  "validOTP":     "258369",
-  "shortMobile":  "12345",
-  "allZeroMobile":"0000000000",
-  "wrongOTP":     "123456",
-  "partialOTP":   "258",
-  "allZeroOTP":   "000000"
-}
