@@ -10,7 +10,7 @@
 
 ```
 manual-qa-repository/
-├── test-cases/                    ← Manual TCs — structured by portal → module
+├── 01-test-cases/                 ← Manual TCs — structured by portal → module
 │   ├── INDEX.md                   ← Master portal index
 │   ├── admin-portal/              ← > Admin Portal
 │   │   ├── INDEX.md
@@ -29,14 +29,14 @@ manual-qa-repository/
 │       ├── TC_SM_TOWERS.md
 │       └── TC_LEADS.md
 │
-├── testing-types/                 ← Smoke, regression, sanity, UAT sign-off, retesting, exploratory
-├── user-manual/                   ← Admin guide + per-screen docs (12 dimensions)
-├── bug-reports/                   ← BUG_TRACKER.md, per-bug files, metrics, templates
-├── environments/                  ← UAT / DEV config, test accounts, ENV strategy
-├── test-runs/                     ← Execution summaries per sprint per environment
-├── execution/                     ← Run commands, ENV skip log, UAT vs DEV delta
-├── architecture/                  ← Agent roles, process flow, framework config, QA strategy
-├── templates/                     ← TC template, screen doc template, execution summary template
+├── 02-testing-types/              ← Smoke, regression, sanity, UAT sign-off, retesting, exploratory
+├── 03-user-manual/                ← Admin guide + per-screen docs (12 dimensions)
+├── 04-bug-reports/                ← BUG_TRACKER.md, per-bug files, metrics, templates
+├── 05-environments/               ← UAT / DEV config, test accounts, ENV strategy
+├── 06-test-runs/                  ← Execution summaries per sprint per environment
+├── 07-execution/                  ← Run commands, ENV skip log, UAT vs DEV delta
+├── 08-architecture/               ← Agent roles, process flow, framework config, QA strategy
+├── 09-templates/                  ← TC template, screen doc template, execution summary template
 │
 ├── README.md                      ← This file
 ├── DASHBOARD.md                   ← Live project status dashboard
@@ -54,10 +54,10 @@ manual-qa-repository/
 ## Sprint Execution Order (Per Portal)
 
 ```
-1. Portal Documentation    → user-manual/pages/<MODULE>.md
-2. Manual Test Cases       → test-cases/<portal>/<module>/TC_<MODULE>.md  (BA sign-off required)
+1. Portal Documentation    → 03-user-manual/pages/<MODULE>.md
+2. Manual Test Cases       → 01-test-cases/<portal>/<module>/TC_<MODULE>.md  (BA sign-off required)
 3. Automation Scripts      → tests/e2e/<module>.spec.js
-4. Execute + Report        → test-runs/<env>/sprint-N/
+4. Execute + Report        → 06-test-runs/<env>/sprint-N/
 ```
 
 ---
@@ -66,17 +66,17 @@ manual-qa-repository/
 
 | Need | Go To |
 |------|-------|
-| Find test cases | [test-cases/INDEX.md](test-cases/INDEX.md) |
-| Admin Portal TCs | [test-cases/admin-portal/INDEX.md](test-cases/admin-portal/INDEX.md) |
-| Sales Manager TCs | [test-cases/sales-manager-portal/INDEX.md](test-cases/sales-manager-portal/INDEX.md) |
-| Smoke checklist | [testing-types/smoke/SMOKE_CHECKLIST.md](testing-types/smoke/SMOKE_CHECKLIST.md) |
-| Admin user guide | [user-manual/ADMIN-GUIDE.md](user-manual/ADMIN-GUIDE.md) |
-| Bug tracker | [bug-reports/BUG_TRACKER.md](bug-reports/BUG_TRACKER.md) |
-| Test accounts | [environments/test-accounts.md](environments/test-accounts.md) |
-| Run commands | [execution/run-commands.md](execution/run-commands.md) |
-| Agent roles | [architecture/AGENT-ROLES.md](architecture/AGENT-ROLES.md) |
-| Process flow | [architecture/PROCESS-FLOW.md](architecture/PROCESS-FLOW.md) |
-| TC template | [templates/TC_TEMPLATE.md](templates/TC_TEMPLATE.md) |
+| Find test cases | [01-test-cases/INDEX.md](01-test-cases/INDEX.md) |
+| Admin Portal TCs | [01-test-cases/admin-portal/INDEX.md](01-test-cases/admin-portal/INDEX.md) |
+| Sales Manager TCs | [01-test-cases/sales-manager-portal/INDEX.md](01-test-cases/sales-manager-portal/INDEX.md) |
+| Smoke checklist | [02-testing-types/smoke/SMOKE_CHECKLIST.md](02-testing-types/smoke/SMOKE_CHECKLIST.md) |
+| Admin user guide | [03-user-manual/ADMIN-GUIDE.md](03-user-manual/ADMIN-GUIDE.md) |
+| Bug tracker | [04-bug-reports/BUG_TRACKER.md](04-bug-reports/BUG_TRACKER.md) |
+| Test accounts | [05-environments/test-accounts.md](05-environments/test-accounts.md) |
+| Run commands | [07-execution/run-commands.md](07-execution/run-commands.md) |
+| Agent roles | [08-architecture/AGENT-ROLES.md](08-architecture/AGENT-ROLES.md) |
+| Process flow | [08-architecture/PROCESS-FLOW.md](08-architecture/PROCESS-FLOW.md) |
+| TC template | [09-templates/TC_TEMPLATE.md](09-templates/TC_TEMPLATE.md) |
 | Sprint log | [SPRINT_LOG.md](SPRINT_LOG.md) |
 | Dashboard | [DASHBOARD.md](DASHBOARD.md) |
 
@@ -97,4 +97,4 @@ Type codes: `UI` `FUNC` `VAL` `E2E` `API` `DB` `INT` `BIZ` `REG` `EXP` `NEG` `ED
 
 Format: `BUG_NNN` (e.g. `BUG_001`, `BUG_010`)  
 Next: **BUG_011**  
-All bugs: [bug-reports/BUG_TRACKER.md](bug-reports/BUG_TRACKER.md)
+All bugs: [04-bug-reports/BUG_TRACKER.md](04-bug-reports/BUG_TRACKER.md)

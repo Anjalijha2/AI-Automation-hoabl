@@ -126,17 +126,17 @@ xanadu/
 │       └── selectorHelpers.js            # loadSelectors(module)
 │
 ├── manual-qa-repository/
-│   ├── test-cases/                       # Manual TCs — portal → module hierarchy
+│   ├── 01-test-cases/                    # Manual TCs — portal → module hierarchy
 │   │   ├── admin-portal/                 # > Admin Portal (Login, Customers, Config, etc.)
 │   │   └── sales-manager-portal/         # > Sales Manager Portal (Callback, Towers, Leads)
-│   ├── testing-types/                    # Smoke, regression, sanity, UAT sign-off, retesting, exploratory
-│   ├── user-manual/                      # Admin guide + per-screen docs (12 dimensions)
-│   ├── bug-reports/                      # BUG_TRACKER.md, per-bug files, metrics, templates
-│   ├── environments/                     # UAT / DEV config, test accounts, ENV strategy
-│   ├── test-runs/                        # Execution summaries per sprint per environment
-│   ├── execution/                        # Run commands, ENV skip log, UAT vs DEV delta
-│   ├── architecture/                     # Agent roles, process flow, framework config, QA strategy
-│   ├── templates/                        # TC, screen doc, execution summary templates
+│   ├── 02-testing-types/                 # Smoke, regression, sanity, UAT sign-off, retesting, exploratory
+│   ├── 03-user-manual/                   # Admin guide + per-screen docs (12 dimensions)
+│   ├── 04-bug-reports/                   # BUG_TRACKER.md, per-bug files, metrics, templates
+│   ├── 05-environments/                  # UAT / DEV config, test accounts, ENV strategy
+│   ├── 06-test-runs/                     # Execution summaries per sprint per environment
+│   ├── 07-execution/                     # Run commands, ENV skip log, UAT vs DEV delta
+│   ├── 08-architecture/                  # Agent roles, process flow, framework config, QA strategy
+│   ├── 09-templates/                     # TC, screen doc, execution summary templates
 │   ├── DASHBOARD.md
 │   ├── SPRINT_LOG.md
 │   ├── TASK_TRACKER.md
@@ -192,12 +192,12 @@ xanadu/
 | Document | Path | Contents |
 |----------|------|----------|
 | Dashboard | `manual-qa-repository/DASHBOARD.md` | Live project status |
-| Agent Roles | `manual-qa-repository/architecture/AGENT-ROLES.md` | 3-agent roles + pipeline phases |
-| Process Flow | `manual-qa-repository/architecture/PROCESS-FLOW.md` | End-to-end pipeline walkthrough |
-| Framework Config | `manual-qa-repository/architecture/FRAMEWORK-CONFIG.md` | Playwright config, scripts, env vars |
-| QA Strategy | `manual-qa-repository/architecture/QA-STRATEGY.md` | Coverage goals, risk priority |
-| Test Cases Index | `manual-qa-repository/test-cases/INDEX.md` | All portals + modules + TC counts |
-| Bug Tracker | `manual-qa-repository/bug-reports/BUG_TRACKER.md` | Open and resolved bugs |
+| Agent Roles | `manual-qa-repository/08-architecture/AGENT-ROLES.md` | 3-agent roles + pipeline phases |
+| Process Flow | `manual-qa-repository/08-architecture/PROCESS-FLOW.md` | End-to-end pipeline walkthrough |
+| Framework Config | `manual-qa-repository/08-architecture/FRAMEWORK-CONFIG.md` | Playwright config, scripts, env vars |
+| QA Strategy | `manual-qa-repository/08-architecture/QA-STRATEGY.md` | Coverage goals, risk priority |
+| Test Cases Index | `manual-qa-repository/01-test-cases/INDEX.md` | All portals + modules + TC counts |
+| Bug Tracker | `manual-qa-repository/04-bug-reports/BUG_TRACKER.md` | Open and resolved bugs |
 | Sprint Log | `manual-qa-repository/SPRINT_LOG.md` | Active and completed sprints |
 | Task Tracker | `manual-qa-repository/TASK_TRACKER.md` | Pending and completed tasks |
 | Test Coverage | `manual-qa-repository/test-coverage.md` | Coverage by portal + sprint |
