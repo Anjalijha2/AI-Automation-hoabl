@@ -1,162 +1,32 @@
 # Sprint Log
 
-**Last updated:** 2026-05-08
+## Sprint Structure
+
+Each sprint follows: **Portal Documentation → Manual Test Cases → Automation Scripts**
 
 ---
 
-## Sprint 1 — Framework Setup & Core Module Coverage
+## Active Sprints
 
-**Goal:** Establish QA framework structure and automate Login + Customers modules.
-
-**Status:** ✅ Complete
-
-### Completed
-- [x] Setup Playwright + TypeScript project structure
-- [x] Configured `playwright.config.ts` with projects (login-tests, regression)
-- [x] Created Auth Setup (`auth.setup.ts`) for session caching
-- [x] Implemented Login Page Object (`login.page.ts`) — 18 test cases
-- [x] Implemented Customers Page Object (`customers.page.ts`) — 16 test cases
-- [x] Created all AI Agent scripts (`agents/` folder)
-- [x] Created manual test case files (`manual-test-cases/TC_LOGIN.md`, `TC_CUSTOMERS.md`)
-- [x] Created page documentation (`docs/pages/LOGIN.md`, `docs/pages/CUSTOMERS.md`)
-- [x] Created bug tracker (`bugs/BUG_TRACKER.md`)
-- [x] Resolved BUG_001 to BUG_009 (selector, timing, filter issues)
+| Sprint | Portal | Phase | Status | Start | End |
+|--------|--------|-------|--------|-------|-----|
+| — | — | — | Not started | — | — |
 
 ---
 
-## Sprint 2 — Config Module Test Coverage
+## Completed Sprints
 
-**Goal:** Automate Config module test cases — Tower Configuration, Registration Status, Unit Status, Unit Cost Update, Bulk Booking/Reg Cancellation, Sales Managers, Customer Portal.
-
-**Status:** ✅ Complete
-
-### Completed
-- [x] Transcribed Admin CMS manual test cases → `manual-test-cases/TC_ADMIN_CMS.md`
-- [x] Added Section 10 integration tests (TC-1.1 to TC-1.6) to `TC_CONFIG.md`
-- [x] Executed TC-1.1, TC-1.2 manually via browser agent — **both PASS**
-- [x] Created Tower Config automation — 6 tests, all ✅ PASS
-  - Fixed URL routing bug (`/cms` → `/admin/cms`)
-  - Fixed locator bug (`.ant-card` → `.tower-configuration-section`)
-  - Fixed TC-1.5 count assertion (exact 18 → ≥ 18)
-- [x] Created Registration Status test cases (TC-2.1 to TC-2.7)
-- [x] Executed TC-2.3, TC-2.6, TC-2.7 manually — PASS; TC-2.1, TC-2.2, TC-2.4, TC-2.5 ENV SKIP (campaign active on UAT)
-- [x] Registration Status automation — TC_CFG_020–024 (5 upload flow tests, xlsx-based)
-- [x] Logged **BUG_010** — No validation on empty Submit in Registration Status
-- [x] Unit Status automation — TC_CFG_025–030 (6 tests: RESERVED↔AVAILABLE, Update flag, invalid status)
-- [x] Unit Cost Update automation — TC_CFG_031–034 (4 tests: agreement value update, mixed rows, skip, invalid)
-- [x] Bulk Booking Cancellation — TC_CFG_035–037 (3 tests: positive, non-existent, already-processed)
-- [x] Bulk Registration Cancellation — TC_CFG_038–040 (3 tests: positive, Update=0 skip, invalid reg number)
-- [x] Sales Managers — TC_CFG_041–048 (8 tests: add, unavailable, inactive, update email, search by name/phone, invalid phone, duplicate email)
-- [x] Customer Portal — TC_CFG_049–053 (5 tests: full payment flow, failure, cancel, session timeout, GHNG reg verification)
-- [x] Max Preferences — TC_CFG_007–010 (4 tests: update value, persist, change, click without change)
-- [x] Customer Actions S1 — TC_CFG_011–013 (3 tests: disable/enable registrations, dropdown counts)
-- [x] Sample Downloads — TC_CFG_014–019 (6 tests: one per upload section)
-- [x] Merged all Config test cases into `docs/manual-test-cases/TC_CONFIG.md` (52 TCs total)
+_None yet._
 
 ---
 
-## Sprint 3 — Remaining Modules
+## Sprint Template
 
-**Goal:** Expand coverage to Allocation, Towers, Channel Partners, JBP Management.
+Each sprint entry tracks one portal through all three phases:
 
-**Status:** ✅ Complete
-
-### Completed
-- [x] Allocation module — 44 tests (3 Setup + 11 Admin + 30 Customer)
-  - `src/pages/AllocationPage.js` — full page object (admin + customer portal)
-  - `tests/ui/allocation.spec.js` — all phases 0–10 automated
-  - `docs/manual-test-cases/TC_ALLOCATION.md` — 44 TC documentation
-  - `docs/pages/ALLOCATION.md` + `docs/selectors/allocation.json`
-  - Phase 8 TC-ADM-PHASE8 added (stop campaign after payments, correct execution order)
-  - Fixed Describe 7 beforeEach active-campaign guard locator (`.or()` chain)
-  - ENV SKIP guards for tests requiring live gateway or specific UAT state:
-    - TC-CST-009 (no Sold units on UAT), TC-CST-013 (no Available registration)
-    - TC-CST-016, TC-CST-028 (live Easebuzz gateway — manual only)
-    - TC-ADM-008 (no auto-completed campaign on UAT), TC-ADM-010 (no campaigns in list)
-
-### Hardening (this session)
-- [x] TC-ADM-002 fix — picker disabled-cell assertion
-- [x] TC-ADM-007 fix — reuse existing Active campaign
-- [x] TC-CST-029 fix — allotment card layout + ENV_SKIP guard
-- [x] TC-CST-030 fix — click Waitlisted card before assertion
-- [x] TC-CST-031 removed — not required
-- [x] Retrospective completed — all trackers updated
-
-### Completed (continued)
-- [x] Towers module — 13 tests, all ✅ PASS
-  - `src/pages/TowersPage.js` — full POM (KPIs, tower list, grid, drawer)
-  - `tests/ui/towers.spec.js` — 13 tests across 5 describes
-  - `docs/manual-test-cases/TC_TOWERS.md` — 13 critical-path TCs
-  - `docs/selectors/towers.json` — full selector map
-
-### Completed (continued)
-- [x] Channel Partners module — 10 tests, all ✅ PASS
-  - `src/pages/ChannelPartnersPage.js` — full POM (total count, search, view drawer, more dropdown, map master CP, refresh)
-  - `tests/ui/channel-partners.spec.js` — 10 tests across 6 describes
-  - `docs/manual-test-cases/TC_CHANNEL_PARTNERS.md` — 10 critical-path TCs
-  - `docs/selectors/channel-partners.json` — full selector map
-  - Key discoveries: phone search filters rows but header count stays at total; dropdown menu includes nav items (filter for "Mark as Master"); Reset Filters clears input + restores baseline count
-
-### Completed (continued)
-- [x] JBP Management module — 4 tests, all ✅ PASS
-  - `src/pages/JBPManagementPage.js` — full POM (tabs, table, date filter, create cycle, close cycle)
-  - `src/pages/CPPortalPage.js` — CP portal POM (login, JBP nav, form fill, submit)
-  - `tests/ui/jbp-management.spec.js` — TC-JBP-001 through TC-JBP-004
-  - `docs/manual-test-cases/TC_JBP.md` — 4 TC documentation
-  - TC-JBP-001: page structure (tabs + columns) ✅
-  - TC-JBP-002: date range filter + clear ✅
-  - TC-JBP-003: create cycle with today's date, verify OPEN status ✅
-  - TC-JBP-004: CP Portal login → JBP form fill + submit ✅
-  - Probe specs removed (probe_cp_numbers, probe_cp_portal, probe_jbp)
-
-### Retrospective
-- 166 automated tests across 7 modules — all green
-- 1 open bug: BUG_010 (Config — Registration Status empty submit)
-- Probe specs deleted — were exploration artifacts, not production tests
-- Sprint 4 begins: Offers, Sales Managers, Payment Transactions, CMS/Config (full)
-
----
-
-## Sprint 4 — Offers Module
-
-**Goal:** Full pipeline coverage of the Offers Management module.
-
-**Status:** ✅ Complete (Offers module — 12 TCs, all pass)
-
-### Completed
-- [x] BRD analysis — `brd/offers.md` — 6 clarifications raised, domain red flags identified
-- [x] Phase 1 — Discovery — `docs/selectors/offers.json` — full selector map via live portal inspection
-- [x] Phase 2 — Screen Docs — `docs/pages/OFFERS.md` — 12-dimension documentation
-- [x] Phase 3 — Test Cases — `docs/manual-test-cases/TC_OFFERS.md` — 12 TCs (P1+P2 coverage)
-- [x] Phase 4 — POM — `src/pages/OffersPage.js` — full page object (navigate, header, table, drawer, toggle, typology)
-- [x] Phase 5 — Spec — `tests/ui/offers.spec.js` — 12 tests across 6 describes
-- [x] Phase 6 — Execution — 12/12 tests pass; 2-pass healing cycle completed
-- [x] Retrospective — all trackers updated
-
-### Healing Events
-1. **Selector fix (edit/delete buttons):** Initial selector `button:has(img[alt="edit"])` was wrong — Ant Design uses anticon spans with `aria-label`, not `<img alt>`. Fixed to `button:has([aria-label="edit"])`.
-2. **Delete confirmation dialog:** CLARIFICATION-OFFERS-005 resolved — delete shows "Are you sure you want to delete this offer?" with "Yes, delete" button. Cleanup code in TC-005 updated.
-3. **Test contamination:** First run left 2 orphaned "QA Test Offer Sprint4" rows (cleanup delete failed due to wrong selector). Manually cleaned UAT data; second run passed cleanly.
-
-### Key Domain Discoveries
-- Offers module uses `.ant-drawer` (side drawer), NOT `.ant-modal` (centered modal)
-- Ant Design icon buttons use `aria-label` on inner `<span role="img">`, NOT `img[alt]`
-- Delete has confirmation: "Are you sure you want to delete this offer?" / "Yes, delete"
-- Toggle has NO confirmation dialog — HIGH risk flag confirmed
-- 4 typology options confirmed: 1 Bed Growth Home, 2 Bed Growth Home, 2 Bed Peak Home, 2 Bed Rise Home
-- Sr.No values are DB primary keys — gaps (2,4,5,6 missing) confirm hard deletes
-- All UAT offers are Amount Based — Percentage column always shows "-"
-
-### Test Results
-- TC-OFFERS-001 — Page Load ✅
-- TC-OFFERS-002 — Table Columns ✅
-- TC-OFFERS-003 — Sr.No Non-Contiguous ✅
-- TC-OFFERS-004 — Add Drawer Fields ✅
-- TC-OFFERS-005 — Create Valid Offer + Cleanup ✅
-- TC-OFFERS-006 — Validation (Empty Submit) ✅
-- TC-OFFERS-007 — Edit Pre-Fill ✅
-- TC-OFFERS-008 — Edit Round-Trip ✅
-- TC-OFFERS-009 — Toggle OFF + Persistence ✅
-- TC-OFFERS-010 — Toggle ON ✅
-- TC-OFFERS-011 — Typology Dropdown ✅
-- TC-OFFERS-012 — Refresh ✅
+```
+Sprint N — <Portal Name>
+  Phase 1: Portal Documentation     ⏳ / ✅
+  Phase 2: Manual Test Cases         ⏳ / ✅
+  Phase 3: Automation Scripts        ⏳ / ✅
+```

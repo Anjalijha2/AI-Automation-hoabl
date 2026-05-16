@@ -1,134 +1,106 @@
-/**
- * PLAYWRIGHT CONFIGURATION — XR Portal QA Framework
- * ==================================================
- * Located at: config/playwright.config.js
- * All paths use path.join(__dirname, '..') to resolve to project root.
- *
- * Run commands (from project root):
- *   npx playwright test --project=login-tests --headed --workers=1 --config config/playwright.config.js
- *   npx playwright test --project=regression --headed --workers=1 --config config/playwright.config.js
- *   npx playwright test --project=auth-setup --config config/playwright.config.js
- *   npx playwright show-report reports/html-report
- */
-
+// config/playwright.config.js
+// All paths resolve relative to project root (one level up from config/).
 const path = require('path');
-const { defineConfig } = require('@playwright/test');
+const { defineConfig, devices } = require('@playwright/test');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
+const ROOT = path.join(__dirname, '..');
+const AUTH_STATE = path.join(ROOT, 'automation-repository/fixtures/.auth/admin.json');
 
 module.exports = defineConfig({
-    testDir: path.join(__dirname, '../tests'),
-    fullyParallel: false,
+  testDir: path.join(ROOT, 'tests'),
+  timeout: 60_000,
+  expect: { timeout: 10_000 },
+  fullyParallel: false,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 1,
+  workers: 1,
 
-    // Never allow .only in CI
-    forbidOnly: !!process.env.CI,
+  // --- Reporting ---
+  reporter: [
+    ['html', { outputFolder: path.join(ROOT, 'reports/html-report'), open: 'never' }],
+    ['json', { outputFile: path.join(ROOT, 'reports/results.json') }],
+    ['list'],
+  ],
 
-    // Retry once on failure (helps with flaky network)
-    retries: 1,
+  outputDir: path.join(ROOT, 'test-results'),
 
-    // Always 1 worker so tests run sequentially (easy to watch in headed mode)
-    workers: 1,
+  // --- Shared settings ---
+  use: {
+    baseURL: process.env.BASE_URL || 'https://uat-web.xrportal.in/admin',
+    trace: 'on-first-retry',
+    screenshot: 'on',
+    video: 'retain-on-failure',
+    headless: process.env.HEADLESS === 'true',
+    viewport: { width: 1920, height: 900 },
+    actionTimeout: 15_000,
+    navigationTimeout: 30_000,
+    launchOptions: {
+      slowMo: 500,
+      args: [
+        '--start-maximized',
+        '--window-size=1920,1080',
+        '--disable-blink-features=AutomationControlled',
+        '--no-first-run',
+        '--no-default-browser-check',
+      ],
+    },
+  },
 
-    // Reporters: HTML report + console list
-    reporter: [
-        ['html', { outputFolder: path.join(__dirname, '../reports/html-report'), open: 'never' }],
-        ['json', { outputFile: path.join(__dirname, '../reports/results.json') }],
-        ['list']
-    ],
-
-    outputDir: path.join(__dirname, '../test-results'),
-
-    use: {
-        baseURL: 'https://uat-web.xrportal.in/admin',
-
-        // Capture trace on first retry (great for debugging)
-        trace: 'on-first-retry',
-
-        // Always take screenshots
-        screenshot: 'on',
-
-        // Keep video on failure
-        video: 'retain-on-failure',
-
-        // Headed by default; set HEADLESS=true env var to run headless
-        headless: process.env.HEADLESS === 'true',
-        viewport: { width: 1920, height: 900 },
-
-        // Slow down all actions by 500ms so it looks like real user
-        launchOptions: {
-            slowMo: 500,
-            args: [
-                '--start-maximized',
-                '--window-size=1920,1080',
-                '--disable-blink-features=AutomationControlled',
-                '--no-first-run',
-                '--no-default-browser-check',
-            ]
-        },
-
-        // Timeouts
-        actionTimeout: 15_000,
-        navigationTimeout: 30_000,
+  projects: [
+    // Auth setup — runs once, saves session to admin.json
+    {
+      name: 'auth-setup',
+      testMatch: /.*\.setup\.js/,
+      use: { browserName: 'chromium' },
     },
 
-    projects: [
-        // ── Auth Setup ──────────────────────────────────────────────
-        {
-            name: 'auth-setup',
-            testMatch: /.*\.setup\.js/,
-            use: { browserName: 'chromium' },
-        },
+    // Login tests — standalone, no stored session needed
+    {
+      name: 'login-tests',
+      testMatch: /tests\/e2e\/login\.spec\.js/,
+      use: { browserName: 'chromium' },
+    },
 
-        // ── Login Tests (standalone — no auth dependency) ───────────
-        {
-            name: 'login-tests',
-            testMatch: /.*login\.spec\.js/,
-            use: { browserName: 'chromium' },
-        },
+    // Smoke suite
+    {
+      name: 'smoke',
+      testDir: path.join(ROOT, 'tests/smoke'),
+      testMatch: /.*\.spec\.js/,
+      dependencies: ['auth-setup'],
+      use: { ...devices['Desktop Chrome'], storageState: AUTH_STATE },
+    },
 
-        // ── Smoke Tests ─────────────────────────────────────────────
-        {
-            name: 'smoke',
-            testMatch: /.*smoke\.spec\.js/,
-            dependencies: ['auth-setup'],
-            use: {
-                browserName: 'chromium',
-                storageState: path.join(__dirname, '../automation-repository/fixtures/.auth/admin.json'),
-            },
-        },
+    // Full regression — all e2e specs
+    {
+      name: 'regression',
+      testDir: path.join(ROOT, 'tests/e2e'),
+      testMatch: /.*\.spec\.js/,
+      dependencies: ['auth-setup'],
+      use: { ...devices['Desktop Chrome'], storageState: AUTH_STATE },
+    },
 
-        // ── Full Regression ─────────────────────────────────────────
-        {
-            name: 'regression',
-            testMatch: /.*\.spec\.js/,
-            testIgnore: [/.*smoke\.spec\.js/, /.*login\.spec\.js/],
-            dependencies: ['auth-setup'],
-            use: {
-                browserName: 'chromium',
-                storageState: path.join(__dirname, '../automation-repository/fixtures/.auth/admin.json'),
-            },
-        },
-
-        // ── Cross-Browser: Chromium ──────────────────────────────────
-        {
-            name: 'chromium',
-            testMatch: /.*\.spec\.js/,
-            testIgnore: [/.*smoke\.spec\.js/, /.*login\.spec\.js/],
-            dependencies: ['auth-setup'],
-            use: {
-                browserName: 'chromium',
-                storageState: path.join(__dirname, '../automation-repository/fixtures/.auth/admin.json'),
-            },
-        },
-
-        // ── Customer Portal Tests (No Admin Auth Dependency) ───────
-        {
-            name: 'customer',
-            testMatch: /.*\.spec\.js/,
-            testIgnore: [/.*smoke\.spec\.js/, /.*login\.spec\.js/],
-            use: {
-                browserName: 'chromium',
-                // Customer tests use their own login flow in beforeEach
-                storageState: { cookies: [], origins: [] },
-            },
-        },
-    ],
+    // Cross-browser
+    {
+      name: 'chromium',
+      testDir: path.join(ROOT, 'tests/e2e'),
+      testMatch: /.*\.spec\.js/,
+      dependencies: ['auth-setup'],
+      use: { ...devices['Desktop Chrome'], storageState: AUTH_STATE },
+    },
+    {
+      name: 'firefox',
+      testDir: path.join(ROOT, 'tests/e2e'),
+      testMatch: /.*\.spec\.js/,
+      dependencies: ['auth-setup'],
+      use: { ...devices['Desktop Firefox'], storageState: AUTH_STATE },
+    },
+    {
+      name: 'webkit',
+      testDir: path.join(ROOT, 'tests/e2e'),
+      testMatch: /.*\.spec\.js/,
+      dependencies: ['auth-setup'],
+      use: { ...devices['Desktop Safari'], storageState: AUTH_STATE },
+    },
+  ],
 });
