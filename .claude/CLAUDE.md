@@ -15,10 +15,10 @@ Mobile OTP — no password. UAT has static OTP.
 ```bash
 npm run auth:setup
 # or directly:
-npx playwright test --config config/playwright.config.js --project=auth-setup
+npx playwright test --config automation-repository/playwright.config.js --project=auth-setup
 ```
 
-Re-run when: protected tests redirect to login, or `automation-repository/fixtures/.auth/admin.json` deleted.
+Re-run when: protected tests redirect to login, or `automation-repository/01-fixtures/.auth/admin.json` deleted.
 `login-tests` needs no saved session. All other projects depend on `admin.json`.
 
 ---
@@ -27,10 +27,10 @@ Re-run when: protected tests redirect to login, or `automation-repository/fixtur
 
 ```bash
 # Single spec
-npx playwright test tests/e2e/<module>.spec.js --config config/playwright.config.js --project=regression --headed --workers=1
+npx playwright test tests/e2e/<module>.spec.js --config automation-repository/playwright.config.js --project=regression --headed --workers=1
 
 # By TC_ID
-npx playwright test --config config/playwright.config.js -g "TC-LOGIN-001" --headed
+npx playwright test --config automation-repository/playwright.config.js -g "TC-LOGIN-001" --headed
 
 # Named suites
 npm run test:login        # standalone
@@ -76,23 +76,23 @@ All artifacts live in: `manual-qa-repository/` (numbered 01–09 folders)
 
 ### Page Object Model
 
-All page objects: `automation-repository/pages/*.js`, extend `BasePage`.
+All page objects: `automation-repository/02-pages/*.js`, extend `BasePage`.
 
-Fixture pattern (recommended): via `automation-repository/fixtures/base-test.js`
+Fixture pattern (recommended): via `automation-repository/01-fixtures/base-test.js`
 ```javascript
-const { test, expect } = require('../../automation-repository/fixtures/base-test');
+const { test, expect } = require('../../automation-repository/01-fixtures/base-test');
 test('my test', async ({ loginPage }) => { ... });
 ```
 
 Direct pattern (also valid):
 ```javascript
-const { LoginPage } = require('../../automation-repository/pages/LoginPage');
+const { LoginPage } = require('../../automation-repository/02-pages/LoginPage');
 const loginPage = new LoginPage(page);
 ```
 
 ### Selectors
 
-- **`automation-repository/pages/*.js`** — primary, what tests use
+- **`automation-repository/02-pages/*.js`** — primary, what tests use
 - **Selector JSON** (generated during discovery, stored alongside screen docs) — source of truth for AI agents
 
 Fix UI breaks in page object first, then update JSON.
@@ -116,9 +116,9 @@ test.skip(process.env.ENV === 'uat', 'Skipped on UAT — live gateway');
 
 ## Key Constants
 
-`automation-repository/constants/testData.js` — UAT credentials, BASE_URL, timeouts, viewport.
+`automation-repository/07-constants/testData.js` — UAT credentials, BASE_URL, timeouts, viewport.
 
-Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fixtures/.auth/admin.json`.
+Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/01-fixtures/.auth/admin.json`.
 
 ---
 
@@ -127,7 +127,7 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fix
 1. Run discovery: `npm run discover`
 2. Document screens → `manual-qa-repository/03-user-manual/pages/<MODULE>.md`
 3. Design test cases → `manual-qa-repository/01-test-cases/<portal>/<module>/TC_<MODULE>.md` (BA sign-off required)
-4. Create `automation-repository/pages/<Portal>Page.js` extending `BasePage`
+4. Create `automation-repository/02-pages/<Portal>Page.js` extending `BasePage`
 5. Create `tests/e2e/<portal>.spec.js` using `base-test` fixtures
 6. Run auth-setup, then execute suite
 7. Log bugs → `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`
@@ -139,7 +139,7 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fix
 
 | Item | Convention | Example |
 |------|-----------|---------|
-| Page object | `automation-repository/pages/<Portal>Page.js` | `LoginPage.js` |
+| Page object | `automation-repository/02-pages/<Portal>Page.js` | `LoginPage.js` |
 | Spec file | `tests/e2e/<portal>.spec.js` | `login.spec.js` |
 | Screen doc | `manual-qa-repository/03-user-manual/pages/<PORTAL>.md` | `LOGIN.md` |
 | TC file | `manual-qa-repository/01-test-cases/<portal>/<module>/TC_<MODULE>.md` | `TC_LOGIN.md` |
@@ -173,7 +173,7 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fix
 │   ├── automation-qa-engineer/      # Automation QA memory
 │   └── xr-manual-qa/               # Manual QA memory
 ├── rules/                           # Path-scoped coding rules (auto-loaded)
-│   ├── page-objects.md              # automation-repository/pages/**
+│   ├── page-objects.md              # automation-repository/02-pages/**
 │   ├── specs.md                     # tests/**/*.spec.js
 │   └── selectors.md                 # manual-qa-repository/sprints/**/03-selectors/**
 ├── agents/                          # Claude Code subagents

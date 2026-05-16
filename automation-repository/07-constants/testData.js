@@ -2,7 +2,7 @@
  * Test Constants — XR Portal QA Framework
  * ----------------------------------------
  * Central place for all static test values.
- * Import anywhere: const { VALID_MOBILE, VALID_OTP } = require('../../automation-repository/constants/testData.js');
+ * Import anywhere: const { VALID_MOBILE, VALID_OTP } = require('../../automation-repository/07-constants/testData.js');
  */
 
 module.exports = {

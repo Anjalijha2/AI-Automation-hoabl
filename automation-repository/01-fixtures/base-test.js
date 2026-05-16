@@ -1,9 +1,9 @@
-// automation-repository/fixtures/base-test.js
+// automation-repository/01-fixtures/base-test.js
 // Central fixture — import this in all spec files instead of @playwright/test
 const { test: baseTest, expect } = require('@playwright/test');
 
-const { LoginPage } = require('../pages/LoginPage');
-const { ApiClient } = require('../api/ApiClient');
+const { LoginPage } = require('../02-pages/LoginPage');
+const { ApiClient } = require('../04-api/ApiClient');
 
 /**
  * Extend Playwright's base test with all page objects and helpers
@@ -29,7 +29,7 @@ const test = baseTest.extend({
   // --- Authenticated page (reuses storageState from auth-setup) ---
   authenticatedPage: async ({ browser }, use) => {
     const context = await browser.newContext({
-      storageState: 'automation-repository/fixtures/.auth/admin.json',
+      storageState: 'automation-repository/01-fixtures/.auth/admin.json',
     });
     const page = await context.newPage();
     await use(page);
