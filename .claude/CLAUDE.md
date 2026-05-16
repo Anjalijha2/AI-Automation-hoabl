@@ -72,7 +72,7 @@ Each sprint covers one portal:
 2. **Manual Test Cases** — design TCs across 15 types, BA sign-off required
 3. **Automation Scripts** — generate Playwright specs from approved TCs
 
-All artifacts live in: `manual-qa-repository/sprints/sprint-<N>/<portal-name>/`
+All artifacts live in: `manual-qa-repository/` (numbered 01–09 folders)
 
 ### Page Object Model
 
@@ -93,7 +93,7 @@ const loginPage = new LoginPage(page);
 ### Selectors
 
 - **`automation-repository/pages/*.js`** — primary, what tests use
-- **`manual-qa-repository/sprints/<N>/<portal>/03-selectors/<portal>.json`** — source of truth for AI agents
+- **Selector JSON** (generated during discovery, stored alongside screen docs) — source of truth for AI agents
 
 Fix UI breaks in page object first, then update JSON.
 
@@ -124,14 +124,14 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fix
 
 ## Adding a New Portal (Sprint)
 
-1. Create sprint folder: `manual-qa-repository/sprints/sprint-<N>/<portal-name>/`
-2. Run discovery: `npm run discover`
-3. Document screens → `01-documentation/<PORTAL>.md`
-4. Design test cases → `02-test-cases/TC_<PORTAL>.md` (BA sign-off required)
-5. Extract selectors → `03-selectors/<portal>.json`
-6. Create `automation-repository/pages/<Portal>Page.js` extending `BasePage`
-7. Create `tests/e2e/<portal>.spec.js` using `base-test` fixtures
-8. Run auth-setup, then execute suite
+1. Run discovery: `npm run discover`
+2. Document screens → `manual-qa-repository/03-user-manual/pages/<MODULE>.md`
+3. Design test cases → `manual-qa-repository/01-test-cases/<module>/TC_<MODULE>.md` (BA sign-off required)
+4. Create `automation-repository/pages/<Portal>Page.js` extending `BasePage`
+5. Create `tests/e2e/<portal>.spec.js` using `base-test` fixtures
+6. Run auth-setup, then execute suite
+7. Log bugs → `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`
+8. Log execution summary → `manual-qa-repository/06-test-runs/<env>/sprint-N/`
 
 ---
 
@@ -141,10 +141,10 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fix
 |------|-----------|---------|
 | Page object | `automation-repository/pages/<Portal>Page.js` | `LoginPage.js` |
 | Spec file | `tests/e2e/<portal>.spec.js` | `login.spec.js` |
-| Screen doc | `sprints/sprint-N/<portal>/01-documentation/<PORTAL>.md` | `LOGIN.md` |
-| Selector JSON | `sprints/sprint-N/<portal>/03-selectors/<portal>.json` | `login.json` |
-| TC file | `sprints/sprint-N/<portal>/02-test-cases/TC_<PORTAL>.md` | `TC_LOGIN.md` |
-| Bug | `BUG_NNN` in `bugs/BUG_TRACKER.md` | `BUG_001` |
+| Screen doc | `manual-qa-repository/03-user-manual/pages/<PORTAL>.md` | `LOGIN.md` |
+| TC file | `manual-qa-repository/01-test-cases/<module>/TC_<MODULE>.md` | `TC_LOGIN.md` |
+| Bug | `BUG_NNN` in `manual-qa-repository/04-bug-reports/BUG_TRACKER.md` | `BUG_001` |
+| Execution summary | `manual-qa-repository/06-test-runs/<env>/sprint-N/execution-summary.md` | — |
 
 ---
 
@@ -153,10 +153,12 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fix
 - HTML report: `reports/html-report/` — `npm run report`
 - JSON results: `reports/results.json`
 - Screenshots: `test-results/`
-- Bug tracker: `bugs/BUG_TRACKER.md`
+- Bug tracker: `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`
+- Execution summaries: `manual-qa-repository/06-test-runs/`
 - Sprint log: `manual-qa-repository/SPRINT_LOG.md`
 - Task tracker: `manual-qa-repository/TASK_TRACKER.md`
 - Test coverage: `manual-qa-repository/test-coverage.md`
+- Dashboard: `manual-qa-repository/DASHBOARD.md`
 
 ---
 

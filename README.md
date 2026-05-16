@@ -126,21 +126,22 @@ xanadu/
 │       └── selectorHelpers.js            # loadSelectors(module)
 │
 ├── manual-qa-repository/
-│   ├── architecture/
-│   │   ├── AGENT-ROLES.md
-│   │   ├── FRAMEWORK-CONFIG.md
-│   │   └── PROCESS-FLOW.md
-│   ├── sprints/
-│   │   ├── README.md                     # Sprint structure guide
-│   │   └── sprint-<N>/
-│   │       └── <portal-name>/
-│   │           ├── 01-documentation/     # Screen docs (12 dimensions)
-│   │           ├── 02-test-cases/        # Manual TCs (15 types)
-│   │           ├── 03-selectors/         # Selector JSON (source of truth)
-│   │           └── 04-execution/         # Run summary + bug report
+│   ├── 01-test-cases/                    # Manual TCs per module (INDEX + per-module files)
+│   ├── 02-testing-types/                 # Smoke, regression, sanity, UAT sign-off, retesting, exploratory
+│   ├── 03-user-manual/                   # Admin guide + per-screen docs (12 dimensions)
+│   ├── 04-bug-reports/                   # BUG_TRACKER.md, per-bug files, metrics, templates
+│   ├── 05-environments/                  # UAT / DEV config, test accounts, ENV strategy
+│   ├── 06-test-runs/                     # Execution summaries per sprint per environment
+│   ├── 07-execution/                     # Run commands, ENV skip log, UAT vs DEV delta
+│   ├── 08-architecture/                  # Agent roles, process flow, framework config, QA strategy
+│   ├── 09-templates/                     # TC, screen doc, execution summary templates
+│   ├── DASHBOARD.md
 │   ├── SPRINT_LOG.md
 │   ├── TASK_TRACKER.md
 │   ├── test-coverage.md
+│   ├── QA-METRICS.md
+│   ├── AGENT-CONFIG.md
+│   ├── DOCUMENTATION-TRACKER.md
 │   └── CHANGELOG.md
 │
 ├── tests/
@@ -149,9 +150,6 @@ xanadu/
 │   ├── smoke/                            # Smoke suite specs
 │   ├── api/                              # API contract tests
 │   └── visual/                           # Visual regression tests
-│
-├── bugs/
-│   └── BUG_TRACKER.md
 │
 └── reports/                              # Git-ignored
     ├── html-report/
@@ -191,12 +189,15 @@ xanadu/
 
 | Document | Path | Contents |
 |----------|------|----------|
-| Agent Roles | `manual-qa-repository/architecture/AGENT-ROLES.md` | 3-agent roles + pipeline phases |
-| Process Flow | `manual-qa-repository/architecture/PROCESS-FLOW.md` | End-to-end pipeline walkthrough |
-| Framework Config | `manual-qa-repository/architecture/FRAMEWORK-CONFIG.md` | Playwright config, scripts, env vars |
-| Sprint Guide | `manual-qa-repository/sprints/README.md` | Sprint folder structure + naming |
+| Dashboard | `manual-qa-repository/DASHBOARD.md` | Live project status |
+| Agent Roles | `manual-qa-repository/08-architecture/AGENT-ROLES.md` | 3-agent roles + pipeline phases |
+| Process Flow | `manual-qa-repository/08-architecture/PROCESS-FLOW.md` | End-to-end pipeline walkthrough |
+| Framework Config | `manual-qa-repository/08-architecture/FRAMEWORK-CONFIG.md` | Playwright config, scripts, env vars |
+| QA Strategy | `manual-qa-repository/08-architecture/QA-STRATEGY.md` | Coverage goals, risk priority |
+| Test Cases Index | `manual-qa-repository/01-test-cases/INDEX.md` | All modules + TC counts |
+| Bug Tracker | `manual-qa-repository/04-bug-reports/BUG_TRACKER.md` | Open and resolved bugs |
 | Sprint Log | `manual-qa-repository/SPRINT_LOG.md` | Active and completed sprints |
 | Task Tracker | `manual-qa-repository/TASK_TRACKER.md` | Pending and completed tasks |
 | Test Coverage | `manual-qa-repository/test-coverage.md` | Coverage by portal + sprint |
+| QA Metrics | `manual-qa-repository/QA-METRICS.md` | Defect density, pass rates |
 | Changelog | `manual-qa-repository/CHANGELOG.md` | All changes by date |
-| Bug Tracker | `bugs/BUG_TRACKER.md` | Open and resolved bugs |

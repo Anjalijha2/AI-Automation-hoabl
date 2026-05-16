@@ -13,10 +13,10 @@
 - Final sign-off on test cases before automation begins
 
 ### Outputs
-- `docs/SPRINT_LOG.md`
-- `docs/TASK_TRACKER.md`
-- `docs/test-coverage.md`
-- `docs/CHANGELOG.md`
+- `manual-qa-repository/SPRINT_LOG.md`
+- `manual-qa-repository/TASK_TRACKER.md`
+- `manual-qa-repository/test-coverage.md`
+- `manual-qa-repository/CHANGELOG.md`
 
 ### Rule
 Always the entry point. No Manual QA or Automation QA phase starts without BA gate approval.
@@ -37,19 +37,19 @@ Always the entry point. No Manual QA or Automation QA phase starts without BA ga
 ### Phase 2 — Screen Documentation
 - Read discovery outputs
 - Document each screen across 12 dimensions
-- Output: `manual-qa-repository/pages/<MODULE>.md`, `manual-qa-repository/selectors/<module>.json`
-- **Rule:** Selector JSON is source of truth for AI agents
+- Output: `manual-qa-repository/03-user-manual/pages/<MODULE>.md`
+- **Rule:** Selector JSON is source of truth for AI agents (see selectors note below)
 
 ### Phase 3 — Test Case Design
 - Read page docs + BRD
 - Generate manual test cases across 15 types: `UI` `FUNC` `VAL` `E2E` `API` `DB` `INT` `BIZ` `REG` `EXP` `NEG` `EDGE` `XMOD` `DC` `WF`
-- Output: `manual-qa-repository/manual-test-cases/TC_<MODULE>.md`
+- Output: `manual-qa-repository/01-test-cases/<module>/TC_<MODULE>.md`
 - **Rule:** Every TC maps to BRD requirement; TC_IDs use `TC_MODULE_TYPE_NNN` format
 
 ### Phase 4 — Defect Logging
 - Parse `reports/results.json` for failures
 - Root-cause each failure, create structured bug entries
-- Output: `bugs/BUG_TRACKER.md` (format: `BUG_NNN`)
+- Output: `manual-qa-repository/04-bug-reports/BUG_TRACKER.md` (format: `BUG_NNN`)
 
 ---
 
@@ -59,14 +59,14 @@ Always the entry point. No Manual QA or Automation QA phase starts without BA ga
 
 ### Phase 1 — Script Generation
 - Convert BA-approved test cases to Playwright scripts
-- Follow Page Object Model (`src/pages/<Module>Page.js` extending `BasePage`)
-- Output: `tests/ui/<module>.spec.js`
+- Follow Page Object Model (`automation-repository/pages/<Module>Page.js` extending `BasePage`)
+- Output: `tests/e2e/<module>.spec.js`
 - **Rule:** Never overwrite existing spec files without explicit approval
 
 ### Phase 2 — Test Execution
 - Run Playwright suites via `npm run test:<module>` or `npm run test:regression`
 - Capture results per TC_ID
-- Output: `reports/results.json`, `reports/html-report/`, `reports/screenshots/`
+- Output: `reports/results.json`, `reports/html-report/`, `test-results/`
 - **Rule:** Always run auth-setup before protected tests; always `--workers=1` with `--headed`
 
 ### Phase 3 — Healing Analysis
@@ -74,6 +74,14 @@ Always the entry point. No Manual QA or Automation QA phase starts without BA ga
 - Produce fix recommendations — read-only, no direct edits
 - Output: `healing-reports/fix-recommendations.md`
 - **Rule:** Fixes applied only after explicit user approval
+
+---
+
+## Selector Source of Truth
+
+- **Page objects use:** `automation-repository/pages/*.js`
+- **AI agents read:** selector JSON files generated during discovery
+- Fix UI breaks in page object first, then update JSON
 
 ---
 
