@@ -1,7 +1,7 @@
----
+﻿---
 paths:
   - "tests/**/*.spec.js"
-  - "tests/auth.setup.js"
+  - "automation-repository/fixtures/auth.setup.js"
 ---
 
 # Spec File Rules
@@ -9,7 +9,7 @@ paths:
 ## Auth
 Protected specs must declare:
 ```javascript
-test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 ```
 
 ## TC_ID Format

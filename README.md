@@ -1,96 +1,85 @@
 # XR Portal — AI-Powered QA Framework
 
-End-to-end QA automation for XR Portal using an AI pipeline and Playwright 1.58.2.
+AI agent pipeline + Playwright 1.58.2. Multi-portal, BRD/FRD-driven, phase-gated.
 
-**Target:** `https://uat-web.xrportal.in/admin`
-**Language:** JavaScript (CommonJS)
-**Approach:** Sprint-wise · Portal-wise · Documentation → Test Cases → Automation
+**Language:** JavaScript (CommonJS) — no TypeScript, no transpile.
 
 ---
 
-## Execution Model
+## Portals
 
-Each sprint covers one portal through three phases in sequence:
-
-```
-Phase 1: Portal Documentation
-Phase 2: Manual Test Case Creation
-Phase 3: Automation Script Development
-```
+| Portal | URL | Auth Session |
+|--------|-----|-------------|
+| Admin | `https://uat-web.xrportal.in/admin` | `automation-repository/fixtures/.auth/admin.json` |
+| Sales Manager | `https://uat-web.xrportal.in/sales-manager` | `automation-repository/fixtures/.auth/sales-manager.json` |
+| Channel Partner | `https://uat-web.xrportal.in/` | `automation-repository/fixtures/.auth/channel-partner.json` |
+| Buyer | `https://uat.xrportal.in/` | `automation-repository/fixtures/.auth/buyer.json` |
+| API | `https://uat-api.xrportal.in/` | — (token-based) |
 
 ---
 
 ## Quick Start
 
-**Step 1: Install dependencies**
 ```bash
 npm install
 npx playwright install chromium
+npm run auth:setup       # saves session → automation-repository/fixtures/.auth/admin.json
+npm run test:e2e:admin   # run E2E suite for admin portal
+npm run report           # open HTML report
 ```
 
-**Step 2: Configure environment**
-```env
-BASE_URL=https://uat-web.xrportal.in/admin
-```
-
-**Step 3: Set up auth session** (required before smoke/regression)
-```bash
-npm run auth:setup
-```
-
-Saves session to `automation-repository/fixtures/.auth/admin.json`.
-
-**Step 4: Run tests**
-```bash
-npm run test:regression   # Full regression suite
-npm run test:smoke        # Smoke tests
-npm run test:login        # Login tests (standalone)
-npm run report            # Open HTML report
-```
-
----
-
-## Authentication
-
-- **Method:** 2-step Mobile OTP — no password required
-- **UAT Credentials:** Mobile `8888888888` · OTP `258369` (static UAT value)
-- **Session file:** `automation-repository/fixtures/.auth/admin.json` (git-ignored)
-
-Re-run `npm run auth:setup` when session expires or `admin.json` is deleted.
+**Auth:** Mobile OTP, no password. UAT: `8888888888` / OTP `258369` (static).
 
 ---
 
 ## Test Commands
 
 ```bash
-npm run test              # Regression suite (headless, 1 worker)
-npm run test:headed       # Regression suite (headed)
-npm run test:smoke        # Smoke suite (headed, needs auth-setup)
-npm run test:login        # Login tests (headed, standalone)
-npm run test:regression   # Full regression (headed, needs auth-setup)
-npm run test:chrome       # Cross-browser — Chromium
-npm run test:firefox      # Cross-browser — Firefox
-npm run test:webkit       # Cross-browser — WebKit/Safari
-npm run report            # Open HTML report
+# Auth
+npm run auth:setup
+
+# E2E (per portal)
+npm run test:e2e:admin
+npm run test:e2e:sales-manager
+npm run test:e2e:channel-partner
+npm run test:e2e:buyer
+
+# UI/UX
+npm run test:ui:admin
+
+# Regression
+npm run test:regression:admin
+
+# API + DB
+npm run test:api
+npm run test:db
+
+# Smoke
+npm run test:smoke
+
+# Cross-browser
+npm run test:chrome
+npm run test:firefox
+npm run test:webkit
+
+# Standalone login
+npm run test:login
+
+# Full suite
+npm run test:all
+
+# Report
+npm run report
+npm run generate:report   # generate execution-summary.md from results.json
+
+# Pipeline
+npm run sync              # 4-step sync (Tech Lead → BA → QA Manual → QA Auto)
+npm run discover          # crawl portal UI → discovery/reports/
+npm run sprint:status
+npm run sprint:update
 ```
 
-**Always `--workers=1` with `--headed`** — multiple headed windows conflict.
-
----
-
-## AI Agent Pipeline
-
-```bash
-npm run discover              # Crawl portal UI → discovery/reports/
-npm run docs:generate         # Screen docs → manual-qa-repository/sprints/
-npm run testcases:generate    # Manual TCs → manual-qa-repository/sprints/
-npm run automation:generate   # Playwright specs → tests/e2e/
-npm run execute               # Run all tests → reports/results.json
-npm run defects:log           # Parse failures → bugs/BUG_TRACKER.md
-npm run heal:analyze          # Selector analysis (read-only)
-npm run sprint:status         # Sprint summary
-npm run sprint:update         # Update SPRINT_LOG + TASK_TRACKER
-```
+**Always `--workers=1`.** Multiple headed windows conflict.
 
 ---
 
@@ -98,60 +87,81 @@ npm run sprint:update         # Update SPRINT_LOG + TASK_TRACKER
 
 ```
 xanadu/
-├── .env                                  # BASE_URL only (git-ignored)
-├── .gitignore
-├── config/
-│   └── playwright.config.js              # Multi-project Playwright config
 ├── package.json
+├── jsconfig.json
 │
 ├── automation-repository/
-│   ├── agents/                           # AI agent scripts
-│   ├── api/
-│   │   └── ApiClient.js                  # Generic HTTP + domain helpers
-│   ├── components/                       # Reusable component objects
-│   ├── constants/
-│   │   └── testData.js                   # BASE_URL, credentials, timeouts
-│   ├── discovery/
-│   │   └── config-discovery.js           # UI crawl & selector extraction
-│   ├── fixtures/
-│   │   ├── .auth/admin.json              # Saved session (git-ignored)
-│   │   └── base-test.js                  # Central fixture — DI for all page objects
+│   ├── playwright.config.js              # Master config — 6 test type projects
+│   ├── .env.example
+│   ├── base/
+│   │   └── BasePage.js                   # Shared page helpers — all POMs extend this
 │   ├── pages/
-│   │   ├── BasePage.js                   # Shared helpers
-│   │   └── LoginPage.js                  # Login POM
+│   │   ├── admin/
+│   │   │   ├── LoginPage.js
+│   │   │   └── DashboardPage.js
+│   │   ├── sales-manager/
+│   │   ├── channel-partner/
+│   │   └── buyer/
+│   ├── fixtures/
+│   │   ├── .auth/<portal>.json           # Saved sessions (git-ignored)
+│   │   ├── auth.setup.js                 # OTP login → saves session
+│   │   ├── base-test.js                  # Central fixture (DI pattern)
+│   │   └── global-setup.js
+│   ├── api/
+│   │   └── ApiClient.js
+│   ├── components/
+│   ├── utils/
+│   │   ├── WaitUtil.js
+│   │   └── selectorHelpers.js
 │   ├── test-data/
-│   │   └── factories/UserFactory.js      # Test data factories
-│   └── utils/
-│       ├── WaitUtil.js                   # pollUntil, retry, sleep
-│       └── selectorHelpers.js            # loadSelectors(module)
+│   │   └── factories/UserFactory.js
+│   ├── constants/
+│   │   └── testData.js
+│   └── discovery/
+│       └── config-discovery.js
+│
+├── locators/                             # Element locator maps (Tech Lead Agent owned)
+│   ├── admin/locator-map.json
+│   ├── sales-manager/locator-map.json
+│   ├── channel-partner/locator-map.json
+│   └── buyer/locator-map.json
+│
+├── db/
+│   ├── connection.js
+│   └── queries/
+│       ├── booking.js
+│       ├── inventory.js
+│       └── user.js
+│
+├── sync/
+│   └── last-synced-commits.json          # Sync pointer for 4-step pipeline
+│
+├── templates/
+│   └── module-scaffold/                  # Scaffold templates for new modules
+│
+├── tests/
+│   ├── e2e/<portal>/                     # E2E specs — portal-wise
+│   ├── ui-ux/<portal>/                   # UI/UX specs
+│   ├── regression/<portal>/              # Regression specs + snapshots
+│   ├── api/                              # API contract specs
+│   ├── db/                               # DB state specs
+│   ├── smoke/                            # Smoke suite
+│   ├── cross-browser/                    # Cross-browser specs
+│   └── archived/                         # Deprecated specs (never delete)
 │
 ├── manual-qa-repository/
 │   ├── 01-test-cases/                    # Manual TCs — portal → module hierarchy
-│   │   ├── admin-portal/                 # > Admin Portal (Login, Customers, Config, etc.)
-│   │   └── sales-manager-portal/         # > Sales Manager Portal (Callback, Towers, Leads)
-│   ├── 02-testing-types/                 # Smoke, regression, sanity, UAT sign-off, retesting, exploratory
-│   ├── 03-user-manual/                   # Admin guide + per-screen docs (12 dimensions)
-│   ├── 04-bug-reports/                   # BUG_TRACKER.md, per-bug files, metrics, templates
-│   ├── 05-environments/                  # UAT / DEV config, test accounts, ENV strategy
-│   ├── 06-test-runs/                     # Execution summaries per sprint per environment
-│   ├── 07-execution/                     # Run commands, ENV skip log, UAT vs DEV delta
-│   ├── 08-architecture/                  # Agent roles, process flow, framework config, QA strategy
-│   ├── 09-templates/                     # TC, screen doc, execution summary templates
+│   ├── 02-testing-types/                 # Smoke, regression, sanity, UAT, retesting
+│   ├── 03-user-manual/                   # Per-screen docs (12 dimensions)
+│   ├── 04-bug-reports/BUG_TRACKER.md
+│   ├── 05-environments/                  # UAT/DEV config, test accounts
+│   ├── 06-test-runs/                     # Execution summaries per sprint
+│   ├── 07-execution/
+│   ├── 08-architecture/                  # Agent roles, process flow, framework config
+│   ├── 09-templates/
 │   ├── DASHBOARD.md
 │   ├── SPRINT_LOG.md
-│   ├── TASK_TRACKER.md
-│   ├── test-coverage.md
-│   ├── QA-METRICS.md
-│   ├── AGENT-CONFIG.md
-│   ├── DOCUMENTATION-TRACKER.md
-│   └── CHANGELOG.md
-│
-├── tests/
-│   ├── auth.setup.js                     # Saves login session to admin.json
-│   ├── e2e/                              # Feature test specs
-│   ├── smoke/                            # Smoke suite specs
-│   ├── api/                              # API contract tests
-│   └── visual/                           # Visual regression tests
+│   └── TASK_TRACKER.md
 │
 └── reports/                              # Git-ignored
     ├── html-report/
@@ -162,15 +172,32 @@ xanadu/
 
 ## Playwright Projects
 
-| Project | Test Dir | Auth Required | Use Case |
-|---------|----------|---------------|----------|
-| `auth-setup` | `tests/auth.setup.js` | No | One-time login → saves `admin.json` |
-| `login-tests` | `tests/e2e/login.spec.js` | No (standalone) | Tests auth flow directly |
-| `smoke` | `tests/smoke/` | Yes | Quick sanity checks |
-| `regression` | `tests/e2e/` | Yes | Full regression run |
-| `chromium` | `tests/e2e/` | Yes | Cross-browser (Chrome) |
-| `firefox` | `tests/e2e/` | Yes | Cross-browser (Firefox) |
-| `webkit` | `tests/e2e/` | Yes | Cross-browser (Safari) |
+| Project | Test Dir | Auth | Use Case |
+|---------|----------|------|---------|
+| `auth-setup` | `automation-repository/fixtures/` | No | One-time session save |
+| `login-tests` | `tests/e2e/admin/login.spec.js` | No | Auth flow tests |
+| `e2e` | `tests/e2e/` | Yes | Full E2E journeys |
+| `ui-ux` | `tests/ui-ux/` | Yes | Component + a11y |
+| `regression` | `tests/regression/` | Yes | Baseline comparison |
+| `api` | `tests/api/` | No (token) | API contracts |
+| `db` | `tests/db/` | No | DB state assertions |
+| `smoke` | `tests/smoke/` | Yes | Sanity checks |
+| `chromium` | `tests/cross-browser/` | Yes | Chrome |
+| `firefox` | `tests/cross-browser/` | Yes | Firefox |
+| `webkit` | `tests/cross-browser/` | Yes | Safari/Edge |
+
+---
+
+## 4-Agent System
+
+| Agent | Role |
+|-------|------|
+| BA Agent | BRD/FRD interpretation, test case generation |
+| Tech Lead Agent | Source scans, locator maps, self-healing |
+| QA Agent | All test code, POMs, manual QA artefacts, execution |
+| Developer Agent | App source changes — explicit user invocation only |
+
+**BA Agent starts every pipeline. Developer Agent invoked by user only.**
 
 ---
 
@@ -181,25 +208,5 @@ xanadu/
 | Playwright | 1.58.2 | Browser automation + test runner |
 | Node.js | LTS | Runtime |
 | JavaScript | CommonJS | Language |
-| dotenv | 17.3.1 | `.env` variable loading |
-| csv-writer | 1.6.0 | CSV report output |
-| xlsx | 0.18.5 | Excel file handling |
-
----
-
-## Documentation Index
-
-| Document | Path | Contents |
-|----------|------|----------|
-| Dashboard | `manual-qa-repository/DASHBOARD.md` | Live project status |
-| Agent Roles | `manual-qa-repository/08-architecture/AGENT-ROLES.md` | 3-agent roles + pipeline phases |
-| Process Flow | `manual-qa-repository/08-architecture/PROCESS-FLOW.md` | End-to-end pipeline walkthrough |
-| Framework Config | `manual-qa-repository/08-architecture/FRAMEWORK-CONFIG.md` | Playwright config, scripts, env vars |
-| QA Strategy | `manual-qa-repository/08-architecture/QA-STRATEGY.md` | Coverage goals, risk priority |
-| Test Cases Index | `manual-qa-repository/01-test-cases/INDEX.md` | All portals + modules + TC counts |
-| Bug Tracker | `manual-qa-repository/04-bug-reports/BUG_TRACKER.md` | Open and resolved bugs |
-| Sprint Log | `manual-qa-repository/SPRINT_LOG.md` | Active and completed sprints |
-| Task Tracker | `manual-qa-repository/TASK_TRACKER.md` | Pending and completed tasks |
-| Test Coverage | `manual-qa-repository/test-coverage.md` | Coverage by portal + sprint |
-| QA Metrics | `manual-qa-repository/QA-METRICS.md` | Defect density, pass rates |
-| Changelog | `manual-qa-repository/CHANGELOG.md` | All changes by date |
+| dotenv | 17.x | ENV loading |
+| xlsx | 0.18.5 | Excel (TestCases.xlsx) |

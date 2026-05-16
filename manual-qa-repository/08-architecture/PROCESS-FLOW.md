@@ -1,4 +1,4 @@
-# Process Flow — XR Portal QA Framework
+﻿# Process Flow — XR Portal QA Framework
 
 > End-to-end pipeline: AI-driven discovery → test case generation → automation → execution.
 > Update when pipeline steps, scripts, or agents change.
@@ -47,7 +47,7 @@ Phase 3: Automation Scripts
 
 ## Phase 0 — Authentication Setup
 
-**Script:** `tests/auth.setup.js`  
+**Script:** `automation-repository/fixtures/auth.setup.js`  
 **Command:** `npm run auth:setup`  
 **Output:** `automation-repository/fixtures/.auth/admin.json`
 
@@ -68,7 +68,7 @@ Steps:
 
 ## Phase 2 — Screen Documentation
 
-**Command:** `npm run docs:generate`  
+**Command:** `npm run generate:report  # QA Agent calls generate-user-manual skill`  
 **Output:** `manual-qa-repository/03-user-manual/pages/<MODULE>.md`
 
 12 documentation dimensions per screen:
@@ -89,7 +89,7 @@ Steps:
 
 ## Phase 3 — Test Case Design
 
-**Command:** `npm run testcases:generate`  
+**Command:** `# BA Agent → manual-tester skill → TestCases.xlsx`  
 **Output:** `manual-qa-repository/01-test-cases/<module>/TC_<MODULE>.md`
 
 15 TC types: `UI` `FUNC` `VAL` `E2E` `API` `DB` `INT` `BIZ` `REG` `EXP` `NEG` `EDGE` `XMOD` `DC` `WF`
@@ -100,8 +100,8 @@ Steps:
 
 ## Phase 4 — Script Generation
 
-**Command:** `npm run automation:generate`  
-**Output:** `tests/e2e/<module>.spec.js`, `automation-repository/pages/<Module>Page.js`
+**Command:** `# QA Agent → scaffold specs from templates`  
+**Output:** `tests/e2e/<module>.spec.js`, `automation-repository/pages/admin/<Module>Page.js`
 
 ---
 
@@ -114,14 +114,14 @@ Steps:
 
 ## Phase 6 — Defect Logging
 
-**Command:** `npm run defects:log`  
+**Command:** `# QA Agent → parse results.json → BUG_TRACKER.md`  
 **Output:** `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`
 
 ---
 
 ## Phase 7 — Healing Analysis
 
-**Command:** `npm run heal:analyze`  
+**Command:** `# Tech Lead Agent → e2e-self-healer skill`  
 **Output:** `healing-reports/fix-recommendations.md`
 
 **Rule:** Read-only. Fixes applied only after explicit user approval.
@@ -140,14 +140,14 @@ Steps:
 ```
 1.  npm run auth:setup
 2.  npm run discover
-3.  npm run docs:generate         → 03-user-manual/pages/
-4.  npm run testcases:generate    → 01-test-cases/<module>/
+3.  npm run generate:report  # QA Agent calls generate-user-manual skill         → 03-user-manual/pages/
+4.  # BA Agent → manual-tester skill → TestCases.xlsx    → 01-test-cases/<module>/
 5.  [BA sign-off on TCs]
-6.  npm run automation:generate   → tests/e2e/
+6.  # QA Agent → scaffold specs from templates   → tests/e2e/
 7.  npm run test:smoke            → smoke check
-8.  npm run test:regression       → full run
-9.  npm run defects:log           → 04-bug-reports/
-10. npm run heal:analyze          → healing-reports/
+8.  npm run test:regression:admin       → full run
+9.  # QA Agent → parse results.json → BUG_TRACKER.md           → 04-bug-reports/
+10. # Tech Lead Agent → e2e-self-healer skill          → healing-reports/
 11. npm run sprint:update         → SPRINT_LOG + TASK_TRACKER
 ```
 

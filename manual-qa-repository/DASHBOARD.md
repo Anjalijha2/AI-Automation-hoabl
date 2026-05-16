@@ -1,4 +1,4 @@
-# QA Dashboard — XR Portal Admin
+﻿# QA Dashboard — XR Portal Admin
 
 **Last Updated:** 2026-05-16  
 **Environment:** UAT (`https://uat-web.xrportal.in/admin`)
@@ -61,8 +61,8 @@ Open: [BUG_010](04-bug-reports/UAT/open/BUG_010-reg-status-validation.md) — Re
 ## Next Actions
 
 1. Run discovery on Login module → `npm run discover`
-2. Generate Login screen docs → `npm run docs:generate`
+2. Generate Login screen docs → `npm run generate:report  # QA Agent calls generate-user-manual skill`
 3. BA sign-off on TC_LOGIN.md
-4. Generate `tests/e2e/login.spec.js` → `npm run automation:generate`
+4. Generate `tests/e2e/login.spec.js` → `# QA Agent → scaffold specs from templates`
 5. Run auth-setup + login regression suite
 6. Log any failures in `04-bug-reports/BUG_TRACKER.md`

@@ -1,4 +1,4 @@
----
+﻿---
 paths:
   - "docs/selectors/**/*.json"
 ---
@@ -26,7 +26,7 @@ paths:
 
 ## Ownership
 - `docs/selectors/*.json` — source of truth for AI agents
-- `src/pages/*.js` — primary for running tests (constructors load from JSON)
+- `automation-repository/pages/admin/*.js` — primary for running tests (constructors load from JSON)
 - When UI changes break selectors: fix page object first, then update JSON to match
 
 ## Versioning

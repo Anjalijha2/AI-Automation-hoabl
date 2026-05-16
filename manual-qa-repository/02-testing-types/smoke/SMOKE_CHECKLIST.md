@@ -1,4 +1,4 @@
-# Smoke Test Checklist
+﻿# Smoke Test Checklist
 
 **Purpose:** Quick sanity pass — verify core flows not broken after deploy  
 **Runtime target:** < 10 minutes  
@@ -47,7 +47,7 @@
 ```bash
 npm run test:smoke
 # or
-npx playwright test tests/smoke/ --config config/playwright.config.js --project=smoke --headed --workers=1
+npx playwright test tests/smoke/ --config automation-repository/playwright.config.js --project=smoke --headed --workers=1
 ```
 
 ---

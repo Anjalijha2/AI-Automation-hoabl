@@ -17,10 +17,10 @@
 
 ```bash
 # Run single TC
-npx playwright test --config config/playwright.config.js -g "TC_LOGIN_FUNC_001" --headed
+npx playwright test --config automation-repository/playwright.config.js -g "TC_LOGIN_FUNC_001" --headed
 
 # Run module subset
-npx playwright test tests/e2e/login.spec.js --config config/playwright.config.js --project=regression --headed --workers=1
+npx playwright test tests/e2e/login.spec.js --config automation-repository/playwright.config.js --project=regression --headed --workers=1
 ```
 
 ---

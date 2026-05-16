@@ -1,17 +1,38 @@
 # Agent Configuration
 
-**Project:** XR Portal Admin QA Pipeline  
-**Setup:** Antigravity Multi-Agent (3 sessions)
+**Project:** XR Portal QA Framework — 4-Agent System
+**Portals:** Admin, Sales Manager, Channel Partner, Buyer, API
 
 ---
 
-## Sessions
+## Agents
 
-| Session Name | System Prompt | Subagent | Role |
-|-------------|--------------|---------|------|
-| `XR — BA Agent` | `.claude/docs/agent-prompts/ba-agent.md` | `ba-pipeline-orchestrator.md` | Orchestrator |
-| `XR — Manual QA` | `.claude/docs/agent-prompts/manual-qa-agent.md` | `xr-manual-qa.md` | Discovery + TCs + Bugs |
-| `XR — Automation QA` | `.claude/docs/agent-prompts/automation-qa-agent.md` | `automation-qa-engineer.md` | Scripts + Execution + Healing |
+| Agent | File | Role |
+|-------|------|------|
+| BA Agent | `.claude/agents/ba_agent.md` | BRD/FRD interpretation, TC generation |
+| Tech Lead Agent | `.claude/agents/tech_lead_agent.md` | Locator maps, source scanning, self-healing |
+| QA Agent | `.claude/agents/qa_agent.md` | All test code, execution, manual QA artefacts |
+| Developer Agent | `.claude/agents/developer_agent.md` | App source — explicit user invocation only |
+
+---
+
+## 13 Skills
+
+| Skill | Called By |
+|-------|-----------|
+| `manual-tester` | BA Agent |
+| `test-case-reviewer` | QA Agent |
+| `locator-map-builder` | Tech Lead Agent |
+| `e2e-self-healer` | QA Agent, Tech Lead Agent |
+| `run-e2e` | QA Agent |
+| `run-ui-ux` | QA Agent |
+| `run-regression` | QA Agent |
+| `run-cross-browser` | QA Agent |
+| `run-api-tests` | QA Agent |
+| `run-db-tests` | QA Agent |
+| `generate-report` | QA Agent |
+| `generate-user-manual` | QA Agent |
+| `sync-and-update` | Tech Lead + QA Agent |
 
 ---
 
@@ -19,36 +40,32 @@
 
 | Gate | Condition | Enforced By |
 |------|-----------|-------------|
-| Discovery → Screen Docs | discovery report exists | BA Orchestrator |
-| Screen Docs → TCs | page docs written | BA Orchestrator |
-| TCs → Automation | BA sign-off on TC file | BA Orchestrator |
-| Automation → Execution | scripts generated and reviewed | BA Orchestrator |
-| Execution → Defects | results.json has failures | BA Orchestrator |
+| Source scan → Locator update | source diff exists | Tech Lead Agent |
+| Locator update → TC update | change-manifest.json signed off | BA Agent |
+| TC design → Automation | BA sign-off on TestCases.xlsx | BA Agent |
+| Spec gen → Execution | scripts compile clean | QA Agent |
+| Execution → Bug log | results.json has failures | QA Agent |
 
 ---
 
-## Memory Locations
+## Portals & Auth
 
-| Agent | Memory Path |
-|-------|------------|
-| BA Pipeline Orchestrator | `.claude/agent-memory/ba-pipeline-orchestrator/` |
-| Automation QA Engineer | `.claude/agent-memory/automation-qa-engineer/` |
-| XR Manual QA | `.claude/agent-memory/xr-manual-qa/` |
+| Portal | URL | Session File |
+|--------|-----|-------------|
+| Admin | `https://uat-web.xrportal.in/admin` | `automation-repository/fixtures/.auth/admin.json` |
+| Sales Manager | `https://uat-web.xrportal.in/sales-manager` | `automation-repository/fixtures/.auth/sales-manager.json` |
+| Channel Partner | `https://uat-web.xrportal.in/` | `automation-repository/fixtures/.auth/channel-partner.json` |
+| Buyer | `https://uat.xrportal.in/` | `automation-repository/fixtures/.auth/buyer.json` |
 
----
-
-## Target Portal
-
-- **URL:** `https://uat-web.xrportal.in/admin`
-- **Auth:** Mobile OTP — static UAT: `8888888888` / `258369`
-- **Session file:** `automation-repository/fixtures/.auth/admin.json`
+**Auth:** Mobile OTP — UAT static: `8888888888` / `258369`
 
 ---
 
 ## Rules
 
-1. Always start from BA Agent — entry point for all pipeline work
-2. No Manual QA phase starts without BA gate approval
-3. No Automation QA starts without BA sign-off on TCs
-4. Healing analysis is read-only — fixes applied only after explicit user approval
-5. Never overwrite existing spec files without explicit approval
+1. BA Agent starts every pipeline — no exceptions
+2. No automation phase without BA sign-off on TCs
+3. Locator maps owned exclusively by Tech Lead Agent
+4. QA Agent owns all test code — Developer Agent never touches
+5. Healing is read-only — fixes applied only after explicit user approval
+6. LSQ excluded entirely. Strapi excluded from source scans.

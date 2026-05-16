@@ -1,99 +1,97 @@
 # Agent Roles & Responsibilities
 
-## BA Pipeline Orchestrator (`ba-pipeline-orchestrator`)
+4-agent system. BA Agent starts every pipeline. Developer Agent explicit-only.
 
-**Role:** Orchestrator — controls pipeline gates, sprint management, domain expertise
+---
+
+## BA Agent (`ba_agent.md`)
+
+**Role:** BRD/FRD interpretation, requirements ownership, test case generation
 
 ### Responsibilities
-- Analyze BRDs and apply real estate domain knowledge
-- Raise clarifications before pipeline starts
-- Enforce gate conditions between phases (no phase skips)
-- Track sprint progress, update SPRINT_LOG + TASK_TRACKER
-- Maintain xr-portal-vault (project memory)
-- Final sign-off on test cases before automation begins
+- Read BRD/FRD from `.claude/docs/hoabl-knowledge-base/`
+- Call `manual-tester` skill → produce `TestCases.xlsx` + `test-data-spec.md`
+- Cross-check source changes against BRD/FRD during sync (Step 2 gate)
+- Flag undocumented features — never infer
+- Sign off on TCs before QA Agent automates
 
 ### Outputs
-- `manual-qa-repository/SPRINT_LOG.md`
-- `manual-qa-repository/TASK_TRACKER.md`
-- `manual-qa-repository/test-coverage.md`
-- `manual-qa-repository/CHANGELOG.md`
+- `manual-qa-repository/01-test-cases/<portal>/<module>/TestCases.xlsx`
+- `manual-qa-repository/01-test-cases/<portal>/<module>/test-data-spec.md`
+- `sync/doc-change-summary.md`
 
 ### Rule
-Always the entry point. No Manual QA or Automation QA phase starts without BA gate approval.
+Entry point for every new module and every sync pipeline run.
 
 ---
 
-## XR Manual QA (`xr-manual-qa`)
+## Tech Lead Agent (`tech_lead_agent.md`)
 
-**Role:** Discovery + Documentation + Test Design + Defect Logging
+**Role:** Source code scanning, locator map ownership, self-healing
 
-### Phase 1 — UI Discovery
-- Crawl XR Portal Admin UI (`https://uat-web.xrportal.in/admin`)
-- Map all pages, modules, navigation flows
-- Extract DOM selectors (inputs, buttons, tables, filters, dropdowns)
-- Capture screenshots
-- Output: `discovery/reports/`
+### Responsibilities
+- Scan `source-code/` for component changes (Strapi excluded)
+- Call `locator-map-builder` skill → update `locators/<portal>/locator-map.json`
+- Call `e2e-self-healer` skill proactively when source changes affect selectors
+- Produce `sync/change-manifest.json` and `sync/handoff-note.md`
 
-### Phase 2 — Screen Documentation
-- Read discovery outputs
-- Document each screen across 12 dimensions
-- Output: `manual-qa-repository/03-user-manual/pages/<MODULE>.md`
-- **Rule:** Selector JSON is source of truth for AI agents (see selectors note below)
+### Outputs
+- `locators/<portal>/locator-map.json`
+- `sync/change-manifest.json`
+- `sync/handoff-note.md`
 
-### Phase 3 — Test Case Design
-- Read page docs + BRD
-- Generate manual test cases across 15 types: `UI` `FUNC` `VAL` `E2E` `API` `DB` `INT` `BIZ` `REG` `EXP` `NEG` `EDGE` `XMOD` `DC` `WF`
-- Output: `manual-qa-repository/01-test-cases/<module>/TC_<MODULE>.md`
-- **Rule:** Every TC maps to BRD requirement; TC_IDs use `TC_MODULE_TYPE_NNN` format
-
-### Phase 4 — Defect Logging
-- Parse `reports/results.json` for failures
-- Root-cause each failure, create structured bug entries
-- Output: `manual-qa-repository/04-bug-reports/BUG_TRACKER.md` (format: `BUG_NNN`)
+### Rule
+Owns locator maps exclusively. Never touches test specs or manual QA artefacts.
 
 ---
 
-## Automation QA Engineer (`automation-qa-engineer`)
+## QA Agent (`qa_agent.md`)
 
-**Role:** Script Generation + Test Execution + Healing Analysis
+**Role:** All test code, manual QA artefacts, execution
 
-### Phase 1 — Script Generation
-- Convert BA-approved test cases to Playwright scripts
-- Follow Page Object Model (`automation-repository/pages/<Module>Page.js` extending `BasePage`)
-- Output: `tests/e2e/<module>.spec.js`
-- **Rule:** Never overwrite existing spec files without explicit approval
+### Phase 1 — TC Review
+- Call `test-case-reviewer` skill → validate TestCases.xlsx against BRD/FRD
 
-### Phase 2 — Test Execution
-- Run Playwright suites via `npm run test:<module>` or `npm run test:regression`
-- Capture results per TC_ID
-- Output: `reports/results.json`, `reports/html-report/`, `test-results/`
-- **Rule:** Always run auth-setup before protected tests; always `--workers=1` with `--headed`
+### Phase 2 — Scaffold & Implement
+- Scaffold POMs: `automation-repository/pages/<portal>/<Module>Page.js`
+- Scaffold 6 test type specs per module
 
-### Phase 3 — Healing Analysis
-- Analyze selector/timing failures from test results
-- Produce fix recommendations — read-only, no direct edits
-- Output: `healing-reports/fix-recommendations.md`
-- **Rule:** Fixes applied only after explicit user approval
+### Phase 3 — Execute
+- Run all 6 test types per module
+- Call `generate-report` → `manual-qa-repository/06-test-runs/`
+- Call `generate-user-manual` → `manual-qa-repository/03-user-manual/`
+- Log failures → `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`
+
+### Rule
+Owns ALL test specs, POMs, `playwright.config.js`. Developer Agent never touches these.
 
 ---
 
-## Selector Source of Truth
+## Developer Agent (`developer_agent.md`)
 
-- **Page objects use:** `automation-repository/pages/*.js`
-- **AI agents read:** selector JSON files generated during discovery
-- Fix UI breaks in page object first, then update JSON
+**Role:** App source code — explicit user invocation only
+
+### Rule
+Read-only by default. Makes source changes only when user explicitly instructs.
+Never touches test files, POMs, playwright.config.js, locator maps, or manual QA artefacts.
 
 ---
 
-## Pipeline Flow
+## Locator Map Ownership
+
+- `locators/<portal>/locator-map.json` — owned by Tech Lead Agent
+- `automation-repository/pages/<portal>/*.js` — POMs consume locator map, owned by QA Agent
+- Fix UI breaks: Tech Lead updates locator map → QA Agent updates POM
+
+---
+
+## 4-Step Sync Pipeline
 
 ```
-BA Orchestrator
-  └── gate check → XR Manual QA (Phase 1: Discovery)
-                      └── gate check → XR Manual QA (Phase 2: Screen Docs)
-                                          └── gate check → XR Manual QA (Phase 3: TCs)
-                                                              └── BA sign-off → Automation QA (Phase 1: Scripts)
-                                                                                  └── gate check → Automation QA (Phase 2: Execution)
-                                                                                                      └── failures? → XR Manual QA (Phase 4: Defects)
-                                                                                                                    → Automation QA (Phase 3: Healing)
+Step 1 — Tech Lead Agent: scan source-code/ → update locator-map.json → change-manifest.json
+Step 2 — BA Agent: cross-check change-manifest vs BRD/FRD → sign off or raise clarification
+Step 3 — QA Agent (Manual): update affected TCs in TestCases.xlsx
+Step 4 — QA Agent (Automation): heal affected specs → re-execute → generate-report
 ```
+
+Trigger: `npm run sync`

@@ -1,0 +1,12 @@
+{
+  "__module__": {
+    "__elementKey__": {
+      "selector": "__css_selector__",
+      "type": "css",
+      "fallback": "__fallback_selector__",
+      "aria_role": "__role__",
+      "deprecated": false,
+      "changelog": ["1.0.0 — initial"]
+    }
+  }
+}

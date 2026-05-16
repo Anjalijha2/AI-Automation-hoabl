@@ -1,4 +1,4 @@
-# TC_LOGIN — Login Module Test Cases
+﻿# TC_LOGIN — Login Module Test Cases
 
 **Module:** Login  
 **Portal:** XR Portal Admin (`https://uat-web.xrportal.in/admin`)  
@@ -336,4 +336,4 @@
 | TC_LOGIN_BIZ_001 | Partial | — | ⏳ Pending |
 | TC_LOGIN_BIZ_002 | Partial | — | ⏳ Pending |
 | TC_LOGIN_E2E_001 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_E2E_002 | Yes | `tests/auth.setup.js` | ⏳ Pending |
+| TC_LOGIN_E2E_002 | Yes | `automation-repository/fixtures/auth.setup.js` | ⏳ Pending |

@@ -1,4 +1,4 @@
-# Login Screen — Documentation
+﻿# Login Screen — Documentation
 
 **Module:** Login  
 **URL:** `https://uat-web.xrportal.in/admin`  
@@ -112,7 +112,7 @@ _(To be added after UI discovery run)_
 ## 11. Related Pages
 
 - Post-login: Customers (`/customers`)
-- Auth setup: `tests/auth.setup.js`
+- Auth setup: `automation-repository/fixtures/auth.setup.js`
 
 ---
 

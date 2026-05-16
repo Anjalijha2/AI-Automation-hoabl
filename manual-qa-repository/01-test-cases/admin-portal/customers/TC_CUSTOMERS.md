@@ -1,4 +1,4 @@
-# TC_CUSTOMERS — Customers Module Test Cases
+﻿# TC_CUSTOMERS — Customers Module Test Cases
 
 **Module:** Customers  
 **Portal:** XR Portal Admin  
@@ -10,7 +10,7 @@
 
 > Test cases will be generated after:
 > 1. UI discovery (`npm run discover`)
-> 2. Screen documentation (`npm run docs:generate`)
+> 2. Screen documentation (`npm run generate:report  # QA Agent calls generate-user-manual skill`)
 > 3. BA sign-off on BRD
 
 ---

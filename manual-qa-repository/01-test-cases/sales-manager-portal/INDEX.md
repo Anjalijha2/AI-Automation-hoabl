@@ -1,4 +1,4 @@
-# Sales Manager Portal — Test Cases Index
+﻿# Sales Manager Portal — Test Cases Index
 
 **Portal:** XR Sales Manager Portal  
 **Back to master:** [../INDEX.md](../INDEX.md)
@@ -17,7 +17,7 @@
 
 > TCs will be generated after:
 > 1. UI discovery (`npm run discover`)
-> 2. Screen documentation (`npm run docs:generate`)
+> 2. Screen documentation (`npm run generate:report  # QA Agent calls generate-user-manual skill`)
 > 3. BA sign-off on BRD
 
 ---

@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "portal": "admin",
+    "version": "1.0.0",
+    "lastUpdated": "2026-05-17",
+    "maintainer": "Tech Lead Agent"
+  },
+  "login": {
+    "mobileInput": {
+      "selector": "input[placeholder='Enter mobile number']",
+      "type": "css",
+      "fallback": "input[type='tel']",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.0.0 — initial"]
+    },
+    "otpInput": {
+      "selector": "input[placeholder='Enter OTP']",
+      "type": "css",
+      "fallback": "input[type='number']",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.0.0 — initial"]
+    },
+    "sendOtpBtn": {
+      "selector": "button:has-text('Send OTP')",
+      "type": "css",
+      "fallback": "button[type='submit']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.0.0 — initial"]
+    },
+    "verifyOtpBtn": {
+      "selector": "button:has-text('Verify OTP')",
+      "type": "css",
+      "fallback": "button[type='submit']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.0.0 — initial"]
+    }
+  },
+  "dashboard": {
+    "navMenu": {
+      "selector": "nav.sidebar",
+      "type": "css",
+      "fallback": "[role='navigation']",
+      "aria_role": "navigation",
+      "deprecated": false,
+      "changelog": ["1.0.0 — initial"]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "_meta": {
+    "description": "Tracks last synced commit per source for the 4-step sync pipeline",
+    "maintainer": "Tech Lead Agent",
+    "lastUpdated": "2026-05-17"
+  },
+  "source-code": {
+    "lastCommit": null,
+    "lastSyncedAt": null
+  },
+  "brd-frd": {
+    "lastCommit": null,
+    "lastSyncedAt": null
+  }
+}

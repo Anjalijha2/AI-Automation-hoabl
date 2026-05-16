@@ -1,15 +1,14 @@
----
+﻿---
 paths:
-  - "src/pages/**/*.js"
-  - "src/base/**/*.js"
+  - "automation-repository/pages/admin/**/*.js"
 ---
 
 # Page Object Rules
 
-Every page object must extend `BasePage` from `src/base/BasePage.js`.
+Every page object must extend `BasePage` from `automation-repository/pages/admin/BasePage.js`.
 
 ```javascript
-const { BasePage } = require('../base/BasePage');
+const { BasePage } = require('./BasePage');
 const selectors = require('../../docs/selectors/<module>.json');
 
 class <Module>Page extends BasePage {

@@ -1,4 +1,4 @@
-# UAT Environment
+﻿# UAT Environment
 
 **URL:** `https://uat-web.xrportal.in/admin`  
 **Purpose:** User Acceptance Testing — pre-production validation
@@ -59,7 +59,7 @@ test.skip(process.env.ENV === 'uat', 'Skipped on UAT — live gateway');
 ## Test Commands (UAT)
 
 ```bash
-npm run test:regression     # Full regression on UAT
+npm run test:regression:admin     # Full regression on UAT
 npm run test:smoke          # Smoke on UAT
-HEADLESS=true npm run test:regression   # CI mode
+HEADLESS=true npm run test:regression:admin   # CI mode
 ```

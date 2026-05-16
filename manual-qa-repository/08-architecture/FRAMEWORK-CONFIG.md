@@ -1,4 +1,4 @@
-# Framework Configuration
+﻿# Framework Configuration
 
 > Update when playwright.config.js, package.json scripts, env vars, or project structure change.
 
@@ -19,7 +19,7 @@
 
 ## playwright.config.js
 
-**File:** `config/playwright.config.js`
+**File:** `automation-repository/playwright.config.js`
 
 ### Global Settings
 
@@ -38,7 +38,7 @@
 
 | Name | Test Match | Auth Dependency |
 |------|-----------|----------------|
-| `auth-setup` | `tests/auth.setup.js` | None |
+| `auth-setup` | `automation-repository/fixtures/auth.setup.js` | None |
 | `login-tests` | `tests/e2e/login.spec.js` | None |
 | `smoke` | `tests/smoke/` | `auth-setup` |
 | `regression` | `tests/e2e/` | `auth-setup` |
@@ -52,16 +52,16 @@
 npm run auth:setup         # Save session → automation-repository/fixtures/.auth/admin.json
 npm run test:login         # Login tests (standalone)
 npm run test:smoke         # Smoke suite
-npm run test:regression    # Full regression
+npm run test:regression:admin    # Full regression
 npm run test:chrome/firefox/webkit  # Cross-browser
 npm run report             # Open HTML report
 npm run discover           # Portal discovery
-npm run docs:generate      # Screen docs
-npm run testcases:generate # Manual TCs
-npm run automation:generate # Playwright specs
+npm run generate:report  # QA Agent calls generate-user-manual skill      # Screen docs
+# BA Agent → manual-tester skill → TestCases.xlsx # Manual TCs
+# QA Agent → scaffold specs from templates # Playwright specs
 npm run execute            # Run all tests
-npm run defects:log        # Log failures to BUG_TRACKER
-npm run heal:analyze       # Selector analysis (read-only)
+# QA Agent → parse results.json → BUG_TRACKER.md        # Log failures to BUG_TRACKER
+# Tech Lead Agent → e2e-self-healer skill       # Selector analysis (read-only)
 npm run sprint:status      # Sprint summary
 npm run sprint:update      # Update sprint docs
 ```
@@ -72,15 +72,15 @@ npm run sprint:update      # Update sprint docs
 
 | File | Purpose |
 |------|---------|
-| `config/playwright.config.js` | Master Playwright config |
-| `automation-repository/pages/BasePage.js` | Shared page helpers |
-| `automation-repository/pages/LoginPage.js` | Login POM |
+| `automation-repository/playwright.config.js` | Master Playwright config |
+| `automation-repository/pages/admin/BasePage.js` | Shared page helpers |
+| `automation-repository/pages/admin/LoginPage.js` | Login POM |
 | `automation-repository/constants/testData.js` | BASE_URL, credentials, timeouts |
 | `automation-repository/fixtures/base-test.js` | DI fixture pattern |
 | `automation-repository/fixtures/.auth/admin.json` | Saved session (git-ignored) |
 | `automation-repository/api/ApiClient.js` | HTTP client |
 | `automation-repository/utils/WaitUtil.js` | pollUntil, retry, sleep |
-| `tests/auth.setup.js` | One-time auth session setup |
+| `automation-repository/fixtures/auth.setup.js` | One-time auth session setup |
 | `tests/e2e/<module>.spec.js` | Playwright test specs |
 | `manual-qa-repository/01-test-cases/` | Manual test cases |
 | `reports/html-report/index.html` | HTML report |

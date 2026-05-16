@@ -1,4 +1,0 @@
-- [Sprint 5 New Modules](project_sprint5_modules.md) — 4 uncovered modules found 2026-05-08: Offers, Sales Managers, Payment Transactions, CMS/Config (full)
-- [CMS Config Page Full Map](project_cms_sections.md) — /admin/cms has 9 sections; TC_ADMIN_CMS.md only covered 4; brd/cms-config.md covers all 9
-- [Domain Red Flags Sprint 5](project_domain_redflag_offers.md) — 8 critical red flags in Offers, Transactions, CMS modules requiring dedicated test cases
-- [Knowledge Base Structure](project_knowledge_base_structure.md) — Clean KB structure post-2026-05-10 reorganization: one Module file per module, BRDs merged, sprint artifacts kept

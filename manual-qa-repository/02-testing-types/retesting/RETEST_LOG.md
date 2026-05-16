@@ -17,7 +17,7 @@
 1. Get bug details from `04-bug-reports/BUG_TRACKER.md`
 2. Run specific TC:
    ```bash
-   npx playwright test --config config/playwright.config.js -g "TC_ID" --headed
+   npx playwright test --config automation-repository/playwright.config.js -g "TC_ID" --headed
    ```
 3. Log result in table above
 4. If pass → update BUG_TRACKER.md status to `Closed`

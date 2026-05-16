@@ -1,7 +1,7 @@
-# Run Commands Reference
+﻿# Run Commands Reference
 
 **Framework:** Playwright 1.58.2 · JavaScript (CommonJS)  
-**Config:** `config/playwright.config.js`
+**Config:** `automation-repository/playwright.config.js`
 
 ---
 
@@ -10,7 +10,7 @@
 ```bash
 npm run auth:setup
 # or
-npx playwright test --config config/playwright.config.js --project=auth-setup
+npx playwright test --config automation-repository/playwright.config.js --project=auth-setup
 ```
 
 Saves session to `automation-repository/fixtures/.auth/admin.json`.  
@@ -40,7 +40,7 @@ HEADLESS=true npm run test:regression
 
 ```bash
 npx playwright test tests/e2e/login.spec.js \
-  --config config/playwright.config.js \
+  --config automation-repository/playwright.config.js \
   --project=regression \
   --headed --workers=1
 ```
@@ -51,7 +51,7 @@ npx playwright test tests/e2e/login.spec.js \
 
 ```bash
 npx playwright test \
-  --config config/playwright.config.js \
+  --config automation-repository/playwright.config.js \
   -g "TC_LOGIN_FUNC_001" \
   --headed
 ```
@@ -82,12 +82,12 @@ npm run report         # Open HTML report in browser
 
 ```bash
 npm run discover              # Crawl portal UI → discovery/reports/
-npm run docs:generate         # Screen docs → manual-qa-repository/
-npm run testcases:generate    # Manual TCs → 01-test-cases/
-npm run automation:generate   # Playwright specs → tests/e2e/
+npm run generate:report  # QA Agent calls generate-user-manual skill         # Screen docs → manual-qa-repository/
+# BA Agent → manual-tester skill → TestCases.xlsx    # Manual TCs → 01-test-cases/
+# QA Agent → scaffold specs from templates   # Playwright specs → tests/e2e/
 npm run execute               # Run all tests → reports/results.json
-npm run defects:log           # Parse failures → 04-bug-reports/BUG_TRACKER.md
-npm run heal:analyze          # Selector analysis (read-only)
+# QA Agent → parse results.json → BUG_TRACKER.md           # Parse failures → 04-bug-reports/BUG_TRACKER.md
+# Tech Lead Agent → e2e-self-healer skill          # Selector analysis (read-only)
 npm run sprint:status         # Sprint summary
 npm run sprint:update         # Update SPRINT_LOG + TASK_TRACKER
 ```
