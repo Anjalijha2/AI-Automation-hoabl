@@ -3,12 +3,7 @@ dist/
 .env
 discovery/videos/
 reports/
-automation/fixtures/.auth/
-src/fixtures/.auth/
+automation-repository/fixtures/.auth/
 test-results/
 .playwright-mcp/
 .claude/agent-memory/
-
-.playwright-mcp/
-.playwright-mcp/
-test-results/

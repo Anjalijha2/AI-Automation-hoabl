@@ -4,7 +4,7 @@
  */
 
 const { test, expect } = require("@playwright/test");
-const { ConfigPage } = require("../../src/pages/ConfigPage.js");
+const { ConfigPage } = require("../../automation-repository/pages/ConfigPage.js");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");

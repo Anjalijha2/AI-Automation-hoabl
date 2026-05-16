@@ -11,11 +11,11 @@
  */
 
 const { test: setup, expect } = require('@playwright/test');
-const { LoginPage } = require('../src/pages/LoginPage.js');
+const { LoginPage } = require('../automation-repository/pages/LoginPage.js');
 const path = require('path');
 
 // Where the session will be saved:
-const authFile = path.join(__dirname, '../src/fixtures/.auth/admin.json');
+const authFile = path.join(__dirname, '../automation-repository/fixtures/.auth/admin.json');
 
 const VALID_MOBILE = '8888888888';
 const VALID_OTP = '258369';

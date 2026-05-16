@@ -6,7 +6,7 @@
  */
 
 const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../../src/pages/LoginPage.js');
+const { LoginPage } = require('../../automation-repository/pages/LoginPage.js');
 
 const VALID_MOBILE = '8888888888';
 const VALID_OTP    = '258369';

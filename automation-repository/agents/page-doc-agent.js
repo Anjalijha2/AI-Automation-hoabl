@@ -8,7 +8,7 @@
  * Inputs  : discovery/dom-selectors.json
  *           discovery/portal-map.json
  *
- * Outputs : docs/pages/<MODULE>.md
+ * Outputs : manual-qa-repository/pages/<MODULE>.md
  *           Each file contains:
  *             - Page description
  *             - Element selectors
@@ -109,7 +109,7 @@ https://uat-web.xrportal.in/admin/customers
 Yes. Session must be initialized via \`auth.setup.js\`.
 
 ## Element Selectors
-Loaded from \`docs/selectors/customers.json\`.
+Loaded from \`manual-qa-repository/selectors/customers.json\`.
 Includes new locators for: Allocation Status, Process Status, Cancellation Modals, and Home Loan Modals.
 
 ## Workflows

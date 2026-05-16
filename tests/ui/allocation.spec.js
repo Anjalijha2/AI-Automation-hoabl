@@ -13,7 +13,7 @@
  */
 
 const { test, expect } = require("@playwright/test");
-const { AllocationPage } = require("../../src/pages/AllocationPage.js");
+const { AllocationPage } = require("../../automation-repository/pages/AllocationPage.js");
 const path = require("path");
 
 // ── Test Data ─────────────────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ async function customerLogin(page, targetUrl = null) {
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🔧 Pre-Execution Setup", () => {
   test.use({
-    storageState: path.join(__dirname, "../../src/fixtures/.auth/admin.json"),
+    storageState: path.join(__dirname, "../../automation-repository/fixtures/.auth/admin.json"),
   });
 
   // ── SETUP-01 ─────────────────────────────────────────────────────────────
@@ -169,7 +169,7 @@ test.describe("⚙️ Admin — Campaign Management", () => {
   test.describe.configure({ timeout: 90_000 }); // form fill + date pickers + slowMo=500 needs headroom
 
   test.use({
-    storageState: path.join(__dirname, "../../src/fixtures/.auth/admin.json"),
+    storageState: path.join(__dirname, "../../automation-repository/fixtures/.auth/admin.json"),
   });
 
   test.beforeEach(async ({ page }) => {
@@ -555,7 +555,7 @@ test.describe("🏠 Customer — Allotment & Unit Selection", () => {
   // Admin tests (TC-ADM-007) stop all campaigns, so we create a fresh one here.
   test.beforeAll(async ({ browser }) => {
     const ctx = await browser.newContext({
-      storageState: path.join(__dirname, "../../src/fixtures/.auth/admin.json"),
+      storageState: path.join(__dirname, "../../automation-repository/fixtures/.auth/admin.json"),
     });
     const adminPage = await ctx.newPage();
     const alloc = new AllocationPage(adminPage);
@@ -939,7 +939,7 @@ test.describe("📋 Customer — KYC Completion", () => {
   test.use({ storageState: { cookies: [], origins: [] } });
   test.slow(); // KYC tests need extra time for login + navigation
 
-  const DUMMY_DOCS = "src/fixtures/dummy-docs";
+  const DUMMY_DOCS = "automation-repository/fixtures/dummy-docs";
 
   test.beforeEach(async ({ page }) => {
     const alloc = await customerLogin(page);
@@ -1371,7 +1371,7 @@ test.describe("🏡 Customer — Post-Booking Home & Milestones", () => {
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🛑 Phase 8 — Admin: Stop Active Campaign", () => {
   test.use({
-    storageState: path.join(__dirname, "../../src/fixtures/.auth/admin.json"),
+    storageState: path.join(__dirname, "../../automation-repository/fixtures/.auth/admin.json"),
   });
 
   test("[TC-ADM-PHASE8] Stop active Xanadu Test Project campaign → status becomes Stopped", async ({

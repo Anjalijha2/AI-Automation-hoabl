@@ -16,8 +16,8 @@
  */
 
 const { test, expect } = require("@playwright/test");
-const { ChannelPartnersPage } = require("../../src/pages/ChannelPartnersPage.js");
-const { CPPortalPage } = require("../../src/pages/CPPortalPage.js");
+const { ChannelPartnersPage } = require("../../automation-repository/pages/ChannelPartnersPage.js");
+const { CPPortalPage } = require("../../automation-repository/pages/CPPortalPage.js");
 
 // ── Test Data ──────────────────────────────────────────────────────────────────
 // CP 1 — Master CP (phone: 8888888888)
@@ -44,7 +44,7 @@ const EXPECTED_COLUMNS = [
 // DESCRIBE 1 — Page Load & Structure
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("📋 Page Load & Structure", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-CP-001
   test("[TC-CP-001] Page loads with correct total CP count", async ({ page }) => {
@@ -74,7 +74,7 @@ test.describe("📋 Page Load & Structure", () => {
 // DESCRIBE 2 — Search
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🔍 Search", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-CP-003 — Master CP
   test("[TC-CP-003] Search by phone (8888888888) returns Master CP row", async ({ page }) => {
@@ -131,7 +131,7 @@ test.describe("🔍 Search", () => {
 // DESCRIBE 3 — View (Eye) Drawer
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("👁️ View Drawer", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-CP-005 — Master CP drawer
   test("[TC-CP-005] Eye icon opens Master CP (8888888888) drawer with correct fields", async ({ page }) => {
@@ -202,7 +202,7 @@ test.describe("👁️ View Drawer", () => {
 // DESCRIBE 4 — Map Master CP
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🔗 Map Master CP", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-CP-008
   test("[TC-CP-008] Map Master CP button disabled by default, enabled after row selection", async ({ page }) => {
@@ -240,7 +240,7 @@ test.describe("🔗 Map Master CP", () => {
 // DESCRIBE 5 — Column Filters
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🔽 Column Filters", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-CP-011
   test("[TC-CP-011] All filterable columns have icons and CP Type filter returns correct results", async ({ page }) => {
@@ -286,7 +286,7 @@ test.describe("🔽 Column Filters", () => {
 // DESCRIBE 6 — Master HV Code Filter + CP Portal End-to-End
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🔗 Master HV Filter + CP Portal", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-CP-012
   test("[TC-CP-012] Filter by Master HV Code, verify CPs, login to CP portal and check All Team Leads", async ({ page, context }) => {
@@ -401,7 +401,7 @@ test.describe("🔗 Master HV Filter + CP Portal", () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // DESCRIBE 7 — Refresh
 test.describe("🔄 Refresh", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-CP-010
   test("[TC-CP-010] Refresh button reloads data without changing total count", async ({ page }) => {

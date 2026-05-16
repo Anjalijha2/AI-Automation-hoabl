@@ -4,7 +4,7 @@
  * Extends Playwright's base `test` with pre-built page objects.
  *
  * Usage in spec files:
- *   const { test, expect } = require('../../src/fixtures/testFixture.js');
+ *   const { test, expect } = require('../../automation-repository/fixtures/testFixture.js');
  *
  *   test('example', async ({ loginPage, customersPage, configPage }) => {
  *     await loginPage.navigate();

@@ -14,7 +14,7 @@
  */
 
 const { test, expect } = require("@playwright/test");
-const { TowersPage } = require("../../src/pages/TowersPage.js");
+const { TowersPage } = require("../../automation-repository/pages/TowersPage.js");
 
 // ── Test Data ──────────────────────────────────────────────────────────────────
 const ACTIVE_TOWER   = "Crest";        // Known active on UAT
@@ -36,7 +36,7 @@ const KPI_BASELINE = {
 // DESCRIBE 1 — KPI Cards
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("📊 KPI Cards", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-TWR-001
   test("[TC-TWR-001] Towers + Units KPI cards show valid counts", async ({ page }) => {
@@ -94,7 +94,7 @@ test.describe("📊 KPI Cards", () => {
 // DESCRIBE 2 — Tower List
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🏢 Tower List", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-TWR-003
   test("[TC-TWR-003] All 18 towers appear in sidebar list", async ({ page }) => {
@@ -133,7 +133,7 @@ test.describe("🏢 Tower List", () => {
 // DESCRIBE 3 — Floor / Unit Grid
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("🗺️ Floor / Unit Grid", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   test.beforeEach(async ({ page }) => {
     const towers = new TowersPage(page);
@@ -210,7 +210,7 @@ test.describe("🗺️ Floor / Unit Grid", () => {
 // DESCRIBE 4 — Unit Detail Drawer
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("📋 Unit Detail Drawer", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   test.beforeEach(async ({ page }) => {
     const towers = new TowersPage(page);
@@ -335,7 +335,7 @@ test.describe("📋 Unit Detail Drawer", () => {
 // DESCRIBE 5 — Download Excel
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe("📥 Download Excel", () => {
-  test.use({ storageState: "src/fixtures/.auth/admin.json" });
+  test.use({ storageState: "automation-repository/fixtures/.auth/admin.json" });
 
   // TC-TWR-013
   test("[TC-TWR-013] Download tower unit data as Excel file", async ({ page }) => {

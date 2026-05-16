@@ -91,7 +91,7 @@ module.exports = defineConfig({
             dependencies: ['auth-setup'],
             use: {
                 browserName: 'chromium',
-                storageState: path.join(__dirname, '../src/fixtures/.auth/admin.json'),
+                storageState: path.join(__dirname, '../automation-repository/fixtures/.auth/admin.json'),
             },
         },
 
@@ -103,7 +103,7 @@ module.exports = defineConfig({
             dependencies: ['auth-setup'],
             use: {
                 browserName: 'chromium',
-                storageState: path.join(__dirname, '../src/fixtures/.auth/admin.json'),
+                storageState: path.join(__dirname, '../automation-repository/fixtures/.auth/admin.json'),
             },
         },
 
@@ -115,7 +115,7 @@ module.exports = defineConfig({
             dependencies: ['auth-setup'],
             use: {
                 browserName: 'chromium',
-                storageState: path.join(__dirname, '../src/fixtures/.auth/admin.json'),
+                storageState: path.join(__dirname, '../automation-repository/fixtures/.auth/admin.json'),
             },
         },
 

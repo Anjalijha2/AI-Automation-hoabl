@@ -5,7 +5,7 @@
  * Purpose : Generate structured manual test cases from BRD
  *           and page documentation, stored as Markdown files.
  *
- * Inputs  : docs/pages/<MODULE>.md
+ * Inputs  : manual-qa-repository/pages/<MODULE>.md
  *           BRD inputs from user
  *
  * Outputs : manual-test-cases/TC_<MODULE>.md

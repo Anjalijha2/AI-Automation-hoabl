@@ -5,15 +5,15 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@base/*":      ["src/base/*"],
-      "@pages/*":     ["src/pages/*"],
-      "@utils/*":     ["src/utils/*"],
-      "@fixtures/*":  ["src/fixtures/*"],
-      "@constants/*": ["src/constants/*"],
-      "@agents/*":    ["src/agents/*"]
+      "@base/*":      ["automation-repository/base/*"],
+      "@pages/*":     ["automation-repository/pages/*"],
+      "@utils/*":     ["automation-repository/utils/*"],
+      "@fixtures/*":  ["automation-repository/fixtures/*"],
+      "@constants/*": ["automation-repository/constants/*"],
+      "@agents/*":    ["automation-repository/agents/*"]
     },
     "checkJs": false
   },
-  "include": ["src/**/*.js", "tests/**/*.js", "config/**/*.js"],
+  "include": ["automation-repository/**/*.js", "tests/**/*.js", "config/**/*.js"],
   "exclude": ["node_modules", "test-results", "reports"]
 }

@@ -12,8 +12,8 @@
  */
 
 const { test, expect } = require('@playwright/test');
-const { JBPManagementPage } = require('../../src/pages/JBPManagementPage.js');
-const { CPPortalPage }      = require('../../src/pages/CPPortalPage.js');
+const { JBPManagementPage } = require('../../automation-repository/pages/JBPManagementPage.js');
+const { CPPortalPage }      = require('../../automation-repository/pages/CPPortalPage.js');
 
 // ── Test Data ──────────────────────────────────────────────────────────────────
 const OPEN_CYCLE_NAME = 'Automation-Test1';   // Known OPEN cycle on UAT
@@ -26,7 +26,7 @@ const EXPECTED_COLUMNS = ['Cycle Name', 'Start Date', 'End Date', 'Status', 'Act
 // DESCRIBE 1 — Page Load & Structure
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('📋 Page Load & Structure', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   // TC-JBP-001
   test('[TC-JBP-001] Page loads with correct tabs and table columns', async ({ page }) => {
@@ -59,7 +59,7 @@ test.describe('📋 Page Load & Structure', () => {
 // DESCRIBE 2 — Cycle Date Range Filter
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('📅 Cycle Date Range Filter', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   // TC-JBP-002
   test('[TC-JBP-002] Cycle Date Range filter shows only cycles within selected dates', async ({ page }) => {
@@ -110,7 +110,7 @@ test.describe('📅 Cycle Date Range Filter', () => {
 // DESCRIBE 3 — Create Cycle
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('➕ Create Cycle', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   // TC-JBP-003
   test('[TC-JBP-003] Create a new cycle with today\'s date and verify it appears as OPEN', async ({ page }) => {
@@ -189,7 +189,7 @@ test.describe('➕ Create Cycle', () => {
 // DESCRIBE 4 — JBP Form Submission (CP Portal)
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('📝 JBP Form Submission (CP Portal)', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   const JBP_FORM_DATA = {
     brokerage:         '10,00,000',

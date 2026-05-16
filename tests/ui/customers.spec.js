@@ -6,12 +6,12 @@
  */
 
 const { test, expect } = require('@playwright/test');
-const { CustomersPage } = require('../../src/pages/CustomersPage.js');
-const { ConfigPage } = require('../../src/pages/ConfigPage.js');
+const { CustomersPage } = require('../../automation-repository/pages/CustomersPage.js');
+const { ConfigPage } = require('../../automation-repository/pages/ConfigPage.js');
 const path = require('path');
 
 test.use({
-    storageState: path.join(__dirname, '../../src/fixtures/.auth/admin.json'),
+    storageState: path.join(__dirname, '../../automation-repository/fixtures/.auth/admin.json'),
 });
 
 test.describe('📊 CUSTOMERS — Module Tests', () => {

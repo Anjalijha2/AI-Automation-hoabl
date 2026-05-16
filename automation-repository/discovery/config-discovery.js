@@ -14,12 +14,12 @@
  *   - Download links / anchors
  *
  * Outputs (per module):
- *   docs/selectors/<ModuleName>-discovery.json
- *   docs/selectors/<ModuleName>-top.png
- *   docs/selectors/<ModuleName>-bottom.png
+ *   manual-qa-repository/selectors/<ModuleName>-discovery.json
+ *   manual-qa-repository/selectors/<ModuleName>-top.png
+ *   manual-qa-repository/selectors/<ModuleName>-bottom.png
  *
  * Summary:
- *   docs/selectors/portal-map.json                 ← added
+ *   manual-qa-repository/selectors/portal-map.json                 ← added
  *
  * Run:
  *   node src/test/discovery/config-discovery.js
@@ -31,7 +31,7 @@ const fs   = require('fs');
 const path = require('path');
 
 const SESSION_FILE = path.resolve(__dirname, '../fixtures/.auth/admin.json');
-const OUTPUT_DIR   = path.resolve(__dirname, '../../../docs/selectors');
+const OUTPUT_DIR   = path.resolve(__dirname, '../../../manual-qa-repository/selectors');
 
 // ── Modules to crawl ──────────────────────────────────────────────────────────
 const MODULES = [

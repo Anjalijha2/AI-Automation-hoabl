@@ -22,7 +22,7 @@
  */
 
 const { test, expect } = require('@playwright/test');
-const { OffersPage } = require('../../src/pages/OffersPage.js');
+const { OffersPage } = require('../../automation-repository/pages/OffersPage.js');
 
 // ── Test Data ──────────────────────────────────────────────────────────────────
 
@@ -58,7 +58,7 @@ const EXPECTED_TYPOLOGIES = [
 // DESCRIBE 1 — Page Load & Structure
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Page Load & Structure', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   // TC-OFFERS-001
   test('[TC-OFFERS-001] Page loads with correct offer count and heading', async ({ page }) => {
@@ -140,7 +140,7 @@ test.describe('Page Load & Structure', () => {
 // DESCRIBE 2 — Add New Offer
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Add New Offer', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   // TC-OFFERS-004
   test('[TC-OFFERS-004] Add New Offer drawer opens with correct fields and defaults', async ({ page }) => {
@@ -257,7 +257,7 @@ test.describe('Add New Offer', () => {
 // DESCRIBE 3 — Edit Offer
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Edit Offer', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   // TC-OFFERS-007 — Pre-fill verification
   test('[TC-OFFERS-007] Edit drawer opens with all fields pre-filled for Home Loan Discount', async ({ page }) => {
@@ -340,7 +340,7 @@ test.describe('Edit Offer', () => {
 // DESCRIBE 4 — Toggle ON/OFF
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Toggle ON/OFF', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   // TC-OFFERS-009 — Toggle from ON to OFF and restore
   test('[TC-OFFERS-009] Toggle switches offer from ON to OFF; state persists after refresh', async ({ page }) => {
@@ -413,7 +413,7 @@ test.describe('Toggle ON/OFF', () => {
 // DESCRIBE 5 — Typology Dropdown
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Typology Scoping', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   // TC-OFFERS-011 — Typology options in Edit drawer
   test('[TC-OFFERS-011] Edit drawer typology dropdown shows all 4 typology options', async ({ page }) => {
@@ -442,7 +442,7 @@ test.describe('Typology Scoping', () => {
 // DESCRIBE 6 — Refresh
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Refresh', () => {
-  test.use({ storageState: 'src/fixtures/.auth/admin.json' });
+  test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
   // TC-OFFERS-012
   test('[TC-OFFERS-012] Refresh button reloads data without altering offer count', async ({ page }) => {
