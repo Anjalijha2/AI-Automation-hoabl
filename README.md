@@ -30,7 +30,7 @@ BASE_URL=https://uat-web.xrportal.in/admin
 npx playwright test --config config/playwright.config.js --project=auth-setup
 ```
 
-Saves session to `src/fixtures/.auth/admin.json`.
+Saves session to `automation-repository/fixtures/.auth/admin.json`.
 
 **Step 4: Run tests**
 ```bash
@@ -46,7 +46,7 @@ npm run report            # Open HTML report
 
 - **Model:** 2-step Mobile OTP — no password required
 - **UAT Credentials:** Mobile `8888888888` · OTP `258369` (static UAT value)
-- **Session file:** `src/fixtures/.auth/admin.json` (git-ignored)
+- **Session file:** `automation-repository/fixtures/.auth/admin.json` (git-ignored)
 
 The `login-tests` project is **standalone** — tests the auth flow directly without a stored session. All other suites (smoke, regression) load the saved session via `storageState`.
 
@@ -92,9 +92,9 @@ The `login-tests` project is **standalone** — tests the auth flow directly wit
 - Auth session setup (`tests/auth.setup.js`)
 - Login page object + 22 automated tests
 - Customers page object + 17 automated tests
-- All 8 AI agent scripts (`src/agents/`)
-- Manual test case docs (`docs/manual-test-cases/`)
-- Page documentation (`docs/pages/`)
+- All AI agent scripts (`automation-repository/agents/`)
+- Manual test case docs (`manual-qa-repository/manual-test-cases/`)
+- Page documentation (`manual-qa-repository/pages/`)
 - Bug tracker (`bugs/BUG_TRACKER.md`) — BUG_001 to BUG_009 resolved
 
 **Sprint 2 — Complete ✅**
@@ -141,18 +141,18 @@ login-tests  (independent — run any time)
 
 ### AI Pipeline
 ```bash
-npm run discover              # Agent 0: Crawl portal UI → discovery/reports/
-npm run docs:generate         # Agent 1: Generate page docs → docs/pages/
-npm run testcases:generate    # Agent 2: Generate manual test cases → docs/manual-test-cases/
-npm run automation:generate   # Agent 3: Generate Playwright specs → tests/ui/
-npm run execute               # Agent 4: Run all tests via agent wrapper
-npm run execute:login         # Agent 4: Run login tests via agent wrapper
-npm run execute:customers     # Agent 4: Run customers tests via agent wrapper
-npm run defects:log           # Agent 5: Parse failures, log to BUG_TRACKER.md
-npm run heal:analyze          # Agent 6: Analyze selector failures (read-only)
-npm run sprint:status         # Agent 7: View current sprint status
-npm run sprint:update         # Agent 7: Update sprint logs and task tracker
-npm run sprint:plan-brd       # Agent 7: Plan sprint from BRD
+npm run discover              # Discovery: Crawl portal UI → discovery/reports/
+npm run docs:generate         # Screen Docs: Generate page docs → manual-qa-repository/pages/
+npm run testcases:generate    # Test Cases: Generate manual TCs → manual-qa-repository/manual-test-cases/
+npm run automation:generate   # Script Gen: Generate Playwright specs → tests/ui/
+npm run execute               # Execution: Run all tests → reports/results.json
+npm run execute:login         # Execution: Run login tests
+npm run execute:customers     # Execution: Run customers tests
+npm run defects:log           # Defects: Parse failures → bugs/BUG_TRACKER.md
+npm run heal:analyze          # Healing: Analyze selector failures (read-only)
+npm run sprint:status         # Sprint: View current sprint status
+npm run sprint:update         # Sprint: Update SPRINT_LOG + TASK_TRACKER
+npm run sprint:plan-brd       # Sprint: Plan sprint from BRD
 ```
 
 ### Playwright Direct
@@ -178,16 +178,16 @@ npm run report                # Open HTML report in browser
 
 The framework uses 8 purpose-built AI agents to drive the full QA lifecycle:
 
-| # | File | npm Script | Role |
-|---|------|------------|------|
-| 0 | `src/discovery/config-discovery.js` | `npm run discover` | Crawls portal UI, maps all modules, extracts DOM selectors |
-| 1 | `src/agents/page-doc-agent.js` | `npm run docs:generate` | Generates structured page docs from discovery output |
-| 2 | `src/agents/testcase-agent.js` | `npm run testcases:generate` | Writes manual test cases (Positive / Negative / Boundary / Security) |
-| 3 | `src/agents/automation-agent.js` | `npm run automation:generate` | Converts approved test cases to Playwright specs (POM pattern) |
-| 4 | `src/agents/execution-agent.js` | `npm run execute` | Runs test suites, captures per-TC results |
-| 5 | `src/agents/defect-agent.js` | `npm run defects:log` | Parses test failures, creates structured bug entries |
-| 6 | `src/agents/healing-agent.js` | `npm run heal:analyze` | Analyzes broken selectors and suggests fixes (read-only) |
-| 7 | `src/agents/sprint-manager.js` | `npm run sprint:status` | Sprint logs, task tracker, test coverage report |
+| Agent | File | npm Script | Role |
+|-------|------|------------|------|
+| Discovery | `automation-repository/discovery/config-discovery.js` | `npm run discover` | Crawls portal UI, maps all modules, extracts DOM selectors |
+| Screen Docs | `automation-repository/agents/page-doc-agent.js` | `npm run docs:generate` | Generates structured page docs from discovery output |
+| Test Cases | `automation-repository/agents/testcase-agent.js` | `npm run testcases:generate` | Writes manual test cases across 15 testing types |
+| Script Gen | `automation-repository/agents/automation-agent.js` | `npm run automation:generate` | Converts approved test cases to Playwright specs (POM pattern) |
+| Execution | `automation-repository/agents/execution-agent.js` | `npm run execute` | Runs test suites, captures per-TC results |
+| Defects | `automation-repository/agents/defect-agent.js` | `npm run defects:log` | Parses test failures, creates structured bug entries |
+| Healing | `automation-repository/agents/healing-agent.js` | `npm run heal:analyze` | Analyzes broken selectors and suggests fixes (read-only) |
+| Sprint | `automation-repository/agents/sprint-manager.js` | `npm run sprint:status` | Sprint logs, task tracker, test coverage report |
 
 **Pipeline flow — adding a new module:**
 ```
@@ -208,14 +208,14 @@ xanadu/
 ├── .gitignore
 ├── config/
 │   ├── playwright.config.js              # 6 projects: auth-setup, login-tests, smoke, regression, chromium, firefox, webkit
-│   ├── env.dev.js                        # Dev environment config
-│   ├── env.qa.js                         # QA environment config
-│   └── env.prod.js                       # Prod environment config
-├── jsconfig.json                         # Path aliases (@pages, @utils, @base, etc.)
+│   ├── env.dev.js
+│   ├── env.qa.js
+│   └── env.prod.js
+├── jsconfig.json                         # Path aliases
 ├── package.json
 │
-├── src/
-│   ├── agents/                           # 8 AI agent scripts (.js)
+├── automation-repository/                # All source code (moved from src/)
+│   ├── agents/                           # AI agent scripts (.js)
 │   │   ├── automation-agent.js
 │   │   ├── defect-agent.js
 │   │   ├── execution-agent.js
@@ -228,7 +228,7 @@ xanadu/
 │   ├── constants/
 │   │   └── testData.js                   # BASE_URL, credentials, timeouts, viewport
 │   ├── discovery/
-│   │   └── config-discovery.js           # Agent 0: UI crawl & selector extraction
+│   │   └── config-discovery.js           # UI crawl & selector extraction
 │   ├── fixtures/
 │   │   ├── .auth/admin.json              # Saved session (git-ignored)
 │   │   ├── testFixture.js                # Playwright fixtures
@@ -236,11 +236,59 @@ xanadu/
 │   ├── pages/                            # Page Object Models
 │   │   ├── LoginPage.js
 │   │   ├── CustomersPage.js
-│   │   └── ConfigPage.js
+│   │   ├── ConfigPage.js
+│   │   ├── TowersPage.js
+│   │   ├── AllocationPage.js
+│   │   ├── ChannelPartnersPage.js
+│   │   ├── CPPortalPage.js
+│   │   ├── OffersPage.js
+│   │   └── JBPManagementPage.js
 │   └── utils/
 │       ├── dataGenerator.js
 │       ├── playwrightHelpers.js
-│       └── selectorHelpers.js            # loadSelectors(module) → docs/selectors/*.json
+│       └── selectorHelpers.js            # loadSelectors(module) → manual-qa-repository/selectors/*.json
+│
+├── manual-qa-repository/                 # All QA docs (moved from docs/)
+│   ├── architecture/
+│   │   ├── AGENT-ROLES.md               # 3-agent roles + pipeline flow
+│   │   ├── FRAMEWORK-CONFIG.md
+│   │   └── PROCESS-FLOW.md
+│   ├── execution/
+│   │   ├── execution-summary.md
+│   │   ├── pipeline-status.md
+│   │   └── run-commands.md
+│   ├── manual-test-cases/
+│   │   ├── INDEX.md
+│   │   ├── TC_LOGIN.md
+│   │   ├── TC_CUSTOMERS.md
+│   │   ├── TC_CONFIG.md
+│   │   ├── TC_ALLOCATION.md
+│   │   ├── TC_TOWERS.md
+│   │   ├── TC_CHANNEL_PARTNERS.md
+│   │   ├── TC_OFFERS.md
+│   │   ├── TC_JBP.md
+│   │   └── TC_ADMIN_CMS.md
+│   ├── pages/
+│   │   ├── LOGIN.md
+│   │   ├── CUSTOMERS.md
+│   │   ├── CONFIG.md
+│   │   ├── ALLOCATION.md
+│   │   └── OFFERS.md
+│   ├── selectors/                        # Selector JSON files (source of truth for AI agents)
+│   │   ├── login.json
+│   │   ├── customers.json
+│   │   ├── config.json
+│   │   ├── config-discovery.json
+│   │   ├── allocation.json
+│   │   ├── towers.json
+│   │   ├── offers.json
+│   │   └── channel-partners.json
+│   ├── AGENT-CONFIG.md
+│   ├── CHANGELOG.md
+│   ├── DOCUMENTATION-TRACKER.md
+│   ├── SPRINT_LOG.md
+│   ├── TASK_TRACKER.md
+│   └── test-coverage.md
 │
 ├── tests/
 │   ├── auth.setup.js                     # Saves login session to admin.json
@@ -248,43 +296,16 @@ xanadu/
 │   │   └── user.api.spec.js
 │   ├── smoke/
 │   │   └── smoke.spec.js
-│   ├── test-data/                        # JSON + xlsx test data files
+│   ├── test-data/
 │   └── ui/
 │       ├── login.spec.js                 # 22 login tests
 │       ├── customers.spec.js             # 17 customers tests
-│       ├── config.spec.js                # 53 config tests (TC_CFG_001–053)
-│       ├── registration-status.spec.js   # Standalone registration status
-│       └── tower-config.spec.js          # Standalone tower config
+│       ├── config.spec.js                # 53 config tests
+│       ├── allocation.spec.js            # 44 allocation tests
+│       └── towers.spec.js               # 13 tower tests
 │
 ├── bugs/
-│   └── BUG_TRACKER.md                    # BUG_001–BUG_010
-│
-├── docs/
-│   ├── architecture/
-│   │   ├── AGENT-ROLES.md
-│   │   ├── FRAMEWORK-CONFIG.md
-│   │   └── PROCESS-FLOW.md
-│   ├── execution/
-│   │   ├── execution-summary.md
-│   │   └── run-commands.md
-│   ├── manual-test-cases/
-│   │   ├── INDEX.md
-│   │   ├── TC_LOGIN.md
-│   │   ├── TC_CUSTOMERS.md
-│   │   ├── TC_CONFIG.md                  # 52 Config TCs (Sections 1–10)
-│   │   └── TC_ADMIN_CMS.md
-│   ├── pages/
-│   │   ├── LOGIN.md
-│   │   ├── CUSTOMERS.md
-│   │   └── CONFIG.md
-│   ├── selectors/                        # Centralized selector JSON files
-│   │   ├── login.json
-│   │   ├── customers.json
-│   │   └── config.json
-│   ├── CHANGELOG.md
-│   ├── SPRINT_LOG.md
-│   ├── TASK_TRACKER.md
-│   └── test-coverage.md
+│   └── BUG_TRACKER.md
 │
 ├── reports/                              # Git-ignored
 │   ├── html-report/
@@ -313,17 +334,17 @@ xanadu/
 
 | Document | Path | Contents |
 |----------|------|----------|
-| Agent Roles | `docs/architecture/AGENT-ROLES.md` | All 8 agents — inputs, outputs, rules |
-| Process Flow | `docs/architecture/PROCESS-FLOW.md` | End-to-end pipeline walkthrough |
-| Framework Config | `docs/architecture/FRAMEWORK-CONFIG.md` | `playwright.config.js`, scripts, env vars |
-| Login Page | `docs/pages/LOGIN.md` | Selectors, methods, test case breakdown |
-| Customers Page | `docs/pages/CUSTOMERS.md` | Selectors, methods, test case breakdown |
-| Config Page | `docs/pages/CONFIG.md` | Selectors, methods, test case breakdown |
-| Config Test Cases | `docs/manual-test-cases/TC_CONFIG.md` | 52 TCs across 10 sections |
-| Test Coverage | `docs/test-coverage.md` | Coverage status per module |
-| Sprint Log | `docs/SPRINT_LOG.md` | Sprint 1–2 complete, Sprint 3 Allocation/Towers complete |
-| Changelog | `docs/CHANGELOG.md` | All changes by date |
-| Task Tracker | `docs/TASK_TRACKER.md` | Completed / pending tasks |
+| Agent Roles | `manual-qa-repository/architecture/AGENT-ROLES.md` | 3-agent roles + pipeline phases |
+| Process Flow | `manual-qa-repository/architecture/PROCESS-FLOW.md` | End-to-end pipeline walkthrough |
+| Framework Config | `manual-qa-repository/architecture/FRAMEWORK-CONFIG.md` | `playwright.config.js`, scripts, env vars |
+| Login Page | `manual-qa-repository/pages/LOGIN.md` | Selectors, methods, test case breakdown |
+| Customers Page | `manual-qa-repository/pages/CUSTOMERS.md` | Selectors, methods, test case breakdown |
+| Config Page | `manual-qa-repository/pages/CONFIG.md` | Selectors, methods, test case breakdown |
+| Config Test Cases | `manual-qa-repository/manual-test-cases/TC_CONFIG.md` | 52 TCs across 10 sections |
+| Test Coverage | `manual-qa-repository/test-coverage.md` | Coverage status per module |
+| Sprint Log | `manual-qa-repository/SPRINT_LOG.md` | Sprint history |
+| Changelog | `manual-qa-repository/CHANGELOG.md` | All changes by date |
+| Task Tracker | `manual-qa-repository/TASK_TRACKER.md` | Completed / pending tasks |
 | Bug Tracker | `bugs/BUG_TRACKER.md` | BUG_001–BUG_010 |
-| Run Commands | `docs/execution/run-commands.md` | Quick command reference |
-| Execution Summary | `docs/execution/execution-summary.md` | Per-TC results |
+| Run Commands | `manual-qa-repository/execution/run-commands.md` | Quick command reference |
+| Execution Summary | `manual-qa-repository/execution/execution-summary.md` | Per-TC results |

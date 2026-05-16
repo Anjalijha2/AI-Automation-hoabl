@@ -17,7 +17,7 @@ Mobile OTP — no password. UAT has static OTP.
 npx playwright test --config config/playwright.config.js --project=auth-setup
 ```
 
-Re-run when: protected tests redirect to login, or `src/fixtures/.auth/admin.json` deleted.
+Re-run when: protected tests redirect to login, or `automation-repository/fixtures/.auth/admin.json` deleted.
 `login-tests` needs no saved session. All other projects depend on `admin.json`.
 
 ---
@@ -50,15 +50,15 @@ HEADLESS=true npm run test:regression
 ## AI Agent Pipeline
 
 ```bash
-npm run discover              # Agent 0: crawl portal UI → discovery/reports/
-npm run docs:generate         # Agent 1: page docs → docs/pages/
-npm run testcases:generate    # Agent 2: manual TCs → docs/manual-test-cases/
-npm run automation:generate   # Agent 3: Playwright specs → tests/ui/
-npm run execute               # Agent 4: run tests
-npm run defects:log           # Agent 5: parse failures → bugs/BUG_TRACKER.md
-npm run heal:analyze          # Agent 6: broken selector analysis (read-only)
-npm run sprint:status         # Agent 7: sprint summary
-npm run sprint:update         # Agent 7: update SPRINT_LOG + TASK_TRACKER
+npm run discover              # Discovery: crawl portal UI → discovery/reports/
+npm run docs:generate         # Screen Docs: page docs → manual-qa-repository/pages/
+npm run testcases:generate    # Test Cases: manual TCs → manual-qa-repository/manual-test-cases/
+npm run automation:generate   # Script Gen: Playwright specs → tests/ui/
+npm run execute               # Execution: run tests → reports/results.json
+npm run defects:log           # Defects: parse failures → bugs/BUG_TRACKER.md
+npm run heal:analyze          # Healing: broken selector analysis (read-only)
+npm run sprint:status         # Sprint: summary
+npm run sprint:update         # Sprint: update SPRINT_LOG + TASK_TRACKER
 ```
 
 ---
@@ -67,16 +67,16 @@ npm run sprint:update         # Agent 7: update SPRINT_LOG + TASK_TRACKER
 
 ### Page Object Model
 
-All page objects: `src/pages/*.js`, extend `BasePage` (`src/base/BasePage.js`).
+All page objects: `automation-repository/pages/*.js`, extend `BasePage` (`automation-repository/base/BasePage.js`).
 
 Two consumption patterns:
 1. **Direct** (most specs): `new TowersPage(page)` in `beforeEach`
-2. **Fixture** (login/customers/config): via `src/fixtures/testFixture.js`
+2. **Fixture** (login/customers/config): via `automation-repository/fixtures/testFixture.js`
 
 ### Selectors
 
-- **`src/pages/*.js`** — primary, what tests use
-- **`docs/selectors/*.json`** — source of truth for AI agents via `selectorHelpers.loadSelectors('module')`
+- **`automation-repository/pages/*.js`** — primary, what tests use
+- **`manual-qa-repository/selectors/*.json`** — source of truth for AI agents via `selectorHelpers.loadSelectors('module')`
 
 Fix UI breaks in page object first, then update JSON.
 
@@ -104,22 +104,22 @@ test.skip(process.env.ENV === 'uat', 'Skipped on UAT — live gateway');
 
 ## Key Constants
 
-`src/constants/testData.js` — UAT credentials, BASE_URL, timeouts, viewport.
+`automation-repository/constants/testData.js` — UAT credentials, BASE_URL, timeouts, viewport.
 
 ```javascript
-const { VALID_MOBILE, VALID_OTP, DEFAULT_TIMEOUT } = require('../../src/constants/testData.js');
+const { VALID_MOBILE, VALID_OTP, DEFAULT_TIMEOUT } = require('../../automation-repository/constants/testData.js');
 ```
 
-Auth: mobile `8888888888` / OTP `258369` → saves to `src/fixtures/.auth/admin.json`.
+Auth: mobile `8888888888` / OTP `258369` → saves to `automation-repository/fixtures/.auth/admin.json`.
 
 ---
 
 ## Adding a New Module
 
-1. Create `src/pages/<Module>Page.js` extending `BasePage`
+1. Create `automation-repository/pages/<Module>Page.js` extending `BasePage`
 2. Create `tests/ui/<module>.spec.js` with auth storageState
 3. Add `npm run test:<module>` to `package.json`
-4. Log TCs in `docs/manual-test-cases/TC_<MODULE>.md`, update `docs/test-coverage.md`
+4. Log TCs in `manual-qa-repository/manual-test-cases/TC_<MODULE>.md`, update `manual-qa-repository/test-coverage.md`
 5. Run auth-setup, then the new spec
 
 ---
@@ -128,11 +128,11 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `src/fixtures/.auth/admin.
 
 | Item | Convention | Example |
 |------|-----------|---------|
-| Page object file | `<Module>Page.js` | `TowersPage.js` |
-| Spec file | `<module>.spec.js` | `towers.spec.js` |
-| Page doc | `docs/pages/<MODULE>.md` | `TOWERS.md` |
-| Selector JSON | `docs/selectors/<module>.json` | `towers.json` |
-| TC file | `docs/manual-test-cases/TC_<MOD>.md` | `TC_TOWERS.md` |
+| Page object file | `automation-repository/pages/<Module>Page.js` | `TowersPage.js` |
+| Spec file | `tests/ui/<module>.spec.js` | `towers.spec.js` |
+| Page doc | `manual-qa-repository/pages/<MODULE>.md` | `TOWERS.md` |
+| Selector JSON | `manual-qa-repository/selectors/<module>.json` | `towers.json` |
+| TC file | `manual-qa-repository/manual-test-cases/TC_<MOD>.md` | `TC_TOWERS.md` |
 | BRD | `brd/<module>.md` | `towers.md` |
 | Bug | `BUG_NNN` in `bugs/BUG_TRACKER.md` | `BUG_011` |
 
@@ -141,10 +141,12 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `src/fixtures/.auth/admin.
 ## Reports & Bugs
 
 - HTML report: `reports/html-report/` — `npm run report`
-- JSON results: `reports/results.json` — parsed by `defect-agent.js`
+- JSON results: `reports/results.json` — parsed by `automation-repository/agents/defect-agent.js`
 - Screenshots: `test-results/` + `reports/screenshots/`
 - Bug tracker: `bugs/BUG_TRACKER.md`
-- Sprint log: `docs/SPRINT_LOG.md`
+- Sprint log: `manual-qa-repository/SPRINT_LOG.md`
+- Task tracker: `manual-qa-repository/TASK_TRACKER.md`
+- Test coverage: `manual-qa-repository/test-coverage.md`
 
 ---
 
@@ -159,9 +161,9 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `src/fixtures/.auth/admin.
 │   ├── automation-qa-engineer/      # Automation QA memory (empty)
 │   └── xr-manual-qa/               # Manual QA memory (empty)
 ├── rules/                           # Path-scoped coding rules (auto-loaded)
-│   ├── page-objects.md              # src/pages/**, src/base/**
+│   ├── page-objects.md              # automation-repository/pages/**, automation-repository/base/**
 │   ├── specs.md                     # tests/**/*.spec.js
-│   └── selectors.md                 # docs/selectors/**
+│   └── selectors.md                 # manual-qa-repository/selectors/**
 ├── agents/                          # Claude Code subagents
 │   ├── ba-pipeline-orchestrator.md
 │   ├── xr-manual-qa.md

@@ -1,212 +1,228 @@
 # Process Flow — XR Portal QA Framework
 
-> This document captures the complete end-to-end process flow:
-> AI-driven discovery → test case generation → automation → execution.
-> Update this file when the pipeline steps, scripts, or agents change.
+> End-to-end pipeline: AI-driven discovery → test case generation → automation → execution.
+> Update when pipeline steps, scripts, or agents change.
 
 ---
 
 ## High-Level Overview
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              XR Portal QA — 3-Phase AI Pipeline             │
-│                                                             │
-│  PHASE 1          PHASE 2              PHASE 3              │
-│  Discovery   →  Test Case Gen   →   Automation              │
-│  (Crawl)        (AI write cases)    (Run tests)             │
-│                                                             │
-│  ai-agent/        ai-agent/          automation/            │
-│  discovery-       test-case-         tests/*.spec.ts        │
-│  crawler.ts       generator.ts                              │
-│                   ai-agent/                                 │
-│                   automation-                               │
-│                   generator.ts                              │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                XR Portal QA — 3-Agent AI Pipeline                   │
+│                                                                     │
+│  BA ORCHESTRATOR                                                    │
+│       │                                                             │
+│       ├── XR MANUAL QA                                             │
+│       │     Phase 1: Discovery → Phase 2: Screen Docs              │
+│       │     Phase 3: Test Cases → Phase 4: Defect Logging          │
+│       │                                                             │
+│       └── AUTOMATION QA ENGINEER                                   │
+│             Phase 1: Script Gen → Phase 2: Execution               │
+│             Phase 3: Healing Analysis                               │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Phase 0 — Authentication Setup
 
-**Script:** `automation/tests/auth.setup.ts`
-**Command:** `npx playwright test --project=auth-setup`
-**Output:** `automation/fixtures/.auth/admin.json`
+**Script:** `tests/auth.setup.js`
+**Command:** `npx playwright test --config config/playwright.config.js --project=auth-setup`
+**Output:** `automation-repository/fixtures/.auth/admin.json`
 
 ### What it does
 1. Navigates to `https://uat-web.xrportal.in/admin`
-2. Calls `login.login(VALID_MOBILE, VALID_OTP)` (UI-based login)
+2. Enters mobile `8888888888`, submits OTP `258369`
 3. Waits for "Customers" text visible and URL `/customers`
 4. Saves full session (cookies + localStorage + sessionStorage) to `admin.json`
 
 ### When to re-run
-- Session expired (tests start failing on navigation to protected pages)
-- `admin.json` was deleted
-- OTP or mobile credentials changed
-
-### Credentials (UAT)
-```
-VALID_MOBILE = '8888888888'
-VALID_OTP    = '258369'     ← static UAT OTP; update both here and in login.spec.ts if changed
-```
+- Session expired (protected-page tests start failing on login redirect)
+- `admin.json` deleted
+- UAT credentials changed
 
 ---
 
 ## Phase 1 — Discovery Crawl
 
-**Script:** `ai-agent/discovery-crawler.ts`
-**Command:** `npx ts-node ai-agent/discovery-crawler.ts`
+**Script:** `automation-repository/discovery/config-discovery.js`
+**Command:** `npm run discover`
+**Claude Code agent:** `xr-manual-qa` — Phase 1
 
 ### Inputs
-- `.env` credentials (`BASE_URL`, `LOGIN_EMAIL`, `LOGIN_PASSWORD`)
-- `MAX_DEPTH=3` (how deep to crawl nested nav)
+- `.env` `BASE_URL`
+- Portal at `https://uat-web.xrportal.in/admin`
 
 ### What it does
-1. Logs into the portal automatically via Playwright
+1. Logs into portal via Playwright
 2. Reads all sidebar/navigation links
 3. For each module/page:
-   - Takes a full-page screenshot → `discovery/screenshots/`
-   - Records all interactive elements:
-     - Buttons, input fields, selects, checkboxes
-     - Tables: headers, row count, has search/filter/pagination
-     - Tabs, modals (if opened)
-     - Observations (what the module does)
-4. Outputs:
-   - `discovery/reports/portal-map.json` — structured machine-readable map
-   - `discovery/reports/discovery-report.md` — human-readable summary
+   - Takes full-page screenshot → `discovery/screenshots/`
+   - Records all interactive elements (buttons, inputs, selects, tables, tabs, modals)
+4. Outputs structured discovery reports
 
 ### Outputs
-
 ```
 discovery/
 ├── screenshots/
 │   ├── customers.png
-│   ├── config.png
 │   └── ...
 └── reports/
-    ├── portal-map.json         ← JSON: modules[], each with elements[], tables[], observations[]
+    ├── portal-map.json         ← JSON: modules[], elements[], tables[], observations[]
     └── discovery-report.md     ← Markdown: one section per module
 ```
 
-### portal-map.json Structure
-```json
-{
-  "url": "https://uat-web.xrportal.in/admin",
-  "crawledAt": "2026-03-11T...",
-  "modules": [
-    {
-      "name": "Customers",
-      "url": "/admin/customers",
-      "elements": [
-        { "type": "input", "label": "Search by Phone", "selector": "..." }
-      ],
-      "tables": [
-        { "headers": ["Registration Details", "..."], "rowCount": 10, "hasSearch": true }
-      ],
-      "observations": ["Shows customer list with stat cards"]
-    }
-  ]
-}
-```
-
 ---
 
-## Phase 2 — Test Case Generation
+## Phase 2 — Screen Documentation
 
-**Script:** `ai-agent/test-case-generator.ts`
-**Command:** `npx ts-node ai-agent/test-case-generator.ts`
+**Script:** `automation-repository/agents/page-doc-agent.js`
+**Command:** `npm run docs:generate`
+**Claude Code agent:** `xr-manual-qa` — Phase 2
 
 ### Inputs
+- `discovery/reports/portal-map.json`
 - `discovery/reports/discovery-report.md`
-- (optionally) `discovery/reports/portal-map.json`
 
 ### What it does
-1. Reads discovery report
-2. For each module, generates structured test cases covering:
-   - **Positive** — happy path
-   - **Negative** — invalid/edge inputs
-   - **Boundary** — min/max values
-   - **Security** — XSS, injection
-   - **Usability** — UI element checks
-3. Each test case has:
-   - **ID**: `TC_<MODULE>_<NNN>` (auto-incremented)
-   - **Category**: positive / negative / boundary / security / usability
-   - **Priority**: P0 / P1 / P2 / P3
-   - **Pre-conditions** + **Post-conditions**
-   - **Steps** (numbered)
-   - **Expected Result**
-   - **Automatable**: true/false + notes
+- Documents each screen across 12 dimensions (purpose, selectors, workflows, UI states, etc.)
 
 ### Outputs
-
 ```
-manual-test-cases/
-├── INDEX.md              ← Master list of all test cases
-├── login.md              ← Login module test cases
-├── customers.md          ← Customers module test cases
-└── <module>.md           ← One file per discovered module
+manual-qa-repository/
+├── pages/<MODULE>.md           ← 12-dimension screen doc
+└── selectors/<module>.json     ← Source of truth for AI agents
 ```
 
 ---
 
-## Phase 3 — Automation Generation
+## Phase 3 — Test Case Design
 
-**Script:** `ai-agent/automation-generator.ts`
-**Command:** `npx ts-node ai-agent/automation-generator.ts`
+**Script:** `automation-repository/agents/testcase-agent.js`
+**Command:** `npm run testcases:generate`
+**Claude Code agent:** `xr-manual-qa` — Phase 3
 
 ### Inputs
-- Test case `.md` files from `manual-test-cases/`
-- (optionally) `portal-map.json` for selectors
+- `manual-qa-repository/pages/<MODULE>.md`
+- `brd/<module>.md`
 
 ### What it does
-1. Reads each test case file
-2. Generates ready-to-run Playwright TypeScript:
-   - **Page Objects** — selectors + action methods
-   - **Test Specs** — one `test()` per test case, with assertions
-   - **Base helpers** — shared utilities
+Generates manual test cases across 15 types:
+`UI` `FUNC` `VAL` `E2E` `API` `DB` `INT` `BIZ` `REG` `EXP` `NEG` `EDGE` `XMOD` `DC` `WF`
+
+Each TC has: ID, priority, pre-conditions, steps, expected result, automatable flag.
 
 ### Outputs
+```
+manual-qa-repository/manual-test-cases/TC_<MODULE>.md
+```
 
-Generated files dropped into:
-```
-automation/
-├── pages/
-│   └── <module>.page.ts   ← Page object with selectors + methods
-└── tests/
-    └── <module>.spec.ts   ← Playwright test spec
-```
+TC_ID format: `TC_MODULE_TYPE_NNN` (e.g. `TC_CUST_FUNC_001`)
 
 ---
 
-## Phase 4 — Test Execution
+## Phase 4 — Script Generation
 
-### Projects and their usage
+**Script:** `automation-repository/agents/automation-agent.js`
+**Command:** `npm run automation:generate`
+**Claude Code agent:** `automation-qa-engineer` — Phase 1
 
-| Project Name | Test Files | Needs Auth | Use Case |
-|---|---|---|---|
-| `auth-setup` | `*.setup.ts` | No | Saves session once |
-| `login-tests` | `login.spec.ts` | No (standalone) | Login UI tests |
-| `smoke` | `*.smoke.spec.ts` | Yes (`admin.json`) | Quick sanity check |
-| `regression` | `*.spec.ts` (excl. login, smoke) | Yes (`admin.json`) | Full regression |
+### Inputs
+- BA-approved TCs from `manual-qa-repository/manual-test-cases/TC_<MODULE>.md`
+- Selectors from `manual-qa-repository/selectors/<module>.json`
+
+### What it does
+- Converts approved TCs to Playwright specs following Page Object Model
+- Creates/updates page object in `automation-repository/pages/<Module>Page.js`
+
+### Outputs
+```
+automation-repository/pages/<Module>Page.js   ← Page Object (if new)
+tests/ui/<module>.spec.js                      ← Playwright test spec
+```
+
+**Rule:** Never overwrites existing spec files without explicit approval.
+
+---
+
+## Phase 5 — Test Execution
+
+**Script:** `automation-repository/agents/execution-agent.js`
+**Command:** `npm run execute` or `npm run test:regression`
+**Claude Code agent:** `automation-qa-engineer` — Phase 2
 
 ### Execution order
 ```
-auth-setup  (runs first — creates admin.json)
-     │
-     ├── login-tests  (independent — tests its own auth flow)
-     ├── smoke        (depends on auth-setup)
-     └── regression   (depends on auth-setup)
+auth-setup  (run once — creates admin.json)
+    │
+    ├── smoke      (depends on auth-setup)
+    └── regression (depends on auth-setup)
+
+login-tests (independent — run any time)
 ```
 
-### Test output artifacts
+### Outputs
+```
+reports/html-report/    ← HTML report (npm run report to open)
+reports/results.json    ← Machine-readable per-TC results
+reports/screenshots/    ← Always-on screenshots
+test-results/           ← Trace on first retry
+```
 
-| Artifact | Location | When Created |
-|---|---|---|
-| HTML Report | `reports/html-report/index.html` | Every run |
-| JSON Results | `reports/results.json` | Every run |
-| Screenshots | `reports/screenshots/` | Every test (always-on) |
-| Videos | `reports/videos/` (embedded) | Retained on failure |
-| Trace | `test-results/` | On first retry |
+---
+
+## Phase 6 — Defect Logging
+
+**Script:** `automation-repository/agents/defect-agent.js`
+**Command:** `npm run defects:log`
+**Claude Code agent:** `xr-manual-qa` — Phase 4
+
+### Inputs
+- `reports/results.json`
+
+### What it does
+- Parses failures, root-causes each, creates structured bug entries
+
+### Outputs
+```
+bugs/BUG_TRACKER.md    ← format: BUG_NNN
+```
+
+---
+
+## Phase 7 — Healing Analysis
+
+**Script:** `automation-repository/agents/healing-agent.js`
+**Command:** `npm run heal:analyze`
+**Claude Code agent:** `automation-qa-engineer` — Phase 3
+
+### What it does
+- Read-only analysis of selector/timing failures
+- Suggests minimal fixes
+
+### Outputs
+```
+healing-reports/fix-recommendations.md
+```
+
+**Rule:** Never modifies scripts directly. Fixes applied only after explicit user approval.
+
+---
+
+## Phase 8 — Sprint Management
+
+**Script:** `automation-repository/agents/sprint-manager.js`
+**Command:** `npm run sprint:status` / `npm run sprint:update`
+**Claude Code agent:** `ba-pipeline-orchestrator`
+
+### Outputs
+```
+manual-qa-repository/SPRINT_LOG.md
+manual-qa-repository/TASK_TRACKER.md
+manual-qa-repository/test-coverage.md
+manual-qa-repository/CHANGELOG.md
+```
 
 ---
 
@@ -214,30 +230,42 @@ auth-setup  (runs first — creates admin.json)
 
 ```
 1. DISCOVER
-   npx ts-node ai-agent/discovery-crawler.ts
-   → Reads portal → outputs portal-map.json + discovery-report.md
+   npm run discover
+   → portal crawl → discovery/reports/
 
-2. GENERATE TEST CASES
-   npx ts-node ai-agent/test-case-generator.ts
-   → Reads discovery → outputs manual-test-cases/<module>.md
+2. SCREEN DOCS
+   npm run docs:generate
+   → manual-qa-repository/pages/<MODULE>.md
+   → manual-qa-repository/selectors/<module>.json
 
-3. GENERATE AUTOMATION
-   npx ts-node ai-agent/automation-generator.ts
-   → Reads test cases → outputs automation/pages/<module>.page.ts
-                                   automation/tests/<module>.spec.ts
+3. TEST CASES
+   npm run testcases:generate
+   → manual-qa-repository/manual-test-cases/TC_<MODULE>.md
+   → BA sign-off required before proceeding
 
-4. REVIEW & REFINE
-   → Manually review generated selectors and test logic
-   → Update docs/pages/<MODULE>.md
+4. SCRIPT GENERATION
+   npm run automation:generate
+   → automation-repository/pages/<Module>Page.js (if new)
+   → tests/ui/<module>.spec.js
 
-5. SETUP AUTH (if not done)
-   npx playwright test --project=auth-setup
+5. AUTH SETUP (if not done)
+   npx playwright test --config config/playwright.config.js --project=auth-setup
 
-6. RUN TESTS
-   npx playwright test --project=regression --headed --workers=1
+6. EXECUTE
+   npm run test:<module>  (--headed --workers=1)
+   → reports/results.json
 
-7. VIEW REPORT
-   npx playwright show-report reports/html-report
+7. DEFECTS
+   npm run defects:log
+   → bugs/BUG_TRACKER.md
+
+8. HEAL (if failures)
+   npm run heal:analyze
+   → healing-reports/fix-recommendations.md
+
+9. SPRINT UPDATE
+   npm run sprint:update
+   → manual-qa-repository/SPRINT_LOG.md
 ```
 
 ---
@@ -246,30 +274,9 @@ auth-setup  (runs first — creates admin.json)
 
 ```env
 BASE_URL=https://uat-web.xrportal.in/admin
-LOGIN_EMAIL=your_admin_email@example.com
-LOGIN_PASSWORD=your_password
-SCREENSHOT_DIR=./discovery/screenshots
-REPORT_DIR=./discovery/reports
-MAX_DEPTH=3
 ```
 
-> `.env` is git-ignored. Never commit it.
-
----
-
-## Adding a New Page (Checklist)
-
-When a new module/page needs to be tested:
-
-- [ ] Run discovery crawler to capture the new page
-- [ ] Review `discovery-report.md` for the new module
-- [ ] Run test case generator (or write test cases manually)
-- [ ] Create `automation/pages/<new-page>.page.ts` with Page Object
-- [ ] Create `automation/tests/<new-page>.spec.ts` with test suite
-- [ ] Create `docs/pages/<NEW-PAGE>.md` (copy CUSTOMERS.md as template)
-- [ ] Add the page to [INDEX.md](INDEX.md) pages table
-- [ ] Run tests and verify all pass
-- [ ] Update changelog in all affected MD files
+> `.env` is git-ignored. Auth uses static UAT credentials — mobile `8888888888` / OTP `258369`.
 
 ---
 
@@ -278,3 +285,4 @@ When a new module/page needs to be tested:
 | Date | Change | Updated By |
 |---|---|---|
 | 2026-03-11 | Initial process flow document created | Claude |
+| 2026-05-16 | Rewritten for JS (CommonJS), 3-agent Claude Code setup, new folder structure | Claude |

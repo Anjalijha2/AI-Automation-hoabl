@@ -1,7 +1,6 @@
 # Framework Configuration — Memory Document
 
-> Update this file whenever you change playwright.config.ts, package.json scripts,
-> environment variables, or project structure. Add a row to the Changelog.
+> Update when playwright.config.js, package.json scripts, env vars, or project structure change.
 
 ---
 
@@ -9,53 +8,53 @@
 
 | Tool | Version | Purpose |
 |---|---|---|
-| Playwright | 1.58.2 | E2E browser automation |
-| TypeScript | 5.9.3 | Language |
-| ts-node | 10.9.2 | Run `.ts` files directly |
+| Playwright | 1.58.2 | E2E browser automation + test runner |
+| Node.js | LTS | Runtime |
+| JavaScript | CommonJS | Language (no TypeScript, no transpile) |
 | dotenv | 17.3.1 | Load `.env` vars |
 | csv-writer | 1.6.0 | CSV report output |
-| xlsx | 0.18.5 | Excel export |
-| Node.js | LTS | Runtime |
+| xlsx | 0.18.5 | Excel file handling |
 
 ---
 
-## playwright.config.ts
+## playwright.config.js
 
-**File:** `playwright.config.ts` (project root)
+**File:** `config/playwright.config.js`
 
 ### Global Settings
 
 | Setting | Value | Notes |
 |---|---|---|
-| `testDir` | `./automation/tests` | Where specs live |
+| `testDir` | `./tests` | Where specs live |
 | `fullyParallel` | `false` | Sequential execution |
-| `forbidOnly` | `true` in CI | Prevents `.only` in CI |
 | `retries` | `1` | Retry once on failure |
 | `workers` | `1` | One browser at a time |
 | `baseURL` | `https://uat-web.xrportal.in/admin` | |
 | `actionTimeout` | `15,000 ms` | Per-action timeout |
 | `navigationTimeout` | `30,000 ms` | Page load timeout |
-| `slowMo` | `500 ms` | Delay between actions (real-user feel) |
-| `screenshot` | `'on'` | Always capture screenshots |
-| `video` | `'retain-on-failure'` | Video saved only on failure |
-| `trace` | `'on-first-retry'` | Trace captured on first retry |
+| `screenshot` | `'on'` | Always capture |
+| `video` | `'retain-on-failure'` | Saved only on failure |
+| `trace` | `'on-first-retry'` | Captured on first retry |
 
 ### Reporters
 
-| Reporter | Output | Notes |
-|---|---|---|
-| `html` | `reports/html-report/` | `open: 'never'` (view manually) |
-| `json` | `reports/results.json` | Machine-readable results |
-| `list` | stdout | Console output during run |
+| Reporter | Output |
+|---|---|
+| `html` | `reports/html-report/` |
+| `json` | `reports/results.json` |
+| `list` | stdout |
 
 ### Projects
 
 | Name | Matches | Auth Dependency | Auth State |
 |---|---|---|---|
-| `auth-setup` | `*.setup.ts` | None | — |
-| `login-tests` | `login.spec.ts` | None | — (standalone) |
-| `smoke` | `*.smoke.spec.ts` | `auth-setup` | `./automation/fixtures/.auth/admin.json` |
-| `regression` | `*.spec.ts` (excl. smoke & login) | `auth-setup` | `./automation/fixtures/.auth/admin.json` |
+| `auth-setup` | `tests/auth.setup.js` | None | — |
+| `login-tests` | `tests/ui/login.spec.js` | None | — (standalone) |
+| `smoke` | `tests/smoke/*.spec.js` | `auth-setup` | `automation-repository/fixtures/.auth/admin.json` |
+| `regression` | `tests/ui/*.spec.js` | `auth-setup` | `automation-repository/fixtures/.auth/admin.json` |
+| `chromium` | all specs | Yes | Cross-browser |
+| `firefox` | all specs | Yes | Cross-browser |
+| `webkit` | all specs | Yes | Cross-browser |
 
 ---
 
@@ -63,101 +62,88 @@
 
 ```bash
 # AI Pipeline
-npm run discover              # Phase 1: Crawl portal
-npm run generate:testcases    # Phase 2: Generate test case MDs
-npm run generate:automation   # Phase 3: Generate Playwright specs
+npm run discover              # Crawl portal UI → discovery/reports/
+npm run docs:generate         # Screen docs → manual-qa-repository/pages/
+npm run testcases:generate    # Manual TCs → manual-qa-repository/manual-test-cases/
+npm run automation:generate   # Playwright specs → tests/ui/
+npm run execute               # Run all tests
+npm run defects:log           # Parse failures → bugs/BUG_TRACKER.md
+npm run heal:analyze          # Selector analysis (read-only)
+npm run sprint:status         # Sprint summary
+npm run sprint:update         # Update SPRINT_LOG + TASK_TRACKER
 
-# Test Execution
-npm test                      # Run all tests (headless)
-npm run test:login            # Login tests (headed, 1 worker)
-npm run test:login:positive   # Login positive tests only (-g "POSITIVE")
-npm run test:login:negative   # Login negative tests only (-g "NEGATIVE")
-npm run test:login:debug      # Login tests in debug mode
-npm run test:customers        # Customers tests (headed)
-npm run test:smoke            # Smoke suite
-npm run test:regression       # Full regression
-npm run test:headed           # All tests headed
-npm run test:debug            # All tests debug mode
-
-# Reports
-npm run report                # Open HTML report in browser
-```
-
-### Raw script definitions
-```json
-{
-  "discover": "npx ts-node ai-agent/discovery-crawler.ts",
-  "generate:testcases": "npx ts-node ai-agent/test-case-generator.ts",
-  "generate:automation": "npx ts-node ai-agent/automation-generator.ts",
-  "test": "npx playwright test",
-  "test:login": "npx playwright test --project=login-tests --headed --workers=1",
-  "test:login:positive": "npx playwright test --project=login-tests --headed --workers=1 -g \"POSITIVE\"",
-  "test:login:negative": "npx playwright test --project=login-tests --headed --workers=1 -g \"NEGATIVE\"",
-  "test:login:debug": "npx playwright test --project=login-tests --debug automation/tests/login.spec.ts",
-  "test:customers": "npx playwright test automation/tests/customers.spec.ts --project=regression --headed --workers=1",
-  "test:smoke": "npx playwright test --project=smoke",
-  "test:regression": "npx playwright test --project=regression",
-  "test:headed": "npx playwright test --headed --workers=1",
-  "test:debug": "npx playwright test --debug",
-  "report": "npx playwright show-report reports/html-report"
-}
-```
-
----
-
-## TypeScript Config (tsconfig.json)
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "commonjs",
-    "strict": true,
-    "moduleResolution": "node"
-  },
-  "include": ["automation/**/*.ts", "ai-agent/**/*.ts"]
-}
+# Playwright Direct
+npm run test:login            # Login tests (headed, standalone)
+npm run test:customers        # Customers tests (headed, needs auth-setup)
+npm run test:regression       # Full regression (headed, needs auth-setup)
+npm run test:smoke            # Smoke suite (headed, needs auth-setup)
+npm run test:chrome           # Cross-browser — Chromium
+npm run test:firefox          # Cross-browser — Firefox
+npm run test:webkit           # Cross-browser — WebKit
+npm run report                # Open HTML report
 ```
 
 ---
 
 ## Environment Variables (.env)
 
-> `.env` is git-ignored. Copy `.env.example` or recreate manually.
-
 ```env
 BASE_URL=https://uat-web.xrportal.in/admin
-LOGIN_EMAIL=your_admin_email@example.com
-LOGIN_PASSWORD=your_password
-SCREENSHOT_DIR=./discovery/screenshots
-REPORT_DIR=./discovery/reports
-MAX_DEPTH=3
 ```
 
 | Variable | Used By | Purpose |
 |---|---|---|
-| `BASE_URL` | Discovery crawler, Playwright config | Target portal URL |
-| `LOGIN_EMAIL` | Discovery crawler | Admin login credential |
-| `LOGIN_PASSWORD` | Discovery crawler | Admin login credential |
-| `SCREENSHOT_DIR` | Discovery crawler | Where crawl screenshots are saved |
-| `REPORT_DIR` | Discovery crawler | Where portal-map.json / discovery-report.md go |
-| `MAX_DEPTH` | Discovery crawler | How deep to crawl nested navigation (default 3) |
+| `BASE_URL` | Discovery agent, Playwright config | Target portal URL |
 
-> Note: Playwright test specs use hard-coded UAT credentials (`8888888888` / `258369`), not `.env` values.
+> Auth uses hard-coded UAT credentials — mobile `8888888888` / OTP `258369`, not `.env`.
 
 ---
 
 ## Auth Session File
 
-**Path:** `automation/fixtures/.auth/admin.json`
+**Path:** `automation-repository/fixtures/.auth/admin.json`
 **Git-ignored:** Yes
-**Created by:** `auth.setup.ts` (via `page.context().storageState()`)
-**Used by:** `smoke` and `regression` projects via `storageState` config
+**Created by:** `tests/auth.setup.js`
+**Used by:** `smoke` and `regression` projects via `storageState`
 
-If this file is missing or expired, run:
+Re-run auth-setup when session expires:
 ```bash
-npx playwright test --project=auth-setup
+npx playwright test --config config/playwright.config.js --project=auth-setup
 ```
+
+---
+
+## Key File Paths
+
+| File | Purpose |
+|---|---|
+| `config/playwright.config.js` | Master Playwright config |
+| `automation-repository/base/BasePage.js` | Shared page helpers |
+| `automation-repository/constants/testData.js` | BASE_URL, credentials, timeouts |
+| `automation-repository/fixtures/testFixture.js` | Playwright fixtures |
+| `automation-repository/fixtures/.auth/admin.json` | Saved session (git-ignored) |
+| `automation-repository/pages/<Module>Page.js` | Page Object Models |
+| `automation-repository/utils/selectorHelpers.js` | `loadSelectors(module)` |
+| `tests/auth.setup.js` | One-time auth session setup |
+| `tests/ui/<module>.spec.js` | Playwright test specs |
+| `manual-qa-repository/selectors/<module>.json` | Selector source of truth for AI agents |
+| `manual-qa-repository/manual-test-cases/TC_<MODULE>.md` | Manual test cases |
+| `reports/html-report/index.html` | Playwright HTML report |
+| `reports/results.json` | Raw test results JSON |
+| `bugs/BUG_TRACKER.md` | Bug entries (BUG_NNN format) |
+
+---
+
+## TC_ID Conventions
+
+| Format | Source | Example |
+|---|---|---|
+| `TC-MODULE-NNN` (hyphens) | Hand-written specs | `TC-TWR-001` |
+| `TC_MODULE_TYPE_NNN` (underscores) | Agent-generated | `TC_CUST_FUNC_001` |
+
+Type codes: `UI` `FUNC` `VAL` `E2E` `API` `DB` `INT` `BIZ` `REG` `EXP` `NEG` `EDGE` `XMOD` `DC` `WF`
+
+Module prefixes: `LOGIN` `CUST` `CFG` `ALLOC` `TWR` `CP` `JBP`
 
 ---
 
@@ -165,56 +151,12 @@ npx playwright test --project=auth-setup
 
 ```
 node_modules/
-dist/
 .env
-discovery/videos/
+automation-repository/fixtures/.auth/
 reports/
-automation/fixtures/.auth/
+test-results/
+.playwright-mcp-snapshots/
 ```
-
----
-
-## VS Code Setup (.vscode/)
-
-| File | Purpose |
-|---|---|
-| `extensions.json` | Recommended extensions (Playwright, Prettier, TypeScript) |
-| `settings.json` | MCP server (Playwright), Copilot Chat agent enabled, Prettier as formatter |
-| `mcp.json` | MCP server configuration for Playwright |
-
----
-
-## Key File Paths (Quick Reference)
-
-| File | Purpose |
-|---|---|
-| `playwright.config.ts` | Master Playwright config |
-| `automation/pages/login.page.ts` | Login page object |
-| `automation/pages/customers.page.ts` | Customers page object |
-| `automation/tests/auth.setup.ts` | One-time auth session setup |
-| `automation/tests/login.spec.ts` | Login test suite (18 tests) |
-| `automation/tests/customers.spec.ts` | Customers test suite (6 tests) |
-| `automation/fixtures/.auth/admin.json` | Saved session state (git-ignored) |
-| `ai-agent/discovery-crawler.ts` | Phase 1: portal crawl |
-| `ai-agent/test-case-generator.ts` | Phase 2: test case generation |
-| `ai-agent/automation-generator.ts` | Phase 3: spec generation |
-| `discovery/reports/portal-map.json` | Crawl output (machine-readable) |
-| `discovery/reports/discovery-report.md` | Crawl output (human-readable) |
-| `manual-test-cases/INDEX.md` | Generated test case index |
-| `reports/html-report/index.html` | Playwright HTML report |
-| `reports/results.json` | Raw test results JSON |
-
----
-
-## Test Naming Conventions
-
-| Prefix | Category | Example |
-|---|---|---|
-| `TC_POS_` | Positive | `TC_POS_001` |
-| `TC_NEG_` | Negative | `TC_NEG_006` |
-| `TC_FUNC_` | Functionality | `TC_FUNC_003` |
-| `TC_SEC_` | Security | `TC_SEC_001` |
-| `TC_CUST_` | Customers module | `TC_CUST_004` |
 
 ---
 
@@ -222,4 +164,5 @@ automation/fixtures/.auth/
 
 | Date | Change | Updated By |
 |---|---|---|
-| 2026-03-11 | Initial config reference document created | Claude |
+| 2026-03-11 | Initial config reference created | Claude |
+| 2026-05-16 | Rewritten for JS (CommonJS), updated all paths to new folder structure | Claude |
