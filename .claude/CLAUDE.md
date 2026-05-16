@@ -154,6 +154,10 @@ Auth: mobile `8888888888` / OTP `258369` → saves to `src/fixtures/.auth/admin.
 .claude/
 ├── CLAUDE.md                        # This file
 ├── settings.json / settings.local.json
+├── agent-memory/                    # Persistent memory per agent
+│   ├── ba-pipeline-orchestrator/    # BA Agent memory (MEMORY.md + md files)
+│   ├── automation-qa-engineer/      # Automation QA memory (empty)
+│   └── xr-manual-qa/               # Manual QA memory (empty)
 ├── rules/                           # Path-scoped coding rules (auto-loaded)
 │   ├── page-objects.md              # src/pages/**, src/base/**
 │   ├── specs.md                     # tests/**/*.spec.js
