@@ -5,22 +5,24 @@ paths:
 
 # Page Object Rules
 
-Every page object must extend `BasePage` from `automation-repository/pages/admin/BasePage.js`.
+Every page object must extend `BasePage` from `automation-repository/base/BasePage.js`.
 
 ```javascript
-const { BasePage } = require('./BasePage');
-const selectors = require('../../docs/selectors/<module>.json');
+const { BasePage } = require('../../base/BasePage');
+const locatorMap = require('../../../locators/<portal>/locator-map.json');
+
+const L = locatorMap.<module>;
 
 class <Module>Page extends BasePage {
   constructor(page) {
     super(page);
-    this.s = selectors.selectors;
+    this.L = L;
   }
 }
 module.exports = { <Module>Page };
 ```
 
-- Selectors always from `docs/selectors/<module>.json` — never hardcoded
+- Locators always from `locators/<portal>/locator-map.json` — never hardcoded
 - Methods are atomic — one logical action per method
 - File name: `<Module>Page.js` (PascalCase + "Page" suffix)
 - Export named: `module.exports = { <Module>Page }`

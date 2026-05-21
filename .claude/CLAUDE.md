@@ -192,6 +192,7 @@ test.skip(process.env.ENV === 'uat', 'Skipped on UAT — live gateway');
 | `automation-repository/fixtures/auth.setup.js` | OTP login → saves sessions |
 | `automation-repository/constants/testData.js` | BASE_URL, credentials, timeouts |
 | `automation-repository/api/ApiClient.js` | HTTP client |
+| `automation-repository/components/` | Shared UI component helpers |
 | `locators/<portal>/locator-map.json` | Element locator map (Tech Lead Agent) |
 | `db/queries/<entity>.js` | DB queries (raw Sequelize, never inline) |
 | `sync/last-synced-commits.json` | Sync pointer per repo |
@@ -243,6 +244,16 @@ test.skip(process.env.ENV === 'uat', 'Skipped on UAT — live gateway');
 
 ---
 
+## Environment Variables
+
+| Variable | Value | Effect |
+|----------|-------|--------|
+| `ENV` | `uat` | Skips tests guarded with `test.skip(process.env.ENV === 'uat', ...)` — use on UAT to skip live-gateway tests |
+
+Set inline: `ENV=uat npm run test:e2e:admin`
+
+---
+
 ## Reports & Bugs
 
 - HTML report: `reports/html-report/` — `npm run report`
@@ -254,37 +265,3 @@ test.skip(process.env.ENV === 'uat', 'Skipped on UAT — live gateway');
 - Sprint log: `manual-qa-repository/SPRINT_LOG.md`
 - Task tracker: `manual-qa-repository/TASK_TRACKER.md`
 
----
-
-## .claude/ Structure
-
-```
-.claude/
-├── CLAUDE.md
-├── settings.json / settings.local.json
-├── agents/
-│   ├── ba_agent.md
-│   ├── tech_lead_agent.md
-│   ├── qa_agent.md
-│   └── developer_agent.md
-├── skills/
-│   ├── manual-tester.md
-│   ├── test-case-reviewer.md
-│   ├── locator-map-builder.md
-│   ├── e2e-self-healer.md
-│   ├── run-e2e.md
-│   ├── run-ui-ux.md
-│   ├── run-regression.md
-│   ├── run-cross-browser.md
-│   ├── run-api-tests.md
-│   ├── run-db-tests.md
-│   ├── generate-report.md
-│   ├── generate-user-manual.md
-│   └── sync-and-update.md
-├── rules/
-│   ├── page-objects.md
-│   ├── specs.md
-│   └── selectors.md
-└── docs/
-    └── hoabl-knowledge-base/    ← BRD/FRD — sole source of truth
-```
