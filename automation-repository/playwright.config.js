@@ -34,7 +34,8 @@ module.exports = defineConfig({
     video:             'retain-on-failure',
     trace:             'on-first-retry',
     headless:          process.env.HEADLESS === 'true',
-    viewport:          { width: 1920, height: 900 },
+    viewport:          null,
+    launchOptions:     { args: ['--start-maximized', '--window-size=1920,1080'] },
   },
 
   projects: [
@@ -56,7 +57,7 @@ module.exports = defineConfig({
       name: 'e2e',
       testDir: path.join(ROOT, 'tests/e2e'),
       dependencies: ['auth-setup'],
-      use: { ...devices['Desktop Chrome'], storageState: AUTH('admin') },
+      use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('admin') },
     },
 
     // ── UI/UX ───────────────────────────────────────────────────────────────
@@ -64,7 +65,7 @@ module.exports = defineConfig({
       name: 'ui-ux',
       testDir: path.join(ROOT, 'tests/ui-ux'),
       dependencies: ['auth-setup'],
-      use: { ...devices['Desktop Chrome'], storageState: AUTH('admin') },
+      use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('admin') },
     },
 
     // ── Regression ──────────────────────────────────────────────────────────
@@ -72,7 +73,7 @@ module.exports = defineConfig({
       name: 'regression',
       testDir: path.join(ROOT, 'tests/regression'),
       dependencies: ['auth-setup'],
-      use: { ...devices['Desktop Chrome'], storageState: AUTH('admin') },
+      use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('admin') },
     },
 
     // ── API tests ───────────────────────────────────────────────────────────
@@ -93,7 +94,7 @@ module.exports = defineConfig({
       name: 'smoke',
       testDir: path.join(ROOT, 'tests/smoke'),
       dependencies: ['auth-setup'],
-      use: { ...devices['Desktop Chrome'], storageState: AUTH('admin') },
+      use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('admin') },
     },
 
     // ── Cross-browser ───────────────────────────────────────────────────────
@@ -101,19 +102,19 @@ module.exports = defineConfig({
       name: 'chromium',
       testDir: path.join(ROOT, 'tests/cross-browser'),
       dependencies: ['auth-setup'],
-      use: { ...devices['Desktop Chrome'], storageState: AUTH('admin') },
+      use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('admin') },
     },
     {
       name: 'firefox',
       testDir: path.join(ROOT, 'tests/cross-browser'),
       dependencies: ['auth-setup'],
-      use: { ...devices['Desktop Firefox'], storageState: AUTH('admin') },
+      use: { ...devices['Desktop Firefox'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('admin') },
     },
     {
       name: 'webkit',
       testDir: path.join(ROOT, 'tests/cross-browser'),
       dependencies: ['auth-setup'],
-      use: { ...devices['Desktop Safari'], storageState: AUTH('admin') },
+      use: { ...devices['Desktop Safari'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('admin') },
     },
   ],
 
