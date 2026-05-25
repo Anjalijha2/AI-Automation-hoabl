@@ -1,22 +1,451 @@
-# TC_OFFERS — Offers Module Test Cases
-
-**Module:** Offers  
-**Portal:** XR Portal Admin  
-**BA Sign-off:** ⏳ Pending  
-**Total TCs:** TBD  
-**Selector Source:** `03-selectors/offers.json` _(to be created on discovery)_
+# Test Cases — Offers
+**Portal:** Admin Portal
+**BRD Reference:** ADMIN-BRD-Offers.md
 
 ---
 
-> Test cases will be generated after discovery and BA sign-off.
+## Offers List & Page Layout
+
+### ADM_OFR_001 — Offers page loads at /admin/offers
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "Offers" in sidebar<br>2. Observe URL |
+| **Expected Result** | URL is /admin/offers; offers list and Add Offer button visible |
+| **Priority** | Critical |
 
 ---
 
-## Planned Coverage Areas
+### ADM_OFR_002 — Offers table columns
 
-- Offer creation (discount, cashback, freebies)
-- Offer applicability (units, projects, customer segments)
-- Offer validity period management
-- Offer activation / deactivation
-- Offer application to booking/allocation
-- Cross-module: offers → allocation, customers
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offers page loaded |
+| **Test Steps** | 1. Inspect table column headers |
+| **Expected Result** | Columns: Offer Name, Type, Discount Value, Start Date, End Date, Typology, Active toggle, Action (trash) |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_003 — Add New Offer button visible
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offers page loaded |
+| **Test Steps** | 1. Locate "Add New Offer" button |
+| **Expected Result** | Button visible at top of page |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_004 — Type column shows Amount Based or Percentage Based
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offers page loaded |
+| **Test Steps** | 1. Read distinct Type values |
+| **Expected Result** | Values are: Amount Based or Percentage Based |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_005 — System-generated offer HOME_LOAN shown when present
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Admin previously approved a Home Loan in Customers |
+| **Test Steps** | 1. Locate offer with code HOME_LOAN |
+| **Expected Result** | HOME_LOAN offer exists in list; created by system after Home Loan Approval |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_006 — System-generated offer VC_REQUEST shown when present
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | SM recorded VC_DONE_PREFERENCE or VC_2_DONE outcome |
+| **Test Steps** | 1. Locate offer with code VC_REQUEST |
+| **Expected Result** | VC_REQUEST offer exists; was auto-created |
+| **Priority** | Medium |
+
+---
+
+## Create Offer — Amount Based
+
+### ADM_OFR_007 — Click Add New Offer opens create form
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offers page loaded |
+| **Test Steps** | 1. Click Add New Offer |
+| **Expected Result** | Form/modal opens with fields: Offer Name, Type, Discount Value, Start Date, End Date, Typology |
+| **Priority** | Critical |
+
+---
+
+### ADM_OFR_008 — Create Amount Based offer with valid data
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Enter Name "Early Bird 27K"<br>2. Select Type = Amount Based<br>3. Enter Discount = 27000<br>4. Set Start Date = today<br>5. Set End Date = today + 30 days<br>6. Click Create Offer |
+| **Expected Result** | Offer created; appears in list with Active = ON |
+| **Priority** | Critical |
+
+---
+
+### ADM_OFR_009 — Amount Based offer shows ₹ formatted discount
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Amount Based offer created |
+| **Test Steps** | 1. Inspect Discount Value column |
+| **Expected Result** | Value shown as "₹27,000" |
+| **Priority** | Medium |
+
+---
+
+### ADM_OFR_010 — Create offer with negative discount rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Enter Discount = -500<br>2. Submit |
+| **Expected Result** | Validation error; discount must be positive |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_011 — Create offer with discount = 0 rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Enter Discount = 0<br>2. Submit |
+| **Expected Result** | Validation error; discount must be > 0 |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_012 — Create offer with empty Name rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Leave Name empty<br>2. Fill other fields<br>3. Submit |
+| **Expected Result** | Name required error |
+| **Priority** | High |
+
+---
+
+## Create Offer — Percentage Based
+
+### ADM_OFR_013 — Create Percentage Based offer with 5%
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Name "Festive 5%"<br>2. Type = Percentage Based<br>3. Discount = 5<br>4. Set dates<br>5. Create |
+| **Expected Result** | Offer created; Discount Value column shows "5%" |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_014 — Percentage > 100 rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Type = Percentage Based<br>2. Discount = 150<br>3. Submit |
+| **Expected Result** | Validation error; percentage cannot exceed 100 |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_015 — Percentage discount shows correct % format
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Percentage offer created |
+| **Test Steps** | 1. Inspect Discount Value column |
+| **Expected Result** | Value shown with % suffix (e.g. "5%") |
+| **Priority** | Medium |
+
+---
+
+## Date Validity & Typology
+
+### ADM_OFR_016 — Offer with End Date before Start Date rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Start Date = 2026-06-01<br>2. End Date = 2026-05-15<br>3. Submit |
+| **Expected Result** | Validation error: end date must be after start date |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_017 — Offer with past Start Date allowed (active immediately)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Start Date = yesterday<br>2. End Date = today + 7<br>3. Submit |
+| **Expected Result** | Offer created; valid because Start ≤ today ≤ End |
+| **Priority** | Medium |
+
+---
+
+### ADM_OFR_018 — Typology restriction to "1 Bed Growth Home"
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Select Typology = "1 Bed Growth Home"<br>2. Fill other fields and create |
+| **Expected Result** | Offer applies only to 1 Bed Growth Home units; other typology units not discounted |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_019 — Offer applies to All Typologies when none specified
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open |
+| **Test Steps** | 1. Leave Typology blank/All<br>2. Create offer |
+| **Expected Result** | Offer applies across all unit typologies |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_020 — Offer with future Start Date does not apply yet
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offer with Start Date = tomorrow |
+| **Test Steps** | 1. Open Towers and click an eligible unit |
+| **Expected Result** | All Inclusive Price does NOT include this future offer |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_021 — Offer past End Date does not apply
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offer with End Date = yesterday |
+| **Test Steps** | 1. Open Towers and click an eligible unit |
+| **Expected Result** | Expired offer not deducted from price |
+| **Priority** | High |
+
+---
+
+## Toggle Activate / Deactivate
+
+### ADM_OFR_022 — New offer starts with Active = ON
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | New offer just created |
+| **Test Steps** | 1. Inspect Active column on new offer row |
+| **Expected Result** | Toggle is ON by default |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_023 — Toggle Active OFF takes effect immediately without confirmation
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Active offer exists |
+| **Test Steps** | 1. Click toggle in Action column |
+| **Expected Result** | Toggle switches to OFF instantly with no confirmation dialog |
+| **Priority** | Critical |
+
+---
+
+### ADM_OFR_024 — Deactivated offer not applied to new buyer pricing
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offer just deactivated |
+| **Test Steps** | 1. Open Towers in buyer view<br>2. Click a unit that was previously discounted |
+| **Expected Result** | All Inclusive Price no longer includes that offer's discount |
+| **Priority** | Critical |
+
+---
+
+### ADM_OFR_025 — Re-activate offer via toggle
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Inactive offer exists |
+| **Test Steps** | 1. Click toggle to ON |
+| **Expected Result** | Offer reactivated immediately; discount applies again |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_026 — Toggle change during active campaign affects buyer pricing immediately
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Active campaign; offer ON |
+| **Test Steps** | 1. Admin toggles offer OFF<br>2. Refresh buyer's unit view |
+| **Expected Result** | Buyer sees price without that discount |
+| **Priority** | Critical |
+
+---
+
+## Delete Offer
+
+### ADM_OFR_027 — Trash icon visible in Action column
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offers page loaded |
+| **Test Steps** | 1. Inspect Action column |
+| **Expected Result** | Trash icon visible per offer row |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_028 — Click trash icon opens delete confirmation
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offer exists |
+| **Test Steps** | 1. Click trash icon |
+| **Expected Result** | Confirmation dialog opens with offer name and Delete/Cancel buttons |
+| **Priority** | Critical |
+
+---
+
+### ADM_OFR_029 — Confirm delete removes offer from list
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Delete confirmation open |
+| **Test Steps** | 1. Click Delete in dialog |
+| **Expected Result** | Offer removed from list; success toast shown |
+| **Priority** | Critical |
+
+---
+
+### ADM_OFR_030 — Cancel delete keeps offer
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Delete confirmation open |
+| **Test Steps** | 1. Click Cancel in dialog |
+| **Expected Result** | Dialog closes; offer remains in list |
+| **Priority** | Medium |
+
+---
+
+## Pricing Application & Edge Cases
+
+### ADM_OFR_031 — Multiple active offers stack on Agreement Value
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Two active offers applicable to same typology |
+| **Test Steps** | 1. Open eligible unit in Towers<br>2. Inspect All Inclusive Price |
+| **Expected Result** | All Inclusive Price = Agreement Value - sum of both offer discounts |
+| **Priority** | Critical |
+
+---
+
+### ADM_OFR_032 — Race: Offer turned OFF while buyer mid-payment
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Buyer viewing pricing with offer; admin toggles offer OFF |
+| **Test Steps** | 1. Buyer clicks Proceed to Pay after admin toggles OFF |
+| **Expected Result** | Discount disappears from final booking amount per BRD race condition rule |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_033 — Locked bookings not affected by offer changes
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Buyer completed booking with offer applied |
+| **Test Steps** | 1. Toggle the offer OFF<br>2. Check buyer's booking record |
+| **Expected Result** | Existing booking amount unchanged; offer change applies only to future bookings |
+| **Priority** | Critical |
+
+---
+
+### ADM_OFR_034 — Pagination works on offers table
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | More than 10 offers exist |
+| **Test Steps** | 1. Click Next page |
+| **Expected Result** | Next page loads with remaining offers |
+| **Priority** | Medium |
+
+---
+
+### ADM_OFR_035 — Search/filter offers by name
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offers page loaded |
+| **Test Steps** | 1. Use search field to type partial offer name |
+| **Expected Result** | List filters to matching offers |
+| **Priority** | Medium |
+
+---
+
+### ADM_OFR_036 — HOME_LOAN offer cannot be manually edited or deleted
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | HOME_LOAN system offer exists |
+| **Test Steps** | 1. Try to delete or edit HOME_LOAN offer |
+| **Expected Result** | Edit/delete may be restricted for system-generated offers (or allowed with warning) |
+| **Priority** | Medium |
+
+---

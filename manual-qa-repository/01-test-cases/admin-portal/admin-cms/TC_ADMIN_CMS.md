@@ -1,22 +1,435 @@
-# TC_ADMIN_CMS — Admin CMS Module Test Cases
-
-**Module:** Admin CMS  
-**Portal:** XR Portal Admin  
-**BA Sign-off:** ⏳ Pending  
-**Total TCs:** TBD  
-**Selector Source:** `03-selectors/admin-cms.json` _(to be created on discovery)_
+# Test Cases — Admin Portal Shell & CMS Link
+**Portal:** Admin Portal
+**BRD Reference:** ADMIN-BRD-Admin-Portal.md
 
 ---
 
-> Test cases will be generated after discovery and BA sign-off.
+## Portal Shell & Sidebar Navigation
+
+### ADM_CMS_001 — Admin portal shell loads after successful login
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin completed OTP login |
+| **Test Steps** | 1. Complete login flow<br>2. Observe portal layout |
+| **Expected Result** | Left sidebar navigation, top header, and main content area render; default landing is Customers page |
+| **Priority** | Critical |
 
 ---
 
-## Planned Coverage Areas
+### ADM_CMS_002 — Left sidebar shows all 10 module links plus Logout
 
-- Content page management (create, edit, publish, archive)
-- Media library (upload, manage, delete)
-- SEO fields (title, description, slug)
-- Content scheduling (publish at date/time)
-- Revision history / rollback
-- Role-based editing permissions
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Inspect left sidebar |
+| **Expected Result** | Sidebar shows: Customers, Config, Allocation, Offers, Towers, JBP Mgmt, Channel Partners, Sales Managers, Transactions, CMS (external), Logout |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_003 — Sidebar persistent across all admin pages
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Navigate to Towers, then Allocation, then Offers |
+| **Expected Result** | Sidebar remains visible and consistent on every page |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_004 — Click Customers in sidebar navigates to /admin/customers
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin on any admin page |
+| **Test Steps** | 1. Click "Customers" in sidebar |
+| **Expected Result** | URL becomes /admin/customers; Customers page loads |
+| **Priority** | Critical |
+
+---
+
+### ADM_CMS_005 — Click Config navigates to /admin/cms
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "Config" in sidebar |
+| **Expected Result** | URL becomes /admin/cms; Configurations page loads |
+| **Priority** | Critical |
+
+---
+
+### ADM_CMS_006 — Click Allocation navigates to /admin/allocation
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "Allocation" in sidebar |
+| **Expected Result** | URL becomes /admin/allocation |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_007 — Click Offers navigates to /admin/offers
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "Offers" in sidebar |
+| **Expected Result** | URL becomes /admin/offers |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_008 — Click Towers navigates to /admin/towers
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "Towers" in sidebar |
+| **Expected Result** | URL becomes /admin/towers |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_009 — Click JBP Mgmt navigates to /admin/jbp-management
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "JBP Mgmt" in sidebar |
+| **Expected Result** | URL becomes /admin/jbp-management |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_010 — Click Channel Partners navigates to /admin/channel-partners
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "Channel Partners" in sidebar |
+| **Expected Result** | URL becomes /admin/channel-partners |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_011 — Click Sales Managers navigates to /admin/sales-managers
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "Sales Managers" in sidebar |
+| **Expected Result** | URL becomes /admin/sales-managers |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_012 — Click Transactions navigates to /admin/payment-transactions
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "Transactions" in sidebar |
+| **Expected Result** | URL becomes /admin/payment-transactions |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_013 — Current page is highlighted in sidebar
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin on a module page |
+| **Test Steps** | 1. Navigate to Towers<br>2. Inspect sidebar |
+| **Expected Result** | Towers sidebar item visually highlighted (different color/background) |
+| **Priority** | Medium |
+
+---
+
+### ADM_CMS_014 — Sidebar item order matches BRD specification
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Read sidebar items top-to-bottom |
+| **Expected Result** | Order: Customers, Config, Allocation, Offers, Towers, JBP Mgmt, Channel Partners, Sales Managers, Transactions, CMS, Logout |
+| **Priority** | Medium |
+
+---
+
+## External CMS Link
+
+### ADM_CMS_015 — Sidebar shows separate CMS link
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Locate "CMS" item in sidebar (separate from Config) |
+| **Expected Result** | "CMS" link is visible and distinct from "Config" |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_016 — Clicking external CMS opens different domain
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "CMS" in sidebar |
+| **Expected Result** | Opens external content management system at a different domain (Strapi); not part of admin portal |
+| **Priority** | Medium |
+
+---
+
+### ADM_CMS_017 — External CMS opens in new tab/window
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click CMS link |
+| **Expected Result** | External CMS opens in new tab; admin portal session remains in original tab |
+| **Priority** | Medium |
+
+---
+
+### ADM_CMS_018 — External CMS is documented as out-of-scope
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | N/A |
+| **Test Steps** | 1. Review BRD for CMS link |
+| **Expected Result** | BRD confirms external CMS is separate system, excluded from admin portal scope and testing |
+| **Priority** | Medium |
+
+---
+
+## Logout & Session
+
+### ADM_CMS_019 — Logout button visible at bottom of sidebar
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Inspect bottom of sidebar |
+| **Expected Result** | Logout button visible |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_020 — Click Logout ends session
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click Logout in sidebar<br>2. Observe redirect |
+| **Expected Result** | Session ended; redirected to /admin login page |
+| **Priority** | Critical |
+
+---
+
+### ADM_CMS_021 — After logout, JWT token is invalidated
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Just logged out |
+| **Test Steps** | 1. Try to use old token to access protected API endpoint |
+| **Expected Result** | API rejects request with 401 Unauthorized; token no longer valid |
+| **Priority** | Critical |
+
+---
+
+### ADM_CMS_022 — After logout, accessing protected route redirects to login
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Just logged out |
+| **Test Steps** | 1. Try to navigate to /admin/customers via URL |
+| **Expected Result** | Redirected to /admin login page |
+| **Priority** | Critical |
+
+---
+
+### ADM_CMS_023 — Logout clears browser session storage
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Just logged out |
+| **Test Steps** | 1. Open DevTools → Application → Local/Session Storage |
+| **Expected Result** | Admin session keys cleared from browser storage |
+| **Priority** | High |
+
+---
+
+## Access Control & Roles
+
+### ADM_CMS_024 — Admin (roleId=1) can access all modules
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Logged in as Admin role |
+| **Test Steps** | 1. Click each sidebar item in turn |
+| **Expected Result** | All 9 portal pages load without access denied errors |
+| **Priority** | Critical |
+
+---
+
+### ADM_CMS_025 — Sales Manager Admin (roleId=4) accesses all modules
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Logged in as SM Admin |
+| **Test Steps** | 1. Navigate through all sidebar items |
+| **Expected Result** | All modules accessible (with possible config restrictions per BRD) |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_026 — Buyer role cannot access admin portal
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Buyer session token (non-admin) |
+| **Test Steps** | 1. Try to access /admin with buyer credentials |
+| **Expected Result** | Access denied; redirected away from admin portal |
+| **Priority** | Critical |
+
+---
+
+### ADM_CMS_027 — CP role cannot access admin portal
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | CP session token |
+| **Test Steps** | 1. Try to access /admin |
+| **Expected Result** | Access denied or redirected to CP portal |
+| **Priority** | Critical |
+
+---
+
+### ADM_CMS_028 — Standard SM (non-admin) cannot access admin portal
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Standard SM (not SM Admin) session |
+| **Test Steps** | 1. Try to access /admin |
+| **Expected Result** | Access denied; redirected to SM portal |
+| **Priority** | High |
+
+---
+
+## Page Rendering & Responsiveness
+
+### ADM_CMS_029 — Sidebar always visible (no full-screen mode)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin on any module |
+| **Test Steps** | 1. Look for any toggle to hide/collapse sidebar |
+| **Expected Result** | Sidebar always visible per BRD; no full-screen mode toggle |
+| **Priority** | Medium |
+
+---
+
+### ADM_CMS_030 — Browser back button navigates module history
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Navigated Customers → Towers → Offers |
+| **Test Steps** | 1. Click browser Back button |
+| **Expected Result** | Returns to Towers page; sidebar reflects active page |
+| **Priority** | Medium |
+
+---
+
+### ADM_CMS_031 — Direct URL navigation works for all modules
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Type /admin/offers directly in URL bar<br>2. Press Enter |
+| **Expected Result** | Offers page loads directly without navigating via sidebar |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_032 — Invalid /admin/xyz URL shows 404 or redirects
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Navigate to /admin/nonexistent-module |
+| **Expected Result** | 404 page or redirect to /admin/customers |
+| **Priority** | Medium |
+
+---
+
+### ADM_CMS_033 — Page renders correctly at 1920x1080 desktop resolution
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Browser at 1920x1080 |
+| **Test Steps** | 1. Load any admin page |
+| **Expected Result** | All elements visible without scrolling for primary content |
+| **Priority** | Medium |
+
+---
+
+### ADM_CMS_034 — Page renders at 1366x768 laptop resolution
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Browser at 1366x768 |
+| **Test Steps** | 1. Load each module |
+| **Expected Result** | All elements visible; sidebar and content area readable |
+| **Priority** | Medium |
+
+---
+
+### ADM_CMS_035 — F5 refresh maintains session and page
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin on /admin/towers |
+| **Test Steps** | 1. Press F5 |
+| **Expected Result** | Towers page reloads; user stays logged in |
+| **Priority** | High |
+
+---

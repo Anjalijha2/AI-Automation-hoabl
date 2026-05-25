@@ -25,7 +25,7 @@
       "query": "path:CP-Portal",
       "color": {
         "a": 1,
-        "rgb": 2092036
+        "rgb": 15988514
       }
     },
     {
@@ -60,6 +60,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 363,
-  "scale": 0.60917999647559,
+  "scale": 0.4808915733982353,
   "close": true
 }

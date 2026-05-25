@@ -1,6 +1,6 @@
 ﻿---
 paths:
-  - "automation-repository/pages/admin/**/*.js"
+  - "automation-repository/pages/**/*.js"
 ---
 
 # Page Object Rules

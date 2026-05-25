@@ -213,3 +213,62 @@ This is a project-level setting. Reducing the limit does not retroactively inval
 **Known Bug (BUG_010 — Open):** Registration Status section — clicking Submit without selecting a file shows no validation error. The system silently fails. Expected behavior: an error message prompting the admin to select a file first.
 
 All other Config module questions are resolved as of 2026-05-10.
+
+---
+
+## 11. Backend Gap Reconciliation (2026-05-21)
+
+Controller audit findings against `master-config.controller.js` and `admin.controller.js`.
+
+### 11.1 Master Configuration API (Section 8) <!-- BA correction: GAP-TL-032, 2026-05-21 -->
+- Section 8 master-config endpoints (`storeMasterConfigs`) were not previously documented.
+- `projectId` is env-resolved server-side; the formerly-accepted `req.body.projectId` is now commented out.
+- **Allowed `dataType` enum (8 values):** `string`, `number`, `boolean`, `json`, `date`, `datetime`, `array`, `object`. <!-- BA correction: GAP-TL-033, 2026-05-21 -->
+
+### 11.2 Section 8 force-disables "2 Bed Peak Home" <!-- BA correction: GAP-TL-034, 2026-05-21 -->
+- `admin.controller.js:1591-1594` silently overrides any admin input for typology "2 Bed Peak Home" to `isAllowed=false, countAllowed=0`. The UI may show the row but server enforces disabled state.
+- Implications: any admin attempt to enable this typology will appear to succeed but persist as disabled.
+
+### 11.3 Section 8 "No Change Detected" (HTTP 400) <!-- BA correction: GAP-TL-035, 2026-05-21 -->
+- If the submitted configuration is identical to current state, backend returns HTTP 400 "No Change Detected". Not HTTP 200.
+
+### 11.4 Bulk Booking Cancellation — preconditions <!-- BA correction: GAP-TL-036, GAP-TL-037, GAP-TL-038, 2026-05-21 -->
+- **Blocked during active campaign** (`admin.controller.js:2331-2333`): HTTP 400 "Cannot cancel booking when campaign is active".
+- **Blocked by Mavis booking** (`:2423-2429`): if a Mavis booking exists for the bookingNumber → HTTP 400 "Mavis booking still exists, please clear that step first".
+- **Cancelable status:** only RegistrationUnit.status = `WINNER`. All other statuses are skipped with row error "Not cancelable" in the result file (`:2400-2406`). Doc previously implied a friendly "Booked" status; literal value is `WINNER`.
+
+### 11.5 Mavis bookingNumber env-prefix <!-- BA correction: GAP-TL-039, 2026-05-21 -->
+- When querying Mavis, the bookingNumber is prepended with `D` (dev) or `U` (uat). Production uses the raw value. QA test data must align with the runtime env prefix.
+
+### 11.6 Bulk Cancellation cascade (5+ models) <!-- BA correction: GAP-TL-052, 2026-05-21 -->
+- Cancellation cascades via raw SQL across:
+  - `registration_units`: clears 20+ columns
+  - `payment_transactions`: soft-deletes related rows
+  - `MilestonePaymentTracking`: soft-deletes
+  - `RegistrationUnitPaymentSchedule`: soft-deletes
+  - `RegistrationUnitOffer`: soft-deletes
+  - `ParkingInventory`: releases HOLD/BOOKED rows back to AVAILABLE
+- Previous FRD §7 only mentioned RegistrationUnit + Unit + Python sync — incomplete.
+
+### 11.7 Section 2 (Registration Status / availableForAllocation) <!-- BA correction: GAP-TL-040, GAP-TL-041, GAP-TL-042, GAP-TL-051, 2026-05-21 -->
+- **Blocked during active campaign:** HTTP 400 "Cannot update registration-unit when campaign is active".
+- **Skipped rows:** RegistrationUnit with status `WINNER` or `HOLD` are excluded from the update (`where: { status: { [Op.notIn]: ['WINNER','HOLD'] } }`).
+- **Dual write:**
+  - ALLOW → `status='PREALLOCATED', availableForAllocation=true`
+  - FORBID → `status='WAITLIST', availableForAllocation=false`
+  Previous FRD said only the boolean.
+- **Side-effects:** Section 2 syncs Redis and triggers Python `/broadcast-registrations`.
+
+### 11.8 Section 3 (Unit Cost Update) — chunking and validation <!-- BA correction: GAP-TL-043, GAP-TL-044, GAP-TL-045, GAP-TL-046, GAP-TL-048, 2026-05-21 -->
+- **Chunked transactions:** rows processed in chunks of 250 with abort-after-2-failures (`admin.controller.js:1766-1928`).
+- **Unit status transitions (strict):** ONLY `AVAILABLE ↔ RESERVED`. The previously documented `BOOKED → AVAILABLE` "high-risk operation" is NOT supported. Attempts will be rejected per chunk.
+- **XLSX required columns:** `allocationAmount`, `allocationPercent`, `allocationCalcType` (`PERCENT` | `AMOUNT`). PERCENT mode requires `allocationPercent`; AMOUNT mode requires `allocationAmount`. Previous FRD §5 only listed `Agreement_Value` and `EarlyBird`.
+- **Empty submission:** HTTP 400 "No rows marked for update".
+- **Sample/Inventory downloads** exclude units with status BOOKED/HOLD/REFUGE/PBT — only AVAILABLE/RESERVED appear in samples (previous FRD implied "all unit prices").
+
+### 11.9 Per-unit edit endpoint (pricing + status in one call) <!-- BA correction: GAP-TL-047, 2026-05-21 -->
+- New endpoint: `PATCH /api/v1/admin/units/:id` (`updateUnitPriceByPrimaryId`). Accepts pricing fields and status in a single call. Not previously documented.
+
+### 11.10 Bulk refund template typos and key mismatch <!-- BA correction: GAP-TL-049, GAP-TL-050, 2026-05-21 -->
+- `downloadBulkRefundSample` template has a column-name typo: `upadte` (`admin.controller.js:1520`). Flag to Dev Agent.
+- `bulkRefundRegistrationUnits` result file header reads "Registration Number" but the data key is `unitNumber`. Reconcile when QA validates the file.

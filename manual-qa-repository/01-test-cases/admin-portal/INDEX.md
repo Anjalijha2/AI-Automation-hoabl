@@ -10,7 +10,7 @@
 | Module | File | Total TCs | Last Updated | BA Sign-off |
 |--------|------|-----------|--------------|-------------|
 | Login | [login/TC_LOGIN.md](login/TC_LOGIN.md) | 22 | 2026-05-16 | ✅ |
-| Customers | [customers/TC_CUSTOMERS.md](customers/TC_CUSTOMERS.md) | — | — | ⏳ |
+| Customers | [customers/TC_CUSTOMERS.md](customers/TC_CUSTOMERS.md) | 32 | 2026-05-17 | ✅ |
 | Config / CMS | [config/TC_CONFIG.md](config/TC_CONFIG.md) | — | — | ⏳ |
 | Allocation | [allocation/TC_ALLOCATION.md](allocation/TC_ALLOCATION.md) | — | — | ⏳ |
 | Towers | [towers/TC_TOWERS.md](towers/TC_TOWERS.md) | — | — | ⏳ |
@@ -18,6 +18,8 @@
 | JBP Management | [jbp/TC_JBP.md](jbp/TC_JBP.md) | — | — | ⏳ |
 | Offers | [offers/TC_OFFERS.md](offers/TC_OFFERS.md) | — | — | ⏳ |
 | Admin CMS | [admin-cms/TC_ADMIN_CMS.md](admin-cms/TC_ADMIN_CMS.md) | — | — | ⏳ |
+| Sales Managers | [sales-managers/TC_SM.md](sales-managers/TC_SM.md) | — | — | ⏳ |
+| Payment Transactions | [payment-transactions/TC_PAYMENT.md](payment-transactions/TC_PAYMENT.md) | — | — | ⏳ |
 
 ---
 
@@ -25,12 +27,14 @@
 
 | Module | Sprint | Phase |
 |--------|--------|-------|
-| Login | Sprint 1 | Phase 3 — Automation pending |
-| Towers | Sprint 2 | Phase 2 — TCs pending |
-| Allocation | Sprint 2 | Phase 2 — TCs pending |
-| Config/CMS | Sprint 3 | Phase 2 — TCs pending |
-| Customers | Sprint 4 | Phase 1 — Not started |
-| Channel Partners | TBD | — |
-| JBP | TBD | — |
-| Offers | TBD | — |
-| Admin CMS | TBD | — |
+| Login | Sprint 1 | ✅ Complete |
+| Customers | Sprint 1 | Phase 1 — In Progress |
+| Channel Partners | Sprint 1 | Phase 1 — Queued |
+| Sales Managers | Sprint 1 | Phase 1 — Queued |
+| Towers | Sprint 1 | Phase 1 — Queued |
+| Config/CMS | Sprint 1 | Phase 1 — Queued |
+| JBP | Sprint 1 | Phase 1 — Queued |
+| Offers | Sprint 1 | Phase 1 — Queued |
+| Payment Transactions | Sprint 1 | Phase 1 — Queued |
+| Allocation | Sprint 1 | Phase 1 — Queued |
+| Admin CMS | Sprint 1 | Phase 1 — Queued |

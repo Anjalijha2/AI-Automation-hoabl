@@ -5,33 +5,24 @@
   "main": "index.js",
   "scripts": {
     "auth:setup": "npx playwright test --config automation-repository/playwright.config.js --project=auth-setup",
-
     "test:e2e:admin": "npx playwright test tests/e2e/admin/ --config automation-repository/playwright.config.js --project=e2e --workers=1",
     "test:e2e:sales-manager": "npx playwright test tests/e2e/sales-manager/ --config automation-repository/playwright.config.js --project=e2e --workers=1",
     "test:e2e:channel-partner": "npx playwright test tests/e2e/channel-partner/ --config automation-repository/playwright.config.js --project=e2e --workers=1",
     "test:e2e:buyer": "npx playwright test tests/e2e/buyer/ --config automation-repository/playwright.config.js --project=e2e --workers=1",
-
     "test:ui:admin": "npx playwright test tests/ui-ux/admin/ --config automation-repository/playwright.config.js --project=ui-ux --workers=1",
-
     "test:regression:admin": "npx playwright test tests/regression/admin/ --config automation-repository/playwright.config.js --project=regression --workers=1",
-
     "test:api": "npx playwright test tests/api/ --config automation-repository/playwright.config.js --project=api --workers=1",
     "test:db": "npx playwright test tests/db/ --config automation-repository/playwright.config.js --project=db --workers=1",
     "test:smoke": "npx playwright test --config automation-repository/playwright.config.js --project=smoke --workers=1",
-
     "test:chrome": "npx playwright test --config automation-repository/playwright.config.js --project=chromium --workers=1",
     "test:firefox": "npx playwright test --config automation-repository/playwright.config.js --project=firefox --workers=1",
     "test:webkit": "npx playwright test --config automation-repository/playwright.config.js --project=webkit --workers=1",
-
     "test:login": "npx playwright test tests/e2e/admin/login.spec.js --config automation-repository/playwright.config.js --project=login-tests --headed --workers=1",
     "test:all": "npx playwright test --config automation-repository/playwright.config.js --workers=1",
-
     "report": "npx playwright show-report reports/html-report",
     "generate:report": "node automation-repository/utils/generate-report.js",
-
     "discover": "node automation-repository/discovery/config-discovery.js",
     "sync": "node sync/run-sync.js",
-
     "sprint:status": "node automation-repository/utils/sprint-manager.js status",
     "sprint:update": "node automation-repository/utils/sprint-manager.js update"
   },
@@ -43,6 +34,7 @@
     "@playwright/test": "^1.58.2",
     "csv-writer": "^1.6.0",
     "dotenv": "^17.3.1",
+    "exceljs": "^4.4.0",
     "playwright": "^1.58.2",
     "xlsx": "^0.18.5"
   }

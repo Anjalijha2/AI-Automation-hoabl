@@ -172,3 +172,35 @@ None — this is a read-only view. No user input is accepted on this page.
 ## 10. Open Questions / Gaps
 
 None. All tower module behavior confirmed through automated testing (13 tests passing).
+
+---
+
+## 11. Backend Gap Reconciliation (2026-05-21)
+
+Controller (`tower.controller.js`) and service (`tower.service.js`) audit findings.
+
+### 11.1 Hard-coded projectId (env-derived) <!-- BA correction: GAP-TL-025, GAP-DEV-001, 2026-05-21 -->
+- `tower.controller.js:17, 175`: `const projectId = app.production ? 1 : 2;`. Tower list and unit-by-tower endpoints scope on this. Client cannot override.
+
+### 11.2 `getAllTowers` accepts `isActive` filter via GET body <!-- BA correction: GAP-TL-026, 2026-05-21 -->
+- The endpoint reads `req.body.isActive`, accepting only literal `true`/`false`. GET-with-body is non-standard; many HTTP clients strip the body. Document the filter but flag the anti-pattern.
+
+### 11.3 KPI `disabledUnits` = RESERVED only (FRD previously said REFUGE+RESERVED+PBT) <!-- BA correction: GAP-TL-027, 2026-05-21 -->
+- `tower.controller.js:198`: `disabledUnits: counts.reserved || 0`. The FRD Feature 1 §5 description (REFUGE / RESERVED / PBT) is incorrect — code counts RESERVED only.
+
+### 11.4 `availableUnits` source <!-- BA correction: GAP-TL-028, 2026-05-21 -->
+- `availableUnits` is computed by `common.controller.getUnitStatusCount`; verify scope (AVAILABLE only vs AVAILABLE+others) when designing KPI tests.
+
+### 11.5 `updateTowerStatus` fires Python `/broadcast-towers` <!-- BA correction: GAP-TL-029, 2026-05-21 -->
+- `tower.controller.js:135-139` issues a GET to the Python WebSocket service endpoint `/broadcast-towers`. Required for QA WebSocket mocks; not previously documented.
+
+### 11.6 No-op toggles skipped from audit log <!-- BA correction: GAP-TL-030, 2026-05-21 -->
+- If `updateTowerStatus` is called with the current state (no-op), the audit-log emission is skipped (`tower.controller.js:81-83`). QA: do not assert audit row on idempotent toggle.
+
+### 11.7 `getUnitsByTowerId` response shape <!-- BA correction: GAP-TL-031, 2026-05-21 -->
+- Returns: `id, unitName, unitId, unitNo, floorNumber, status, basicPrice, totalUnitValue, facing`.
+- FRD Feature 4 §5 previously listed: Unit No, BHK Type, Size, Agreement Value, Early Bird Benefit, All Inclusive Price.
+- Reconciliation: `basicPrice` and `totalUnitValue` are present in the API but were absent from the FRD drawer description; `agreementValue` and `earlyBirdBenefit` are NOT in the response. QA test data must use the actual response fields.
+
+### 11.8 Admin unit-swap tower list NOT filtered by `isActive` <!-- BA correction: GAP-DEV-028, 2026-05-21 -->
+- `tower.service.js:17-25` `adminUnitSwapTowers` returns ALL towers regardless of `isActive`. Only `userHeatmapTowers` and `fetchTowersForDropdown` filter. This is already noted in UnitSwap FRD §4.2; restated here for cross-reference.

@@ -1,6 +1,6 @@
 ﻿---
 paths:
-  - "docs/selectors/**/*.json"
+  - "locators/**/*.json"
 ---
 
 # Selector File Rules
@@ -25,8 +25,8 @@ paths:
 5. `:text("...")` — last resort, document reason
 
 ## Ownership
-- `docs/selectors/*.json` — source of truth for AI agents
-- `automation-repository/pages/admin/*.js` — primary for running tests (constructors load from JSON)
+- `locators/<portal>/locator-map.json` — source of truth for AI agents (Tech Lead Agent owned)
+- `automation-repository/pages/<portal>/*.js` — POMs consume locator map via require()
 - When UI changes break selectors: fix page object first, then update JSON to match
 
 ## Versioning

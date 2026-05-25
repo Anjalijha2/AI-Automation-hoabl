@@ -2,11 +2,18 @@
   "_meta": {
     "description": "Tracks last synced commit per source for the 4-step sync pipeline",
     "maintainer": "Tech Lead Agent",
-    "lastUpdated": "2026-05-17"
+    "lastUpdated": "2026-05-21"
   },
   "source-code": {
-    "lastCommit": null,
-    "lastSyncedAt": null
+    "lastCommit": "14e13793cfc004f7aea38b76f9c6175584cc9dc3",
+    "lastSyncedAt": "2026-05-21T00:00:00Z",
+    "perRepo": {
+      "admin-sm-cp-portal": "be3b418ed0d24d1ff76fa552bf80b968df865697",
+      "backend": "ca68b28e6cfca984df7626f3059f8bec21fbb126",
+      "buyer-portal": "866e38a2de042106e9bd13d46dad53a869d4484a",
+      "web-socket": "befb3b0ad981eb89d85a551df37ad764cb557707",
+      "strapi": "EXCLUDED"
+    }
   },
   "brd-frd": {
     "lastCommit": null,

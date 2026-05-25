@@ -325,3 +325,75 @@ Confirmation Amount = allocationAmount from Unit record
 4. **Buyer clicks "Proceed to Pay":** Pricing is calculated live including all active applicable offers. The Easebuzz payment popup opens.
 5. **Buyer completes payment:** After successful payment, the unit is marked Booked and the buyer sees a booking confirmation screen.
 6. **Admin can monitor:** The Allocation campaign dashboard updates in real time as units are selected and booked.
+
+---
+
+# Backend Gap Reconciliation (2026-05-21)
+
+Controller- and service-layer audit findings against the Allocation surface. These notes override conflicting statements in the features above. See parent BRD §10 for full narrative; this section restates spec-level points.
+
+### ⚠️ KNOWN ISSUE — CRITICAL: `cancelUserAllocation` ownership check broken
+<!-- BA correction: GAP-TL-008, 2026-05-21 -->
+Any authenticated user can cancel any `registrationUnit` by ID (`allocation.controller.js:56-62`). Do not document the endpoint until fixed.
+
+### ⚠️ KNOWN ISSUE — CRITICAL: `markAllocationCampaignFailed` destroys the row
+<!-- BA correction: GAP-DEV-011, 2026-05-21 -->
+The service does `destroy()` not status-update. The "FAILED" status filter in Feature 2 will always be empty. Treat FAILED as aspirational.
+
+### ⚠️ KNOWN ISSUE — CRITICAL: Double-booking race window
+<!-- BA correction: GAP-DEV-034, 2026-05-21 -->
+No DB-level uniqueness on assigned `unit_id` for WINNER/HOLD. Concurrent requests can both pass the app-level check.
+
+### Feature 1 corrections (Campaign Create)
+- **§6 / §7:** `projectId` is env-defaulted to 1 (prod) / 2 (UAT) when omitted. <!-- BA correction: GAP-TL-001, GAP-DEV-001, 2026-05-21 -->
+- **§5 / §7:** PHYSICAL_EVENT requires `commonPoolExcel` file; STATIC/DYNAMIC accept `allotmentExcel`. Missing → HTTP 400. <!-- BA correction: GAP-TL-002, 2026-05-21 -->
+- **§7 errors:** Excel validation failures return HTTP 400 with XLSX binary body (filenames `physical-event-allocation-errors.xlsx` / `dynamic-allocation-errors.xlsx`), NOT JSON. <!-- BA correction: GAP-TL-003, 2026-05-21 -->
+- **DYNAMIC Excel:** 20-registration-per-unit hard cap, separate from configurable `allocationsPerUnit`. <!-- BA correction: GAP-DEV-012, 2026-05-21 -->
+- **PHYSICAL_EVENT asymmetry:** typology-match check and assigned-vs-pool overlap check are both commented out (STATIC enforces typology-match). <!-- BA correction: GAP-DEV-013, GAP-DEV-014, 2026-05-21 -->
+- **Stale campaign cleanup:** Past-window non-terminal campaigns are forced to `status='FAILED'` on next create. <!-- BA correction: GAP-DEV-007, 2026-05-21 -->
+
+### New Feature — Dynamic Campaign Rounds <!-- BA correction: GAP-TL-004, 2026-05-21 -->
+- **Endpoint:** `GET /api/v1/admin/allocation/campaign/:campaignId/rounds`
+- **Defaults:** `page=1`, `limit=20`
+- **Returns:** paginated rounds list for the campaign.
+
+### New Feature — Campaign Allotments Export <!-- BA correction: GAP-TL-005, 2026-05-21 -->
+- **Endpoint:** `GET /api/v1/admin/allocation/campaign/:campaignId/allotments/export`
+- **Returns:** Excel stream of all allotments for the campaign.
+
+### New Feature — Notify Physical Event Registrants <!-- BA correction: GAP-TL-006, 2026-05-21 -->
+- **Endpoint:** `POST /api/v1/admin/allocation/campaigns/:campaignId/notify`
+- **Action:** Triggers Kaleyra notifications to all physical-event registrants.
+
+### Feature 3 / 4 corrections (Stop / Cancel)
+- **Route surface:** Likely a single `updateAllocationCampaign` PUT endpoint that takes an `action` field (values include stop/cancel). The doc's separate `/stop` and `/cancel` route claims are unverified. <!-- BA correction: GAP-TL-007, 2026-05-21 -->
+- **Status flip is async:** `terminateAllocationCampaign` does NOT update `AllocationCampaign.status` synchronously — it calls Python `/campaign/stop` and waits for callback. <!-- BA correction: GAP-DEV-010, 2026-05-21 -->
+
+### Feature 5 corrections (Pricing / Buyer Booking)
+- **finalAgreementValue formula:** `agreementValue + totalParkingAmount − earlyBirdBenefit − (homeLoanDiscountAmount if eligible) − offerDiscountAmount`. <!-- BA correction: GAP-TL-015, 2026-05-21 -->
+- **Home-loan eligibility:** `RegistrationHomeLoan.status='completed' AND loanApprovalStatus != 'admin_rejected'` OR `loanApprovalStatus='admin_approved'`. <!-- BA correction: GAP-TL-015, 2026-05-21 -->
+- **GST:** 1% if finalAgreementValue < ₹45 lakh, else 5%. <!-- BA correction: GAP-TL-010, 2026-05-21 -->
+- **TDS:** suppressed (₹0) when finalAgreementValue < ₹45 lakh. <!-- BA correction: GAP-TL-010, 2026-05-21 -->
+- **Stamp duty:** hard-coded 7%. <!-- BA correction: GAP-DEV-020, 2026-05-21 -->
+- **Hold expiry:** 20 minutes; payment statuses `cancelled`/`bounced`/`failed` release immediately. <!-- BA correction: GAP-DEV-015, GAP-DEV-016, 2026-05-21 -->
+- **STATIC InitialAllotment:** rows created post-payment at booking finalize, not at campaign start. <!-- BA correction: GAP-DEV-017, 2026-05-21 -->
+- **DYNAMIC orphan WINNER:** if no PREALLOCATED/ALLOCATED row, fallback to last `dynamicRoundId`; if still none, log+skip (booking still succeeds). <!-- BA correction: GAP-DEV-018, 2026-05-21 -->
+- **migrateUnassignedUnitsAfterBooking:** disabled in source. PHYSICAL_EVENT buyer's other units do not auto-release. <!-- BA correction: GAP-DEV-019, 2026-05-21 -->
+
+### KYC sub-feature corrections
+- **submitKyc partial-success response:** HTTP 207 Multi-Status when some units succeed. <!-- BA correction: GAP-TL-011, 2026-05-21 -->
+- **submitKyc SM proxy:** `reqFromSm=true` switches operating user to `userId` in payload with no caller-role check. <!-- BA correction: GAP-TL-012, 2026-05-21 -->
+- **verifyKycEsignOtp master OTP:** `otpConfig.adminMasterOtp` accepted for any user, skipping expiry/value validation. <!-- BA correction: GAP-TL-014, 2026-05-21 -->
+- **Admin overrides:** `forcedCancel` (bool) and `fallbackStatus` (string) accepted from admin role only. <!-- BA correction: GAP-TL-013, 2026-05-21 -->
+
+### Status enum reference <!-- BA correction: GAP-TL-016, 2026-05-21 -->
+RegistrationUnit.status ∈ { `WINNER`, `PREALLOCATED`, `WAITLIST`, `HOLD`, `CANCELLED` }.
+
+### Campaign pre-start blackout <!-- BA correction: GAP-DEV-008, 2026-05-21 -->
+`checkAnyActiveCampaignExists` returns true for any RUNNING campaign OR any NOT_STARTED campaign with `startTime <= now + 2 min`. Unit Swap, Cancel Unit, Assign Unit, Bulk Refund are blocked during this window.
+
+### Bulk refund dynamic-membership check disabled <!-- BA correction: GAP-DEV-009, 2026-05-21 -->
+The per-registration `activeCampaignRegistrationSet.has(unitNumber)` block is commented out. Only the global 2-min blackout protects against refunding mid-dynamic-campaign units.
+
+### createPaymentIntent undocumented endpoint <!-- BA correction: GAP-TL-009, 2026-05-21 -->
+Stores any string into PaymentIntent. Hard-codes `transactionType=2`. No referential validation. Candidate for removal — do not write functional tests against it.

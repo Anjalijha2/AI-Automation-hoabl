@@ -514,3 +514,45 @@ None.
 3. **Change the limit:** Select a new value from the dropdown.
 4. **Click "Update"** to save.
 5. **Result:** The new preference limit takes effect immediately. Buyers attempting to select more units than the limit during an active allocation campaign will be blocked at the preference count limit.
+
+---
+
+# Backend Gap Reconciliation (2026-05-21)
+
+Controller-layer audit findings against `admin.controller.js` and `master-config.controller.js`. See parent BRD §11 for full narrative.
+
+### Section 2 — Registration Status corrections
+- Blocked during active campaign: HTTP 400 "Cannot update registration-unit when campaign is active". <!-- BA correction: GAP-TL-040, 2026-05-21 -->
+- WINNER/HOLD rows are skipped from the update. <!-- BA correction: GAP-TL-041, 2026-05-21 -->
+- Dual write: ALLOW → `status=PREALLOCATED, availableForAllocation=true`; FORBID → `status=WAITLIST, availableForAllocation=false`. <!-- BA correction: GAP-TL-042, 2026-05-21 -->
+- Side-effects: Redis sync + Python `/broadcast-registrations`. <!-- BA correction: GAP-TL-051, 2026-05-21 -->
+
+### Section 3 — Unit Cost Update corrections
+- Chunked in 250-row batches; abort after 2 chunk failures. <!-- BA correction: GAP-TL-043, 2026-05-21 -->
+- **Unit status transitions strictly AVAILABLE ↔ RESERVED.** `BOOKED → AVAILABLE` is NOT supported (correct prior FRD claim). <!-- BA correction: GAP-TL-044, 2026-05-21 -->
+- XLSX requires: `allocationAmount`, `allocationPercent`, `allocationCalcType` (PERCENT/AMOUNT). <!-- BA correction: GAP-TL-045, 2026-05-21 -->
+- Empty submission → HTTP 400 "No rows marked for update". <!-- BA correction: GAP-TL-046, 2026-05-21 -->
+- Sample/Inventory downloads exclude BOOKED/HOLD/REFUGE/PBT (only AVAILABLE/RESERVED). <!-- BA correction: GAP-TL-048, 2026-05-21 -->
+
+### New Feature — Per-Unit Edit Endpoint <!-- BA correction: GAP-TL-047, 2026-05-21 -->
+`PATCH /api/v1/admin/units/:id` — accepts pricing + status in one call.
+
+### Section 5 — Bulk Booking Cancellation corrections
+- Blocked during active campaign. <!-- BA correction: GAP-TL-036, 2026-05-21 -->
+- Blocked by existing Mavis booking. <!-- BA correction: GAP-TL-037, 2026-05-21 -->
+- Only RegistrationUnit status = `WINNER` is cancelable. <!-- BA correction: GAP-TL-038, 2026-05-21 -->
+- bookingNumber prepended `D`/`U` for dev/uat when calling Mavis. <!-- BA correction: GAP-TL-039, 2026-05-21 -->
+- **Cancellation cascade** (5+ models): registration_units (20+ cols cleared), payment_transactions, MilestonePaymentTracking, RegistrationUnitPaymentSchedule, RegistrationUnitOffer (soft-deletes); ParkingInventory HOLD/BOOKED released. <!-- BA correction: GAP-TL-052, 2026-05-21 -->
+
+### Bulk Refund template/key typos <!-- BA correction: GAP-TL-049, GAP-TL-050, 2026-05-21 -->
+- Sample template column-name typo: `upadte`.
+- Result file header "Registration Number" maps to data key `unitNumber`.
+
+### Section 8 — Master Configuration <!-- BA correction: GAP-TL-032, GAP-TL-033, GAP-TL-034, GAP-TL-035, GAP-DEV-021, 2026-05-21 -->
+- `storeMasterConfigs` endpoints added to scope; `projectId` env-resolved.
+- Allowed `dataType` enum: `string, number, boolean, json, date, datetime, array, object`.
+- **"2 Bed Peak Home" force-disabled** — server silently coerces to `isAllowed=false, countAllowed=0` regardless of input.
+- "No change" submission → HTTP 400 "No Change Detected".
+
+### 2-BHK Rise/Peak parking carve-out (cross-reference) <!-- BA correction: GAP-DEV-021, 2026-05-21 -->
+- Backend force-disables parking for typologies named exactly "2 BHK Rise Home" or "2 BHK Peak Home" (string match, `common.service.js:130, 517`).

@@ -86,3 +86,31 @@ At the moment a buyer clicks "Proceed to Pay":
 - [[Feature-Spec - Offers]] — Full feature specifications with How to Use
 - [[Allocation]] — Campaigns where offers are applied
 - [[Customers]] — Home Loan Approval triggers HOME_LOAN offer
+
+---
+
+## 10. Backend Gap Reconciliation (2026-05-21)
+
+Controller (`offer.controller.js`) and service (`offer.service.js`) audit findings.
+
+### 10.1 `unitTypologyId` is scalar, not multi-select <!-- BA correction: GAP-TL-054, 2026-05-21 -->
+- API accepts a SINGLE `unitTypologyId` scalar (`offer.controller.js:39, 81-109`). Previous FRD Feature 2 §5 wording "Multi-select" is incorrect. To target multiple typologies, admin must create multiple offers.
+
+### 10.2 `offerCode` is admin-settable <!-- BA correction: GAP-TL-055, 2026-05-21 -->
+- `offer.controller.js:41, 84`: `offerCode` is read straight from `req.body` with no whitelist. An admin can set `offerCode='HOME_LOAN'` or `offerCode='VC_REQUEST'`.
+- Previous BRD/FRD claim that "Admin-created offers have offerCode=NULL; HOME_LOAN/VC_REQUEST are system-only" is NOT enforced by code.
+- **Action:** Flagged to Developer Agent. QA: document the current permissive behaviour but design negative tests to verify if/when whitelist is added.
+
+### 10.3 Pagination params on `getOffers` <!-- BA correction: GAP-TL-053, 2026-05-21 -->
+- Accepts `page`, `limit`, and `projectId` query parameters. Not previously documented.
+
+### 10.4 `deleteOffer` is hard destroy with no audit, no FK guard <!-- BA correction: GAP-DEV-023, 2026-05-21 -->
+- `offer.service.js:129-140`: calls `offer.destroy()`. No soft-delete, no audit log emission, no check for existing `RegistrationUnitOffer` references.
+- **Impact:** Hard-deleting an offer that is referenced by bookings may orphan downstream pricing rows. Doc previously implied soft-delete with audit — incorrect.
+
+### 10.5 `toggleOfferStatus` emits no audit <!-- BA correction: GAP-DEV-024, 2026-05-21 -->
+- `offer.service.js:145-157` flips `isActive` and saves. NO audit-log emission. Previous FRD Feature 4 §9 claim that toggle is audited is incorrect.
+
+### 10.6 `createOffer` / `editOffer` lack service-level audit + date-order validation <!-- BA correction: GAP-DEV-025, 2026-05-21 -->
+- `offer.service.js:39-77, 82-124` do direct create/update. No `startDate <= endDate` check, no audit, no null-value check at the service layer.
+- Validations live in controller/validator middleware. QA: test boundary date-order via the HTTP layer, not by calling the service directly.

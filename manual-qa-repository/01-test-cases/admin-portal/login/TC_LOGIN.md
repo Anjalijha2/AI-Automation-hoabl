@@ -1,339 +1,495 @@
-﻿# TC_LOGIN — Login Module Test Cases
-
-**Module:** Login  
-**Portal:** XR Portal Admin (`https://uat-web.xrportal.in/admin`)  
-**BA Sign-off:** ✅ Approved (2026-05-16)  
-**Total TCs:** 22  
-**Selector Source:** `03-selectors/login.json` _(to be created on discovery)_
+# Test Cases — Login
+**Portal:** Admin Portal
+**BRD Reference:** ADMIN-BRD-Login.md
 
 ---
 
-## UI Tests
+## Login Page Rendering
 
-### TC_LOGIN_UI_001
-**Title:** Login page renders all required elements  
-**Priority:** High  
-**Pre-conditions:** Navigate to `/admin`  
-**Steps:**
-1. Open `https://uat-web.xrportal.in/admin`
-2. Observe page layout
+### ADM_LGN_001 — Verify login page loads at /admin URL
 
-**Expected:** Mobile input, "Send OTP" button, page heading visible  
-**Automatable:** Yes
-
----
-
-### TC_LOGIN_UI_002
-**Title:** OTP input appears after sending OTP  
-**Priority:** High  
-**Pre-conditions:** Mobile number entered  
-**Steps:**
-1. Enter mobile `8888888888`
-2. Click "Send OTP"
-
-**Expected:** OTP input field appears; "Login" / "Verify" button visible  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Browser open; no active admin session |
+| **Test Steps** | 1. Navigate to https://uat-web.xrportal.in/admin<br>2. Wait for page to fully load |
+| **Expected Result** | Login page renders within 5 seconds with HoABL logo, side banner image, "Admin Login" heading, mobile input field, and Send OTP button |
+| **Priority** | Critical |
 
 ---
 
-### TC_LOGIN_UI_003
-**Title:** Responsive layout on 1280×720 viewport  
-**Priority:** Medium  
-**Pre-conditions:** None  
-**Steps:**
-1. Open login page at 1280×720
-2. Inspect layout
+### ADM_LGN_002 — Verify all static elements on Step 1 mobile screen
 
-**Expected:** No overflow, all elements visible, no horizontal scrollbar  
-**Automatable:** Yes
-
----
-
-## Functional Tests
-
-### TC_LOGIN_FUNC_001
-**Title:** Successful login with valid OTP  
-**Priority:** Critical  
-**Pre-conditions:** UAT environment, valid OTP `258369`  
-**Steps:**
-1. Enter mobile `8888888888`
-2. Click "Send OTP"
-3. Enter OTP `258369`
-4. Click "Login" / "Verify"
-
-**Expected:** Redirected to `/customers` or dashboard; "Customers" heading visible  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Observe all visible elements on the page |
+| **Expected Result** | Page displays HoABL logo, side banner, "Admin Login" heading, "+91" prefix, mobile input with placeholder "Enter Mobile Number", Terms link, Privacy link, Send OTP button, copyright footer |
+| **Priority** | High |
 
 ---
 
-### TC_LOGIN_FUNC_002
-**Title:** "Send OTP" button triggers OTP delivery  
-**Priority:** High  
-**Pre-conditions:** Valid mobile entered  
-**Steps:**
-1. Enter mobile `8888888888`
-2. Click "Send OTP"
+### ADM_LGN_003 — Verify mobile field placeholder text
 
-**Expected:** OTP field displayed; success indicator or message shown  
-**Automatable:** Yes
-
----
-
-### TC_LOGIN_FUNC_003
-**Title:** Session persists after page refresh  
-**Priority:** High  
-**Pre-conditions:** User logged in  
-**Steps:**
-1. Login successfully
-2. Refresh browser
-
-**Expected:** Stays on dashboard; not redirected to login  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Locate mobile number input field<br>2. Observe placeholder text |
+| **Expected Result** | Field shows placeholder "Enter Mobile Number" with "+91" prefix to its left |
+| **Priority** | Medium |
 
 ---
 
-### TC_LOGIN_FUNC_004
-**Title:** Logout clears session  
-**Priority:** High  
-**Pre-conditions:** User logged in  
-**Steps:**
-1. Login successfully
-2. Click logout (profile/menu)
-3. Try to navigate to `/customers`
+### ADM_LGN_004 — Verify Terms & Conditions link is clickable
 
-**Expected:** Redirected to login page; session cleared  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Click "Terms & Conditions" link |
+| **Expected Result** | Terms of Service page or modal opens |
+| **Priority** | Medium |
 
 ---
 
-## Validation Tests
+### ADM_LGN_005 — Verify Privacy Policy link is clickable
 
-### TC_LOGIN_VAL_001
-**Title:** Empty mobile number shows validation error  
-**Priority:** High  
-**Pre-conditions:** Login page open  
-**Steps:**
-1. Leave mobile input empty
-2. Click "Send OTP"
-
-**Expected:** Validation error "Mobile number is required" or similar  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Click "Privacy Policy" link |
+| **Expected Result** | Privacy Policy page or modal opens |
+| **Priority** | Medium |
 
 ---
 
-### TC_LOGIN_VAL_002
-**Title:** Invalid mobile format rejected  
-**Priority:** High  
-**Pre-conditions:** Login page open  
-**Steps:**
-1. Enter `123` in mobile field
-2. Click "Send OTP"
+### ADM_LGN_006 — Verify copyright footer text
 
-**Expected:** Error: invalid mobile number format  
-**Automatable:** Yes
-
----
-
-### TC_LOGIN_VAL_003
-**Title:** Empty OTP shows validation error  
-**Priority:** High  
-**Pre-conditions:** OTP field visible  
-**Steps:**
-1. Enter valid mobile, click "Send OTP"
-2. Leave OTP empty, click "Login"
-
-**Expected:** Validation error shown for OTP field  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Scroll to footer<br>2. Read footer text |
+| **Expected Result** | Footer reads "Copyright 2026 Growwithhoabl All Rights Reserved" |
+| **Priority** | Medium |
 
 ---
 
-### TC_LOGIN_VAL_004
-**Title:** Wrong OTP shows error  
-**Priority:** High  
-**Pre-conditions:** OTP sent  
-**Steps:**
-1. Enter mobile `8888888888`, send OTP
-2. Enter wrong OTP `000000`
-3. Click "Login"
+### ADM_LGN_007 — Verify Send OTP button visible and enabled
 
-**Expected:** Error message: invalid/incorrect OTP  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Locate Send OTP button<br>2. Verify state |
+| **Expected Result** | Send OTP button is visible, enabled, labelled "Send OTP" |
+| **Priority** | High |
 
 ---
 
-### TC_LOGIN_VAL_005
-**Title:** Non-numeric mobile input rejected  
-**Priority:** Medium  
-**Pre-conditions:** Login page open  
-**Steps:**
-1. Enter `abcdefghij` in mobile field
-2. Click "Send OTP"
+### ADM_LGN_008 — Verify direct URL is only route to login
 
-**Expected:** Error or field rejects non-numeric input  
-**Automatable:** Yes
-
----
-
-## Negative Tests
-
-### TC_LOGIN_NEG_001
-**Title:** Unregistered mobile number  
-**Priority:** Medium  
-**Pre-conditions:** Login page open  
-**Steps:**
-1. Enter unregistered mobile `9999999999`
-2. Click "Send OTP"
-
-**Expected:** Error: mobile not registered / OTP not sent  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | No active session |
+| **Test Steps** | 1. Access /admin without session<br>2. Try /admin/customers directly |
+| **Expected Result** | Both routes resolve to login page |
+| **Priority** | High |
 
 ---
 
-### TC_LOGIN_NEG_002
-**Title:** OTP input before sending OTP  
-**Priority:** Low  
-**Pre-conditions:** Login page open  
-**Steps:**
-1. Attempt to enter/submit OTP without first clicking "Send OTP"
+## OTP Send Flow
 
-**Expected:** OTP field not accessible or shows appropriate message  
-**Automatable:** Yes
+### ADM_LGN_009 — Send OTP with valid 10-digit admin mobile
 
----
-
-### TC_LOGIN_NEG_003
-**Title:** Direct URL access to protected page without login  
-**Priority:** High  
-**Pre-conditions:** No active session  
-**Steps:**
-1. Clear cookies/session
-2. Navigate directly to `https://uat-web.xrportal.in/admin/customers`
-
-**Expected:** Redirected to login page  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | UAT admin mobile 8888888888 registered |
+| **Test Steps** | 1. Enter "8888888888" in Mobile Number field<br>2. Click Send OTP<br>3. Observe next screen |
+| **Expected Result** | Page transitions to Step 2 OTP entry screen with six OTP boxes and countdown timer |
+| **Priority** | Critical |
 
 ---
 
-## Edge Cases
+### ADM_LGN_010 — Verify OTP entry screen layout
 
-### TC_LOGIN_EDGE_001
-**Title:** Mobile number with leading/trailing spaces  
-**Priority:** Low  
-**Pre-conditions:** Login page open  
-**Steps:**
-1. Enter `  8888888888  ` (with spaces)
-2. Click "Send OTP"
-
-**Expected:** Trimmed and processed, or validation error  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Send OTP clicked for 8888888888 |
+| **Test Steps** | 1. Observe all elements on OTP entry screen |
+| **Expected Result** | Shows back arrow, "ENTER OTP" heading, sub-text "Enter the OTP sent to your phone number", 6 single-digit boxes, countdown timer, Re-Send OTP (disabled), Submit OTP button |
+| **Priority** | High |
 
 ---
 
-### TC_LOGIN_EDGE_002
-**Title:** OTP input boundary — 5 digits  
-**Priority:** Low  
-**Pre-conditions:** OTP sent  
-**Steps:**
-1. Enter 5-digit OTP `25836`
-2. Click "Login"
+### ADM_LGN_011 — Mobile field rejects letters
 
-**Expected:** Validation error — OTP must be 6 digits  
-**Automatable:** Yes
-
----
-
-### TC_LOGIN_EDGE_003
-**Title:** Multiple rapid "Send OTP" clicks  
-**Priority:** Medium  
-**Pre-conditions:** Login page open  
-**Steps:**
-1. Enter valid mobile
-2. Click "Send OTP" 3 times rapidly
-
-**Expected:** OTP sent once; button debounced or disabled after first click  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Click mobile field<br>2. Type "abcdefghij" |
+| **Expected Result** | No letters appear; keystrokes blocked at input level |
+| **Priority** | High |
 
 ---
 
-## Business Rule Tests
+### ADM_LGN_012 — Mobile field rejects special characters
 
-### TC_LOGIN_BIZ_001
-**Title:** Admin-only access — non-admin mobile blocked  
-**Priority:** High  
-**Pre-conditions:** Non-admin mobile available  
-**Steps:**
-1. Enter non-admin mobile
-2. Complete OTP flow
-
-**Expected:** Access denied or redirected away from admin portal  
-**Automatable:** Partial (depends on test data)
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Click mobile field<br>2. Type "!@#$%^&*()" |
+| **Expected Result** | No special characters appear; keystrokes blocked |
+| **Priority** | High |
 
 ---
 
-### TC_LOGIN_BIZ_002
-**Title:** OTP expiry — expired OTP rejected  
-**Priority:** Medium  
-**Pre-conditions:** OTP sent, wait for expiry  
-**Steps:**
-1. Send OTP
-2. Wait for OTP to expire (per system config)
-3. Enter expired OTP
+### ADM_LGN_013 — Mobile field accepts only digits
 
-**Expected:** Error: OTP expired, please request new OTP  
-**Automatable:** Partial (time-dependent)
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Type "1234567890" in mobile field |
+| **Expected Result** | All 10 digits appear in field |
+| **Priority** | High |
 
 ---
 
-## End-to-End Tests
+### ADM_LGN_014 — Send OTP with empty mobile field
 
-### TC_LOGIN_E2E_001
-**Title:** Full login → navigate → logout flow  
-**Priority:** Critical  
-**Pre-conditions:** UAT environment  
-**Steps:**
-1. Open login page
-2. Enter mobile, send OTP
-3. Enter OTP, submit
-4. Verify dashboard loads
-5. Navigate to Customers module
-6. Log out
-7. Verify redirect to login
-
-**Expected:** Complete flow completes without errors; session cleared on logout  
-**Automatable:** Yes
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded; field empty |
+| **Test Steps** | 1. Click Send OTP without entering anything |
+| **Expected Result** | Nothing happens; page remains on Step 1 |
+| **Priority** | High |
 
 ---
 
-### TC_LOGIN_E2E_002
-**Title:** Login → session save → reload → still authenticated  
-**Priority:** High  
-**Pre-conditions:** UAT environment  
-**Steps:**
-1. Login successfully
-2. Save session state (`admin.json`)
-3. Open new browser context with saved state
-4. Navigate to `/customers`
+### ADM_LGN_015 — Send OTP with 5-digit short number
 
-**Expected:** Authenticated without re-login; customers page loads  
-**Automatable:** Yes (auth-setup flow)
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Enter "12345"<br>2. Click Send OTP |
+| **Expected Result** | OTP not sent; page does not transition to OTP screen |
+| **Priority** | High |
 
 ---
 
-## Automation Coverage
+### ADM_LGN_016 — Send OTP with all zeros mobile
 
-| TC | Automatable | Spec | Status |
-|----|-------------|------|--------|
-| TC_LOGIN_UI_001 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_UI_002 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_UI_003 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_FUNC_001 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_FUNC_002 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_FUNC_003 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_FUNC_004 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_VAL_001–005 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_NEG_001–003 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_EDGE_001–003 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_BIZ_001 | Partial | — | ⏳ Pending |
-| TC_LOGIN_BIZ_002 | Partial | — | ⏳ Pending |
-| TC_LOGIN_E2E_001 | Yes | `tests/e2e/login.spec.js` | ⏳ Pending |
-| TC_LOGIN_E2E_002 | Yes | `automation-repository/fixtures/auth.setup.js` | ⏳ Pending |
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Enter "0000000000"<br>2. Click Send OTP |
+| **Expected Result** | OTP rejected; stays on mobile entry screen |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_017 — Verify mobile field max length 10 digits
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Try to enter "12345678901234567890" |
+| **Expected Result** | Only first 10 digits accepted; rest blocked |
+| **Priority** | Medium |
+
+---
+
+## OTP Verification Flow
+
+### ADM_LGN_018 — Submit valid OTP 258369 logs in successfully
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP screen shown after Send OTP for 8888888888 |
+| **Test Steps** | 1. Type "2" in OTP Box 1<br>2. Type "5" in Box 2<br>3. Type "8" in Box 3<br>4. Type "3" in Box 4<br>5. Type "6" in Box 5<br>6. Type "9" in Box 6<br>7. Click Submit OTP |
+| **Expected Result** | User redirected to /admin/customers within 5 seconds |
+| **Priority** | Critical |
+
+---
+
+### ADM_LGN_019 — OTP boxes auto-advance focus on digit entry
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP entry screen shown |
+| **Test Steps** | 1. Click Box 1<br>2. Type each digit of "258369" sequentially |
+| **Expected Result** | After each digit, focus auto-advances to next box; cursor ends in Box 6 |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_020 — Each OTP box accepts only single digit
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP entry screen shown |
+| **Test Steps** | 1. Click Box 1<br>2. Try typing "25" |
+| **Expected Result** | "2" stays in Box 1; "5" auto-advances to Box 2 |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_021 — Submit wrong 6-digit OTP
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP entry screen shown |
+| **Test Steps** | 1. Enter "123456"<br>2. Click Submit OTP |
+| **Expected Result** | Error message shown; user remains on OTP screen; not redirected |
+| **Priority** | Critical |
+
+---
+
+### ADM_LGN_022 — Submit OTP with empty boxes
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP screen shown; all boxes empty |
+| **Test Steps** | 1. Click Submit OTP without entering anything |
+| **Expected Result** | Login not attempted; user stays on OTP screen |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_023 — Submit partial OTP (3 digits)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP screen shown |
+| **Test Steps** | 1. Enter "123" in boxes 1-3 only<br>2. Click Submit OTP |
+| **Expected Result** | Login rejected; stays on OTP screen |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_024 — Submit all-zeros OTP
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP screen shown |
+| **Test Steps** | 1. Enter "000000"<br>2. Click Submit OTP |
+| **Expected Result** | Login rejected; error shown |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_025 — Multiple wrong OTP attempts no lockout
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP screen shown |
+| **Test Steps** | 1. Submit "111111"<br>2. Submit "222222"<br>3. Submit "333333"<br>4. Submit "258369" |
+| **Expected Result** | First 3 attempts rejected with error but no lockout; 4th attempt with correct OTP succeeds |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_026 — OTP countdown timer counts down
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP screen just shown |
+| **Test Steps** | 1. Observe timer<br>2. Wait 5 seconds<br>3. Observe again |
+| **Expected Result** | Timer decrements every second (e.g. "60s" → "55s") |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_027 — Re-Send OTP disabled during active timer
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP screen shown; timer counting |
+| **Test Steps** | 1. Try to click Re-Send OTP while timer active |
+| **Expected Result** | Re-Send OTP is disabled/grayed; clicking does nothing |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_028 — Re-Send OTP enabled after timer expires
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP screen shown |
+| **Test Steps** | 1. Wait for timer to reach 0s<br>2. Observe Re-Send OTP link |
+| **Expected Result** | Re-Send OTP becomes enabled/clickable |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_029 — Click Re-Send OTP after timer expires
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Timer expired; Re-Send OTP enabled |
+| **Test Steps** | 1. Click Re-Send OTP |
+| **Expected Result** | New OTP requested; timer restarts at 60s; Re-Send OTP disabled again |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_030 — Back button returns to mobile screen
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP entry screen shown |
+| **Test Steps** | 1. Click back arrow at top of OTP screen |
+| **Expected Result** | Returns to Step 1 mobile entry screen |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_031 — Successful login redirects to /admin/customers
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Valid mobile and OTP submitted |
+| **Test Steps** | 1. Complete login with 8888888888 / 258369<br>2. Observe URL after redirect |
+| **Expected Result** | URL becomes /admin/customers; Customers page renders |
+| **Priority** | Critical |
+
+---
+
+## Session Management
+
+### ADM_LGN_032 — Session persists across page refresh
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Login successfully<br>2. Press F5 to refresh |
+| **Expected Result** | User remains logged in; page reloads without redirect to login |
+| **Priority** | Critical |
+
+---
+
+### ADM_LGN_033 — Session persists across new browser tab
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Open new tab in same browser<br>2. Navigate to /admin/customers |
+| **Expected Result** | New tab loads page directly without login prompt |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_034 — Session lasts up to 1 day
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Admin logged in; JWT issued |
+| **Test Steps** | 1. Note login time<br>2. Wait 23 hours<br>3. Access protected route |
+| **Expected Result** | Session still valid within 24h window |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_035 — Expired session redirects to login
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Session token expired |
+| **Test Steps** | 1. Clear admin.json storage<br>2. Try to access /admin/customers |
+| **Expected Result** | Redirected to /admin login page |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_036 — Protected route without login redirects to /admin
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | No active session |
+| **Test Steps** | 1. Open incognito<br>2. Navigate to /admin/towers |
+| **Expected Result** | Redirected to /admin login page |
+| **Priority** | Critical |
+
+---
+
+## Security & Negative Cases
+
+### ADM_LGN_037 — SQL injection in mobile field is blocked
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Try entering "' OR 1=1 --" in mobile field<br>2. Click Send OTP |
+| **Expected Result** | Input blocked at field level (numeric only); no DB error |
+| **Priority** | Critical |
+
+---
+
+### ADM_LGN_038 — XSS injection in mobile field is blocked
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Try entering "<script>alert('xss')</script>" in mobile field |
+| **Expected Result** | Script tags blocked; no JS alert fires |
+| **Priority** | Critical |
+
+---
+
+### ADM_LGN_039 — Unregistered mobile number rejected at OTP verify
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Enter unregistered "9999999999"<br>2. Click Send OTP<br>3. Enter "258369"<br>4. Click Submit OTP |
+| **Expected Result** | OTP verification fails; user not logged in |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_040 — Login page responsive on mobile viewport
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Browser at 375x667 viewport |
+| **Test Steps** | 1. Resize to mobile viewport<br>2. Load /admin |
+| **Expected Result** | All elements visible and tappable; no overflow |
+| **Priority** | Medium |
+
+---

@@ -1,31 +1,17 @@
-﻿# Sales Manager Portal — Test Cases Index
+# Sales Manager Portal — Test Cases Index
 
-**Portal:** XR Sales Manager Portal  
+**Portal:** XR Sales Manager Portal
 **Back to master:** [../INDEX.md](../INDEX.md)
 
----
-
-## Modules
-
-| Module | File | Total TCs | Last Updated | BA Sign-off |
-|--------|------|-----------|--------------|-------------|
-| Callback Requests | [TC_CALLBACK.md](TC_CALLBACK.md) | — | — | ⏳ |
-| Towers | [TC_SM_TOWERS.md](TC_SM_TOWERS.md) | — | — | ⏳ |
-| Leads | [TC_LEADS.md](TC_LEADS.md) | — | — | ⏳ |
+> **Note:** TC files live in `../sm-portal/`. This directory retained for path continuity.
 
 ---
 
-> TCs will be generated after:
-> 1. UI discovery (`npm run discover`)
-> 2. Screen documentation (`npm run generate:report  # QA Agent calls generate-user-manual skill`)
-> 3. BA sign-off on BRD
+## Modules (171 TCs total)
 
----
-
-## Planned Coverage Areas
-
-- Callback request list (view, filter, respond)
-- Lead management (assign, track, status)
-- Tower availability view (read-only)
-- Performance dashboard
-- Target vs. actual tracking
+| Module | File | Total TCs | BA Sign-off |
+|--------|------|-----------|-------------|
+| Login | [../sm-portal/login/TC_LOGIN.md](../sm-portal/login/TC_LOGIN.md) | 8 | ⏳ |
+| Callback Requests | [../sm-portal/callback-requests/TC_CALLBACK_REQUESTS.md](../sm-portal/callback-requests/TC_CALLBACK_REQUESTS.md) | 134 | ⏳ |
+| Physical Allocation | [../sm-portal/physical-allocation/TC_PHYSICAL_ALLOCATION.md](../sm-portal/physical-allocation/TC_PHYSICAL_ALLOCATION.md) | 19 | ⏳ |
+| Tower Heatmap | [../sm-portal/tower-heatmap/TC_TOWER_HEATMAP.md](../sm-portal/tower-heatmap/TC_TOWER_HEATMAP.md) | 10 | ⏳ |

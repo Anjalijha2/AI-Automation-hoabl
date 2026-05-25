@@ -1,26 +1,21 @@
 {
   "_meta": {
     "portal": "admin",
-    "version": "1.0.0",
-    "lastUpdated": "2026-05-17",
-    "maintainer": "Tech Lead Agent"
+    "version": "1.5.0",
+    "lastUpdated": "2026-05-21",
+    "maintainer": "Tech Lead Agent",
+    "changelog": [
+      "1.5.0 — added Customers three-dot menu items (view-milestones, unit-swap, update-parking), Cancel Unit modal, Unit Swap modal, Update Parking modal selectors (source: CustomerTable.jsx L1114-L1132, L1408-L1444, L1799-L1878, L1880-L2001)"
+    ]
   },
   "login": {
     "mobileInput": {
-      "selector": "input[placeholder='Enter mobile number']",
+      "selector": "input[placeholder='Enter Mobile Number']",
       "type": "css",
       "fallback": "input[type='tel']",
       "aria_role": "textbox",
       "deprecated": false,
-      "changelog": ["1.0.0 — initial"]
-    },
-    "otpInput": {
-      "selector": "input[placeholder='Enter OTP']",
-      "type": "css",
-      "fallback": "input[type='number']",
-      "aria_role": "textbox",
-      "deprecated": false,
-      "changelog": ["1.0.0 — initial"]
+      "changelog": ["1.0.0 — initial", "1.1.0 — corrected placeholder to match FRD ('Enter Mobile Number')"]
     },
     "sendOtpBtn": {
       "selector": "button:has-text('Send OTP')",
@@ -30,13 +25,109 @@
       "deprecated": false,
       "changelog": ["1.0.0 — initial"]
     },
-    "verifyOtpBtn": {
-      "selector": "button:has-text('Verify OTP')",
+    "otpBox1": {
+      "selector": "input[aria-label='OTP Input 1']",
+      "type": "css",
+      "fallback": "input[aria-label*='1']",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from FRD (6 individual OTP boxes with aria-labels)"]
+    },
+    "otpBox2": {
+      "selector": "input[aria-label='OTP Input 2']",
+      "type": "css",
+      "fallback": "input[aria-label*='2']",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from FRD"]
+    },
+    "otpBox3": {
+      "selector": "input[aria-label='OTP Input 3']",
+      "type": "css",
+      "fallback": "input[aria-label*='3']",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from FRD"]
+    },
+    "otpBox4": {
+      "selector": "input[aria-label='OTP Input 4']",
+      "type": "css",
+      "fallback": "input[aria-label*='4']",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from FRD"]
+    },
+    "otpBox5": {
+      "selector": "input[aria-label='OTP Input 5']",
+      "type": "css",
+      "fallback": "input[aria-label*='5']",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from FRD"]
+    },
+    "otpBox6": {
+      "selector": "input[aria-label='OTP Input 6']",
+      "type": "css",
+      "fallback": "input[aria-label*='6']",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from FRD"]
+    },
+    "submitOtpBtn": {
+      "selector": "button:has-text('Submit OTP')",
       "type": "css",
       "fallback": "button[type='submit']",
       "aria_role": "button",
       "deprecated": false,
-      "changelog": ["1.0.0 — initial"]
+      "changelog": ["1.1.0 — added (was wrongly named verifyOtpBtn in 1.0.0)"]
+    },
+    "verifyOtpBtn__deprecated": {
+      "selector": "button:has-text('Verify OTP')",
+      "type": "css",
+      "fallback": null,
+      "aria_role": "button",
+      "deprecated": true,
+      "changelog": ["1.0.0 — initial (wrong label)", "1.1.0 — deprecated; use submitOtpBtn"]
+    },
+    "backBtn": {
+      "selector": "button.reset-btn.back-to-mobile",
+      "type": "css",
+      "fallback": "button[aria-label='Back']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from FRD"]
+    },
+    "resendOtpLink": {
+      "selector": "button.common-link",
+      "type": "css",
+      "fallback": "button:has-text('Re-Send OTP')",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from FRD", "1.2.0 — selector updated to button.common-link (live DOM inspection confirmed it is a button, not a link)"]
+    },
+    "otpTimer": {
+      "selector": "text=/\\d+s/",
+      "type": "regex-text",
+      "fallback": "[class*='timer']",
+      "aria_role": null,
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from FRD (countdown timer e.g. '55s')"]
+    },
+    "pageHeading": {
+      "selector": "h2:has-text('Admin Login')",
+      "type": "css",
+      "fallback": "heading:has-text('Admin Login')",
+      "aria_role": "heading",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from BRD", "1.2.0 — corrected h1→h2 (live DOM: heading level=2)"]
+    },
+    "otpHeading": {
+      "selector": "h2:has-text('ENTER OTP')",
+      "type": "css",
+      "fallback": "heading:has-text('ENTER OTP')",
+      "aria_role": "heading",
+      "deprecated": false,
+      "changelog": ["1.1.0 — added from BRD", "1.2.0 — changed from text= to h2:has-text() to avoid strict mode ambiguity (2 matches)"]
     }
   },
   "dashboard": {
@@ -47,6 +138,624 @@
       "aria_role": "navigation",
       "deprecated": false,
       "changelog": ["1.0.0 — initial"]
+    }
+  },
+  "customers": {
+    "sidebarCustomersLink": {
+      "selector": ".menu-box a[href='/admin/customers']",
+      "type": "css",
+      "fallback": ".ant-menu a:has-text('Customers')",
+      "aria_role": "link",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §2 Navigation", "1.3.1 — corrected: no nav.sidebar; sidebar is ant-menu, link uses href attr (live DOM)"]
+    },
+    "pageHeading": {
+      "selector": "h3",
+      "type": "css",
+      "fallback": "h3:has-text('Registration Records')",
+      "aria_role": "heading",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: no Customers h1/h2 exists; only h3 '9673 Registration Records' on page (live DOM)"]
+    },
+    "kpiCardRegistered": {
+      "selector": ".customer-card:has-text(\"Registered\")",
+      "type": "css",
+      "fallback": "div:has(h5:text-is(\"Registered\"))",
+      "aria_role": "region",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: actual class is .customer-card with h5 headings, not .ant-card (live DOM)"]
+    },
+    "kpiCardInactive": {
+      "selector": ".customer-card:has-text(\"Inactive Registrations\")",
+      "type": "css",
+      "fallback": "div:has(h5:text-is(\"Inactive Registrations\"))",
+      "aria_role": "region",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected selector and exact heading text (live DOM)"]
+    },
+    "kpiCardCancelled": {
+      "selector": ".customer-card:has-text(\"Cancelled Registrations\")",
+      "type": "css",
+      "fallback": "div:has(h5:text-is(\"Cancelled Registrations\"))",
+      "aria_role": "region",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected selector and exact heading text (live DOM)"]
+    },
+    "kpiCardKycPending": {
+      "selector": ".customer-card:has-text(\"KYC Pending (Booked)\")",
+      "type": "css",
+      "fallback": "div:has(h5:text-is(\"KYC Pending (Booked)\"))",
+      "aria_role": "region",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: full heading text is 'KYC Pending (Booked)' (live DOM)"]
+    },
+    "kpiCardConfirmed": {
+      "selector": ".customer-card:has-text(\"Confirmed (Paid+KYC)\")",
+      "type": "css",
+      "fallback": "div:has(h5:text-is(\"Confirmed (Paid+KYC)\"))",
+      "aria_role": "region",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: full heading text is 'Confirmed (Paid+KYC)' (live DOM)"]
+    },
+    "kpiCardActiveTowers": {
+      "selector": ".customer-card:has-text(\"Active Towers\")",
+      "type": "css",
+      "fallback": "div:has(h5:text-is(\"Active Towers\"))",
+      "aria_role": "region",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected selector (live DOM)"]
+    },
+    "kpiValueByHeading": {
+      "selector": "//*[self::h2 or self::h3 or self::h4][normalize-space()='{label}']/following-sibling::*[1]",
+      "type": "xpath-template",
+      "fallback": "//*[text()='{label}']/parent::*//*[contains(@class,'value') or contains(@class,'statistic')]",
+      "aria_role": null,
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial; XPath template — substitute {label} with KPI name per FRD getByRole('heading') + sibling pattern"]
+    },
+    "tableRecordsHeading": {
+      "selector": "h3.table-title",
+      "type": "css",
+      "fallback": "h3:has-text('Registration Records')",
+      "aria_role": "heading",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 (h3 'X Registration Records' — source of truth for table count, NOT tbody row count)", "1.4.0 — confirmed against source (CustomerTable.jsx L1447: <h3 className='table-title'>); promoted .table-title class to primary"]
+    },
+    "registrationTable": {
+      "selector": "table",
+      "type": "css",
+      "fallback": "[role='table']",
+      "aria_role": "table",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: table has no class, just 'table' (live DOM)"]
+    },
+    "tableRow": {
+      "selector": "tr.ant-table-row",
+      "type": "css",
+      "fallback": "tbody tr",
+      "aria_role": "row",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial (estimated — Ant Design row class)"]
+    },
+    "tableHeaderRow": {
+      "selector": "thead.ant-table-thead tr",
+      "type": "css",
+      "fallback": "thead tr",
+      "aria_role": "row",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial (estimated — verify against live DOM)"]
+    },
+    "colRegistrationNumber": {
+      "selector": "thead th:has-text('Registration')",
+      "type": "css",
+      "fallback": "thead th:has-text('Registration Details')",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Table Columns", "1.3.4 — scoped to thead to exclude Ant Design measure-cell duplicate"]
+    },
+    "colStatus": {
+      "selector": "thead th:has-text('Allocation Status')",
+      "type": "css",
+      "fallback": "thead th:has-text('Status')",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Table Columns", "1.3.4 — scoped to thead"]
+    },
+    "colProcessStatus": {
+      "selector": "thead th:has-text('Process Status')",
+      "type": "css",
+      "fallback": null,
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Table Columns", "1.3.4 — scoped to thead"]
+    },
+    "colHomeLoan": {
+      "selector": "thead th:has-text('Home Loan Details')",
+      "type": "css",
+      "fallback": "thead th:has-text('Home Loan')",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Table Columns", "1.3.4 — scoped to thead", "1.4.0 — corrected exact header text to 'Home Loan Details' (source: CustomerTable.jsx L783)"]
+    },
+    "colAllottedUnit": {
+      "selector": "thead th:has-text('Alloted Unit')",
+      "type": "css",
+      "fallback": "thead th:has-text('lloted Unit')",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Table Columns", "1.3.4 — scoped to thead; 1.3.4 — corrected spelling to match live UI ('Alloted Unit', single-t)"]
+    },
+    "colConfirmationNumber": {
+      "selector": "thead th:has-text('Confirmation')",
+      "type": "css",
+      "fallback": "thead th:has-text('Confirmation Number')",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Table Columns", "1.3.4 — scoped to thead", "1.4.0 — corrected: actual header text is 'Confirmation' (source: CustomerTable.jsx L989)"]
+    },
+    "colGrowthPartner": {
+      "selector": "thead th:has-text('Growth Partner')",
+      "type": "css",
+      "fallback": "thead th:has-text('HV Code')",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Table Columns", "1.3.4 — scoped to thead"]
+    },
+    "colPhone": {
+      "selector": "thead th:has-text('Phone')",
+      "type": "css",
+      "fallback": null,
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_UI_003", "1.3.4 — scoped to thead"]
+    },
+    "colActions": {
+      "selector": "thead th:has-text('Actions')",
+      "type": "css",
+      "fallback": "thead th:has-text('Action')",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_UI_003", "1.3.4 — scoped to thead"]
+    },
+    "searchByPhoneInput": {
+      "selector": "input[placeholder*='Search by Phone' i]",
+      "type": "css",
+      "fallback": "input[placeholder*='Phone' i]",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_FUNC_003 and TC_CUST_UI_006 (estimated placeholder — verify against live DOM)"]
+    },
+    "filterButton": {
+      "selector": "button:has-text('Filter')",
+      "type": "css",
+      "fallback": "button[aria-label='Filter']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_UI_006"]
+    },
+    "refreshButton": {
+      "selector": "button:has-text('Refresh')",
+      "type": "css",
+      "fallback": "button[aria-label='Refresh']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_FUNC_009"]
+    },
+    "downloadButton": {
+      "selector": "button:has-text('Download')",
+      "type": "css",
+      "fallback": "button[aria-label='Download']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FS-CUST Feature 4"]
+    },
+    "cancelBulkUnitsButton": {
+      "selector": "button:has-text('Cancel Bulk Units')",
+      "type": "css",
+      "fallback": null,
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_UI_006"]
+    },
+    "resetFiltersButton": {
+      "selector": "button:has-text('Reset Filters')",
+      "type": "css",
+      "fallback": "button:has-text('Reset')",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Filters"]
+    },
+    "allocationStatusFilterDropdown": {
+      "selector": ".ant-dropdown:not(.ant-dropdown-hidden) [role='menu']:has-text('Allocation Status')",
+      "type": "css",
+      "fallback": "div:has-text('Allocation Status') .ant-select",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Filters (FRD note: scope to .ant-dropdown:not(.ant-dropdown-hidden) to avoid hidden dropdown conflict)"]
+    },
+    "processStatusFilterDropdown": {
+      "selector": ".ant-dropdown:not(.ant-dropdown-hidden) [role='menu']:has-text('Process Status')",
+      "type": "css",
+      "fallback": "div:has-text('Process Status') .ant-select",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Filters"]
+    },
+    "registrationDetailsSearch": {
+      "selector": "input[placeholder*='Registration Details' i]",
+      "type": "css",
+      "fallback": "input[placeholder*='Registration' i]",
+      "aria_role": "searchbox",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Filters (estimated placeholder)"]
+    },
+    "growthPartnerHvCodeSearch": {
+      "selector": "input[placeholder*='Growth Partner' i]",
+      "type": "css",
+      "fallback": "input[placeholder*='HV Code' i]",
+      "aria_role": "searchbox",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Filters (estimated placeholder)"]
+    },
+    "confirmationNumberSearch": {
+      "selector": "input[placeholder*='Confirmation Number' i]",
+      "type": "css",
+      "fallback": "input[placeholder*='Confirmation' i]",
+      "aria_role": "searchbox",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Filters (estimated placeholder)"]
+    },
+    "allottedUnitSearch": {
+      "selector": "input[placeholder*='Allotted Unit' i]",
+      "type": "css",
+      "fallback": "input[placeholder*='Unit' i]",
+      "aria_role": "searchbox",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Filters (estimated placeholder)"]
+    },
+    "filterOkButton": {
+      "selector": ".ant-dropdown:not(.ant-dropdown-hidden) button:has-text('OK')",
+      "type": "css",
+      "fallback": ".ant-table-filter-dropdown-btns button.ant-btn-primary",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 (FRD note: scoped to active dropdown to avoid hidden dropdown conflict)"]
+    },
+    "filterResetButton": {
+      "selector": ".ant-dropdown:not(.ant-dropdown-hidden) button:has-text('Reset')",
+      "type": "css",
+      "fallback": ".ant-table-filter-dropdown-btns button:has-text('Reset')",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3"]
+    },
+    "rowTrashIcon": {
+      "selector": "tr.ant-table-row button.copy-icon",
+      "type": "css",
+      "fallback": "tr.ant-table-row button:has(svg[data-icon='delete'])",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: actual class is button.copy-icon; no aria-label on button itself, span inside has aria-label='delete' (live DOM)"]
+    },
+    "rowThreeDotMenu": {
+      "selector": "tr.ant-table-row button.ant-dropdown-trigger",
+      "type": "css",
+      "fallback": "tr.ant-table-row button:has(svg[data-icon='more'])",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: actual class includes ant-dropdown-trigger (live DOM)"]
+    },
+    "homeLoanApprovalMenuItem": {
+      "selector": ".ant-dropdown:not(.ant-dropdown-hidden) li:has-text('Home Loan Approval')",
+      "type": "css",
+      "fallback": "[role='menuitem']:has-text('Home Loan Approval')",
+      "aria_role": "menuitem",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FS-CUST Feature 3"]
+    },
+    "cancelRegistrationModal": {
+      "selector": ".ant-modal:has-text('Cancel Registration')",
+      "type": "css",
+      "fallback": "[role='dialog']",
+      "aria_role": "dialog",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: :has(:text()) → :has-text() (Playwright pseudo-class)"]
+    },
+    "cancelRegistrationModalTitle": {
+      "selector": ".ant-modal-title:has-text('Cancel Registration')",
+      "type": "css",
+      "fallback": "[role='dialog'] h2:has-text('Cancel Registration')",
+      "aria_role": "heading",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FS-CUST Feature 2 §5"]
+    },
+    "cancelRegistrationModalRefundText": {
+      "selector": ".ant-modal-body :text('₹999')",
+      "type": "css",
+      "fallback": ".ant-modal-body :text-matches('999')",
+      "aria_role": null,
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FS-CUST Feature 2 §6 BR1 (₹999 refund amount)"]
+    },
+    "cancelRegistrationConfirmBtn": {
+      "selector": ".ant-modal-footer button.ant-btn-dangerous:has-text('Cancel Registration')",
+      "type": "css",
+      "fallback": ".ant-modal button:has-text('Cancel Registration')",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FS-CUST Feature 2 §5 (red Cancel Registration button)"]
+    },
+    "cancelRegistrationCloseBtn": {
+      "selector": ".ant-modal-footer button:has-text('Close')",
+      "type": "css",
+      "fallback": ".ant-modal-close",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FS-CUST Feature 2 §5"]
+    },
+    "homeLoanApprovalModal": {
+      "selector": ".ant-modal:has-text('Home Loan Approval')",
+      "type": "css",
+      "fallback": "[role='dialog']",
+      "aria_role": "dialog",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: :has(:text()) → :has-text() (live DOM)"]
+    },
+    "homeLoanApprovalToggle": {
+      "selector": ".ant-modal:has-text('Home Loan Approval') .ant-switch",
+      "type": "css",
+      "fallback": "[role='switch']",
+      "aria_role": "switch",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected selector prefix (live DOM)"]
+    },
+    "homeLoanApprovalSubmitBtn": {
+      "selector": ".ant-modal:has-text('Home Loan Approval') button.btn-book-solid",
+      "type": "css",
+      "fallback": ".ant-modal button:has-text('Submit')",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial", "1.3.1 — corrected: actual class is btn-book-solid not ant-btn-primary (live DOM)"]
+    },
+    "toastSuccess": {
+      "selector": ".ant-message-success, .ant-notification-notice-success",
+      "type": "css",
+      "fallback": "[role='alert']:has-text('successfully')",
+      "aria_role": "alert",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FS-CUST Feature 2 §7 (toast 'refunded successfully')"]
+    },
+    "toastRefundSuccess": {
+      "selector": ":text('refunded successfully')",
+      "type": "text",
+      "fallback": ".ant-message:has-text('refunded')",
+      "aria_role": "alert",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FS-CUST Feature 2 §7 BR6"]
+    },
+    "paginationBar": {
+      "selector": "ul.ant-pagination",
+      "type": "css",
+      "fallback": "[role='navigation'][aria-label*='pagination' i]",
+      "aria_role": "navigation",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 Pagination (FRD note: requires scrollToPagination() — lands below viewport)"]
+    },
+    "paginationPageSizeDropdown": {
+      "selector": ".ant-pagination-options .ant-select",
+      "type": "css",
+      "fallback": ".ant-pagination-options-size-changer",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3 (10/20/50/100 options)"]
+    },
+    "paginationPrevBtn": {
+      "selector": "li.ant-pagination-prev",
+      "type": "css",
+      "fallback": "button[aria-label='Previous Page']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3"]
+    },
+    "paginationNextBtn": {
+      "selector": "li.ant-pagination-next",
+      "type": "css",
+      "fallback": "button[aria-label='Next Page']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from FRD §3"]
+    },
+    "paginationTotalText": {
+      "selector": ".ant-pagination-total-text",
+      "type": "css",
+      "fallback": ":text-matches('\\d+–\\d+ of \\d+ items')",
+      "aria_role": null,
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_UI_005 ('1–10 of <total> items')"]
+    },
+    "emptyState": {
+      "selector": ".ant-empty",
+      "type": "css",
+      "fallback": ".ant-table-placeholder",
+      "aria_role": null,
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_NEG_002 / TC_CUST_NEG_004 (Ant Design empty state)"]
+    },
+    "loadingSpinner": {
+      "selector": ".ant-spin-spinning",
+      "type": "css",
+      "fallback": ".ant-table-loading",
+      "aria_role": "progressbar",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_FUNC_009 (table loading indicator)"]
+    },
+    "adminAvatar": {
+      "selector": ".admin-avatar, header .ant-avatar",
+      "type": "css",
+      "fallback": "[aria-label='User menu']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_REG_001 (estimated — verify against live DOM)"]
+    },
+    "logoutMenuItem": {
+      "selector": "[role='menuitem']:has-text('Logout')",
+      "type": "css",
+      "fallback": "li:has-text('Logout')",
+      "aria_role": "menuitem",
+      "deprecated": false,
+      "changelog": ["1.3.0 — initial from TC_CUST_REG_001"]
+    },
+    "viewMilestonesMenuItem": {
+      "selector": ".ant-dropdown:not(.ant-dropdown-hidden) li.ant-dropdown-menu-item:has-text('View Milestones')",
+      "type": "css",
+      "fallback": "[role='menuitem']:has-text('View Milestones')",
+      "aria_role": "menuitem",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1115-L1119 (menu key 'view-milestones', label 'View Milestones', navigates to /admin/milestone?rn=&uid=)"]
+    },
+    "unitSwapMenuItem": {
+      "selector": ".ant-dropdown:not(.ant-dropdown-hidden) li.ant-dropdown-menu-item:has-text('Unit swap')",
+      "type": "css",
+      "fallback": "[role='menuitem']:has-text('Unit swap')",
+      "aria_role": "menuitem",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1121-L1125 (menu key 'unit-swap', label 'Unit swap' — note lowercase 's' in 'swap')"]
+    },
+    "updateParkingMenuItem": {
+      "selector": ".ant-dropdown:not(.ant-dropdown-hidden) li.ant-dropdown-menu-item:has-text('Update Parking Details')",
+      "type": "css",
+      "fallback": "[role='menuitem']:has-text('Update Parking')",
+      "aria_role": "menuitem",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1127-L1131 (menu key 'update-parking', label 'Update Parking Details')"]
+    },
+    "cancelUnitModal": {
+      "selector": ".ant-modal:has-text('Please make sure that following actions are completed')",
+      "type": "css",
+      "fallback": "[role='dialog']:has-text('Token, Form, Booking deleted')",
+      "aria_role": "dialog",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1409-L1413 (title: 'Please make sure that following actions are completed ?'); same modal used for single + bulk cancel"]
+    },
+    "cancelUnitAttestation1": {
+      "selector": ".ant-modal .ant-checkbox-wrapper:has-text('Activity - Token, Form, Booking deleted')",
+      "type": "css",
+      "fallback": "label:has-text('Activity - Token, Form, Booking deleted') input[type='checkbox']",
+      "aria_role": "checkbox",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1438-L1440 (Checkbox state: confirmTokensFormsDeleted)"]
+    },
+    "cancelUnitAttestation2": {
+      "selector": ".ant-modal .ant-checkbox-wrapper:has-text('Mavis - Booking entry deleted')",
+      "type": "css",
+      "fallback": "label:has-text('Mavis - Booking entry deleted') input[type='checkbox']",
+      "aria_role": "checkbox",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1441-L1443 (Checkbox state: confirmMavisDeleted)"]
+    },
+    "cancelUnitConfirmBtn": {
+      "selector": ".ant-modal-footer button.btn-book-solid:has-text('Submit')",
+      "type": "css",
+      "fallback": ".ant-modal-footer button.ant-btn-primary",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1418-L1427 (okText 'Submit', className 'btn-book-solid', disabled until both attestations checked)"]
+    },
+    "unitSwapModal": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Unit Swap'))",
+      "type": "css",
+      "fallback": "[role='dialog']:has-text('Unit Swap')",
+      "aria_role": "dialog",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1799-L1812 (title 'Unit Swap' with AiOutlineSwap icon; destroyOnHidden)"]
+    },
+    "unitSwapTowerDropdown": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Unit Swap')) .ant-select:has(.ant-select-selection-placeholder:text-matches('Tower', 'i'))",
+      "type": "css",
+      "fallback": ".ant-modal .ant-select:nth-of-type(1)",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial; rendered by UnitSelector component (CustomerTable.jsx L1836-L1854); fetched via apiUrls.common.towers?action=unit-swap"]
+    },
+    "unitSwapUnitDropdown": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Unit Swap')) .ant-select:has(.ant-select-selection-placeholder:text-matches('Unit', 'i'))",
+      "type": "css",
+      "fallback": ".ant-modal .ant-select:nth-of-type(2)",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial; rendered by UnitSelector component; fetched via apiUrls.common.unitsInTower?action=unit-swap (status IN AVAILABLE,RESERVED — no typology filter, source: unit.service.js L17-L30)"]
+    },
+    "unitSwapAttestation1": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Unit Swap')) .ant-checkbox-wrapper:has-text('Activity - Token, Form, Booking deleted')",
+      "type": "css",
+      "fallback": ".ant-modal .ant-checkbox-wrapper:nth-of-type(1)",
+      "aria_role": "checkbox",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1857-L1859 (Checkbox state: confirmTokensFormsDeleted, shared state with Cancel modal)"]
+    },
+    "unitSwapAttestation2": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Unit Swap')) .ant-checkbox-wrapper:has-text('Mavis - Booking entry deleted')",
+      "type": "css",
+      "fallback": ".ant-modal .ant-checkbox-wrapper:nth-of-type(2)",
+      "aria_role": "checkbox",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1861-L1863 (Checkbox state: confirmMavisDeleted, shared state with Cancel modal)"]
+    },
+    "unitSwapSubmitBtn": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Unit Swap')) button.btn-book-solid:has-text('Submit')",
+      "type": "css",
+      "fallback": ".ant-modal button.ant-btn-primary:has-text('Submit')",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1866-L1874 (disabled until both attestations checked AND selectedUnitId; calls handleSubmitUnitSwap)"]
+    },
+    "updateParkingModal": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Parking Details'))",
+      "type": "css",
+      "fallback": "[role='dialog']:has-text('Parking Details')",
+      "aria_role": "dialog",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1881-L1887 (title 'Parking Details', width 600, destroyOnHidden)"]
+    },
+    "parkingToggle": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Parking Details')) button.ant-switch",
+      "type": "css",
+      "fallback": ".ant-modal [role='switch']",
+      "aria_role": "switch",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1922-L1933 (Switch field 'additionalParkingEnabled', checkedChildren 'Enable' / unCheckedChildren 'Disable')"]
+    },
+    "parkingCountInput": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Parking Details')) .ant-input-number input[name='parkingCount']",
+      "type": "css",
+      "fallback": ".ant-modal input[placeholder='Parking Count']",
+      "aria_role": "spinbutton",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1946-L1961 (InputNumber, max 500, min 1, digit-only regex /^\\d*$/; visible only when additionalParkingEnabled=true)"]
+    },
+    "parkingAmountInput": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Parking Details')) input[name='parkingAmount']",
+      "type": "css",
+      "fallback": ".ant-modal input[placeholder='Parking Amount']",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1972-L1983 (Input, decimal regex /^\\d*\\.?\\d*$/; visible only when additionalParkingEnabled=true)"]
+    },
+    "parkingPreviewText": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Parking Details')) b:has-text('Total Parking Amount:')",
+      "type": "css",
+      "fallback": ".ant-modal :text-matches('Total Parking Amount: \\d')",
+      "aria_role": null,
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1987 (text 'Total Parking Amount: ' + parkingCount * parkingAmount; NaN if either is null)"]
+    },
+    "updateParkingSubmitBtn": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Parking Details')) button.btn-book-solid:has-text('Submit')",
+      "type": "css",
+      "fallback": ".ant-modal button[type='submit']",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.5.0 — initial from CustomerTable.jsx L1993-L1995 (className 'btn-book-solid', htmlType 'submit', loading=isParkingSubmitting)"]
     }
   }
 }

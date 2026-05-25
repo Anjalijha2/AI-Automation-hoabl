@@ -29,14 +29,18 @@ Default landing page after login. Covers the KPI cards, registration table, filt
 
 ## 5. KPI Cards
 
+> **CORRECTED 2026-05-21:** KPI cards are populated by a SEPARATE aggregate query (`RegistrationUnit.findAll` with `SUM(CASE WHEN ...)` attributes) that does NOT apply any table filter, search, or sort. KPI values always reflect global, project-scoped counts. Filtering the table does NOT recompute KPI tiles. (Source: `admin.controller.js` lines 127–193, confirmed by Tech Lead spec §4.)
+
 | Card | Metric Definition |
 |------|------------------|
-| Registered | Count of registrations with allocationStatus = available/confirmed/waiting (excludes cancelled/refunded) |
-| Inactive | Count of Inactive registrations |
-| Cancelled | Count of Cancelled registrations |
-| KYC Pending | Count of Booked + KYC not yet submitted |
-| Confirmed | Count of Booked + KYC Completed |
-| Active Towers | Count of towers currently toggled Active in Config |
+| Registered | `SUM(CASE WHEN RegistrationUnit.status != 'REFUND' AND registration.status != 'REFUND' THEN 1 ELSE 0 END)` — global project total |
+| Inactive (waitlistCount) | `SUM(CASE WHEN RegistrationUnit.status='WAITLIST' AND available_for_allocation=0 THEN 1 ELSE 0 END)` — global |
+| Cancelled (refundedCount) | `SUM(CASE WHEN RegistrationUnit.status='REFUND' THEN 1 ELSE 0 END)` — global |
+| KYC Pending | `SUM(CASE WHEN status='WINNER' AND is_kyc_submitted=0 THEN 1 ELSE 0 END)` — global |
+| Confirmed | `SUM(CASE WHEN status='WINNER' AND is_kyc_submitted=1 THEN 1 ELSE 0 END)` — global |
+| Active Towers | `Tower.count({ distinct: true, col: 'towerId', where: { isActive: 1 } })` — separate query, global |
+
+> **CORRECTED 2026-05-21 (dead-code flag):** An `allotedCount` literal exists in source (lines 153–161, 203) but is commented out and NOT returned in the `adminKpi` response. Frontend reading this key receives `undefined`. Do NOT expose or test an "Alloted" KPI tile.
 
 ## 6. Table Columns
 
@@ -52,15 +56,35 @@ Default landing page after login. Covers the KPI cards, registration table, filt
 
 ## 7. Filters
 
-| Filter | Type |
-|--------|------|
-| Allocation Status | Dropdown (Registered / Booked / Inactive / Cancelled) |
-| Process Status | Dropdown |
-| Registration Details | Inline text search |
-| Growth Partner HV Code | Inline text search |
-| Confirmation Number | Inline text search |
-| Allotted Unit | Inline text search |
-| Reset Filters | Button — restores full unfiltered list |
+> **CORRECTED 2026-05-21:** The "Allocation Status" filter is sent to the backend as the query param `allotmentStatus` (NOT `allocationStatus`). Accepted values are comma-separated and case-sensitive: `alloted`, `waitlisted`, `booked_online`, `booked_offline`, `refunded`, `registered`. (Source: `admin.controller.js` lines 219, 228, 381; Tech Lead spec §2 and §2.1.)
+>
+> **UI Label → API Value mapping (Allocation Status):**
+>
+> | UI Label | API Value |
+> |----------|-----------|
+> | Registered | `registered` |
+> | Booked Online | `booked_online` |
+> | Booked Offline | `booked_offline` |
+> | Waitlisted | `waitlisted` |
+> | Cancelled/Refunded | `refunded` |
+> | Alloted (campaign) | `alloted` |
+>
+> **CORRECTED 2026-05-21 — globalSearch is phone-only:** The "Search by Phone" field maps to `globalSearch` and currently performs a `LIKE %value%` against `User.phone` ONLY. The original OR branches for first_name, last_name, registration_number, confirmation_number, unit_no, and tower_name are commented out in source (lines 288–293). Any text claiming global search covers name / registration / unit / tower is incorrect against the current implementation.
+>
+> **CORRECTED 2026-05-21 — hasHomeLoan semantics narrowed:** `hasHomeLoan=true` strictly evaluates `HomeLoan.status='completed'` only. The original two-branch `loan_type`/`step` logic is commented out (lines 307–315). `hasHomeLoan=false` evaluates `HomeLoan.status IN ('in_progress', NULL)`.
+
+| Filter | API param | Backend field(s) | Accepted values |
+|--------|-----------|------------------|-----------------|
+| Search by Phone | `globalSearch` | `User.phone` ONLY (substring) | Free text |
+| Allocation Status | `allotmentStatus` | `RegistrationUnits.status` + related (see Tech Spec §2.1) | comma-separated: `alloted`, `waitlisted`, `booked_online`, `booked_offline`, `refunded`, `registered` |
+| Process Status — Payment | `paymentStatus` | `RegistrationUnits.status`, `allocation_transaction_id` | comma-separated case-sensitive: `Paid`, `Pending` |
+| Process Status — KYC | `kycStatus` | `is_kyc_submitted`, `status`, `allocation_transaction_id` | comma-separated case-sensitive: `KYC Completed`, `KYC Pending` |
+| Home Loan | `hasHomeLoan` | `HomeLoan.status` only | comma-separated: `true`, `false` |
+| Registration Details | `registrationNumber` | `RegistrationUnits.registration_number` | Free text substring |
+| Growth Partner HV Code | `growthPartnerHvCode` | `Broker.hv_code`, `first_name`, `last_name`, full-name CONCAT | Free text substring (OR across 4) |
+| Confirmation Number | `unitConfirmationNumber` | `RegistrationUnits.booking_number` | Free text substring |
+| Allotted Unit | `unitNo` | `Unit.unit_no`, `Unit.tower_name`, `apartment_type` or `frontend_typology_name` | Free text substring (OR across 4 conditional branches) |
+| Reset Filters | — | clears all params; KPI tiles do not change (they are global) | — |
 
 Pagination options: 10 / 20 / 50 / 100 records per page.
 
@@ -73,7 +97,7 @@ Pagination options: 10 / 20 / 50 / 100 records per page.
 1. **Navigate to Customers:** Log in to the Admin Portal — the Customers dashboard loads automatically as the default landing page.
 2. **Read the KPI cards:** Six summary cards at the top show key counts: Registered, Inactive, Cancelled, KYC Pending, Confirmed, and Active Towers. These update in real time.
 3. **Browse the registration table:** Scroll down to see the full table of buyer registrations with status, KYC, home loan, and unit details.
-4. **Filter the list:** Use the Allocation Status or Process Status dropdowns, or type in the search fields (Registration Details, Growth Partner HV Code, etc.) to narrow results.
+4. **Filter the list:** Use the Allocation Status or Process Status dropdowns, or type in the search fields (Registration Details, Growth Partner HV Code, etc.) to narrow results. **Note (CORRECTED 2026-05-21):** the "Search by Phone" field filters by phone number only — it does NOT search across name, registration number, confirmation number, unit number, or tower name. KPI tiles do NOT recompute when filters are applied — they always show global project counts.
 5. **Adjust pagination:** Select 10, 20, 50, or 100 records per page using the pagination control at the bottom.
 6. **Reset:** Click "Reset Filters" to clear all active filters and return to the full unfiltered list.
 
@@ -191,7 +215,7 @@ Row-level action accessed via the 3-dot action menu on the registration table.
 Allow admins to export all registration records to an Excel file for offline analysis and reporting.
 
 ## 2. Scope
-Single "Download" button in the Customers module header. Exports all records regardless of active filters.
+Single "Download" button in the Customers module header. **CORRECTED 2026-05-21 — export respects active filters (confirmed via backend service code).** Exports ALL records matching the current active filters across all pages (pagination is disabled via `isDownload=1`). If no filter is active, all records are exported. If a filter is applied (e.g. Allocation Status = Cancelled), only matching records are exported.
 
 ## 3. Eligibility / Preconditions
 - Admin session required.
@@ -203,7 +227,7 @@ Single "Download" button in the Customers module header. Exports all records reg
 No form — single click triggers download.
 
 ## 6. Validations & Business Rules
-1. Export includes ALL records, not just the currently filtered view.
+1. **CORRECTED 2026-05-21 — export respects active filters (confirmed via backend service code).** Export includes ALL records matching the current active filters across all pages (pagination disabled via `isDownload=1`). If no filter is active, all records are exported. If a filter is applied (e.g. Allocation Status = Cancelled), only matching records are exported. The `isDownload=1` flag does NOT bypass filter `where[Op.and]` conditions — it only removes the `limitOffset(limit, page)` pagination.
 2. Downloaded file name: `RegistrationData.xlsx`.
 3. File contains 17 columns covering all key registration fields.
 
@@ -223,7 +247,7 @@ None.
 1. **Navigate to the Customers page:** The Download button is in the page header area.
 2. **Click "Download":** The file downloads automatically to your browser's default download location.
 3. **Open the file:** Open `RegistrationData.xlsx` in Excel or any spreadsheet application.
-4. **Note:** The export always includes all records in the system — active filters on screen do not affect what is exported.
+4. **Note (CORRECTED 2026-05-21 — export respects active filters, confirmed via backend service code):** Active filters ARE respected by the export. The export downloads all matching records across all pages (pagination removed via `isDownload=1`). No active filter = full export. Active filter = filtered export (e.g. Allocation Status = Cancelled → only Cancelled records exported).
 
 ---
 
@@ -342,3 +366,32 @@ Three LSQ activities created (same payload as online booking):
 5. **Upload proof (optional):** Attach a payment proof document — cheque image, transfer screenshot, or payment voucher.
 6. **Click Submit.**
 7. **Result:** The unit is marked as Booked and assigned to the registration. The registration status changes to Confirmed. The buyer receives a booking confirmation via email and WhatsApp. The transaction is recorded as an offline payment.
+
+---
+
+# Backend Gap Reconciliation (2026-05-21)
+
+Service-layer audit findings against `registration-unit.service.js`, `common.service.js`, `registration.service.js`. These notes override conflicting statements above.
+
+### Default project resolution (env-based) <!-- BA correction: GAP-DEV-001, 2026-05-21 -->
+If `projectId` is omitted from the request payload, backend substitutes `1` (prod) / `2` (UAT). Applies to every Customers entry-point: list, swap, parking, milestones, offline-assign.
+
+### Unit Swap — previous unit → RESERVED <!-- BA correction: GAP-DEV-003, 2026-05-21 -->
+When the swapped-from unit has no remaining consumers, status is set to `RESERVED` (not `AVAILABLE`). RESERVED is not buyer-allocatable; admin must manually flip in Config CMS to re-offer.
+
+### Unit Swap — KYC-branched activity-flag reset <!-- BA correction: GAP-DEV-004, 2026-05-21 -->
+Activity-flag reset on swap branches on `isKycSubmitted` (`registration-unit.service.js:174-184, 816-825`):
+- `isKycSubmitted=true` → reset admin-side activity flags only.
+- `isKycSubmitted=false` → reset self-KYC activity flags only.
+
+### Parking — pool decrement not project-scoped <!-- BA correction: GAP-DEV-006, 2026-05-21 -->
+Parking pool fetch is keyed on `lsqTypologyId` only; no `projectId` filter. If two projects share an `lsqTypologyId`, they share the pool.
+
+### Parking — 2-BHK Rise/Peak carve-out via string match <!-- BA correction: GAP-DEV-021, 2026-05-21 -->
+`common.service.js:130, 517`: `is2BHKRiseOrPeakHome = typologyName === '2 BHK Rise Home' || typologyName === '2 BHK Peak Home'` — parking is force-disabled for these two typologies. Implemented as a name string match (fragile; should be a typology flag).
+
+### Offline Assign — HOME_LOAN-only offer support <!-- BA correction: GAP-DEV-027, 2026-05-21 -->
+`registration-unit.service.js:707-724` fetches only the `HOME_LOAN` offer during offline assign. TODO comment notes parking/home-loan/offers need to be managed from request. Other offer codes are silently dropped.
+
+### Logout cross-reference <!-- BA correction: GAP-TL-019, 2026-05-21 -->
+The Customers module assumes a valid JWT throughout. Per Login Feature 3 §6, server-side logout is a no-op — tokens remain valid until 1-day expiry regardless of logout click. Do not rely on token revocation when designing data-isolation tests.

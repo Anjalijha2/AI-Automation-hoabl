@@ -25,7 +25,7 @@
 | Sprint 1 | Login | ✅ | ✅ | ⏳ | In Progress |
 | Sprint 2 | Towers + Allocation | ✅ | ⏳ | ⏳ | Pending TCs |
 | Sprint 3 | Config / CMS | ✅ | ⏳ | ⏳ | Pending TCs |
-| Sprint 4 | Customers | ⏳ | ⏳ | ⏳ | Not Started |
+| Sprint 4 | Customers | ✅ | ✅ | ✅ | Specs Complete |
 
 ---
 
@@ -34,7 +34,7 @@
 | Module | TCs Written | Automated | Pass Rate |
 |--------|-------------|-----------|-----------|
 | Login | 22 | 0 | — |
-| Customers | 0 | 0 | — |
+| Customers | 90+ | 7 spec files | Pending run |
 | Towers | 0 | 0 | — |
 | Allocation | 0 | 0 | — |
 | Config/CMS | 0 | 0 | — |

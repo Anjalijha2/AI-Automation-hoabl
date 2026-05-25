@@ -141,15 +141,18 @@ Available from any page within the Admin Portal via the user menu.
 No form — single click action.
 
 ## 6. Validations & Business Rules
-- On logout, JWT is invalidated server-side.
-- Subsequent requests with the old token are rejected.
-- Browser is redirected to `/admin` (login page).
+<!-- BA correction: GAP-TL-019, 2026-05-21 -->
+- ⚠️ **KNOWN ISSUE — CRITICAL SECURITY:** Logout is a server-side no-op. The JWT is NOT invalidated, NOT blacklisted, and NOT recorded as revoked. The token remains usable for its full 1-day expiry window after the user clicks Logout.
+- The client is expected to discard the token locally (clear localStorage / sessionStorage); the server enforces nothing.
+- Browser is redirected to `/admin` (login page) — purely a client-side redirect.
 
 ## 7. System Actions on Submit
+<!-- BA correction: GAP-TL-019, 2026-05-21 -->
 1. `POST /api/v1/auth/logout` with Bearer token in Authorization header.
-2. Server invalidates the token.
-3. Browser session storage cleared.
-4. Redirect to login page.
+2. Server returns HTTP 200 success — **no token invalidation, no session record clear, no cookie clear** (the cookie-clear branch is commented out in `auth.controller.js:36-46`).
+3. Client clears browser session storage locally.
+4. Client redirects to login page.
+5. Any post-logout request reusing the old token will SUCCEED until the JWT's 1-day expiry. QA must not write a test asserting post-logout 401.
 
 ## 8. Notifications
 None.
@@ -178,3 +181,35 @@ None.
 - Token expiry: 1 day
 - Type: Bearer (Authorization header)
 - All protected admin endpoints require `roleId = 1` or `4`
+- ⚠️ Logout does NOT invalidate the token server-side (see Feature 3 §6). Client must discard locally.
+
+---
+
+# Backend Gap Reconciliation (2026-05-21)
+
+Controller-layer audit findings against `auth.controller.js`. These override conflicting statements above.
+
+### 11.1 No backend OTP cooldown <!-- BA correction: GAP-TL-017, 2026-05-21 -->
+- The OTP throttling block in `auth.controller.js:558-568` is commented out. There is NO server-side rate limit on Send OTP.
+- Feature 1 §6 Rule 6 (re-send timer) applies to the UI only. A direct API caller can request OTPs back-to-back with no throttle.
+- QA: do not test backend cooldown as a passing case.
+
+### 11.2 Two distinct master OTPs <!-- BA correction: GAP-TL-018, 2026-05-21 -->
+- Backend selects between `otpConfig.adminMasterOtp` (admin/sm) and `otpConfig.masterOtp` (user/cp).
+- Admin Portal scope uses `adminMasterOtp`. UAT value `258369`.
+- Feature 1 §6.5 implicitly refers to the admin master OTP.
+
+### 11.3 Admin/SM pre-provisioning <!-- BA correction: GAP-TL-023, 2026-05-21 -->
+- Add to Feature 1 §6: roles `admin`/`sm`/`sm_admin` require pre-existence in the user table. Unknown mobiles return HTTP 400 "User not found".
+- CP role is auto-created — out of admin portal scope.
+
+### 11.4 "Access revoked" message <!-- BA correction: GAP-TL-024, 2026-05-21 -->
+- Add to Feature 2 §6: if `isActive=false` on the resolved user, verify-OTP returns HTTP 400 with exact text "Your access to the portal has been revoked".
+
+### 11.5 `permissions` field in verify-OTP response <!-- BA correction: GAP-TL-022, 2026-05-21 -->
+- verify-OTP success response includes `permissions: { moduleId: [actionIds] }` for admin/sm/cp.
+- UI uses this to gate menu items.
+
+### 11.6 `sendOtpV3` hidden fields <!-- BA correction: GAP-TL-020, 2026-05-21 -->
+- send-otp silently accepts and forwards to LeadSquared: `sessionId`, `hvCode`, `nri`, `fullUrl`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `gad_source`, `gad_campaignid`, `gbraid`, `gclid`.
+- Admin Portal does not transmit these — documented here so unknown-field tolerance is not flagged as a bug.

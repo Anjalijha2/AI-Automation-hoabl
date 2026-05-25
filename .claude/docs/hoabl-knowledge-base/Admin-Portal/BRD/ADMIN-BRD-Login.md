@@ -154,3 +154,42 @@ There is no other way to reach the login page — it is the default page for the
 ## 10. Open Questions / Gaps
 
 None. All login behavior confirmed through automated testing (22 tests passing as of Sprint 1).
+
+---
+
+## 11. Backend Gap Reconciliation (2026-05-21)
+
+This section corrects and supplements §6–§7 based on controller-layer audit of `auth.controller.js`. All notes below override conflicting statements above.
+
+### ⚠️ KNOWN ISSUE — CRITICAL SECURITY: Logout does NOT invalidate JWT
+<!-- BA correction: GAP-TL-019, 2026-05-21 -->
+- **Behaviour:** `POST /auth/logout` returns HTTP 200 but performs no server-side action — no JWT blacklist, no session record clear, no cookie clear.
+- **Impact:** A JWT remains valid for its full 1-day lifetime even after the user clicks "Logout". Anyone holding a copy of the token (browser history, dev tools, intercepted log) can continue calling protected APIs.
+- **Doc previously claimed:** FRD Feature 3 §6 / §7.2 stated "JWT invalidated server-side". This was incorrect.
+- **Correct behaviour:** Logout is a client-only no-op. Client must discard the token locally; the server does not enforce it.
+- **Action:** Flagged to Developer Agent. Until source fix, QA must NOT test post-logout-token-rejection as a passing case.
+
+### 11.1 OTP cooldown — no backend throttle <!-- BA correction: GAP-TL-017, 2026-05-21 -->
+- Backend cooldown code is commented out in `auth.controller.js:558-568`. There is NO server-side rate limit on `sendOtp` requests.
+- Only the frontend re-send timer (referenced in §4 Step 2) enforces spacing. A direct API caller can request OTPs back-to-back.
+- §6 Rule 4 (Re-Send disabled until timer expires) applies to the UI only — not the API.
+
+### 11.2 Two distinct master OTPs <!-- BA correction: GAP-TL-018, 2026-05-21 -->
+- §6 Rule 8 listed a single master OTP `258369`. Backend actually selects between TWO master OTPs:
+  - `otpConfig.adminMasterOtp` — used when the resolved user role is admin or sm.
+  - `otpConfig.masterOtp` — used for user/CP roles.
+- For Admin Portal scope (admin/sm only), the relevant one is `adminMasterOtp`. The value `258369` is the admin master OTP on UAT.
+
+### 11.3 Admin/SM must be pre-provisioned; CP auto-created <!-- BA correction: GAP-TL-023, 2026-05-21 -->
+- For roles `admin`, `sm`, `sm_admin`: if the mobile number is NOT already present in the user table, backend returns HTTP 400 "User not found" — even on a valid OTP request.
+- For role `cp` (out of admin scope but stated here for cross-reference): user is auto-created on first OTP request.
+- §6 should treat admin-side users as strictly pre-provisioned.
+
+### 11.4 "Access revoked" message <!-- BA correction: GAP-TL-024, 2026-05-21 -->
+- Add to §7 validations: if the resolved user has `isActive=false`, backend returns HTTP 400 with the exact string "Your access to the portal has been revoked".
+
+### 11.5 `permissions` map in verify-OTP response <!-- BA correction: GAP-TL-022, 2026-05-21 -->
+- On successful OTP verification for roles admin/sm/cp, response includes a `permissions` field shaped as `{ moduleId: [actionIds] }`. UI uses this to gate menu items.
+
+### 11.6 Hidden tracking fields on `sendOtpV3` <!-- BA correction: GAP-TL-020, 2026-05-21 -->
+- The `sendOtp` endpoint silently accepts `sessionId`, `hvCode`, `nri`, `fullUrl`, and UTM/Google-Ads parameters and forwards them to LeadSquared. Admin Portal does not send these; out of admin scope but documented here so QA does not flag the extra-field tolerance as a bug.

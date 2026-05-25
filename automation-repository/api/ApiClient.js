@@ -1,60 +1,63 @@
 // automation-repository/api/ApiClient.js
-// Use API calls to set up / tear down state WITHOUT going through the UI.
-// Keeps tests fast and deterministic.
+// Wraps Playwright APIRequestContext for structured HTTP calls.
+// Returns { status, body } — never throws on non-2xx, callers assert status.
 
 class ApiClient {
   /**
-   * @param {import('@playwright/test').APIRequestContext} request
+   * @param {import('@playwright/test').APIRequestContext} request  — Playwright request fixture
+   * @param {string} [baseURL]  — overrides process.env.API_BASE_URL when provided
    */
-  constructor(request) {
+  constructor(request, baseURL) {
     this.request = request;
-    this.baseURL = process.env.API_BASE_URL || process.env.BASE_URL;
-    this.headers = {
-      'Content-Type': 'application/json',
-    };
+    this.baseURL = baseURL || process.env.API_BASE_URL || '';
+    this.defaultHeaders = { 'Content-Type': 'application/json' };
   }
 
-  // --- Generic HTTP methods ---
-  async get(path, params = {}) {
+  // ── Core methods — return { status, body } ──────────────────────────────────
+
+  async get(path, { token, params } = {}) {
     const res = await this.request.get(`${this.baseURL}${path}`, {
-      headers: this.headers,
+      headers: this._headers(token),
       params,
     });
-    await this._assertOk(res);
-    return res.json();
+    return this._wrap(res);
   }
 
-  async post(path, body = {}) {
+  async post(path, body = {}, { token } = {}) {
     const res = await this.request.post(`${this.baseURL}${path}`, {
-      headers: this.headers,
+      headers: this._headers(token),
       data: body,
     });
-    await this._assertOk(res);
-    return res.json();
+    return this._wrap(res);
   }
 
-  async put(path, body = {}) {
+  async put(path, body = {}, { token } = {}) {
     const res = await this.request.put(`${this.baseURL}${path}`, {
-      headers: this.headers,
+      headers: this._headers(token),
       data: body,
     });
-    await this._assertOk(res);
-    return res.json();
+    return this._wrap(res);
   }
 
-  async delete(path) {
+  async delete(path, { token } = {}) {
     const res = await this.request.delete(`${this.baseURL}${path}`, {
-      headers: this.headers,
+      headers: this._headers(token),
     });
-    await this._assertOk(res);
+    return this._wrap(res);
   }
 
-  // --- Private ---
-  async _assertOk(response) {
-    if (!response.ok()) {
-      const body = await response.text();
-      throw new Error(`API ${response.status()} — ${response.url()}\n${body}`);
-    }
+  // ── Private ─────────────────────────────────────────────────────────────────
+
+  _headers(token) {
+    return token
+      ? { ...this.defaultHeaders, Authorization: `Bearer ${token}` }
+      : { ...this.defaultHeaders };
+  }
+
+  async _wrap(res) {
+    let body;
+    try { body = await res.json(); } catch { body = null; }
+    return { status: res.status(), body };
   }
 }
 

@@ -1,0 +1,121 @@
+{
+  "_meta": {
+    "generatedBy": "Tech Lead Agent (sync-and-update Step 1)",
+    "scanType": "initial-full",
+    "note": "First sync — last-synced-commits.json had lastCommit: null for all sources. Scanned entire source-code/ tree except strapi/."
+  },
+  "timestamp": "2026-05-21T00:00:00Z",
+  "head_commits": {
+    "xanadu-root": "14e13793cfc004f7aea38b76f9c6175584cc9dc3",
+    "source-code/admin-sm-cp-portal": "be3b418ed0d24d1ff76fa552bf80b968df865697",
+    "source-code/backend": "ca68b28e6cfca984df7626f3059f8bec21fbb126",
+    "source-code/buyer-portal": "866e38a2de042106e9bd13d46dad53a869d4484a",
+    "source-code/web-socket": "befb3b0ad981eb89d85a551df37ad764cb557707"
+  },
+  "exclusions": ["source-code/strapi/"],
+  "portals_affected": ["admin"],
+  "scope_scanned": {
+    "admin-sm-cp-portal": {
+      "modules_discovered": [
+        "admin_login (public route)",
+        "dashboard / CustomerTable (Customers module)",
+        "cms (Cms.jsx)",
+        "tower (Towers + towerView)",
+        "jbp (JbpManagement)",
+        "offers",
+        "payment-transactions",
+        "sales-managers",
+        "milestone (MilestonePage + MilestoneDrawer)",
+        "ConfirmDeletionModal"
+      ],
+      "shared_components_scanned": [
+        "components/common/auth (AuthProvider, RequireAuth, AuthStatus)",
+        "components/common/TopBar, BottomNav, DrawerComponent, AppSelect, CustomPhoneField",
+        "components/admin/allocation, channel-partners, offers, payment-transactions, sales-managers"
+      ]
+    }
+  },
+  "changes": [
+    {
+      "portal": "admin",
+      "module": "customers",
+      "change_type": "locator_correction",
+      "files": ["source-code/admin-sm-cp-portal/src/routes/Private/admin/dashboard/CustomerTable.jsx"],
+      "locators_affected": ["colHomeLoan"],
+      "breaking": false,
+      "detail": "Header text in source is 'Home Loan Details' (L783), locator map had 'Home Loan'. Selector updated; old text moved to fallback."
+    },
+    {
+      "portal": "admin",
+      "module": "customers",
+      "change_type": "locator_correction",
+      "files": ["source-code/admin-sm-cp-portal/src/routes/Private/admin/dashboard/CustomerTable.jsx"],
+      "locators_affected": ["colConfirmationNumber"],
+      "breaking": false,
+      "detail": "Header text in source is 'Confirmation' (L989), locator map had 'Confirmation Number'. Selector updated; old text moved to fallback."
+    },
+    {
+      "portal": "admin",
+      "module": "customers",
+      "change_type": "locator_enhancement",
+      "files": ["source-code/admin-sm-cp-portal/src/routes/Private/admin/dashboard/CustomerTable.jsx"],
+      "locators_affected": ["tableRecordsHeading"],
+      "breaking": false,
+      "detail": "Source confirms h3.table-title class (L1447). Promoted .table-title to primary selector (more stable than text-match)."
+    },
+    {
+      "portal": "admin",
+      "module": "login",
+      "change_type": "verified_no_change",
+      "files": ["source-code/admin-sm-cp-portal/src/routes/Public/admin_login/index.jsx"],
+      "locators_affected": [],
+      "breaking": false,
+      "detail": "All 12 login locators (mobileInput, sendOtpBtn, otpBox1–6, submitOtpBtn, backBtn, resendOtpLink, otpTimer, pageHeading, otpHeading) verified against source. Ant Design Input.OTP renders the 6 OTP boxes with aria-labels; placeholder 'Enter Mobile Number', button class 'btn-book-solid', back button class 'reset-btn back-to-mobile', resend uses class 'common-link', headings h2. All match."
+    },
+    {
+      "portal": "admin",
+      "module": "customers",
+      "change_type": "verified_no_change",
+      "files": ["source-code/admin-sm-cp-portal/src/routes/Private/admin/dashboard/CustomerTable.jsx"],
+      "locators_affected": [],
+      "breaking": false,
+      "detail": "KPI titles verified: Registered, Inactive Registrations, Cancelled Registrations, KYC Pending (Booked), Confirmed (Paid+KYC), Active Towers (L1199–1242). Column titles verified: Registration Details, Growth Partner, Allocation Status, Process Status, Alloted Unit, Actions. Ant Table + ant-pagination + ant-modal + customer-card patterns confirmed."
+    }
+  ],
+  "gaps_and_blockers": [
+    {
+      "module": "cms",
+      "issue": "No locators in map yet for admin CMS module (source: routes/Private/admin/cms/Cms.jsx). BA Agent has not yet defined test cases for this module.",
+      "action": "Defer until BA Agent produces test cases in Step 2"
+    },
+    {
+      "module": "tower",
+      "issue": "No locators in map for Towers module (source: routes/Private/admin/tower/Towers.jsx, towerView.jsx, components/shared/TowerHeatmap.jsx). TC_TOWERS.md exists in manual-qa-repository.",
+      "action": "Defer until BA Agent confirms tower TCs in scope, then full locator pass needed"
+    },
+    {
+      "module": "jbp",
+      "issue": "No locators in map for JBP (source: routes/Private/admin/jbp/JbpManagement.jsx). TC_JBP.md exists.",
+      "action": "Defer until BA Agent confirms in scope"
+    },
+    {
+      "module": "offers",
+      "issue": "No locators in map for Offers (source: routes/Private/admin/offers/index.jsx + components/admin/offers/). TC_OFFERS.md exists.",
+      "action": "Defer until BA Agent confirms in scope"
+    },
+    {
+      "module": "payment-transactions",
+      "issue": "No locators in map for Payment Transactions (source: routes/Private/admin/payment-transactions/PaymentTransactionsTable.jsx).",
+      "action": "Defer until BA Agent confirms in scope"
+    },
+    {
+      "module": "sales-managers / channel-partners / allocation / milestone",
+      "issue": "Components present in source-code but absent from locator map. Manual TCs exist for some.",
+      "action": "Sprint-by-sprint locator addition triggered by BA Agent's test-case scope"
+    }
+  ],
+  "self_healer": {
+    "invoked": false,
+    "reason": "No locator breakage detected in source. All existing admin locators verified or corrected in-place. No POMs touched (Tech Lead Agent does not own POMs; corrections published via locator map only)."
+  }
+}

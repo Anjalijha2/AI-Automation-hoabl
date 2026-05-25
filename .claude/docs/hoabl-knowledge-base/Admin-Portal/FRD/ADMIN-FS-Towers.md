@@ -264,3 +264,26 @@ None — read-only navigation.
 3. **Locate the tower card** you want to inspect — all 18 towers are shown as cards.
 4. **Click "View Tower >"** on the card.
 5. **Result:** You are taken directly to the Towers page (`/admin/towers`) with that specific tower already selected and its floor/unit grid loaded. No need to locate the tower manually in the sidebar.
+
+---
+
+# Backend Gap Reconciliation (2026-05-21)
+
+Controller- and service-layer audit findings. These notes override conflicting statements above. See parent BRD §11 for full narrative.
+
+### Feature 1 corrections (KPI Cards)
+- `disabledUnits` KPI counts RESERVED only — NOT REFUGE+RESERVED+PBT as previously documented. <!-- BA correction: GAP-TL-027, 2026-05-21 -->
+- `projectId` is env-derived (`prod=1`, `uat=2`) — client cannot override. <!-- BA correction: GAP-TL-025, GAP-DEV-001, 2026-05-21 -->
+
+### Feature 2 / 3 corrections (List + Toggle)
+- `getAllTowers` accepts `isActive` filter ONLY via GET request body (literal `true`/`false`). Non-standard. <!-- BA correction: GAP-TL-026, 2026-05-21 -->
+- `updateTowerStatus` no-op (toggle to the same state) skips audit-log emission. <!-- BA correction: GAP-TL-030, 2026-05-21 -->
+- `updateTowerStatus` fires GET to Python `/broadcast-towers` for real-time WebSocket fan-out. QA must mock this endpoint. <!-- BA correction: GAP-TL-029, 2026-05-21 -->
+
+### Feature 4 corrections (Unit drawer)
+- API response fields: `id, unitName, unitId, unitNo, floorNumber, status, basicPrice, totalUnitValue, facing`. <!-- BA correction: GAP-TL-031, 2026-05-21 -->
+- Fields previously documented but NOT in response: `agreementValue`, `earlyBirdBenefit`, "All Inclusive Price", BHK Type, Size. UI may compute these from other endpoints or display computed values.
+- Fields present in response but previously undocumented: `basicPrice`, `totalUnitValue`.
+
+### Admin unit-swap tower list <!-- BA correction: GAP-DEV-028, 2026-05-21 -->
+- `tower.service.js adminUnitSwapTowers` returns ALL towers (no `isActive` filter). Other tower queries do filter. Already noted in Customers UnitSwap FRD §4.2.

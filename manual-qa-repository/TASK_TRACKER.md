@@ -1,7 +1,7 @@
 # Task Tracker
 
 **Project:** XR Portal Admin  
-**Last Updated:** 2026-05-16
+**Last Updated:** 2026-05-21
 
 ---
 
@@ -45,3 +45,7 @@
 | Fix BUG_007 — allocation modal not closing | Allocation / Sprint 2 | 2026-03-12 |
 | Fix BUG_008 — cancelled filter empty | Allocation / Sprint 2 | 2026-03-14 |
 | Fix BUG_009 — CMS banner upload silent fail | Config / Sprint 3 | 2026-04-10 |
+| Sync pipeline run — Step 1 Tech Lead (locator-map v1.3.4 → v1.4.0; customers.colHomeLoan, colConfirmationNumber, tableRecordsHeading) | Customers / Sync | 2026-05-21 |
+| Sync pipeline run — Step 2 BA sign-off (no BRD drift, 8/9 modules covered, GAP-001 milestone non-blocking) | All / Sync | 2026-05-21 |
+| Sync pipeline run — Step 3 QA Manual (TC_CUSTOMERS.md updated for label refinements) | Customers / Sync | 2026-05-21 |
+| Sync pipeline run — Step 4 QA Automation (login: 11 passed / 5 baseline writes; e2e admin: 4 passed / 27 failed due to config defect — viewport:null incompatible with devices[] deviceScaleFactor) | Customers + Login / Sync | 2026-05-21 |
