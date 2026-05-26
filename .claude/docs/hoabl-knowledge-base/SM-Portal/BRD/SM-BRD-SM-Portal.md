@@ -92,7 +92,8 @@ Unlike the Admin Portal, the SM Portal is narrowly scoped to sales-side operatio
 | Microsoft Teams | Auto-generated meeting links for scheduled video calls |
 | Easebuzz / Razorpay | Payment processing during physical allocation |
 | Azure Blob Storage | KYC document upload and storage |
-| Kaleyra | SMS/WhatsApp notifications to customers |
+| Kaleyra | WhatsApp notifications + click-to-call (NOT OTP) |
+| Epinet | OTP SMS delivery <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js --> |
 
 ---
 

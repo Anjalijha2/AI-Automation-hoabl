@@ -307,9 +307,203 @@
 | Field | Value |
 |-------|-------|
 | **Module** | CP – Leads |
-| **Pre-conditions** | CP has more leads than the page size (e.g., > 10) |
-| **Test Steps** | 1. Scroll to bottom of table<br>2. Click Next page<br>3. Verify new leads load |
-| **Expected Result** | Page changes; next set of leads displayed; pagination indicator updates (e.g., "Page 2 of N") |
+| **Pre-conditions** | CP has > 10 leads in `registration_drafts` table |
+| **Test Steps** | 1. `GET /api/v1/cp/cp-user-leads?page=2&limit=10`<br>2. Verify next set of leads |
+| **Expected Result** | Returns leads with offset; pagination max limit = 100 (validations/cp.validations.js:194-195). |
 | **Priority** | Medium |
 
 ---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-leads-management.md`
+
+### MAJOR CORRECTIONS — most existing TCs assume LSQ-based lead sync, but actual implementation is different
+- **No LSQ lead sync** — Leads are stored in `registration_drafts` table (NOT LeadSquared). CP creates a lead via `POST /api/v1/cp/cp-user-register`; this auto-creates a Buyer `users` row with `roleId=2` if phone is new, then creates a `registration_drafts` row with `status='Open'`. The lead-capture flow itself does NOT call LSQ. LSQ is only called when the Buyer follows the shared link and triggers `/auth/user/send-otp`.
+- **Refresh button** (CP_LEAD_024) — There is NO LSQ sync. The list endpoint reads directly from `registration_drafts` table. Refresh just refetches DB.
+- **Lead Source / Stage columns** (CP_LEAD_008-010) — These columns come from `draft.sourceType` JSON field (free-text, not validated — GAP-LEAD-12). "Stage" does not exist; only `status` ENUM `Open/Won/Lost/Refunded` mapped to UI labels `Sent/Registered/Refunded` (BR-CP-LEAD-13).
+- **Status filter** (CP_LEAD_017) — Filter accepts ONLY `Sent` | `Registered` | `Refunded` (validations/cp.validations.js:197). UI label `Sent` covers DB `Open` OR `Lost` (BR-CP-LEAD-13).
+- **CP_LEAD_012 (Lead isolation)** — Standalone/member CP sees only `cpId=self.id`. Master CP (`isLeadCp=true`) sees ALL leads where owning CP's `masterHvCode = self.hvCode`. Master can use `?leadOwner=cp:<id>` to scope (BR-CP-LEAD-10/11).
+- **CP_LEAD_021 (Convert to Registration)** — There is NO "Convert" action on a lead row. The Buyer self-registers via the shared link `${registrationUrl}/ref/${encryptedSlug}` (BR-CP-LEAD-07). The Convert-to-Registration TC is testing non-existent UI.
+- **CP_LEAD_022** — Registration created via the link captures `brokerXrCode` (CP's hvCode) on the Buyer row. KPI "Registered" counts via `Registration.brokerId` (BR-CP-LEAD-22). Watch for the `brokerXrCode` vs `walk_in_source_xr_code` drift (GAP-LEAD-11).
+- **Notifications** — On capture success, WhatsApp `cp_link_share_latest` (Botspice) with `[fullName, registrationLink]` to Buyer (BR-CP-LEAD-09). NRI Buyer with email also gets `nri-cp-referral` email. NO email/SMS to admin, SM, or master CP.
+
+### New TCs added below
+
+### CP_LEAD_026 — Lead capture creates registration_drafts row with status=Open
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | CP logged in; new Buyer phone P |
+| **Test Steps** | 1. `POST /api/v1/cp/cp-user-register` body `{ firstName, lastName, phone:P, email, ... }`<br>2. Query `registration_drafts` |
+| **Expected Result** | 201 `{ registrationNumber: <encryptedSlug> }`. DB row: `cpId=req.user.id, projectId=<env>, status='Open', userId=<new Buyer.id>` (cp.controller.js:881-891). Buyer also auto-created in `users` with `roleId=2`. |
+| **Priority** | Critical |
+
+---
+
+### CP_LEAD_027 — Same CP duplicate lead for same Buyer+project returns 409
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | CP A has existing draft for Buyer B on project X |
+| **Test Steps** | 1. CP A submits another `cp-user-register` for Buyer B |
+| **Expected Result** | 409 "Lead for this User is already Captured." (BR-CP-LEAD-03). |
+| **Priority** | High |
+
+---
+
+### CP_LEAD_028 — Different CPs CAN capture same Buyer on same project (BUG/design)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | CP A captured Buyer B |
+| **Test Steps** | 1. Login as CP C<br>2. Submit cp-user-register for Buyer B |
+| **Expected Result** | 201 succeeds — check is `{userId, cpId, projectId}` so different cpId is allowed (GAP-LEAD-04). Two CPs now own leads for same Buyer. Document for sales-ops. |
+| **Priority** | Medium |
+
+---
+
+### CP_LEAD_029 — Buyer already has paid registration: capture blocked
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Buyer B has `registrations` row with `paymentStatus='success'` for project X |
+| **Test Steps** | 1. CP captures Buyer B on project X |
+| **Expected Result** | 409 "User has already completed registration." (BR-CP-LEAD-04, cp.controller.js:809-818) |
+| **Priority** | High |
+
+---
+
+### CP_LEAD_030 — send-registration-link has NO ownership check (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | CP A captured a lead → has slug S. CP B logged in. |
+| **Test Steps** | 1. CP B calls `GET /api/v1/cp/send-registration-link/<S>` |
+| **Expected Result** | KNOWN BUG: CP B's call succeeds — WhatsApp `cp_link_share_latest` resent to Buyer. If lead was `Refunded`, silently flipped back to `Open` with no audit (GAP-LEAD-01, GAP-LEAD-02, cp.controller.js:1540-1607). Document security gap. |
+| **Priority** | High (Security) |
+
+---
+
+### CP_LEAD_031 — Refunded → Open mutation on resend (no audit)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Lead L with `status='Refunded'` |
+| **Test Steps** | 1. `GET /cp/send-registration-link/<L.slug>`<br>2. Query L.status |
+| **Expected Result** | L.status flipped to `Open` silently (BR-CP-LEAD-20, cp.controller.js:1593-1596). KPI "Sent" includes this lead next refresh. No audit log entry. |
+| **Priority** | High |
+
+---
+
+### CP_LEAD_032 — Master CP leadOwner=cp:<unrelated id> returns 403
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Master CP M; unrelated CP X (X not in M's masterHvCode tree) |
+| **Test Steps** | 1. M calls `GET /cp/cp-user-leads?leadOwner=cp:<X.id>` |
+| **Expected Result** | 403 "Access denied to requested CP leads" (BR-CP-LEAD-11) |
+| **Priority** | High (Security) |
+
+---
+
+### CP_LEAD_033 — Member CP cannot use leadOwner filter for peers
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Member CP (isLeadCp=false, leadCpId=<master>); peer CP Y in same tree |
+| **Test Steps** | 1. Member calls `?leadOwner=cp:<Y.id>` |
+| **Expected Result** | Filter silently ignored for non-master; returns only member's own leads (BR-CP-LEAD-10/11). |
+| **Priority** | High (Security) |
+
+---
+
+### CP_LEAD_034 — Search by name uses JSON_EXTRACT on draft JSON
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Lead with firstName "John" |
+| **Test Steps** | 1. `GET /cp/cp-user-leads?search=John` |
+| **Expected Result** | Match found via `JSON_UNQUOTE(JSON_EXTRACT(draft,'$.firstName/$.lastName/$.phone'))` (BR-CP-LEAD-12). Search by phone supported too. |
+| **Priority** | Medium |
+
+---
+
+### CP_LEAD_035 — Search wildcard injection — `%` returns all (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | CP with multiple leads |
+| **Test Steps** | 1. `GET /cp/cp-user-leads?search=%25` (URL-encoded `%`) |
+| **Expected Result** | KNOWN BUG: returns ALL leads — search uses unescaped `LIKE %${search}%` (GAP-LEAD-05). Low security impact. |
+| **Priority** | Low |
+
+---
+
+### CP_LEAD_036 — Lead creation triggers WhatsApp cp_link_share_latest via Botspice
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Valid capture |
+| **Test Steps** | 1. `POST /cp-user-register`<br>2. Inspect Botspice WhatsApp logs |
+| **Expected Result** | Template `cp_link_share_latest` (variables `[fullName, registrationLink]`) dispatched via Botspice (NOT Kaleyra) to `${countryCode}${phone}` (cp.controller.js:921-926). |
+| **Priority** | High |
+
+---
+
+### CP_LEAD_037 — NRI Buyer with email triggers nri-cp-referral email
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Capture with `nri:true, email:'a@b.com', countryCode:'+971'` |
+| **Test Steps** | 1. Submit capture<br>2. Inspect outbound email |
+| **Expected Result** | EJS template `nri-cp-referral`, subject "Registration link for Payment", data `{ name, registrationLink }` sent to email (cp.controller.js:907-919). |
+| **Priority** | Medium |
+
+---
+
+### CP_LEAD_038 — WhatsApp failure does NOT roll back lead capture
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Mock WhatsApp service to return 500 |
+| **Test Steps** | 1. `POST /cp-user-register`<br>2. Query `registration_drafts` |
+| **Expected Result** | 201 returned to CP; draft persisted; Buyer never receives link. Lead counted in `Sent` KPI (QA-Risk-8, fire-and-forget). |
+| **Priority** | Medium |
+
+---
+
+### CP_LEAD_039 — No notification to mapped SM on lead creation (gap)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | CP has `smUserId` mapping to SM Y |
+| **Test Steps** | 1. CP captures lead<br>2. Check SM Y's notifications / inbox |
+| **Expected Result** | No notification to SM (GAP-LEAD-03). Leads invisible to SM until Buyer self-registers via link. Document missing feature. |
+| **Priority** | Medium |
+
+---
+
+### CP_LEAD_040 — KPI counts: Sent=count(Open+Lost), Registered=count(Registration where paymentStatus=success)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | CP with mixed drafts and converted registrations |
+| **Test Steps** | 1. `GET /api/v1/cp/cp-user-kpi`<br>2. Compare to expected counts |
+| **Expected Result** | `Sent = RegistrationDraft.count(status IN ['Open','Lost'])`, `Registered = Registration.count(brokerId in allowed AND paymentStatus='success')`, `unitRegisteredCount = RegistrationUnit not in [WINNER,REFUND]`, `allotedCount = RegistrationUnit WINNER`, `refundedCount = RegistrationUnit REFUND` (cp.controller.js:1418-1517). |
+| **Priority** | High |

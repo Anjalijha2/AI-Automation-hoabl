@@ -332,14 +332,138 @@
 
 ---
 
-### CP_PROJ_027 — Master CP and Member CP have identical access
+### CP_PROJ_027 — Master CP and Member CP have identical access (no per-CP project assignment)
 
 | Field | Value |
 |-------|-------|
 | **Module** | CP – Project Info |
-| **Pre-conditions** | One Master CP and one Member CP account |
-| **Test Steps** | 1. Login as Master CP, open each section<br>2. Login as Member CP, open each section |
-| **Expected Result** | Both roles see identical project content with no edit controls |
+| **Pre-conditions** | Master CP M; Member CP N |
+| **Test Steps** | 1. Login as M, monitor Strapi requests<br>2. Login as N, monitor Strapi requests |
+| **Expected Result** | Both fetch identical content from `<StrapiBase>/api/projects/1?populate=deep`. There is NO CP-project assignment table — every CP sees the same project (CP-PI-003). Document. |
 | **Priority** | Medium |
 
 ---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-project-information.md`
+
+### CRITICAL CORRECTION — There is NO XR backend endpoint for CP project info
+All project content is fetched **DIRECTLY from Strapi by the CP browser** at `${BaseURL}/api/projects/1?populate=deep` (admin-sm-cp-portal/src/utils/Urls.js:7). The XR backend has NO `/api/v1/cp/project*`, `/towers`, `/units`, `/brochure`, `/documents`, `/gallery`, `/videos` routes (FSD §6.1).
+
+The shared `commonRoutes` (`/api/v1/towers`, `/api/v1/projects/:id/unit-typologies`) explicitly EXCLUDE the `cp` role from `restrictTo` whitelist (common.routes.js:8 — only `user, admin, sales_manager_admin, sales_manager`). A CP token calling those will be rejected with 403.
+
+### Corrections to existing TCs
+- **CP_PROJ_001-009** — Routes are FRONTEND-only (`/project`, `/project1/about` etc. served by Next.js / Vite app shell). No backend endpoint. All data comes from Strapi.
+- **CP_PROJ_003-008** — Hardcoded `project1` in URL maps to hardcoded `projects/1` in Strapi (CP-PI-002). Even if backend operational projectId is 2 (UAT), Strapi content always comes from project 1 (drift).
+- **CP_PROJ_011 / CP_PROJ_016 / CP_PROJ_019 / CP_PROJ_021** — Confirmed: no backend mutation routes exist. Read-only by design (BR §4.3).
+- **CP_PROJ_017-019** — Documents page sources from Strapi `data.brochure.data.attributes.url` and similar — raw Strapi asset URLs, unsigned, cacheable (CP-PI-005). Anyone with URL can share externally — not gated by CP login.
+- **CP_PROJ_025** — No ISR / no caching by XR backend — every CP browser hit goes to Strapi. Hard refresh shows latest published content immediately, but Strapi `populate=deep` returns DRAFT + PUBLISHED — verify only published shows (CP-PI-008, QA-Risk-14).
+
+### New TCs added below
+
+### CP_PROJ_028 — XR backend has NO CP project route (verify by 404)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | CP JWT |
+| **Test Steps** | 1. `GET /api/v1/cp/project` with CP JWT<br>2. `GET /api/v1/cp/brochure`<br>3. `GET /api/v1/cp/documents` |
+| **Expected Result** | All return 404 — no such routes mounted (FSD §6.1, cp.routes.js verified). |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_029 — CP token rejected on shared commonRoutes
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Valid CP JWT |
+| **Test Steps** | 1. `GET /api/v1/towers` with CP JWT<br>2. `GET /api/v1/projects/2/unit-typologies` |
+| **Expected Result** | 403 — `cp` role NOT in `restrictTo('user', 'admin', 'sales_manager_admin', 'sales_manager')` (common.routes.js:8). |
+| **Priority** | High (Security) |
+
+---
+
+### CP_PROJ_030 — Frontend fetches Strapi directly (no XR proxy)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | CP logged in, network tab open |
+| **Test Steps** | 1. Open `/project1/about`<br>2. Inspect network requests |
+| **Expected Result** | Direct `GET <BaseURL>/api/projects/1?populate=deep` to Strapi host. NO request to XR backend `/api/v1/*` for project content (Urls.js:7). |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_031 — Project ID hardcoded to `1` regardless of env
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | UAT (backend projectId=2) |
+| **Test Steps** | 1. Inspect Strapi URL |
+| **Expected Result** | URL = `<StrapiBase>/api/projects/1?populate=deep` (CP-PI-002, Urls.js:7). Mismatched with backend project resolution — drift if Strapi project 1 differs from backend project 2. |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_032 — Strapi outage breaks CP project pages silently
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Block Strapi URL in browser |
+| **Test Steps** | 1. Open `/project1/about` |
+| **Expected Result** | Frontend fails to render — no XR-side circuit breaker / cache (CP-PI-007). UI may white-screen. Document accessibility implications. |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_033 — `information` field XSS via Strapi WYSIWYG (potential)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Admin can write to Strapi `information` field |
+| **Test Steps** | 1. Insert `<script>alert(1)</script>` via Strapi admin<br>2. Open `/project1/projectInfo` |
+| **Expected Result** | Script executes in CP browser — frontend uses `dangerouslySetInnerHTML` without sanitization (CP-PI-004, projectInfo.jsx:14). Trust boundary depends entirely on Strapi authoring controls. Document as security gap. |
+| **Priority** | High (Security) |
+
+---
+
+### CP_PROJ_034 — Brochure URL is unsigned Strapi asset (shareable externally)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Project info page open with brochure published |
+| **Test Steps** | 1. Copy brochure URL from `data.brochure.data.attributes.url`<br>2. Open in incognito (no CP session) |
+| **Expected Result** | PDF downloads without auth — raw Strapi URL, no presigned/expiry (CP-PI-005). Confirm with security if acceptable. |
+| **Priority** | Medium (Security) |
+
+---
+
+### CP_PROJ_035 — Single-newline whitespace in `information` collapses (UX gap)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Author writes content with single newlines between sentences |
+| **Test Steps** | 1. Render Project Info page |
+| **Expected Result** | Single `\n` is dropped; only `\n\n` converted to `<br /><br />` (CP-PI-009, projectInfo.jsx:14). Authors must use double-newline. |
+| **Priority** | Low |
+
+---
+
+### CP_PROJ_036 — No analytics / view tracking on project pages
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | CP browses project pages |
+| **Test Steps** | 1. Browse all sections<br>2. Check XR DB / logs for view tracking |
+| **Expected Result** | No tracking exists in XR Portal (QA-Risk-10). If engagement metrics needed, file as gap. |
+| **Priority** | Low |

@@ -111,7 +111,7 @@
 | **Module** | BYR – Login |
 | **Pre-conditions** | Registered buyer mobile exists (e.g., 8888888888) |
 | **Test Steps** | 1. Enter registered mobile<br>2. Click Send OTP<br>3. Wait for response |
-| **Expected Result** | OTP input appears; "OTP sent" toast displayed; Kaleyra SMS/WhatsApp triggered |
+| **Expected Result** | OTP input appears; "OTP sent" toast displayed; Epinet SMS (epinetinfo.in/api/pushsms) + Botspice WhatsApp dispatched (NOT Kaleyra) |
 | **Priority** | Critical |
 
 ---
@@ -128,14 +128,14 @@
 
 ---
 
-### BYR_LGN_011 — OTP resend throttled by lastOtpSentAt
+### BYR_LGN_011 — OTP resend throttled by frontend 60s timer (UI-only)
 
 | Field | Value |
 |-------|-------|
 | **Module** | BYR – Login |
-| **Pre-conditions** | OTP just sent within throttle window |
-| **Test Steps** | 1. Click "Resend OTP" immediately<br>2. Observe |
-| **Expected Result** | Resend blocked with cooldown message until throttle window elapses |
+| **Pre-conditions** | OTP just sent |
+| **Test Steps** | 1. Observe Resend button state immediately after Send OTP<br>2. Wait 60 seconds<br>3. Re-check Resend button |
+| **Expected Result** | Resend disabled with countdown for 60 seconds (frontend-only timer in `LoginForm.js:169`). Backend cooldown logic is commented out — direct API calls to `/auth/user/send-otp` bypass throttle. NOTE: backend does NOT enforce `lastOtpSentAt` cooldown. |
 | **Priority** | Medium |
 
 ---
@@ -314,26 +314,180 @@
 
 ---
 
-### BYR_LGN_026 — Logout clears session and returns to login
+### BYR_LGN_026 — Logout clears client-side session and returns to login
 
 | Field | Value |
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer logged in |
-| **Test Steps** | 1. Click Logout from menu<br>2. Try to open `/home` directly |
-| **Expected Result** | Session destroyed; `/home` access redirects to login |
+| **Test Steps** | 1. Click Logout from menu<br>2. Try to open `/home` directly without token |
+| **Expected Result** | Local storage / cookies cleared client-side; `/home` access redirects to login. NOTE: JWT is NOT invalidated server-side — `auth.controller.js:36-46` returns 200 but does not blacklist token. Do NOT assert post-logout 401 from API — captured JWT remains valid until natural 24h expiry. |
 | **Priority** | High |
 
 ---
 
-### BYR_LGN_027 — Multiple OTP failures throttle attempts
+### BYR_LGN_027 — Multiple OTP failures NOT throttled server-side (security gap)
 
 | Field | Value |
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | OTP screen visible |
-| **Test Steps** | 1. Enter wrong OTP 5 times consecutively |
-| **Expected Result** | Account/IP temporarily blocked; lockout message shown |
+| **Test Steps** | 1. Submit 100 wrong OTPs in rapid succession via API |
+| **Expected Result** | All 100 return `401 "Invalid OTP"` — backend has NO failed-attempt counter (no `otpAttempts` column on users model); `authLimiter` middleware is commented out in `app.js:40`. Document as KNOWN BUG (auth.controller.js:734-737). Frontend MAY show lockout but backend will keep accepting requests. |
+| **Priority** | High (Security) |
+
+---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-login.md`
+
+### Corrections to existing TCs
+- **BYR_LGN_009** — Replaced "Kaleyra SMS/WhatsApp" with Epinet SMS (`epinetinfo.in/api/pushsms`, sender `THOAL`, entityId `1001286607558438702`) + Botspice WhatsApp (`api/wappBroad/triggerwam`, template `otp_send`). Kaleyra service file exists but is NOT used for OTP (auth.controller.js:594-596; whatsapp.service.js:101,122; communication.service.js:8-9).
+- **BYR_LGN_011** — Resend cooldown is UI-only (60s frontend timer in `LoginForm.js:169`). Backend cooldown logic in `auth.controller.js:558-568` is fully commented out. Test must NOT assert backend 429/cooldown response — only frontend disabled state.
+- **BYR_LGN_026** — Logout does NOT invalidate JWT server-side. `auth.controller.js:36-46` is effectively a no-op (cookie-clear commented out). Do NOT assert post-logout 401.
+- **BYR_LGN_027** — Reframed as KNOWN BUG (security gap). No backend brute-force protection exists.
+
+### New TCs added below
+
+### BYR_LGN_028 — Master OTP `147258` bypasses validation on UAT
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | UAT environment, `MASTER_OTP=147258` set in backend env |
+| **Test Steps** | 1. Send OTP to any buyer phone<br>2. Ignore actual OTP<br>3. Enter `147258`<br>4. Click Verify |
+| **Expected Result** | Login succeeds; backend logs `info: "Master OTP used for user: <id>"` (auth.controller.js:725-731). Must FAIL in production where MASTER_OTP env is unset. |
+| **Priority** | Critical |
+
+---
+
+### BYR_LGN_029 — OTP request without phone returns 400
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | API access |
+| **Test Steps** | 1. `POST /api/v1/auth/user/send-otp` with empty body<br>2. Observe |
+| **Expected Result** | 400 "Phone number is required" (auth.controller.js:338) |
+| **Priority** | High |
+
+---
+
+### BYR_LGN_030 — NRI without email returns 400
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | API access |
+| **Test Steps** | 1. `POST /api/v1/auth/user/send-otp` body `{ phone, nri:true, countryCode:'+971' }` (no email) |
+| **Expected Result** | 400 "Both email and phone are required for NRI users" (auth.controller.js:159-161) |
+| **Priority** | High |
+
+---
+
+### BYR_LGN_031 — Existing non-NRI phone submitted as NRI returns 409
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | Phone X registered as `isNri=false` |
+| **Test Steps** | 1. `POST send-otp` body `{ phone:X, email:'a@b.com', nri:true, countryCode:'+971' }` |
+| **Expected Result** | 409 "Number already registered as Indian national." (auth.controller.js:181-183) |
+| **Priority** | High |
+
+---
+
+### BYR_LGN_032 — Existing NRI phone submitted as non-NRI returns 409
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | Phone Y registered as `isNri=true` |
+| **Test Steps** | 1. `POST send-otp` body `{ phone:Y, nri:false }` |
+| **Expected Result** | 409 "Number already registered as NRI." (auth.controller.js:353-355) |
+| **Priority** | High |
+
+---
+
+### BYR_LGN_033 — NRI email mismatch on send-otp returns 409
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | NRI user exists with phone Y, email `a@b.com` |
+| **Test Steps** | 1. `POST send-otp` body `{ phone:Y, email:'wrong@b.com', nri:true, countryCode:'+971' }` |
+| **Expected Result** | 409 "Email address does not match with the phone number" (auth.controller.js:166-168) |
+| **Priority** | High |
+
+---
+
+### BYR_LGN_034 — NRI verify falls back to phone-only after phone+email miss (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | NRI user exists with phone Y, email `a@b.com`; OTP just sent |
+| **Test Steps** | 1. `POST verify-otp` body `{ phone:Y, email:'differentemail@b.com', nri:true, otp:<valid> }` |
+| **Expected Result** | KNOWN BUG: returns 200 successful login via phone-only fallback in `auth.controller.js:708-715`. Document risk — auth bypass possible if email mismatch slipped through send-otp. |
+| **Priority** | High (Security) |
+
+---
+
+### BYR_LGN_035 — JWT token expires after 24 hours
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | JWT issued at time T |
+| **Test Steps** | 1. Use token at T+23h59m on `/api/v1/user/profile`<br>2. Wait until T+24h01m<br>3. Reuse same token |
+| **Expected Result** | First call 200; second call 401 (JWT expired) — `expiresIn: '1d'` (config/app.js:78) |
+| **Priority** | High |
+
+---
+
+### BYR_LGN_036 — Concurrent send-otp overwrites previous OTP
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | Buyer phone Z |
+| **Test Steps** | 1. Call send-otp twice in 5s for phone Z<br>2. Capture both OTPs (OTP1, OTP2)<br>3. Submit OTP1 to verify |
+| **Expected Result** | OTP1 rejected with 401 "Invalid OTP" (overwritten in `users.otp` column by OTP2 — auth.controller.js:574-577). Only OTP2 valid. |
 | **Priority** | Medium |
 
 ---
+
+### BYR_LGN_037 — OTP request rate limit not enforced (security gap)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | API access |
+| **Test Steps** | 1. Send 200 `/auth/user/send-otp` calls in 60 seconds from same IP |
+| **Expected Result** | All 200 accepted — `authLimiter` middleware commented out in `app.js:40`. Document as known security gap; backend has zero abuse protection. |
+| **Priority** | High (Security) |
+
+---
+
+### BYR_LGN_038 — Country code regex rejects malformed `+91-` or `91`
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | NRI flow |
+| **Test Steps** | 1. `POST send-otp` body `{ phone, email, nri:true, countryCode:'91' }` (no plus)<br>2. Then retry with `countryCode:'+91-'` |
+| **Expected Result** | Both rejected with 400 validation error — regex `/^\+\d{1,3}$/` (validations/auth.validations.js:64) |
+| **Priority** | Medium |
+
+---
+
+### BYR_LGN_039 — `Registration.defaultScope` case mismatch swallows REFUND filter (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | Buyer with `registrations.status = 'Refund'` |
+| **Test Steps** | 1. Login as that buyer<br>2. Inspect `hasActiveRegistration` flag in verify-otp response |
+| **Expected Result** | KNOWN BUG: scope filter uses `status != 'REFUND'` (uppercase) but enum stores `'Refund'` — scope filters nothing (registration.model.js:201-207 vs :161). Refunded registrations leak as "active". |
+| **Priority** | Medium |

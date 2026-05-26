@@ -328,14 +328,14 @@
 
 ## KYC — Step 4 — E-Verification
 
-### BYR_KYC_027 — OTP sent to registered mobile on Confirm
+### BYR_KYC_027 — OTP sent to registered mobile on Confirm (SM physical-event flow only)
 
 | Field | Value |
 |-------|-------|
 | **Module** | BYR – KYC |
 | **Pre-conditions** | T&C ticked, Confirm clicked |
 | **Test Steps** | 1. Click Confirm<br>2. Wait for OTP screen |
-| **Expected Result** | OTP input screen shown; OTP triggered via SMS/WhatsApp |
+| **Expected Result** | OTP input screen shown; OTP triggered via Epinet SMS (NOT Kaleyra) + Botspice WhatsApp. NOTE: `eVerificationCompleted=true` ONLY when `reqFromSm===true && otpVerified===true` (services/allocation.service.js:2011-2018). Buyer self-flow leaves the e-verification flags `false/null`. |
 | **Priority** | Critical |
 
 ---
@@ -435,7 +435,202 @@
 | **Module** | BYR – KYC |
 | **Pre-conditions** | Backend bypass test |
 | **Test Steps** | 1. Submit co-applicant with relationship "Friend" via API |
-| **Expected Result** | API rejects with validation error per business rule |
+| **Expected Result** | 400 Yup validation error — ENUM is exactly `self|father|mother|brother|sister|spouse` (models/applicants.model.js:105-109). "Spouse"/"Child"/"Sibling" via UI must map to this lowercase ENUM. |
 | **Priority** | High |
 
 ---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-kyc.md`
+
+### Corrections to existing TCs
+- **BYR_KYC_004** — There is NO admin "approve/reject KYC" endpoint and NO `kycStatus` ENUM. KYC is self-attested via `isKycSubmitted` boolean only. No `PENDING/SUBMITTED/APPROVED/REJECTED` state machine (GAP-KYC-001, GAP-KYC-002).
+- **BYR_KYC_014** — "Max 4 applicants" comes from `master_config.max_applicants_per_unit` (default 4) — NOT hardcoded. Test expectation must read the config first (controllers/user.controller.js:243-256).
+- **BYR_KYC_015** — Actual ENUM is `self|father|mother|brother|sister|spouse` (lowercase). UI labels Parent/Child/Sibling must map to these values exactly. "Child" is NOT in the ENUM — possible UI/backend drift.
+- **BYR_KYC_017** — Multer field names are exactly `panDoc`, `aadhaarFront`, `aadhaarBack`, `photoDoc` (utils/upload.js:140-149). `photoDoc` is OPTIONAL (passport photo not mandatory) — `panDoc`, `aadhaarFront`, `aadhaarBack` are required (BR-KYC-016).
+- **BYR_KYC_020 / BYR_KYC_021** — MIME whitelist on `/applicants` is `application/pdf | image/jpeg | image/png` (utils/upload.js:34-42). Size cap is **5 MB per file** (utils/upload.js:140-149). NOTE: `/upload-kyc-form` has size limit commented out (BUG-KYC-001).
+- **BYR_KYC_027** — Replaced "Kaleyra" with Epinet SMS + Botspice WhatsApp. Also clarified e-verification only applies to SM physical-event flow, not buyer self-flow.
+- **BYR_KYC_029** — `eVerificationCompleted=true` only when `reqFromSm===true && otpVerified===true`. Buyer-direct submit leaves it null/false (BR-KYC-022).
+- **BYR_KYC_031** — KYC PDF unit-details download is generated server-side by a cron (every 10 min), NOT on-demand from the success screen. Buyer-direct download is via `GET /registration-units/booking-form-data/:registrationUnitId` rendering. Server-side cron sets `isKycPdfSubmitted=true` after LSQ upload (services/kyc-booking-pdf.service.js:30-72, 414).
+- **BYR_KYC_033** — Confirmed: documents stored in Azure Blob (path `applicants/<userId>/<filename>`), NOT S3. The `s3FilePath` field is hard-coded null (legacy/dead — GAP-KYC-005).
+
+### New TCs added below
+
+### BYR_KYC_036 — Submit-KYC ownership check rejects another user's unit
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Buyer A logged in; registration unit X belongs to Buyer B |
+| **Test Steps** | 1. `POST /api/v1/allocation/submit-kyc` body `[{ registrationUnitId: X, isParkingSelected: false, parkingCount: null }]` |
+| **Expected Result** | 403 "You don't have access to some registration units" (services/allocation.service.js:1883-1889) |
+| **Priority** | Critical (Security) |
+
+---
+
+### BYR_KYC_037 — Submit-KYC is idempotent — second call skips, no duplicate side effects
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Unit U with `isKycSubmitted=true` |
+| **Test Steps** | 1. Resubmit `POST /allocation/submit-kyc` for U<br>2. Inspect response |
+| **Expected Result** | 200 with U in `processedUnits` (fast-path), no duplicate LSQ activity. Shape mismatch BUG-KYC-004: returns `{ id, registrationNumber, regUnitId }` (vs create path which returns `unitId`). |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_038 — Submit-KYC partial failure returns HTTP 207 with success:true (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | 2 units submitted; one fails (e.g., parking unavailable) |
+| **Test Steps** | 1. `POST /allocation/submit-kyc` array of 2<br>2. Inspect status + body |
+| **Expected Result** | 207 Multi-Status; body has `success:true` (BUG-KYC-005) with `processedUnits[]` + `failedUnits[]`. Tests MUST assert status code 207, not `success` field. |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_039 — Parking selection requires master_config.park_enabled=true
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | `master_config.park_enabled = false` |
+| **Test Steps** | 1. Submit KYC with `isParkingSelected:true, parkingCount:1` |
+| **Expected Result** | Per-unit transaction rolls back; unit moves to `failedUnits[]`; HTTP 207 (services/allocation.service.js:1970-1979) |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_040 — Add 5th applicant rejected at config cap
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | 4 applicants on a unit; `max_applicants_per_unit=4` |
+| **Test Steps** | 1. `POST /applicants` with 5th applicant data |
+| **Expected Result** | 400 "Maximum 4 applicants allowed per registration unit" (controllers/user.controller.js:251-256). NOTE: soft-deleted applicants do NOT free a slot but `Applicant.count` may include only non-deleted (RISK-KYC-009 — verify behavior). |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_041 — Duplicate applicant phone/PAN/Aadhaar on same unit rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Applicant exists on unit U with phone P |
+| **Test Steps** | 1. `POST /applicants` for unit U with same phone P |
+| **Expected Result** | 400 "Applicant with this phone number, aadhaar card or pan card already exists for this registration unit" (controllers/user.controller.js:267-272) |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_042 — Self/father/mother relation uniqueness enforced
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Applicant with `relation='self'` already on unit U |
+| **Test Steps** | 1. `POST /applicants` for unit U with `relation:'self'` |
+| **Expected Result** | 400 "An applicant with relation 'self' already exists for this registration unit" (controllers/user.controller.js:280-285) |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_043 — Add-applicant requires panDoc, aadhaarFront, aadhaarBack files
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Valid applicant payload |
+| **Test Steps** | 1. `POST /applicants` multipart with only panDoc (omit aadhaarFront/aadhaarBack) |
+| **Expected Result** | 400 mandatory documents missing (controllers/user.controller.js:179-196, 300-305). photoDoc remains optional. |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_044 — /upload-kyc-form rejects request before KYC submit
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Unit U with `isKycSubmitted=false` |
+| **Test Steps** | 1. `POST /upload-kyc-form` multipart with `pdfFile` and `registrationUnitId=U` |
+| **Expected Result** | 400 "Cannot submit KYC token verification in progress" (controllers/user.controller.js:1447-1449). Ambiguous message — also returned when `lsqBookingActivityId` missing (BUG-KYC-006). |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_045 — /upload-kyc-form has no enforced file-size limit (security gap)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Valid KYC-submitted unit |
+| **Test Steps** | 1. Upload 100MB PDF via `POST /upload-kyc-form` |
+| **Expected Result** | Accepted (no limit enforced — BUG-KYC-001). Multer `memoryStorage` holds in heap → DoS risk. Document as security gap. |
+| **Priority** | High (Security) |
+
+---
+
+### BYR_KYC_046 — KYC PDF cron sets isKycPdfSubmitted=true
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Unit with `isKycSubmitted=true, lsqBookingActivityId IS NOT NULL, isKycPdfSubmitted=false` |
+| **Test Steps** | 1. Trigger `GET /cronPdfGenerationJob` (debug route — BUG-KYC-002)<br>2. Wait for completion<br>3. Inspect DB |
+| **Expected Result** | After successful run: `isKycPdfSubmitted=true`; PDF rendered from `kycBookingFormTamplate.ejs` and pushed to LSQ via `lsqLeadService.uploadFile` (services/kyc-booking-pdf.service.js:326-417). |
+| **Priority** | Medium |
+
+---
+
+### BYR_KYC_047 — Self-KYC retry cron progresses 3-step LSQ submission
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Unit with `isKycSubmitted=false, bookingTokenActivitySubmitted=true, selfKycSubmitted=false` |
+| **Test Steps** | 1. Wait for `*/15 * * * *` cron tick (or trigger manually)<br>2. Inspect three flags |
+| **Expected Result** | `selfKycSubmitted` → `selfKycBookingActivitySubmitted` → `selfKycFinalSubmitted` progress to true in order (cron/self-kyc-lsq-update.cron.js:14-83). |
+| **Priority** | Medium |
+
+---
+
+### BYR_KYC_048 — KYC cache invalidation flips Redis is_kyc_submitted
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Successful submit-kyc just completed |
+| **Test Steps** | 1. Inspect Redis key for `(projectId, registrationNumber)` |
+| **Expected Result** | `is_kyc_submitted = 1` set even if downstream LSQ/MAVIS fails afterwards (RISK-KYC-013, services/allocation.service.js:2033-2034, 2204-2210). Dashboard may show KYC done while booking activity flags still false. |
+| **Priority** | Medium |
+
+---
+
+### BYR_KYC_049 — DELETE /applicants/:id is soft delete (paranoid)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Applicant ID A exists |
+| **Test Steps** | 1. `DELETE /applicants/A`<br>2. Query `SELECT deleted_at FROM applicants WHERE id=A` |
+| **Expected Result** | `deleted_at` populated, row not physically removed (models/applicants.model.js:142). |
+| **Priority** | Medium |
+
+---
+
+### BYR_KYC_050 — kycNumber format = `<registrationNumber>-KYC`
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Unit successfully KYC-submitted |
+| **Test Steps** | 1. Query `registration_units.kyc_number` |
+| **Expected Result** | Value = `${registrationNumber}-KYC` (services/allocation.service.js:2019). No uniqueness constraint — resubmit overwrites same value (RISK-KYC-014). |
+| **Priority** | Low |

@@ -106,14 +106,15 @@ Allow CPs to formally register a new buyer into the XR Portal system, creating a
    - `brokerId` = CP's user ID
    - `walkInSourceXrCode` = CP's hvCode
    - `availableForAllocation` = true
-2. Registration number generated in format: **GHNG-XXXXXXXXXX** (10 digits)
-   - Additional unit registrations for same customer: GHNG-XXXXXXXXXX-A, -B, -C
-3. Customer notified via SMS/WhatsApp (Kaleyra)
+2. Registration number generated as an **encrypted slug** (NOT GHNG-XXXXXXXXXX format — that format is for buyer-portal registrations) <!-- FSD-CORRECTION 2026-05-25 // Source: cp.controller.js registration handler -->
+   - Additional unit registrations for same customer: slug-A, -B, -C
+3. Customer notified via WhatsApp template `cp_link_share_latest` (Botspice, NOT Kaleyra). NRI: email `nri-cp-referral`. No notification sent to CP/SM/admin/master CP. <!-- FSD-CORRECTION 2026-05-25 // Source: cp.controller.js:customer-registration notification path -->
 4. New customer row appears in CP's dashboard table
 
 ### 2.6 Notifications
-
-- Customer receives SMS/WhatsApp confirmation of registration
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **Buyer:** WhatsApp template `cp_link_share_latest` via Botspice (NOT Kaleyra). NRI buyers: email `nri-cp-referral`.
+- **CP / SM / Admin / Master CP:** NONE — no notification sent on CP-side registration. // Source: cp.controller.js (customer registration handler)
 
 ---
 

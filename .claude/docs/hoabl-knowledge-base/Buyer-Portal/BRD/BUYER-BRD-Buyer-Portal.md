@@ -122,7 +122,8 @@ The Buyer Portal uses WebSocket connections for live allocation events:
 | Easiloan | Home loan eligibility and bank offers |
 | LeadSquared (LSQ) | Lead/activity tracking, KYC document upload |
 | Mavis | Unit and booking record creation |
-| Kaleyra | SMS and WhatsApp notifications |
+| Kaleyra | WhatsApp notifications (NOT OTP) |
+| Epinet | OTP SMS delivery for login <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js --> |
 | Azure Blob Storage | KYC document uploads |
 | OS Ticket | Support ticket management |
 | WebSocket Server | Real-time allocation event communication |

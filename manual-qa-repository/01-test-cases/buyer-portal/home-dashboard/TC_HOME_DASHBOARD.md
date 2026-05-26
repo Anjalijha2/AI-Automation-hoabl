@@ -395,3 +395,121 @@
 | **Priority** | Low |
 
 ---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard.md`
+
+### Corrections to existing TCs
+- **BYR_DASH_001 / BYR_DASH_011** — Dashboard is NOT served by a single `/dashboard` endpoint. Frontend orchestrates 3-5 calls: `GET /registration`, `GET /user-registrations`, `GET /registration-count`, `GET /user-unit-details`, `GET /milestone-transaction-details`, `GET /allocation/campaigns/latest` (routes/user.routes.js:53-178). All require `Authorization: Bearer <jwt>` with role `user`.
+- **BYR_DASH_005 / BYR_DASH_006** — Computed `allocationStatus` is derived at request time from (campaign RUNNING/STOPPED) × (campaign DYNAMIC vs static) × Redis cache value. Static assertions WILL flake — pin campaign state in test data (services/registration.service.js:135-167).
+- **BYR_DASH_019** — Registration unit `status` ENUM is uppercase: `WAITLIST | PREALLOCATED | ALLOCATED | WINNER | HOLD | REFUND` (models/registration-unit.model.js:121-124). Refund hide-filter bug: `getRegistration` uses `{ status: { [Op.ne]: 'refund' } }` (lowercase) — never matches uppercase ENUM, so refunded units leak into paid-registration units[] array.
+- **BYR_DASH_029** — No WebSocket implementation verified in routes/user.routes.js — campaign live-state likely requires manual page refresh or polling. Replace "via WebSocket" assertion with periodic refresh until confirmed.
+
+### New TCs added below
+
+### BYR_DASH_033 — /registration with no completed payment returns draft branch
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Dashboard |
+| **Pre-conditions** | Buyer with `paymentStatus != 'success'`; slug `?slug=<projectSlug>` |
+| **Test Steps** | 1. `GET /api/v1/registration?slug=<slug>` |
+| **Expected Result** | 200 `{ registrationNumber: null, draft: <json|null> }` (controllers/registration.controller.js:2427-2441) |
+| **Priority** | High |
+
+---
+
+### BYR_DASH_034 — /registration-count reads static tickerClock column
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Dashboard |
+| **Pre-conditions** | Admin sets `projects.ticker_clock = 12345` for active project |
+| **Test Steps** | 1. `GET /api/v1/registration-count`<br>2. Insert a new registration row<br>3. Re-call endpoint |
+| **Expected Result** | Both calls return `{ registrationCount: 12345 }` — value does NOT auto-increment with new registrations (BUG-DASH-003). |
+| **Priority** | Medium |
+
+---
+
+### BYR_DASH_035 — /user-unit-details requires both query params
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Dashboard |
+| **Pre-conditions** | Authenticated buyer |
+| **Test Steps** | 1. `GET /api/v1/user-unit-details?registrationNumber=GHNG-XXX` (omit unitId) |
+| **Expected Result** | 400 "Missing required query parameters: registrationNumber and unitId" (milestone-payment.controller.js:1491-1493) |
+| **Priority** | Medium |
+
+---
+
+### BYR_DASH_036 — Home loan with admin_rejected status hidden from dashboard row
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Dashboard |
+| **Pre-conditions** | Buyer has `registration_home_loans.loanApprovalStatus = 'admin_rejected'` |
+| **Test Steps** | 1. `GET /user-registrations`<br>2. Inspect `homeLoanId` for that row |
+| **Expected Result** | `homeLoanId = null` (LEFT JOIN filter `loanApprovalStatus != 'admin_rejected'` in services/registration.service.js:97-102). Home Loan ENUM: `pending / approved / admin_rejected / admin_approved` — NOT APPLIED/APPROVED/REJECTED. |
+| **Priority** | High |
+
+---
+
+### BYR_DASH_037 — Dynamic campaign allocation falls back to WAITLIST when Redis MISS
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Dashboard |
+| **Pre-conditions** | Dynamic campaign RUNNING; unit DB `status=WAITLIST`, `availableForAllocation=true`; Redis key absent |
+| **Test Steps** | 1. `GET /user-registrations`<br>2. Inspect row `allocationStatus` |
+| **Expected Result** | `allocationStatus = 'WAITLIST'` despite availableForAllocation=true (services/registration.service.js:159-166) |
+| **Priority** | High |
+
+---
+
+### BYR_DASH_038 — Terminal WINNER/HOLD/REFUND bypass campaign override
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Dashboard |
+| **Pre-conditions** | Unit with `status=WINNER`; no campaign running |
+| **Test Steps** | 1. `GET /user-registrations` |
+| **Expected Result** | `allocationStatus='WINNER'` regardless of campaign state (services/registration.service.js:133, 137-140) |
+| **Priority** | High |
+
+---
+
+### BYR_DASH_039 — Refund filter case-mismatch leaks refunded units (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Dashboard |
+| **Pre-conditions** | Buyer with one unit in `status='REFUND'` (uppercase ENUM) |
+| **Test Steps** | 1. `GET /registration?slug=<slug>`<br>2. Inspect `units[]` |
+| **Expected Result** | KNOWN BUG: refunded unit still appears in units[] — filter uses lowercase `'refund'` (controllers/registration.controller.js:2390 vs models/registration-unit.model.js:122). Document, do not pass. |
+| **Priority** | High |
+
+---
+
+### BYR_DASH_040 — Unauthenticated access to /registration returns 401
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Dashboard |
+| **Pre-conditions** | No JWT |
+| **Test Steps** | 1. `GET /api/v1/registration` without Authorization header |
+| **Expected Result** | 401 unauthorized (`protect` middleware in routes/user.routes.js:49) |
+| **Priority** | Critical (Security) |
+
+---
+
+### BYR_DASH_041 — Buyer JWT cannot access non-user role endpoint
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Dashboard |
+| **Pre-conditions** | Valid buyer JWT |
+| **Test Steps** | 1. Use buyer token on admin-only endpoint |
+| **Expected Result** | 403 forbidden (`restrictTo('user')` middleware in routes/user.routes.js:50) |
+| **Priority** | High (Security) |

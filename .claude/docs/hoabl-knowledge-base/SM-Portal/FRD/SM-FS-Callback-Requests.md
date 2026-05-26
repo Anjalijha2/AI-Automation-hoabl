@@ -42,7 +42,7 @@ Default landing page after SM login. SM Admin can see all requests system-wide; 
 | SCHEDULED | SM confirmed a time slot |
 | RESCHEDULED | Time slot changed after initial scheduling |
 | CONFIRMED | Both parties confirmed the meeting |
-| COMPLETED | Call took place and outcome recorded |
+| COMPLETED | Call took place and outcome recorded — **NOTE: COMPLETED state is effectively unreachable in current backend** <!-- FSD-CORRECTION 2026-05-25: service catches ENUM truncation and falls back to CONFIRMED at callback-request-sm.service.js:78-87 --> |
 
 ### 1.6 KPI Cards
 
@@ -57,7 +57,7 @@ The top of the screen shows aggregate metrics:
 1. SM sees only their own requests by default
 2. SM Admin can view and reassign requests between SMs
 3. Once COMPLETED, a request cannot be modified
-4. Requests are assigned to SMs via round-robin — earliest `lastRequestAssignedAt` gets next request
+4. <!-- FSD-CORRECTION 2026-05-25 --> Requests assigned via **least-loaded algorithm** (fewest active requests). Round-robin code is **disabled** at `callback-request-sm.service.js:338-349`. When SM Admin creates a request, `managerId` = their own ID (no auto-distribute). // Source: callback-request-sm.service.js:338-349
 5. SM must have `isAvailable = true` to receive new assignments
 
 ### 1.8 Audit and Logging

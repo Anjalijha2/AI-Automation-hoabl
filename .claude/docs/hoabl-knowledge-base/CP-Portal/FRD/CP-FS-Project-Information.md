@@ -42,8 +42,9 @@ Read-only section. Content is managed by the admin via Strapi CMS. CPs can brows
 
 ### 1.6 System Actions
 
-1. CP navigates to a section → backend fetches content from Strapi CMS API
-2. Content is displayed dynamically based on what the admin has published
+<!-- FSD-CORRECTION 2026-05-25 -->
+1. **CP frontend fetches Strapi DIRECTLY** — no backend CP project endpoint exists. Request goes to `${BaseURL}/api/projects/1?populate=deep` with hardcoded `project id=1`. // Source: cp.controller.js; common routes exclude CP role for tower/unit endpoints
+2. Content is displayed dynamically based on what the admin has published in Strapi
 
 ---
 

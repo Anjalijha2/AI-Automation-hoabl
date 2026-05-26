@@ -44,14 +44,14 @@ Applies to users with role ID 3 (Channel Partner) logging in at the CP Portal lo
 
 ### 1.6 System Actions on Login
 
-1. OTP sent to registered mobile via Kaleyra (SMS/WhatsApp)
+1. OTP sent to registered mobile via **Epinet SMS** (NOT Kaleyra) <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js -->
 2. JWT token issued on successful OTP verification
 3. If profile complete → redirect to `/dashboard`
 4. If profile incomplete → redirect to profile completion screen
 
 ### 1.7 Notifications
 
-- OTP delivered to mobile via SMS or WhatsApp
+- OTP delivered via **Epinet SMS** (not Kaleyra/WhatsApp) <!-- FSD-CORRECTION 2026-05-25 -->
 
 ### 1.8 Audit and Logging
 

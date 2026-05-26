@@ -314,7 +314,8 @@ Pending ──► Approved  (admin approves — submission updated with new valu
 3. Original `JbpSubmission` preserved unchanged.
 
 ## 8. Notifications
-- Kaleyra notification to CP: edit request approved / rejected (if configured).
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **NONE on admin approve/reject.** No backend notification call exists in the approve/reject handlers. CP must poll to discover decision. Only CP-side JBP submit fires a notification (WhatsApp template `jbplaunchtwo_new`). // Source: admin.controller.js (JBP edit-request approve/reject handlers); cp.controller.js:714-730
 
 ## 9. Audit & Logging
 - Admin user ID, edit request ID, decision (Approved / Rejected), reason, timestamp logged.
@@ -331,7 +332,7 @@ Pending ──► Approved  (admin approves — submission updated with new valu
    - Click the "Reject" action on the request.
    - Enter a reason for rejection in the required field.
    - Confirm. The CP's original submission is preserved unchanged.
-5. **Result:** The CP receives a notification (if configured via Kaleyra) informing them whether their edit request was approved or rejected.
+5. **Result:** The decision is recorded. No automatic notification is sent to the CP — CP must check their JBP submission status to see the outcome.
 
 ---
 

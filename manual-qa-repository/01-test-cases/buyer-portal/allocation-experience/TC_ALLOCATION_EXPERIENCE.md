@@ -42,14 +42,14 @@
 
 ---
 
-### BYR_ALLOC_004 — Auto-update when campaign goes live (WebSocket)
+### BYR_ALLOC_004 — Auto-update when campaign goes live (polling — NOT WebSocket)
 
 | Field | Value |
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer on waiting screen at campaign start time |
-| **Test Steps** | 1. Wait for campaign start without refreshing |
-| **Expected Result** | Screen transitions to live allocation view via WebSocket; no manual refresh needed |
+| **Test Steps** | 1. Wait for campaign start; monitor network tab |
+| **Expected Result** | Frontend POLLS `GET /api/v1/user/allocation/campaigns/latest` periodically (NO WebSocket / SSE infrastructure exists — verified absent from backend; FSD §1 GAP-AE-01). Screen transitions on next poll cycle. Do NOT assert WebSocket events. |
 | **Priority** | Critical |
 
 ---
@@ -406,8 +406,8 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | OpenAllottedUnit visible |
-| **Test Steps** | 1. Click Proceed to Pay |
-| **Expected Result** | Easebuzz opens for assigned unit; proceed_to_pay WebSocket event fired |
+| **Test Steps** | 1. Click Proceed to Pay<br>2. Monitor network |
+| **Expected Result** | Backend hits `POST /api/v1/user/allocation/order`; Easebuzz gateway opens (default gateway per BR-AE-12). No WebSocket event fired — no socket.io / SSE infrastructure exists. |
 | **Priority** | Critical |
 
 ---
@@ -472,14 +472,14 @@
 
 ---
 
-### BYR_ALLOC_039 — UnitSoldNotification popup when others book
+### BYR_ALLOC_039 — UnitSoldNotification popup via polling (NOT real-time push)
 
 | Field | Value |
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer on Allotment during DYNAMIC campaign |
-| **Test Steps** | 1. Another buyer books a unit |
-| **Expected Result** | Real-time popup notifies buyer of recent sale |
+| **Test Steps** | 1. Another buyer books a unit<br>2. Wait for next polling cycle |
+| **Expected Result** | Popup appears on NEXT poll of `/campaigns/latest` or unit-availability endpoint. NO backend push exists — comments in allocation.service.js:325, 1698 refer to non-existent WebSocket. Latency = polling interval (likely matches `roundTime` for DYNAMIC). |
 | **Priority** | Low |
 
 ---
@@ -529,7 +529,186 @@
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer Booked before campaign end |
 | **Test Steps** | 1. Inspect dashboard |
-| **Expected Result** | Status remains Booked; not converted to Waitlisted |
+| **Expected Result** | RegistrationUnit.status stays `WINNER` (terminal — bypasses campaign override per BR-DASH-007). |
 | **Priority** | Critical |
 
 ---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-experience.md`
+
+### Corrections to existing TCs
+- **BYR_ALLOC_004 / BYR_ALLOC_033 / BYR_ALLOC_039** — There is NO WebSocket / SSE / Socket.IO infrastructure. Two code comments reference websocket but no implementation exists (GAP-AE-01). All real-time UI MUST poll. Removed all WebSocket assertions.
+- **BYR_ALLOC_023** — Default gateway is Easebuzz (BR-AE-12). Razorpay supported but ONLY Razorpay orders can be cancelled via `cancelAllocationOrderService` (GAP-AE-04).
+- **BYR_ALLOC_028** — Hold expiry is 20 minutes from `paymentTransaction.createdAt`, hardcoded — no project config (GAP-AE-03). Expiry is LAZY — only fires when reconcile cron / webhook runs (GAP-AE-02). Closing the tab leaves unit unavailable until next cron tick.
+- **BYR_ALLOC_034** — On success, RegistrationUnit `WINNER` + WhatsApp template `congrates_payment_success_27sept` + SMS `ALLOTMENT_PAYMENT_SUCCESS` (only if `countryCode === '+91'` literal). WhatsApp via Botspice, SMS via Epinet (NOT Kaleyra).
+- **BYR_ALLOC_040** — Status revert is NOT automatic for buyer-displayed status — `RegistrationUnit.status` stays `ALLOCATED`. Dashboard recomputes display status `WAITLIST` when no campaign running (services/registration.service.js:142-144).
+
+### New TCs added below
+
+### BYR_ALLOC_044 — POST /allocation/order rejects when campaign not RUNNING
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Campaign status = `NOT_STARTED` or `STOPPED` |
+| **Test Steps** | 1. `POST /api/v1/user/allocation/order` body with valid items |
+| **Expected Result** | Error "Allotments are closed" (allocation.service.js:519-527 / BR-AE-01) |
+| **Priority** | Critical |
+
+---
+
+### BYR_ALLOC_045 — Multi-registration order rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Buyer has units in two different registrations R1 and R2 |
+| **Test Steps** | 1. `POST /allocation/order` with items spanning R1 and R2 |
+| **Expected Result** | Rejected — all items in one order must share same `registrationId` (BR-AE-02, allocation.service.js:475-480) |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_046 — Already-WINNER unit submit returns confirmationNumber
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | RegistrationUnit U is `WINNER` with `confirmationNumber` set |
+| **Test Steps** | 1. `POST /allocation/order` with U in items |
+| **Expected Result** | "Unit already confirmed" + `confirmationNumber` returned (BR-AE-03) |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_047 — In-flight HOLD returns "Payment under Verification"
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | RegistrationUnit U is `HOLD` |
+| **Test Steps** | 1. Submit second order on U |
+| **Expected Result** | "Your Payment is under Verification" + `confirmationNumber` (BR-AE-04) |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_048 — Concurrent hold race protected by conditional UPDATE
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Two buyers attempt same unit at same instant |
+| **Test Steps** | 1. Both fire `POST /allocation/order`<br>2. Compare responses |
+| **Expected Result** | First succeeds; second sees "Unit … is already under booking" — protected by `UPDATE ... WHERE status='AVAILABLE'` returning affectedRows=0 (BR-AE-08, allocation.service.js:630-642). |
+| **Priority** | Critical |
+
+---
+
+### BYR_ALLOC_049 — Parking unavailable rejects with specific message
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | All parking slots BOOKED in inventory |
+| **Test Steps** | 1. `POST /allocation/order` with `isParkingSelected:true` |
+| **Expected Result** | "Parking slots are no longer available" (BR-AE-07, allocation.service.js:598-603) |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_050 — Gateway initiation failure rolls back all HOLDs atomically
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Easebuzz returns error on initiate |
+| **Test Steps** | 1. `POST /allocation/order` triggering gateway fail<br>2. Inspect Unit, RegistrationUnit, ParkingInventory |
+| **Expected Result** | All three revert: Unit→AVAILABLE, RegistrationUnit→ALLOCATED, Parking→AVAILABLE (BR-AE-10, allocation.service.js:789-826) |
+| **Priority** | Critical |
+
+---
+
+### BYR_ALLOC_051 — Payment SUCCESS triggers Botspice WhatsApp + Epinet SMS
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Buyer with `countryCode='+91'` completes payment |
+| **Test Steps** | 1. Complete payment<br>2. Inspect WhatsApp and SMS gateway logs |
+| **Expected Result** | WhatsApp template `congrates_payment_success_27sept` with args `[firstName, "{towerName} - {allocatedUnit}"]` via Botspice; SMS code `ALLOTMENT_PAYMENT_SUCCESS` via Epinet. NOT Kaleyra. |
+| **Priority** | Critical |
+
+---
+
+### BYR_ALLOC_052 — Payment SUCCESS for non-+91 country code skips SMS
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | NRI buyer with `countryCode='+971'` |
+| **Test Steps** | 1. Complete payment<br>2. Inspect channels |
+| **Expected Result** | WhatsApp fires; SMS NOT dispatched — guard `countryCode === '+91'` literal (GAP-AE-08, allocation.service.js:1830-1832). |
+| **Priority** | Medium |
+
+---
+
+### BYR_ALLOC_053 — Payment FAILURE triggers `payment_unsuccessful_27sept` + ALLOTMENT_PAYMENT_FAILED
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Gateway returns `cancelled` / `bounced` / `failed` |
+| **Test Steps** | 1. Inspect WhatsApp/SMS logs |
+| **Expected Result** | WhatsApp template `payment_unsuccessful_27sept` (empty args array); SMS code `ALLOTMENT_PAYMENT_FAILED` if `+91`. Status reset to AVAILABLE / ALLOCATED. |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_054 — Hold expiry runs via cron, not real-time timer
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | HOLD created at T |
+| **Test Steps** | 1. At T+21 min, query unit status WITHOUT triggering cron<br>2. Wait for next `allocation-payment-reconcile.cron.js` tick<br>3. Re-query |
+| **Expected Result** | Before cron tick: unit still HOLD even though > 20 min elapsed. After cron tick: unit reset to AVAILABLE (GAP-AE-02). |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_055 — Cross-buyer unit-details access rejected with 401
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Buyer A authenticated; registrationNumber R belongs to Buyer B |
+| **Test Steps** | 1. `GET /api/v1/user/allocation/unit-details?registrationNumber=R&unitId=X` |
+| **Expected Result** | 401 / "Invalid resource access" (BR-AE-15, allocation.controller.js:257-264) |
+| **Priority** | Critical (Security) |
+
+---
+
+### BYR_ALLOC_056 — getDynamicTemplateData applicationDetails returns 400 KYC Incomplete
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | RegistrationUnit U with `isKycSubmitted=false` |
+| **Test Steps** | 1. `GET /allocation/unit-details?unitId=X&registrationNumber=R&applicationDetails=true` |
+| **Expected Result** | 400 "KYC Incomplete" (BR-AE-14, allocation.controller.js:245-247) |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_057 — No rate limit on /allocation/order (security gap)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Authenticated buyer |
+| **Test Steps** | 1. Fire 50 `POST /allocation/order` in 5 seconds |
+| **Expected Result** | All requests accepted (no `rateLimit`/`throttle` middleware on route — GAP-AE-10). Document as security gap; buyer could DoS gateway. |
+| **Priority** | Medium (Security) |

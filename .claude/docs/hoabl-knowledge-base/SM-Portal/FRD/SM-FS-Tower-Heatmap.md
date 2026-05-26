@@ -69,10 +69,12 @@ If multiple towers are listed, click the tower you want to view. The unit grid w
 **Step 3 — Read the colour codes**
 
 Each unit box shows its status by colour:
-- **White / Green** — Available for booking
-- **Orange** — A buyer is currently processing payment (hold, up to 20 minutes)
-- **Red** — Already booked and confirmed
-- **Blue** — Reserved by admin
+<!-- FSD-CORRECTION 2026-05-25: colour map rewritten from source. Orange is commented out. Blue does not exist. // Source: common.service.js heatmap functions -->
+- **Green (`#00FF00`)** — AVAILABLE, HOLD, PREBOOKED, RESERVED
+- **Red (`#FF0000`)** — BOOKED, PBT
+- **Grey (`#808080`)** — REFUGE, or NOT_AVAILABLE (synthetic padding)
+- ~~**Orange**~~ — **NOT ACTIVE** (max-preferences highlight code is commented out in source)
+- ~~**Blue**~~ — **Does not exist** in source colour mapping
 
 **Step 4 — Use this information with customers**
 

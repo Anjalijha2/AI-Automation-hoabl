@@ -305,3 +305,73 @@
 | **Priority** | Low |
 
 ---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-project-information.md`
+
+### Corrections to existing TCs
+- **BYR_PROJ_001 / BYR_PROJ_003 / BYR_PROJ_005-021** — There is NO buyer-facing backend endpoint for project info, amenities, gallery, brochure, documents, or videos. `GET /project`, `GET /amenities`, `GET /gallery`, `GET /brochure`, `GET /specifications` do NOT exist (FSD §6.3 "Endpoints NOT found"). The frontend MUST hit Strapi directly OR these TCs are testing fictional UI features. Verify with frontend team whether the buyer client calls Strapi from the browser (CORS, token exposure risk).
+- **BYR_PROJ_007 / BYR_PROJ_015** — `mahareraNumber` IS exposed via `getDynamicTemplateData` (allocation/unit-details endpoint) — but only inside the cost-sheet response for a specific unit. There is no project-level endpoint returning it.
+- **BYR_PROJ_022** — Strapi has only ONE server-side consumer: `strapiService.getStrapiDetails` called via `GET <STRAPI_BASE_URL>/api/projects/1?populate=deep` for apartment-config validation in `submitEoi` (services/strapi.service.js:115-132). The `1` is hardcoded — Strapi serves project ID 1 regardless of env (this differs from backend DB which uses 2 on non-prod).
+- **BYR_PROJ_023** — Confirmed: Strapi outage returns 500 to `submitEoi`, blocking EOI submission. There is no graceful fallback / cache (BR-PI-005).
+
+### New TCs added below
+
+### BYR_PROJ_025 — registrationNumberPrefix missing blocks EOI
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Project Info |
+| **Pre-conditions** | Seed Project row with `registrationNumberPrefix=NULL` for active projectId |
+| **Test Steps** | 1. `POST /api/v1/registration/order` (EOI submit) |
+| **Expected Result** | 400 "Invalid project" (controllers/registration.controller.js:1213-1218) |
+| **Priority** | High |
+
+---
+
+### BYR_PROJ_026 — Strapi project ID is hardcoded to 1
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Project Info |
+| **Pre-conditions** | UAT environment (backend DB projectId=2) |
+| **Test Steps** | 1. Monitor outbound calls to Strapi during EOI submit |
+| **Expected Result** | Strapi URL = `GET <STRAPI_BASE>/api/projects/1?populate=deep` (services/strapi.service.js:117). Hardcoded `1` — does NOT match backend project resolution. Document drift. |
+| **Priority** | Medium |
+
+---
+
+### BYR_PROJ_027 — Project.isActive=false NOT enforced
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Project Info |
+| **Pre-conditions** | Set `projects.is_active=false` for active projectId |
+| **Test Steps** | 1. Login and submit EOI |
+| **Expected Result** | EOI still processes — `isActive` is NOT filtered in buyer paths (BUG GAP, FSD §7.2). Document as risk. |
+| **Priority** | Medium |
+
+---
+
+### BYR_PROJ_028 — Unknown apartmentType during EOI returns 400 from Strapi gate
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Project Info |
+| **Pre-conditions** | Strapi master does not contain apartmentType "5BHK Penthouse" |
+| **Test Steps** | 1. Submit EOI with `apartmentType: "5BHK Penthouse"` |
+| **Expected Result** | 400 "Invalid Apartment Type" (controllers/registration.controller.js:1123-1137) |
+| **Priority** | High |
+
+---
+
+### BYR_PROJ_029 — projectId hardcoded by NODE_ENV
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Project Info |
+| **Pre-conditions** | Any environment |
+| **Test Steps** | 1. Inspect backend env<br>2. Compare projectId in registration flows |
+| **Expected Result** | production → 1, non-prod → 2 (controllers/registration.controller.js:1170, 2337). Documented as known constraint — multi-project rollout requires code change, not config (BUG-DASH-004). |
+| **Priority** | Medium |

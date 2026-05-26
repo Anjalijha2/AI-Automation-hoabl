@@ -104,14 +104,14 @@
 
 ---
 
-### CP_JBP_009 — Activities multi-checkbox shows 14 options
+### CP_JBP_009 — Activities multi-checkbox shows 15 options (not 14)
 
 | Field | Value |
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
 | **Test Steps** | 1. Scroll to List of Activities section<br>2. Count checkboxes |
-| **Expected Result** | 14 distinct activity checkboxes displayed; all individually selectable |
+| **Expected Result** | 15 activity checkboxes (`activityOptions` in cp.validations.js:87-103): Tele-calling, WhatsApp Blast, Email Blast, SMS Blast, Personal Connect Calling, Digital, Portal Listing, Expo, Society Activity, Corporate Activity, Newspaper Insert, Club Activities, Mall Activity, Association Activity, Others. Validation requires min 1, all from this whitelist. |
 | **Priority** | High |
 
 ---
@@ -326,14 +326,189 @@
 
 ---
 
-### CP_JBP_027 — Rejected edit request leaves original submission intact
+### CP_JBP_027 — Rejected edit request leaves original submission intact (no push notification)
 
 | Field | Value |
 |-------|-------|
 | **Module** | CP – JBP |
-| **Pre-conditions** | Admin has rejected the CP's edit request with reason |
-| **Test Steps** | 1. Open `/jbp` |
-| **Expected Result** | Original v1 submission remains; admin rejection reason is visible to CP |
+| **Pre-conditions** | Admin has rejected the CP's edit request with `adminComment` |
+| **Test Steps** | 1. CP polls `/jbp-cycles` or `/jbp-edit-requests`<br>2. Open `/jbp` |
+| **Expected Result** | Original v1 submission remains ACTIVE. JbpEditRequest.status = REJECTED, adminComment visible. **NO push notification sent on approve/reject** (JBP-CP-005, admin.controller.js:3262-3365). CP must poll to discover state changes. |
 | **Priority** | Medium |
 
 ---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md`
+
+### Corrections to existing TCs
+- **CP_JBP_001** — No `/jbp` backend route. CP frontend orchestrates: `GET /api/v1/cp/jbp-cycles?projectSlug=`, `POST /api/v1/cp/jbp`, `GET /api/v1/cp/jbp-history`, `POST /api/v1/cp/jbp-edit-requests`, `GET /api/v1/cp/jbp-edit-requests`. All require `protect + restrictTo('cp')`.
+- **CP_JBP_002** — Cycle phase logic: `UPCOMING` (OPEN + startDate > today), `ACTIVE` (OPEN + start ≤ today ≤ end), `EXPIRED` (CLOSED or endDate < today). `canSubmit = (phase==='ACTIVE') && !existingSubmission` (cp.controller.js:1755-1763, 1891).
+- **CP_JBP_005** — `brokerageAmount` is a free string ≤255 chars (nullable), NOT a dropdown with predefined ranges (cp.validations.js:163).
+- **CP_JBP_006** — `netBookingCommitment` is a positive integer ≤500000000, digits-only (cp.validations.js:165-173). NOT a dropdown.
+- **CP_JBP_007 / CP_JBP_008** — `manpower` is integer 1..100 required. Negative values rejected.
+- **CP_JBP_009** — 15 activities, not 14 (corrected above).
+- **CP_JBP_011** — `digitalPlatforms` whitelist: `['google', 'meta', 'webpage', 'portal', 'others']` (5 options). `platformBudgets[platform]` must be digits-only 1..500000000 for each selected platform.
+- **CP_JBP_012** — `investmentOptions` 5 values: `'Upto 1 lakhs', '1 to 3 lakhs', '3 to 5 lakhs', '5 to 7 lakhs', '7+ lakhs'`.
+- **CP_JBP_014** — Yes/No fields actually stored as INTEGER COUNT (>0=Yes) for Inserts/Standees/Kiosk/Telecallers/SmsBlast/WhatsappBlast. Only `growthHub` is boolean.
+- **CP_JBP_018** — Success returns 201, message "JBP submitted successfully". Triggers Botspice WhatsApp template `jbplaunchtwo_new` (15 variables, NOT Kaleyra). 
+- **CP_JBP_023** — Versioning: prior ACTIVE → EXPIRED, edit request → CONSUMED, new row `version = prior.version + 1, status='ACTIVE'`. EXPIRED row remains in DB (BUG-CP-006 — `isJbpSubmitted` count includes EXPIRED rows).
+- **CP_JBP_025** — Edit request: 72-hour window (`editableUntil = now + 72h`). Must include `projectSlug`, `jbpSubmissionId`, `reason` (≤255), `explanation` (≤550 nullable). Status PENDING → APPROVED/REJECTED (admin) → CONSUMED (CP saves) or EXPIRED (display-only when editableUntil < now or cycle CLOSED — cp.controller.js:2197-2207).
+- **CP_JBP_027** — Reframed: NO push notification on approve/reject.
+
+### New TCs added below
+
+### CP_JBP_028 — Submit without prospectId returns 400
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | CP with `users.prospect_id IS NULL` |
+| **Test Steps** | 1. `POST /api/v1/cp/jbp` valid body |
+| **Expected Result** | 400 "Something went wrong. Please try again." (cp.controller.js:541-543). Generic message — CP has no LSQ linkage. |
+| **Priority** | High |
+
+---
+
+### CP_JBP_029 — Submit with non-existent jbpCycleId crashes with NPE (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | Valid prospectId; invalid jbpCycleId |
+| **Test Steps** | 1. `POST /api/v1/cp/jbp` body with bogus jbpCycleId |
+| **Expected Result** | KNOWN BUG (JBP-CP-001): NPE on `jbpCycle.endDate` BEFORE null check — outer catch returns generic 500 "Failed to submit JBP. Please try again." (cp.controller.js:545-555). Should be specific 400. |
+| **Priority** | High |
+
+---
+
+### CP_JBP_030 — Submit to CLOSED cycle returns 400
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | jbpCycleId with `status='CLOSED'` OR `endDate < today` |
+| **Test Steps** | 1. `POST /jbp` |
+| **Expected Result** | 400 "JBP cycle is not open to accept submission" (cp.controller.js:553-555). |
+| **Priority** | High |
+
+---
+
+### CP_JBP_031 — Edit window expired returns 403
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | Approved edit request with `editableUntil < now` |
+| **Test Steps** | 1. `POST /jbp` again |
+| **Expected Result** | 403 "Your edit window has expired. Please request a new edit approval" (cp.controller.js:575-580). |
+| **Priority** | High |
+
+---
+
+### CP_JBP_032 — Resubmit without approved edit returns 400
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | ACTIVE submission exists, no APPROVED edit request |
+| **Test Steps** | 1. `POST /jbp` |
+| **Expected Result** | KNOWN BUG (JBP-CP-002): may NPE on `approvedEditRequest.editableUntil` BEFORE the null check that returns "Edit not allowed without approval" (cp.controller.js:568-584). Document. |
+| **Priority** | High |
+
+---
+
+### CP_JBP_033 — LSQ createActivity failure halts submission before DB write
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | Mock LSQ createActivity to return non-Success or missing RelatedId |
+| **Test Steps** | 1. `POST /jbp` |
+| **Expected Result** | 500 "Failed to create Activity in LeadSquared"; NO `jbp_submissions` row created (cp.controller.js:623-637). |
+| **Priority** | High |
+
+---
+
+### CP_JBP_034 — LSQ captureLead failure after activity success leaves orphan LSQ activity
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | createActivity returns success; captureLead fails |
+| **Test Steps** | 1. `POST /jbp`<br>2. Retry on failure |
+| **Expected Result** | 500 returned; DB row NOT created. LSQ activity already created — retry will duplicate (JBP-CP-009, idempotency gap). |
+| **Priority** | Medium |
+
+---
+
+### CP_JBP_035 — Submission triggers Botspice WhatsApp jbplaunchtwo_new (15 vars)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | Successful submit |
+| **Test Steps** | 1. `POST /jbp` valid<br>2. Inspect Botspice outbound |
+| **Expected Result** | Template `jbplaunchtwo_new` with 15 positional variables (firstName, brokerage, netBooking, manpower, activities, platforms, investment, inserts, standees, kiosk, telecallers, smsBlast, whatsappBlast, growthHub, regCommitment). Phone formatted as `"91<phone>"` (no `+`, JBP-CP-003 BUG). Fire-and-forget — failures swallowed (JBP-CP-004). |
+| **Priority** | High |
+
+---
+
+### CP_JBP_036 — Project ownership NOT enforced (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | CP not assigned to project P |
+| **Test Steps** | 1. `POST /jbp` with `projectSlug` of P |
+| **Expected Result** | Succeeds — no membership/assignment check between user and project (JBP-CP-010, cp.controller.js:529-535). Document. |
+| **Priority** | Medium (Security) |
+
+---
+
+### CP_JBP_037 — Duplicate edit request for same submission returns 409
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | Submission S with PENDING edit request |
+| **Test Steps** | 1. `POST /api/v1/cp/jbp-edit-requests` for S again |
+| **Expected Result** | 409 "An edit request is already pending for this submission" (cp.controller.js:2046-2050). |
+| **Priority** | High |
+
+---
+
+### CP_JBP_038 — Already-approved-and-editable returns 409 on new request
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | Submission S has APPROVED edit request, still editable |
+| **Test Steps** | 1. `POST /jbp-edit-requests` for S |
+| **Expected Result** | 409 "You already have an approved edit request. Use it to edit your submission." (cp.controller.js:2052-2059). |
+| **Priority** | Medium |
+
+---
+
+### CP_JBP_039 — Edit request for CLOSED cycle rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | Cycle CLOSED |
+| **Test Steps** | 1. `POST /jbp-edit-requests` |
+| **Expected Result** | 400 "Edit requests are not allowed for CLOSED cycles" (cp.controller.js:2042-2044). |
+| **Priority** | High |
+
+---
+
+### CP_JBP_040 — isJbpSubmitted login flag includes EXPIRED rows (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | CP submitted in cycle N-1 (EXPIRED), not submitted in cycle N |
+| **Test Steps** | 1. Login → inspect `isJbpSubmitted` |
+| **Expected Result** | KNOWN BUG: returns `true` even though current cycle has no submission. Count query has no cycle/status filter (JBP-CP-006, cp.controller.js:452). |
+| **Priority** | Medium |

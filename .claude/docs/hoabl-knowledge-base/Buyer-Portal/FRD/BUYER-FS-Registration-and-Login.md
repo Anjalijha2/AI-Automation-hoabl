@@ -47,7 +47,7 @@ Applies to users with role ID 2 (Buyer/User). Buyers cannot self-register — th
 
 ### 1.7 System Actions on Login
 
-1. OTP generated and sent via Kaleyra (SMS/WhatsApp)
+1. OTP generated and sent via **Epinet SMS** (NOT Kaleyra — Kaleyra imports commented out in `communication.service.js:8-9`) <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js, auth.controller.js -->
 2. JWT token issued on successful OTP verification
 3. Session established with buyer's role and registration data
 4. Buyer redirected to `/home` (Home Dashboard)

@@ -6,15 +6,15 @@
 
 ## Support — Access & List View
 
-### BYR_SUP_001 — Support Tickets accessible from nav menu
+### BYR_SUP_001 — Support Tickets reachable by direct URL (nav entries commented out)
 
 | Field | Value |
 |-------|-------|
 | **Module** | BYR – Support |
 | **Pre-conditions** | Buyer logged in |
-| **Test Steps** | 1. Click Support Tickets in nav |
-| **Expected Result** | URL = `/support-tickets`; list view renders |
-| **Priority** | Critical |
+| **Test Steps** | 1. Inspect Sidebar.js + BottomNavigationBar.jsx for Support Tickets entry<br>2. Manually navigate to `/support-tickets` |
+| **Expected Result** | Sidebar and bottom-nav entries are commented out (Sidebar.js:173-189, BottomNavigationBar.jsx:151-158). Page accessible only by direct URL or deep-link from another in-module page. List view renders. |
+| **Priority** | High |
 
 ---
 
@@ -54,14 +54,14 @@
 
 ---
 
-### BYR_SUP_005 — Status badge reflects current state
+### BYR_SUP_005 — Status badge reflects osTicket state (NOT local DB status)
 
 | Field | Value |
 |-------|-------|
 | **Module** | BYR – Support |
-| **Pre-conditions** | Mix of statuses in tickets |
-| **Test Steps** | 1. Inspect Status column |
-| **Expected Result** | Badge style/colour matches status (Open, In Progress, Resolved, Closed) |
+| **Pre-conditions** | Mix of tickets, osTicket reachable |
+| **Test Steps** | 1. Inspect Status column<br>2. Compare to osTicket source state |
+| **Expected Result** | UI badges sourced from `record.osTicket.status` live fetch: Open / Resolved / Closed / Archived / Deleted. Local DB `status` ENUM (OPEN/IN_PROGRESS/ACTION_REQUIRED/RESOLVED/CLOSED) is NEVER mutated post-create — irrelevant to UI (KB-1, support-ticket.model.js:101-105, no `.update({ status })` in service/controller). If osTicket fetch fails: badge = "Unknown" (SupportTicketTable.jsx:70-82). |
 | **Priority** | High |
 
 ---
@@ -357,7 +357,178 @@
 | **Module** | BYR – Support |
 | **Pre-conditions** | Create form |
 | **Test Steps** | 1. Submit with only whitespace |
-| **Expected Result** | Whitespace-only treated as empty; validation triggers |
+| **Expected Result** | Whitespace-only treated as empty; validation triggers (note field required, support-ticket.validations.js:4-8) |
 | **Priority** | Medium |
 
 ---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-support-tickets.md`
+
+### Corrections to existing TCs
+- **BYR_SUP_001** — Sidebar and bottom-nav links to `/support-tickets` are commented out. Page reachable only via direct URL or in-module deep links.
+- **BYR_SUP_002** — Buyer scoping is enforced on LIST endpoint (`GET /api/v1/support-tickets`) by filter `userId = user.id`. NOT enforced on DETAIL endpoint `GET /api/v1/support-tickets/:id` — see new TC BYR_SUP_028 (BUG).
+- **BYR_SUP_005 / BYR_SUP_026** — Status comes from live osTicket fetch, NOT local DB enum. Status drift: local ENUM has IN_PROGRESS/ACTION_REQUIRED (unrepresentable in osTicket); osTicket has Archived/Deleted (unrepresentable locally).
+- **BYR_SUP_016 / BYR_SUP_029** — Body fields for create: `registrationNumber`, `category`, `note` are mandatory for ALL categories. Plus per-category: CAR_PARKING→numberOfParkings, CANCELLATION→reasonOfCancellation, LOAN→timeSlot+contactNumber (validations/support-ticket.validations.js:10-33).
+- **BYR_SUP_018** — Ticket number format: `TKT-GN-NNNNNN` (e.g., `TKT-GN-000001`), generated server-side. Race condition possible — concurrent creates can collide on unique index (KB-5, support-ticket.service.js:33-46, 95-106).
+- **BYR_SUP_019** — Email/notifications delegated to osTicket (`alert:true, autorespond:true`). Portal backend itself sends NO email. Recipient identity = `firstName + lastName, email, phone` from user record.
+- **BYR_SUP_021** — Documents stored in **Azure Blob** path `tickets/<ticketId>/<filename>`, NOT S3. SAS-signed download URLs returned on GET /:id for CANCELLATION attachments only.
+- **BYR_SUP_027** — On osTicket outage: returns 500 to client, NO DB row created (osTicket POST runs before DB insert — support-ticket.controller.js:19-32).
+- **BYR_SUP_028** — Re-flagged as BUG: detail endpoint does NOT enforce ownership filter — cross-buyer access likely succeeds.
+
+### New TCs added below
+
+### BYR_SUP_030 — Unknown category returns 400
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Authenticated buyer |
+| **Test Steps** | 1. `POST /api/v1/support-tickets/create` body `{ category: 'INVALID_CAT', ... }` |
+| **Expected Result** | 400 "Invalid ticket category: INVALID_CAT" (support-ticket.routes.js:16-26) |
+| **Priority** | High |
+
+---
+
+### BYR_SUP_031 — LOAN category requires timeSlot + contactNumber
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Form |
+| **Test Steps** | 1. Submit LOAN ticket without `contactNumber` |
+| **Expected Result** | 400 Yup validation (validations/support-ticket.validations.js:25-32). Server regex `^\d{10,15}$`; client regex `^[0-9]{10}$` — drift: 11+ digit numbers fail UI but succeed API (KB-3). |
+| **Priority** | High |
+
+---
+
+### BYR_SUP_032 — CAR_PARKING requires numberOfParkings
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Form |
+| **Test Steps** | 1. Submit CAR_PARKING without `numberOfParkings` |
+| **Expected Result** | 400 Yup validation (support-ticket.validations.js:15-18). |
+| **Priority** | High |
+
+---
+
+### BYR_SUP_033 — CANCELLATION requires reasonOfCancellation
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Form |
+| **Test Steps** | 1. Submit CANCELLATION without `reasonOfCancellation` |
+| **Expected Result** | 400 Yup validation. Note: file attachments individually optional (KB-7) — CANCELLATION ticket with zero files is accepted. |
+| **Priority** | High |
+
+---
+
+### BYR_SUP_034 — CANCELLATION uploads only accept whitelist MIME
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | CANCELLATION form |
+| **Test Steps** | 1. Upload `.docx` as `aadharCard`<br>2. Upload `.gif` as `panCard` |
+| **Expected Result** | 400 "Invalid file type for aadharCard..." — whitelist = `application/pdf, image/jpeg, image/jpg, image/png, image/webp` (utils/upload.js:158-175, 195-204) |
+| **Priority** | High |
+
+---
+
+### BYR_SUP_035 — File size limits per field
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | CANCELLATION form |
+| **Test Steps** | 1. Upload 6MB aadharCard (limit 5MB)<br>2. Upload 11MB transactionProof (limit 10MB) |
+| **Expected Result** | Both rejected by multer; aadhar/pan/cancelledCheque cap = 5 MB; transactionProof cap = 10 MB (utils/upload.js:158-175). |
+| **Priority** | High |
+
+---
+
+### BYR_SUP_036 — Non-CANCELLATION categories silently ignore uploaded files
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Form |
+| **Test Steps** | 1. Submit GENERAL with `aadharCard` file attached |
+| **Expected Result** | Ticket created; file NOT uploaded to Azure; DB row attachment columns NULL (support-ticket.service.js:61-85). Silent — no error. |
+| **Priority** | Medium |
+
+---
+
+### BYR_SUP_037 — Search returns no API call for 1-3 chars
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | List view loaded |
+| **Test Steps** | 1. Type "a" then "ab" then "abc" — monitor network |
+| **Expected Result** | No `GET /api/v1/support-tickets?search=...` call. Type 4+ chars: call fires. Clear: immediate reload (client debounce — SupportTicketTable.jsx:128-133). |
+| **Priority** | Medium |
+
+---
+
+### BYR_SUP_038 — projectId hardcoded by NODE_ENV
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Any env |
+| **Test Steps** | 1. Create ticket<br>2. Query `support_tickets.project_id` |
+| **Expected Result** | Always 1 (prod) / 2 (non-prod) regardless of buyer's actual project context (support-ticket.service.js:21). Multi-project rollout BUG. |
+| **Priority** | Medium |
+
+---
+
+### BYR_SUP_039 — Detail endpoint missing ownership check (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Buyer A authenticated; Buyer B has ticket ID=42 |
+| **Test Steps** | 1. `GET /api/v1/support-tickets/42` with A's token |
+| **Expected Result** | KNOWN BUG: returns Buyer B's ticket details (no `userId = user.id` filter on getById — support-ticket.service.js:225-278 vs :165-167). Document as security gap. |
+| **Priority** | Critical (Security) |
+
+---
+
+### BYR_SUP_040 — Concurrent ticket creates can collide on ticket_number unique index
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Two simultaneous buyer create requests |
+| **Test Steps** | 1. Fire 2 `POST /create` calls in parallel |
+| **Expected Result** | KNOWN RACE: both compute same next sequential `TKT-GN-NNNNNN`; one wins, the other 500s on unique index violation, no retry (KB-5). |
+| **Priority** | Medium |
+
+---
+
+### BYR_SUP_041 — Registration unit ownership NOT enforced on create
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Buyer A; registrationNumber R belongs to Buyer B |
+| **Test Steps** | 1. `POST /create` with `registrationNumber=R` from A |
+| **Expected Result** | Backend only checks existence, NOT ownership (support-ticket.service.js:25-31). Ticket likely created. Document — verify intent. |
+| **Priority** | High (Security) |
+
+---
+
+### BYR_SUP_042 — No DELETE/PATCH endpoint for buyer
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Support |
+| **Pre-conditions** | Ticket exists |
+| **Test Steps** | 1. Attempt `DELETE /api/v1/support-tickets/:id` or `PATCH` |
+| **Expected Result** | 404/405 — only POST /create, GET /, GET /:id exist (support-ticket.routes.js). Buyer cannot withdraw/close their own ticket (KB-8). |
+| **Priority** | Medium |

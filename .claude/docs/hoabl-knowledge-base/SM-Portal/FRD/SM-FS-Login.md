@@ -37,21 +37,21 @@ Applies to all users with role ID 4 (Sales Manager Admin) or role ID 5 (Sales Ma
 
 1. Mobile number must be a valid 10-digit Indian number registered as a Sales Manager account
 2. OTP expires within a configured time window — expired OTP rejected with error
-3. Rate limiting applies — repeated failed attempts are blocked temporarily
+3. <!-- FSD-CORRECTION 2026-05-25 --> **No backend OTP rate limit.** OTP cooldown/throttle code is commented out in `auth.controller.js:558-568`. Re-send timer exists in UI only. // Source: auth.controller.js:558-568
 4. If SM account has Is Active = OFF, login is rejected regardless of valid OTP
 5. On successful login, JWT token is issued and stored for session management
 6. Login redirects to `/sales-manager/callback-requests` (default landing page)
 
 ### 1.6 System Actions on Login
 
-1. OTP is generated and sent via Kaleyra (SMS/WhatsApp)
+1. OTP is generated and sent via **Epinet SMS** (NOT Kaleyra) <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js -->
 2. JWT token issued on successful OTP verification
 3. Session is established with the SM's role and user ID
 4. User is redirected to the Callback Requests management screen
 
 ### 1.7 Notifications
 
-- OTP delivered to registered mobile number via SMS or WhatsApp
+- OTP delivered via **Epinet SMS** (not Kaleyra/WhatsApp) <!-- FSD-CORRECTION 2026-05-25 -->
 
 ### 1.8 Audit and Logging
 

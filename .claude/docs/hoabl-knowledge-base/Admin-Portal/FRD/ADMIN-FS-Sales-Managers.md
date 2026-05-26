@@ -210,7 +210,8 @@ Allow admins to create a new Sales Manager account directly through the portal U
 4. Count badge increments.
 
 ## 8. Notifications
-- Kaleyra SMS to new SM: account created with portal login instructions (if configured).
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **NONE.** No notification call (email, SMS, push) in `services/sales-manager.service.js` — grep for `sendNotification|sendEmail|notify|mailer` returned 0 matches. // Source: sales-manager.service.js
 
 ## 9. Audit & Logging
 - Admin user ID, SM name, phone, email, role, assignable/active flags, creation timestamp logged.
@@ -388,7 +389,8 @@ Config page (`/admin/cms`) → Section 7 "Sales Managers".
 4. IS_AVAILABLE and IS_ACTIVE flags applied immediately.
 
 ## 8. Notifications
-- Kaleyra SMS to newly-created SMs: account created with portal login instructions (if configured).
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **NONE.** Bulk import handler dispatches zero notifications — verified by absence of notification/mailer imports in `sales-manager.service.js`. // Source: admin.controller.js:3814, sales-manager.service.js
 
 ## 9. Audit & Logging
 - Admin user ID, filename, SMs created/updated count, timestamp logged.

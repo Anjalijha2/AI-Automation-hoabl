@@ -7,21 +7,26 @@
 
 ---
 
+<!-- FSD-CORRECTION 2026-05-25 — CRITICAL SECURITY GAP -->
+> ⚠️ **`POST /api/v1/cp/registration` is UNAUTHENTICATED.** No auth middleware (`protect` / `restrictTo`) on this endpoint. Any caller (no token required) can submit CP self-KYC data. // Source: cp.routes.js (CP registration route)
+>
+> Additionally: a logged-in CP-A can submit KYC for CP-B by passing CP-B's phone number — no ownership check. // Source: cp.controller.js (KYC submit handler)
+
 ## Feature 1: Assist Customer KYC After Unit Allocation
 
 ### 1.1 Objective
 
-Allow CPs to complete the KYC (Know Your Customer) form on behalf of their customer after a unit has been allocated, uploading required identity documents to complete the buyer's post-allocation process.
+<!-- FSD-CORRECTION 2026-05-25 -->
+Allow CPs to complete **their own** KYC (Know Your Customer) self-registration. **No backend endpoint exists for CPs to submit KYC on behalf of a buyer** — buyer-KYC-via-CP is a buyer-portal flow, not a CP-portal flow. // Source: cp.routes.js (only `/cp/registration` and `/cp/kyc` endpoints exist)
 
 ### 1.2 Scope
 
-KYC assistance is only available after a customer has been allocated a unit and has WINNER status. The CP fills in the KYC form on behalf of the customer.
+<!-- FSD-CORRECTION 2026-05-25 -->
+CP self-KYC only (`POST /cp/registration` — unauthenticated). The WINNER-prerequisite and buyer-KYC-on-behalf described below do NOT correspond to any implemented backend endpoint.
 
 ### 1.3 Preconditions
 
-- CP must be logged in
-- Customer must have WINNER status (confirmed unit booking with payment completed)
-- Unit allocation must be confirmed before KYC can be submitted
+- CP must be logged in (for `/cp/kyc` read) — **NOT required for `/cp/registration` submit** (unauthenticated)
 
 ### 1.4 KYC Form — Applicant Fields
 

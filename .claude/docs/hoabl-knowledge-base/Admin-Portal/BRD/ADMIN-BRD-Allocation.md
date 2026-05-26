@@ -84,7 +84,8 @@ Active → Failed (system error)
 | Python WebSocket Server | Real-time unit grid updates during active campaign |
 | Redis | Campaign state cache and unit hold timers |
 | Easebuzz | Online payment gateway for buyer booking confirmation |
-| Kaleyra | Notifications to buyers when campaign goes Active or ends |
+| Kaleyra | WhatsApp notifications on payment success/failure. **NOT** sent on campaign activate or end (NONE in source) <!-- FSD-CORRECTION 2026-05-25 // Source: allocation-campaign.service.js:530-1075 --> |
+| Epinet | OTP SMS delivery (NOT Kaleyra) <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js --> |
 | Mavis | Unit booking sync after successful payment |
 | LeadSquared | Booking activity logged to CRM |
 

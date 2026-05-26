@@ -32,7 +32,7 @@ Buyer-side request submission. Once submitted, the request is handled by the SM 
 ### 1.5 Business Rules
 
 1. Request is linked to the buyer's registration
-2. System assigns the request to an available SM via round-robin (earliest `lastRequestAssignedAt` gets the request)
+2. <!-- FSD-CORRECTION 2026-05-25 --> System assigns via **least-loaded algorithm** (SM with fewest active requests). Round-robin code is **disabled** at `callback-request-sm.service.js:338-349`. // Source: callback-request-sm.service.js:338-349
 3. SM must have `isAvailable = true` to receive assignments
 4. Request starts with status REQUESTED
 5. Buyer receives a notification when the SM schedules the meeting

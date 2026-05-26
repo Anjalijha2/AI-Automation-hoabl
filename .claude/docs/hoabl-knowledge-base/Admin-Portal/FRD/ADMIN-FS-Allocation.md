@@ -64,8 +64,8 @@ Campaign creation form at the top of the `/admin/allocation` page. Three campaig
 5. Toast: *"Campaign created successfully"*
 
 ## 8. Notifications
-- No notifications sent to buyers on campaign creation.
-- Kaleyra notification sent to buyers when campaign goes Active (if configured).
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **NONE on campaign creation or activation.** No automatic buyer notification fires when a campaign is created or transitions to Running. The only notification path for campaign launch is the explicit admin action `POST /campaigns/:campaignId/notify` (PHYSICAL_EVENT type only). // Source: allocation-campaign.service.js:530-1010
 
 ## 9. Audit & Logging
 - Admin user ID, timestamp, campaign name, allocation type, start/end times logged.
@@ -189,7 +189,8 @@ Allow admins to manually end a running allocation campaign before its scheduled 
 5. Remaining `RegistrationUnit.allocationStatus = 'available'` → set to `waiting`
 
 ## 8. Notifications
-- Kaleyra notification to buyers: campaign has ended.
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **NONE.** `terminateAllocationCampaign` only calls Python `/campaign/stop` and writes audit log. No buyer notification path exists on campaign stop/terminate. // Source: allocation-campaign.service.js:1012-1075
 
 ## 9. Audit & Logging
 - Admin user ID, campaign ID, stop timestamp logged.
@@ -309,7 +310,8 @@ Confirmation Amount = allocationAmount from Unit record
 **Note:** Easebuzz bot detection prevents automated browser completion of payment on UAT. Manual testing required for the payment step.
 
 ## 8. Notifications
-- Kaleyra Email + WhatsApp: booking confirmation to buyer after successful payment.
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **WhatsApp + SMS only. No email.** On payment success: WhatsApp template `congrates_payment_success_27sept` + SMS `ALLOTMENT_PAYMENT_SUCCESS` (Indian phones only, `countryCode === '+91'`). On failure: WhatsApp template `payment_unsuccessful_27sept` + SMS `ALLOTMENT_PAYMENT_FAILED`. // Source: allocation.service.js:1796-1833
 
 ## 9. Audit & Logging
 - Allocation transaction logged: buyer ID, unit ID, amount, campaign ID, timestamp.

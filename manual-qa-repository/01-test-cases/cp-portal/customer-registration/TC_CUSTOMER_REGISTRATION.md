@@ -324,14 +324,14 @@
 
 ---
 
-### CP_REG_027 — Customer receives SMS/WhatsApp confirmation on success
+### CP_REG_027 — Customer receives Botspice WhatsApp on capture (NOT Kaleyra)
 
 | Field | Value |
 |-------|-------|
 | **Module** | CP – Customer Registration |
-| **Pre-conditions** | Kaleyra integration active in UAT |
-| **Test Steps** | 1. Submit a valid registration<br>2. Observe customer's mobile for message |
-| **Expected Result** | Customer receives SMS and/or WhatsApp with the registration confirmation and number |
+| **Pre-conditions** | Botspice WhatsApp integration active |
+| **Test Steps** | 1. Submit a valid `POST /api/v1/cp/cp-user-register`<br>2. Observe customer's WhatsApp |
+| **Expected Result** | Buyer receives WhatsApp template `cp_link_share_latest` (Botspice NOT Kaleyra), params `["<firstName> <lastName>", "${app.registrationUrl}/ref/${encryptedSlug}"]`. NRI Buyer with email also gets `nri-cp-referral` email. NO confirmation back to CP. |
 | **Priority** | High |
 
 ---
@@ -359,3 +359,126 @@
 | **Priority** | Medium |
 
 ---
+
+## FSD Corrections Applied (2026-05-25)
+
+Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registration.md`
+
+### MAJOR CORRECTIONS — CP "Customer Registration" is lead-capture, NOT a full registration
+- **Endpoint**: `POST /api/v1/cp/cp-user-register` (auth: protect + restrictTo('cp'), addUserTypeMiddleware('cp')). Creates a `registration_drafts` row + auto-creates buyer `users` row. The actual buyer registration + payment happens later when Buyer follows the shared link (`${registrationUrl}/ref/${encryptedSlug}`).
+- **No registrationNumber issued at capture** (CP_REG_003, CP_REG_023) — the `data.registrationNumber` returned is the encrypted slug, NOT a `GHNG-NNNNNNNNNN` number. The GHNG-format registration number is generated later when Buyer pays EOI. Dashboard's `registration_number` column comes from `registrations` table, populated post-payment.
+- **No allocation status at capture time** (CP_REG_004) — `RegistrationDraft.status` ENUM is `Open|Won|Lost|Refunded`, NOT WAITLIST/PREALLOCATED/ALLOCATED. Allocation status applies to `RegistrationUnit.status` once Buyer completes booking. UI labels: Open|Lost→"Sent", Won→"Registered", Refunded→"Refunded".
+- **CP isolation** (CP_REG_005) — Master CP (`isLeadCp=true`) sees ALL leads/registrations from member CPs (matched by `masterHvCode`). Standalone/member CP sees only own (BR-CP-LEAD-10).
+- **CP_REG_010-022 (Form fields/validation)** — Many backend Yup validators are commented out: `phone regex`, `countryCode required`, `address required`, `pincode required`, `companyName required`, `officePincode required`, `occupation oneOf` (KB-CPR-02, KB-CPR-03, validations/registration.validations.js:185-224). UI may enforce client-side, but API accepts free-form. T&C field is NOT in API schema — UI-only.
+- **CP_REG_016 — Email uniqueness DISABLED** — Email-existence check commented out (KB-CPR-01). Two buyer rows can share same email if phones differ.
+- **CP_REG_024-025 (Duplicate prevention)** — Actual behavior: `409 "Lead for this User is already Captured."` only when SAME CP captures same Buyer on same project (BR-CPR-03). Different CPs CAN capture same Buyer (GAP-LEAD-04). `409 "User has already completed registration."` only if Buyer has `paymentStatus='success'` registration (BR-CPR-04). `409 "Provided phone number is already registered."` when User.create races for new buyer (BR-CPR-05). NOT keyed by email.
+- **CP_REG_026 (Additional unit -A suffix)** — Suffix convention not verified in CP capture endpoint. Additional units are tracked via `RegistrationUnit.isAdditionalUnit`. Verify if `-A` suffix is generated server-side or UI display.
+- **CP_REG_027** — Reframed for Botspice.
+
+### New TCs added below
+
+### CP_REG_030 — POST /cp/registration is UNAUTHENTICATED (Security gap)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Customer Registration |
+| **Pre-conditions** | None |
+| **Test Steps** | 1. Without any JWT, call `POST /api/v1/cp/registration` (CP self-KYC) with valid body |
+| **Expected Result** | CRITICAL SECURITY GAP: route is mounted BEFORE `router.use(protect)` (routes/cp.routes.js:19-37). Endpoint is public. A bad actor knowing a CP phone with `isCpRegistrationCompleted=false` can re-submit KYC and overwrite legitimate data (QA-Risk-9, fsd-login.md §8.9). Document. |
+| **Priority** | Critical (Security) |
+
+---
+
+### CP_REG_031 — Capture without restrictTo('cp') role rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Customer Registration |
+| **Pre-conditions** | Valid Buyer JWT (roleId=2) |
+| **Test Steps** | 1. `POST /api/v1/cp/cp-user-register` with Buyer JWT |
+| **Expected Result** | 403 from `restrictTo('cp')` middleware (routes/cp.routes.js:36-37). |
+| **Priority** | High (Security) |
+
+---
+
+### CP_REG_032 — Existing buyer row reused — fields NOT updated (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Customer Registration |
+| **Pre-conditions** | Buyer B exists with `firstName='Old'`; no draft from CP A |
+| **Test Steps** | 1. CP A captures Buyer B with `firstName='New'`<br>2. Query `users.first_name` |
+| **Expected Result** | KNOWN BUG: existing-user branch does NOT update firstName/lastName/email/countryCode/isNri — only creates new draft (KB-CPR-08, cp.controller.js:794-822). `users.first_name` still 'Old'. Document. |
+| **Priority** | Medium |
+
+---
+
+### CP_REG_033 — projectId hardcoded by NODE_ENV
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Customer Registration |
+| **Pre-conditions** | Any env |
+| **Test Steps** | 1. Capture lead<br>2. Query `registration_drafts.project_id` |
+| **Expected Result** | Always 1 (prod) or 2 (non-prod) (KB-CPR-05, cp.controller.js:782). Multi-project rollout requires code change. |
+| **Priority** | Medium |
+
+---
+
+### CP_REG_034 — Master CP CANNOT create lead on behalf of member (BUG)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Customer Registration |
+| **Pre-conditions** | Master CP M; member CP X |
+| **Test Steps** | 1. M attempts to capture lead with cpId=X<br>2. Inspect created draft |
+| **Expected Result** | KNOWN GAP: endpoint always sets `cpId = req.user.id` — no override. Master cannot create on behalf of member (KB-CPR-06). Inconsistent with `cp-user-leads?leadOwner=cp:<id>` which DOES allow scoping for visibility. |
+| **Priority** | Medium |
+
+---
+
+### CP_REG_035 — effectiveCountryCode for NRI WhatsApp dispatch
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Customer Registration |
+| **Pre-conditions** | Capture NRI buyer (`nri:true, countryCode:'+971'`) |
+| **Test Steps** | 1. Submit capture<br>2. Inspect WhatsApp dispatch + DB |
+| **Expected Result** | WhatsApp goes to `+971<phone>` (effectiveCountryCode). BUT `users.countryCode` may be stored as raw body value (could be empty) — `effectiveCountryCode` NOT persisted to User row (KB-CPR-04, cp.controller.js:777, 843). |
+| **Priority** | Medium |
+
+---
+
+### CP_REG_036 — Slug encryption determinism
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Customer Registration |
+| **Pre-conditions** | Same userId + hvCode |
+| **Test Steps** | 1. Inspect `encrypt(<userId>/<hvCode>)` for two captures with same inputs |
+| **Expected Result** | Verify whether `encrypt` is deterministic. `RegistrationDraft.slug` likely has UNIQUE constraint — collision-prone if deterministic (QA-Risk-2, cp.controller.js:853-854). |
+| **Priority** | Medium |
+
+---
+
+### CP_REG_037 — Concurrent capture from two CPs for same new phone
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Customer Registration |
+| **Pre-conditions** | Buyer phone P not yet in users |
+| **Test Steps** | 1. CP A and CP B simultaneously POST cp-user-register for P |
+| **Expected Result** | Race condition possible — both pass `User.findOne` then `User.create`. No unique constraint on `users.phone`; may insert two duplicate buyer rows (QA-Risk-6, GAP-LOG-02). Document. |
+| **Priority** | Medium |
+
+---
+
+### CP_REG_038 — `idDraft: true` flag is dead code
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Customer Registration |
+| **Pre-conditions** | After successful capture |
+| **Test Steps** | 1. Query `registration_drafts.draft` JSON |
+| **Expected Result** | `draft.idDraft = true` present but no reader uses it (KB-CPR-09, cp.controller.js:878). Document as dead field. |
+| **Priority** | Low |

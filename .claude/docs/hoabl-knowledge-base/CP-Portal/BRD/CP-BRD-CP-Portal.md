@@ -102,8 +102,10 @@ The CP Portal bridges the developer and the buyer market through the channel par
 |-------------|---------|
 | LeadSquared (LSQ) | Lead data sync, KYC document upload |
 | Azure Blob Storage | Document storage for KYC uploads |
-| Kaleyra | SMS/WhatsApp customer notifications |
-| Strapi CMS | Project content for the Project Information section |
+| Kaleyra | WhatsApp customer notifications (NOT OTP) |
+| Epinet | OTP SMS delivery <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js --> |
+| Strapi CMS | Project content — **fetched directly by CP frontend** (hardcoded project id=1); no backend CP project endpoint <!-- FSD-CORRECTION 2026-05-25 --> |
+| ⚠️ Security Gap | `POST /cp/registration` is **UNAUTHENTICATED** <!-- FSD-CORRECTION 2026-05-25 // Source: cp.routes.js --> |
 
 ---
 

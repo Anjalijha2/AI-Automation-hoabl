@@ -193,7 +193,7 @@ During a DYNAMIC allocation campaign, the system auto-assigns a unit to the buye
 
 ### 3.3 DYNAMIC Allocation Flow
 
-1. System assigns units to registered buyers via round-robin logic
+1. <!-- FSD-CORRECTION 2026-05-25: DYNAMIC allocation uses band-based assignment, not round-robin. Round-robin refers to CB assignment, not unit allocation. // Source: allocation-campaign.service.js --> System assigns units to registered buyers via band-based (DYNAMIC) allocation
 2. Each round has a configurable time window (e.g., 20 minutes)
 3. Buyer sees: **OpenAllottedUnit** component with their assigned unit
 4. Buyer initiates payment (proceed_to_pay WebSocket message)
