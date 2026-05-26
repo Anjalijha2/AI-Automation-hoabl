@@ -146,10 +146,14 @@ function parseMd(mdPath) {
     const l = raw.trimEnd();
 
     // Feature area heading — ## Foo Bar
+    // Skip non-TC metadata sections (FSD corrections, changelogs, etc.)
     const areaMatch = l.match(/^##\s+(.+)$/);
     if (areaMatch) {
+      const areaName = areaMatch[1].trim();
       flushArea();
-      currentArea = { area: areaMatch[1].trim(), tcs: [] };
+      if (!/fsd.?correction|corrections applied|changelog|change.?log/i.test(areaName)) {
+        currentArea = { area: areaName, tcs: [] };
+      }
       continue;
     }
 
@@ -394,8 +398,15 @@ async function buildPortalWorkbook(portalSlug) {
   // Index sheet first
   buildIndexSheet(wb, allSheets, cfg.label, cfg.portalFull);
 
-  // One sheet per feature area
-  allSheets.forEach(s => buildFeatureSheet(wb, s.sheetName, s.tcs, cfg.portalFull));
+  // One sheet per feature area — deduplicate names before writing
+  const usedNames = new Map();
+  allSheets.forEach(s => {
+    const safe = safeSheetName(s.sheetName);
+    const count = (usedNames.get(safe) || 0) + 1;
+    usedNames.set(safe, count);
+    s._safeName = count > 1 ? safeSheetName(`${s.sheetName} ${count}`) : safe;
+  });
+  allSheets.forEach(s => buildFeatureSheet(wb, s._safeName || s.sheetName, s.tcs, cfg.portalFull));
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const outPath = path.join(OUT_DIR, cfg.file);
