@@ -426,15 +426,15 @@
 
 ---
 
-### ADM_CUST_032 — Enable toggle and save approves home loan
+### ADM_CUST_032 — [FSD-CORRECTION] Enable toggle and save approves home loan — NO notification dispatched
 
 | Field | Value |
 |-------|-------|
 | **Module** | ADM – Customers |
-| **BRD/FRD Req** | ADMIN-FS-Customers Feature 3 §7 |
+| **BRD/FRD Req** | ADMIN-FS-Customers Feature 3 §7 / FSD §4.4.3 (B-CUS-073) |
 | **Pre-conditions** | Home Loan Approval modal open |
-| **Test Steps** | 1. Enable the toggle<br>2. Click Save |
-| **Expected Result** | Home loan marked approved (loanApprovalStatus=admin_approved, approvalSource=admin); HOME_LOAN offer becomes eligible for buyer; modal closes |
+| **Test Steps** | 1. Enable the toggle<br>2. Click Save<br>3. Inspect notification logs (Kaleyra, epinet, email service) — verify no calls<br>4. Inspect buyer's phone (SMS/WhatsApp) — verify silence |
+| **Expected Result** | Home loan marked approved (loanApprovalStatus=admin_approved, approvalSource=admin, approvedBy=admin.id, approvedAt=now); HOME_LOAN offer becomes eligible for buyer; modal closes. **NO SMS, NO WhatsApp, NO email is sent to the buyer.** Source: `services/registration-unit.service.js:349-387` — function returns immediately after upsert. Previous BRD/FRD claim of "SMS/WhatsApp to buyer" is INCORRECT. |
 | **Priority** | Critical |
 
 ---
@@ -534,15 +534,15 @@
 
 ---
 
-### TC_CUST_FUNC_047 — Confirm Cancel Registration shows "Registration refunded successfully"
+### TC_CUST_FUNC_047 — [FSD-CORRECTION] Confirm Cancel Registration shows "Registration refunded successfully" — NO buyer notification
 
 | Field | Value |
 |-------|-------|
 | **Module** | ADM – Customers |
-| **BRD/FRD Req** | ADMIN-BRD-Customers §5 Cancel Registration + §9 Cancel Registration flow |
+| **BRD/FRD Req** | ADMIN-BRD-Customers §5 Cancel Registration + §9 Cancel Registration flow / FSD §5 Notification Dispatch |
 | **Pre-conditions** | Cancel Registration popup open on a test Registered/Waitlisted record |
-| **Test Steps** | 1. Click red "Cancel Registration" button |
-| **Expected Result** | Backend invokes PUT refundRegistrationUnit. Toast "Registration refunded successfully" appears. Row status → Cancelled. ₹999 refund issued to original payment method. |
+| **Test Steps** | 1. Click red "Cancel Registration" button<br>2. Inspect notification logs and buyer phone after refund |
+| **Expected Result** | Backend invokes PUT refundRegistrationUnit. Toast "Registration refunded successfully" appears in admin UI. Row status → Cancelled. ₹999 refund issued to original payment method. **NO buyer-facing SMS, WhatsApp, or email is dispatched** — `allocationNotificationService(false, ...)` is explicitly commented out at `services/registration-unit.service.js:1059-1062`. Previous BRD claim of "Communication sent to buyer" is INCORRECT. |
 | **Priority** | Critical |
 
 ---
@@ -1129,6 +1129,99 @@
 
 ---
 
+## [FSD-CORRECTION] New TCs — Source-verified notification silence and admin-action gaps
+
+### TC_CUST_NEG_091 — [FSD-CORRECTION] Cancel Unit (single) dispatches NO buyer notification
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers / Notifications |
+| **BRD/FRD Req** | FSD §5 row 1 — `controllers/admin.controller.js:3367-3700` |
+| **Pre-conditions** | A Booked unit (status=WINNER) successfully cancelled via PUT /api/v1/admin/cancel-units |
+| **Test Steps** | 1. Perform single-unit cancel<br>2. Inspect Kaleyra, epinet, email service logs<br>3. Inspect buyer's phone SMS/WhatsApp |
+| **Expected Result** | No WhatsApp call. No SMS call. No email. Only `syncCancelledUnitsToPython` post-commit (integration sync, NOT a notification). Previous BRD assumption of "Notification sent" is INCORRECT. |
+| **Priority** | High |
+
+---
+
+### TC_CUST_NEG_092 — [FSD-CORRECTION] Bulk cancel units (Excel) dispatches NO buyer notification
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers / Notifications |
+| **BRD/FRD Req** | FSD §5 row 2 — `controllers/admin.controller.js:2301-2689` |
+| **Pre-conditions** | Bulk cancel completed for 5+ booked units via Excel upload |
+| **Test Steps** | 1. Upload bulk-cancel Excel, complete submission<br>2. Inspect notification logs for any of the 5+ buyers |
+| **Expected Result** | No notification of any kind dispatched to any cancelled buyer. Previous BRD claim INCORRECT. |
+| **Priority** | High |
+
+---
+
+### TC_CUST_NEG_093 — [FSD-CORRECTION] Update Parking dispatches NO buyer notification
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers / Notifications |
+| **BRD/FRD Req** | FSD §5 row 8 — `services/registration-unit.service.js:285-347` |
+| **Pre-conditions** | Successful Update Parking on a Booked unit |
+| **Test Steps** | 1. Update parking (toggle on, count=2, amount=250000), submit<br>2. Inspect notifications |
+| **Expected Result** | No buyer SMS/WhatsApp/email. Audit log ADMIN_UPDATE_PARKING is the only post-action artefact. Confirms previous BRD assumption INCORRECT. |
+| **Priority** | Medium |
+
+---
+
+### TC_CUST_NEG_094 — [FSD-CORRECTION] Offline Milestone Payment dispatches NO buyer notification
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers / Notifications |
+| **BRD/FRD Req** | FSD §5 row 10 — `controllers/milestone-payment.controller.js:1063-1484` |
+| **Pre-conditions** | Admin submits an offline milestone payment on a Winner unit |
+| **Test Steps** | 1. Submit offline milestone (paymentType=1, amount = full outstanding)<br>2. Inspect notification logs and buyer phone |
+| **Expected Result** | No buyer notification dispatched. Only LSQ opportunity update and Mavis sync fire (integration sync, NOT buyer comms). Previous BRD claim of "Notification sent" is INCORRECT. |
+| **Priority** | High |
+
+---
+
+### TC_CUST_FUNC_095 — [FSD-CORRECTION] Assign Unit dispatches WhatsApp + SMS (no email)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers / Notifications |
+| **BRD/FRD Req** | FSD §5 row 4 — `services/allocation.service.js:1816-1832` |
+| **Pre-conditions** | A Preallocated unit; buyer with `countryCode='+91'` |
+| **Test Steps** | 1. Admin completes Assign Offline Unit<br>2. Inspect notification dispatch |
+| **Expected Result** | 1 WhatsApp call to `congrates_payment_success_27sept` (vars: firstName, "tower - allocatedUnit"). 1 SMS to `ALLOTMENT_PAYMENT_SUCCESS`. NO email. For non-+91 buyers, SMS is suppressed (WhatsApp only). |
+| **Priority** | Critical |
+
+---
+
+### TC_CUST_NEG_096 — [FSD-CORRECTION] Assign Unit on non-+91 buyer dispatches WhatsApp only (no SMS)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers / Notifications |
+| **BRD/FRD Req** | FSD §5 row 4 — `services/allocation.service.js:1830-1832` |
+| **Pre-conditions** | Buyer NRI with `countryCode != '+91'` (e.g. '+1') |
+| **Test Steps** | 1. Admin completes Assign Offline Unit on NRI buyer<br>2. Inspect notification dispatch |
+| **Expected Result** | 1 WhatsApp call. ZERO SMS calls. SMS dispatcher is gated by `if (smsData.countryCode === '+91')`. |
+| **Priority** | High |
+
+---
+
+### TC_CUST_NEG_097 — [FSD-CORRECTION] Allocation Transaction Update hardcodes gateway='easebuzz'
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers / DB |
+| **BRD/FRD Req** | FSD §7 Bug #1 — `services/registration-unit.service.js:511` |
+| **Pre-conditions** | Admin uses the `allocation_transaction_update` event |
+| **Test Steps** | 1. Submit allocation transaction update for a Booked unit<br>2. Query `SELECT gateway FROM payment_transactions WHERE id = <new txn id>` |
+| **Expected Result** | `gateway` column = `'easebuzz'` even though this is an admin manual update. Document data-quality bug — gateway value misattributes the channel for audits. |
+| **Priority** | Medium |
+
+---
+
 ## Change Log
 
 | Date | Change |
@@ -1136,3 +1229,4 @@
 | 2026-05-11 | Initial baseline (TCs 001–040) |
 | 2026-05-21 | Locator map v1.5.0 + 3 new feature specs. Added: TC_CUST_UI_041; Cancel Unit split TC_CUST_FUNC_042–044, TC_CUST_API_048; Cancel Registration split TC_CUST_FUNC_045–047; TC_CUST_NEG_049 (REFUND row); View Milestones TC_CUST_FUNC_050–056 + TC_CUST_NEG_057; Unit Swap TC_CUST_FUNC_060–064, TC_CUST_NEG_065–070, TC_CUST_FUNC_071; Update Parking TC_CUST_FUNC_080–087, TC_CUST_VAL_084–085, TC_CUST_NEG_088–090. Marked legacy TCs ADM_CUST_026/027/028 as CORRECTED (split into Booked vs Registered/Waitlisted flows). |
 | 2026-05-21 (Phase 3) | Backend source audit corrections (TechSpec §2/§3/§4). INVERTED ADM_CUST_036 (export now respects filters). Corrected ADM_CUST_013 (globalSearch is phone-only). Corrected ADM_CUST_016 (param renamed allocationStatus → allotmentStatus). Added: TC_CUST_FUNC_036b (filtered XLSX row count), TC_CUST_API_005 (allotmentStatus=booked_online), TC_CUST_API_006 (filtered < unfiltered export), TC_CUST_NEG_010 (name search returns nothing — phone-only), TC_CUST_NEG_011 (KPI invariant under filter). |
+| 2026-05-24 (FSD sync) | [FSD-CORRECTION] Annotated ADM_CUST_032 (home loan — NO notification) and TC_CUST_FUNC_047 (cancel registration — NO notification). Added TC_CUST_NEG_091–094 (cancel/parking/offline-milestone notification absence), TC_CUST_FUNC_095/096 (Assign Unit WhatsApp+SMS, NRI variant), TC_CUST_NEG_097 (gateway hardcode bug). |

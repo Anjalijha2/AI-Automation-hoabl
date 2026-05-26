@@ -143,7 +143,9 @@ Row-level action on the Customers registration table. Irreversible — must only
 6. Toast: "refunded successfully"
 
 ## 8. Notifications
-- Kaleyra SMS/WhatsApp: cancellation + refund confirmation sent to buyer's mobile.
+**NONE.**
+
+> **[FSD-CORRECTION 2026-05-25]:** No SMS, WhatsApp, or email is sent to the buyer on Cancel Registration. Source scan of `cancelRegistrationUnits` confirms zero notification imports in that code path. The FRD previously claimed "Kaleyra SMS/WhatsApp" — this was incorrect. Source: `registration-unit.service.js`.
 
 ## 9. Audit & Logging
 - Admin user ID, timestamp, Registration ID (GHNG), unit ID, refund amount logged.
@@ -154,7 +156,7 @@ Row-level action on the Customers registration table. Irreversible — must only
 2. **Click the trash icon:** Click the red delete icon on the registration row you want to cancel.
 3. **Review the confirmation modal:** The popup shows the unit number and the refund amount (₹999). Verify this is the correct record.
 4. **Confirm cancellation:** Click "Cancel Registration" (red button) to proceed.
-5. **Result:** The registration status changes to Cancelled. The unit is released back to inventory (Available). The buyer receives an SMS/WhatsApp notification with cancellation and refund confirmation. The ₹999 refund is processed to the buyer's original payment method.
+5. **Result:** The registration status changes to Cancelled. The unit is released back to inventory (Available). The ₹999 refund is processed to the buyer's original payment method. No notification is sent to the buyer.
 
 > **Warning:** This action is irreversible. Only cancel registrations that have been verified as eligible for cancellation.
 
@@ -194,7 +196,8 @@ Row-level action accessed via the 3-dot action menu on the registration table.
 4. LeadSquared (LSQ): loan approval activity synced to buyer's CRM record.
 
 ## 8. Notifications
-- Kaleyra SMS/WhatsApp: home loan approval notification to buyer.
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **NONE.** `updateHomeLoanDetails` (lines 349–387) makes zero notification calls — no SMS, no WhatsApp, no email. // Source: registration-unit.service.js:349-387
 
 ## 9. Audit & Logging
 - Admin user ID, timestamp, registration ID, loan approval action logged.
@@ -205,7 +208,7 @@ Row-level action accessed via the 3-dot action menu on the registration table.
 2. **Open the action menu:** Click the 3-dot (…) menu on the row → select "Home Loan Approval".
 3. **Enable approval:** In the modal, flip the toggle to ON.
 4. **Submit:** Click Submit (or the confirm button).
-5. **Result:** The buyer's home loan status updates to "Admin Approved". The HOME_LOAN offer discount becomes eligible for that buyer during the next allocation campaign. The buyer receives an SMS/WhatsApp notification confirming loan approval.
+5. **Result:** The buyer's home loan status updates to "Admin Approved". The HOME_LOAN offer discount becomes eligible for that buyer during the next allocation campaign.
 
 ---
 
@@ -342,8 +345,8 @@ Three LSQ activities created (same payload as online booking):
 - Customers KPI counts refreshed: Registered count decreases, Confirmed/Booked count increases.
 
 ## 8. Notifications
-- Kaleyra Email + WhatsApp: booking confirmation sent to buyer with unit details and payment acknowledgement.
-- Templates: to be provided by Xanadu team.
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **WhatsApp + SMS only. No email.** `offlineBookingAssignUnit` sends WhatsApp (Kaleyra) and Epinet SMS. No email notification call exists. // Source: registration-unit.service.js:assignUnit handler; communication.service.js
 
 ## 9. Audit & Logging
 - Admin user ID
@@ -365,7 +368,7 @@ Three LSQ activities created (same payload as online booking):
    - Transaction Date (defaults to today)
 5. **Upload proof (optional):** Attach a payment proof document — cheque image, transfer screenshot, or payment voucher.
 6. **Click Submit.**
-7. **Result:** The unit is marked as Booked and assigned to the registration. The registration status changes to Confirmed. The buyer receives a booking confirmation via email and WhatsApp. The transaction is recorded as an offline payment.
+7. **Result:** The unit is marked as Booked and assigned to the registration. The registration status changes to Confirmed. The buyer receives a booking confirmation via WhatsApp and SMS (no email). The transaction is recorded as an offline payment.
 
 ---
 

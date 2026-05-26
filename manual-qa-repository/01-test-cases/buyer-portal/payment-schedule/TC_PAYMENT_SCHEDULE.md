@@ -1,6 +1,17 @@
 # Test Cases — Payment Schedule
 **Portal:** Buyer (Customer) Portal
 **BRD Reference:** BUYER-FS-Payment-Schedule.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/buyer-portal/fsd-payment-schedule.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts (CRITICAL)
+
+- **Schedule download is CLIENT-SIDE react-to-print ONLY** — there is NO server-side PDF endpoint. Any "Download PDF" button uses browser print to generate.
+- **Milestone status ENUM mismatch (BUG)**: controller writes `FAILED` but model `MilestonePaymentTracking.status` only allows `VERIFICATION` and `PAID`. Writes of `FAILED` will trigger MySQL `Data truncated` error.
+- **No buyer-facing notification on milestone payment success/failure** — FSD verified (previous BRD assumption INCORRECT).
+- Payment Schedule is READ-ONLY view + payment-initiation trigger. Schedule rows are only mutated by milestone-payment processing.
 
 ---
 
@@ -309,5 +320,46 @@
 | **Test Steps** | 1. Inspect milestone breakdown |
 | **Expected Result** | Bank disbursement line not rendered |
 | **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — Payment Schedule source-verified gaps
+
+### BYR_PAY_FSD_026 — [FSD-CORRECTION] Schedule download is client-side react-to-print only (no server PDF endpoint)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Payment Schedule / Frontend |
+| **BRD/FRD Req** | FSD §1 / `PaymentSchedule.jsx` |
+| **Pre-conditions** | Buyer on Payment Schedule page |
+| **Test Steps** | 1. Click "Download" / "Print Schedule"<br>2. Inspect network calls — verify NO server GET to a `/pdf` or `/download-schedule` endpoint<br>3. Verify browser print dialog opens |
+| **Expected Result** | Browser print dialog opens via react-to-print. No server PDF generation; no server file stored. Document as expected design. Output is client-rendered. |
+| **Priority** | Medium |
+
+---
+
+### BYR_PAY_FSD_027 — [BUG-REF: BUG-PAY-001] Milestone status FAILED is unsupported by model — write triggers Data truncated
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Payment Schedule / DB |
+| **BRD/FRD Req** | FSD §2.2 — model.status enum mismatch |
+| **Pre-conditions** | Initiate a milestone payment via Easebuzz and trigger gateway failure callback |
+| **Test Steps** | 1. Initiate online payment for an outstanding milestone<br>2. Force Easebuzz failure callback<br>3. Inspect DB and backend logs |
+| **Expected Result** | Controller attempts `MilestonePaymentTracking.status = 'FAILED'` but model ENUM allows only `VERIFICATION` / `PAID`. MySQL throws `Data truncated for column 'status'`. Either: (a) error is caught silently and row state is inconsistent, or (b) error bubbles to client. Document as code-vs-schema bug. |
+| **Priority** | Critical |
+
+---
+
+### BYR_PAY_FSD_028 — [FSD-CORRECTION] No buyer notification on milestone payment success or failure
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Payment Schedule / Notifications |
+| **BRD/FRD Req** | FSD §1 / verified by source grep |
+| **Pre-conditions** | Buyer completes a milestone payment successfully (or fails) |
+| **Test Steps** | 1. Pay a milestone via Easebuzz<br>2. Inspect notification logs and buyer phone |
+| **Expected Result** | NO SMS, NO WhatsApp, NO email dispatched. Buyer must check the portal manually. Previous BRD assumption INCORRECT. |
+| **Priority** | High |
 
 ---

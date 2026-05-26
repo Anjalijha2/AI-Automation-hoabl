@@ -1,6 +1,28 @@
 # Test Cases — JBP Management
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-JBP-Management.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-jbp-management.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- **No dedicated `jbp.service.js`** exists — all logic inlined in `cp.controller.js` + `admin.controller.js`.
+- **Cycle states are only `OPEN | CLOSED`** — no draft, no scheduled.
+- **Submission states are only `ACTIVE | EXPIRED`** — no Pending/Rejected on submission itself.
+- **Edit-request states**: `PENDING | APPROVED | REJECTED | EXPIRED | CONSUMED` (5 states).
+- **Approve requires `editWindow` (hours)** — NOT a "reason" — `adminComment` is nullable. Reject requires `adminComment`.
+- **`editableUntil = now + editWindow * 3600000`** — clamped to cycle endDate.
+- **WhatsApp `jbplaunchtwo_new`** sent on CP submission, **fire-and-forget** (not awaited) — `cp.controller.js:714`.
+- **WhatsApp template has bug**: `${+91}` emits `"91"` instead of `"+91"` — phone numbers in WhatsApp payload missing the plus prefix.
+- **LSQ calls block submission** — synchronous before DB write. LSQ outage = JBP submission completely blocked.
+- **Auto-CLOSE on list**: any OPEN cycle with `endDate < now` is auto-closed when admin lists cycles.
+- **Auto-EXPIRE on list**: any PENDING/APPROVED edit request whose `editableUntil < now` is auto-expired on list call.
+- **Approve/Reject sends NO notification to CP** — verified by FSD §8 (No email/SMS dispatch on either action).
+- **Edit-request `CONSUMED` state**: set automatically when CP uses approved edit request to resubmit.
+- **PUT/DELETE for cycles are commented out** in routes — cycles can only be Created or Closed.
+- **`projectId` fallback = 2** (non-prod) when `projectSlug` missing in submitJbp.
 
 ---
 
@@ -384,26 +406,28 @@
 
 ---
 
-### ADM_JBP_032 — Approve edit request requires written reason
+### ADM_JBP_032 — [FSD-CORRECTION] Approve edit request requires `editWindow` (hours), NOT a reason
 
 | Field | Value |
 |-------|-------|
 | **Module** | ADM – JBP |
+| **BRD/FRD Req** | FSD §4.2 `approveJbpEditRequestSchema` |
 | **Pre-conditions** | Edit request detail open |
-| **Test Steps** | 1. Click Approve<br>2. Submit without entering reason |
-| **Expected Result** | Reason required validation error; cannot approve without reason |
+| **Test Steps** | 1. Click Approve<br>2. Submit without `editWindow` |
+| **Expected Result** | Validation error on `editWindow` — required integer min 1. `adminComment` is OPTIONAL (nullable, max 550 chars). Previous claim of "reason required for approve" is WRONG. |
 | **Priority** | Critical |
 
 ---
 
-### ADM_JBP_033 — Approve with reason updates original submission
+### ADM_JBP_033 — [FSD-CORRECTION] Approve sets editableUntil but does NOT update submission — NO CP notification
 
 | Field | Value |
 |-------|-------|
 | **Module** | ADM – JBP |
+| **BRD/FRD Req** | FSD §5.3 (Approve) / §8 (No notification) |
 | **Pre-conditions** | Edit request detail open |
-| **Test Steps** | 1. Click Approve<br>2. Enter reason "Approved"<br>3. Submit |
-| **Expected Result** | Submission updated with revised values; status becomes Approved; CP notified |
+| **Test Steps** | 1. Click Approve<br>2. Enter `editWindow=24` (hours), optional adminComment<br>3. Submit<br>4. Verify CP phone/email/WhatsApp for any notification<br>5. Verify the original JbpSubmission row — is it changed? |
+| **Expected Result** | Edit request status → `APPROVED`; `editableUntil = now + 24h` (clamped to cycle endDate 23:59:59.999); `reviewedBy = admin.id`, `reviewedAt = now`. The original submission row is NOT updated — only when the CP resubmits, the old row goes EXPIRED and the new ACTIVE row is inserted with `version = previous.version + 1`. **NO notification dispatched to CP** — verified by source. |
 | **Priority** | Critical |
 
 ---
@@ -420,14 +444,15 @@
 
 ---
 
-### ADM_JBP_035 — Reject with reason preserves original submission
+### ADM_JBP_035 — [FSD-CORRECTION] Reject with adminComment preserves original submission — NO CP notification
 
 | Field | Value |
 |-------|-------|
 | **Module** | ADM – JBP |
+| **BRD/FRD Req** | FSD §4.3, §5.3 (Reject), §8 (No notification) |
 | **Pre-conditions** | Edit request detail open |
-| **Test Steps** | 1. Click Reject<br>2. Enter reason "Insufficient detail"<br>3. Submit |
-| **Expected Result** | Edit request status = Rejected; original submission unchanged; CP notified |
+| **Test Steps** | 1. Click Reject<br>2. Enter `adminComment="Insufficient detail"` (required, max 550)<br>3. Submit<br>4. Verify CP notifications |
+| **Expected Result** | Edit request status → `REJECTED`; original submission unchanged. `reviewedBy = admin.id`, `reviewedAt = now`. **NO notification dispatched to CP** — verified by FSD §8 (no email/SMS/WhatsApp on reject). |
 | **Priority** | High |
 
 ---
@@ -491,5 +516,150 @@
 | **Test Steps** | 1. Click Next page |
 | **Expected Result** | Next page of submissions loads |
 | **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — JBP source-verified gaps
+
+### ADM_JBP_FSD_041 — [BUG-REF: BUG-JBP-001] WhatsApp template `${+91}` emits "91" (template-string bug)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / Notifications |
+| **BRD/FRD Req** | FSD §10 / context note: `${+91}` evaluates to numeric `91` |
+| **Pre-conditions** | A CP submits a JBP successfully |
+| **Test Steps** | 1. Capture WhatsApp dispatch payload to template `jbplaunchtwo_new`<br>2. Inspect the phone-number placeholder |
+| **Expected Result** | The placeholder containing `${+91}<phone>` resolves to `"91<phone>"` — missing the literal `+` sign. JavaScript template literal evaluates `+91` to the numeric value 91. Document as template bug. |
+| **Priority** | High |
+
+---
+
+### ADM_JBP_FSD_042 — [FSD-CORRECTION] CP submit WhatsApp is fire-and-forget — submission still succeeds on dispatch failure
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / Notifications |
+| **BRD/FRD Req** | FSD §5.2 / `cp.controller.js:714` |
+| **Pre-conditions** | Backend with blocked outbound to botspice WhatsApp |
+| **Test Steps** | 1. CP submits JBP<br>2. Verify DB has new ACTIVE row<br>3. Verify no error returned to CP |
+| **Expected Result** | DB row created; CP sees success response. WhatsApp call failed silently in background. Audit log captures success regardless. |
+| **Priority** | Medium |
+
+---
+
+### ADM_JBP_FSD_043 — [FSD-CORRECTION] LSQ outage blocks entire JBP submission
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / API |
+| **BRD/FRD Req** | FSD §5.2 / §10 Bug #5 |
+| **Pre-conditions** | Mock LSQ to return 500 |
+| **Test Steps** | 1. CP attempts submitJbp<br>2. Observe response and DB state |
+| **Expected Result** | LSQ `createActivity` (event 270) AND `captureLead` (CustomObject 14-28) are called BEFORE DB write. Either fails → HTTP 500 to CP, **no DB row inserted**. Document as availability risk. |
+| **Priority** | High |
+
+---
+
+### ADM_JBP_FSD_044 — [FSD-CORRECTION] Cycle auto-CLOSE happens on getAllJbpCycles
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / API |
+| **BRD/FRD Req** | FSD §5.1 / `admin.controller.js:2703-2710` |
+| **Pre-conditions** | An OPEN cycle exists with endDate in the past |
+| **Test Steps** | 1. Confirm cycle is OPEN in DB<br>2. GET /api/v1/admin/jbp-cycles<br>3. Re-query DB |
+| **Expected Result** | After the GET call, the cycle's status is now `CLOSED`. Auto-sweep is triggered by the list call itself. |
+| **Priority** | High |
+
+---
+
+### ADM_JBP_FSD_045 — [FSD-CORRECTION] Edit-request auto-EXPIRE happens on getJbpEditRequests
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / API |
+| **BRD/FRD Req** | FSD §5.3 / `admin.controller.js:3118-3149` |
+| **Pre-conditions** | A PENDING or APPROVED edit request with `editableUntil < now` exists |
+| **Test Steps** | 1. Confirm DB state<br>2. GET /api/v1/admin/jbp-edit-requests<br>3. Re-query the edit-request row |
+| **Expected Result** | After the GET call, the row's status is `EXPIRED`. |
+| **Priority** | High |
+
+---
+
+### ADM_JBP_FSD_046 — [FSD-CORRECTION] CP resubmit consumes APPROVED edit request → CONSUMED
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / DB |
+| **BRD/FRD Req** | FSD §5.2 / §5.3 |
+| **Pre-conditions** | CP has APPROVED edit request still within `editableUntil`; existing ACTIVE submission for cycle |
+| **Test Steps** | 1. CP POST /api/v1/cp/jbp with new values<br>2. Inspect DB |
+| **Expected Result** | Old `JbpSubmission` → `EXPIRED`. New `JbpSubmission` inserted with `version = previous.version + 1` and status `ACTIVE`. The APPROVED edit request row's status → `CONSUMED`. |
+| **Priority** | Critical |
+
+---
+
+### ADM_JBP_FSD_047 — [BUG-REF: BUG-JBP-002] Approve `editableUntil` is clamped to cycle endDate
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP |
+| **BRD/FRD Req** | FSD §5.4 / `cp.controller.js:1834-1855` |
+| **Pre-conditions** | Cycle endDate is in 3 days; admin approves with editWindow=240 (10 days) |
+| **Test Steps** | 1. Approve with editWindow=240<br>2. Inspect editableUntil in DB or CP "latest cycle" view |
+| **Expected Result** | `editableUntil` is set to cycle `endDate 23:59:59.999`, not `now + 240h`. Cycle endDate caps the window. |
+| **Priority** | High |
+
+---
+
+### ADM_JBP_FSD_048 — [FSD-CORRECTION] No PUT or DELETE on cycles (admin cannot edit/delete created cycle)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / API |
+| **BRD/FRD Req** | FSD §10 Bug #7 / `admin.routes.js:171-172` |
+| **Pre-conditions** | A cycle exists |
+| **Test Steps** | 1. PUT /api/v1/admin/jbp-cycles/:id with new dates<br>2. DELETE /api/v1/admin/jbp-cycles/:id |
+| **Expected Result** | Both calls return 404 (route not registered). Cycles can only be Created or Closed. Document as known limitation. |
+| **Priority** | Medium |
+
+---
+
+### ADM_JBP_FSD_049 — [FSD-CORRECTION] Creating new cycle EXPIRES all PENDING/APPROVED edit requests of CLOSED cycles
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / DB |
+| **BRD/FRD Req** | FSD §5.1 / `admin.controller.js:2839-2874` |
+| **Pre-conditions** | One OPEN cycle with submissions that have PENDING and APPROVED edit requests |
+| **Test Steps** | 1. Create a new OPEN cycle (which cascades CLOSE on the old)<br>2. Inspect edit-request rows of submissions tied to the now-CLOSED cycle |
+| **Expected Result** | All PENDING and APPROVED edit-requests are set to `EXPIRED` inside the same transaction. CONSUMED/REJECTED rows are unaffected. |
+| **Priority** | High |
+
+---
+
+### ADM_JBP_FSD_050 — [BUG-REF: BUG-JBP-003] submitJbp NPE on null cycle (jbpCycle.endDate read before null check)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / API |
+| **BRD/FRD Req** | FSD §10 Bug #1 |
+| **Pre-conditions** | CP supplies invalid `jbpCycleId` not in DB |
+| **Test Steps** | 1. POST /api/v1/cp/jbp with `jbpCycleId=999999` |
+| **Expected Result** | Backend throws TypeError on `jbpCycle.endDate` instead of returning HTTP 400 "Cycle not found". Document bug. |
+| **Priority** | High |
+
+---
+
+### ADM_JBP_FSD_051 — [FSD-CORRECTION] `submission.updatedAt` is always undefined in admin response
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP / API |
+| **BRD/FRD Req** | FSD §10 Bug #4 |
+| **Pre-conditions** | Any ACTIVE submission exists |
+| **Test Steps** | 1. GET /api/v1/admin/jbp-submissions<br>2. Inspect `updatedAt` field in any row |
+| **Expected Result** | `updatedAt` is `undefined` / not present. Model has `updatedAt: false` so column doesn't exist. UI should not depend on it. |
+| **Priority** | Low |
 
 ---

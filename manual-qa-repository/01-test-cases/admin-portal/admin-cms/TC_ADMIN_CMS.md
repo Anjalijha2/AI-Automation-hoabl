@@ -1,6 +1,17 @@
 # Test Cases — Admin Portal Shell & CMS Link
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-Admin-Portal.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-admin-cms.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- **There is NO traditional CMS in the XR backend.** The "CMS" admin sidebar link is actually a **config / bulk-upload console** (Config, Bulk Cancel, Bulk Refund, Customer Actions, etc.) — NOT a banner/gallery/testimonial CMS.
+- **The real CMS is Strapi**, consumed by the backend as read-only feed (project content, banners, FAQs). Per project constraint, Strapi internals are OUT OF SCOPE for these tests.
+- Any test that asserts the admin can publish/edit a banner, video, gallery item, FAQ, or testimonial from within the admin portal is INCORRECT — these are managed in Strapi externally.
+- No source code in `admin.controller.js` or admin routes supports image-banner CRUD, video CRUD, gallery CRUD, FAQ CRUD, or testimonial CRUD from the XR admin portal.
 
 ---
 
@@ -431,5 +442,33 @@
 | **Test Steps** | 1. Press F5 |
 | **Expected Result** | Towers page reloads; user stays logged in |
 | **Priority** | High |
+
+---
+
+## [FSD-CORRECTION] New TCs — XR "Admin CMS" is NOT a content CMS
+
+### ADM_CMS_FSD_036 — [FSD-CORRECTION] No banner/gallery/testimonial CRUD exists in XR admin portal
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell / CMS |
+| **BRD/FRD Req** | FSD §1 / source: no admin routes for content CRUD |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Look for any UI in /admin to create or edit a banner, image gallery, testimonial, FAQ, or homepage content<br>2. Inspect all sidebar items |
+| **Expected Result** | No such UI exists. The "CMS" entry in the sidebar opens config/bulk-upload screens (Customer Actions, Bulk Cancel, Bulk Refund). All visual content shown on the buyer portal home page comes from Strapi (external CMS) — not editable from XR admin. Document as platform constraint. |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_FSD_037 — [FSD-CORRECTION] Strapi-sourced content is NOT testable from XR admin portal
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell / Strapi |
+| **BRD/FRD Req** | FSD §1 / project constraint (Strapi excluded) |
+| **Pre-conditions** | Buyer home page has Strapi-driven banner/content visible |
+| **Test Steps** | 1. As admin, try to find any way to modify the buyer home page banner content from within /admin |
+| **Expected Result** | Not possible. All such content edits happen in Strapi admin (out of scope). Any test asserting admin-side content editability is INVALID. |
+| **Priority** | Medium |
 
 ---

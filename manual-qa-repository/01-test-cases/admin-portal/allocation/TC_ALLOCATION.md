@@ -1,6 +1,20 @@
 # Test Cases — Allocation
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-Allocation.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-allocation.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- Three allocation modes: **STATIC, DYNAMIC, PHYSICAL_EVENT**.
+- All admin allocation endpoints sit under `restrictTo('admin')` only — SM Admin is NOT permitted.
+- `POST /campaigns` supports two multipart files: `allotmentExcel` and `commonPoolExcel`.
+- Manual reconcile endpoint exists: `POST /api/v1/admin/allocation/transaction/check`.
+- Cron endpoint: `GET /api/v1/cron-allocation-operations`.
+- Active allocation campaign **BLOCKS** all admin Customers writes (cancel, swap, assign, refund, parking).
+- Notification on Assign Unit (admin) = WhatsApp `congrates_payment_success_27sept` + SMS `ALLOTMENT_PAYMENT_SUCCESS` (only for `+91`). NO email.
 
 ---
 
@@ -437,5 +451,46 @@
 | **Test Steps** | 1. Locate campaign with Failed status |
 | **Expected Result** | Status badge shows "Failed"; admin can investigate or contact support |
 | **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — Allocation source-verified gaps
+
+### ADM_ALLOC_FSD_036 — [FSD-CORRECTION] Active campaign blocks Customers cancel/swap/assign/refund/parking
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Customers |
+| **BRD/FRD Req** | FSD Customers §4.2 (B-CUS-010..013) |
+| **Pre-conditions** | An allocation campaign is OPEN |
+| **Test Steps** | 1. Attempt single-cancel, bulk-cancel, unit-swap, assign-offline-unit, single-refund, bulk-refund, parking-update on a buyer in the same project |
+| **Expected Result** | Each call returns HTTP 400 with the exact text `"Cannot ... when campaign is active"`. RegistrationUnit unchanged. |
+| **Priority** | Critical |
+
+---
+
+### ADM_ALLOC_FSD_037 — [FSD-CORRECTION] Notify Physical Event sends QR codes to PHYSICAL_EVENT registrants only
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Notifications |
+| **BRD/FRD Req** | FSD §2 endpoint 7 — `POST /campaigns/:id/notify` |
+| **Pre-conditions** | An allocation campaign of mode PHYSICAL_EVENT exists with registrants |
+| **Test Steps** | 1. Call `POST /api/v1/admin/allocation/campaigns/<id>/notify`<br>2. Inspect outbound notifications |
+| **Expected Result** | Only PHYSICAL_EVENT campaigns trigger QR-code notification dispatch. STATIC and DYNAMIC campaigns do NOT trigger this endpoint. |
+| **Priority** | High |
+
+---
+
+### ADM_ALLOC_FSD_038 — [FSD-CORRECTION] SM Admin cannot access admin allocation endpoints
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Security |
+| **BRD/FRD Req** | FSD §1 / `routes/admin.routes.js:53` (`restrictTo('admin')`) |
+| **Pre-conditions** | Valid SM Admin JWT (roleId=4) |
+| **Test Steps** | 1. With SM Admin JWT, call `GET /api/v1/admin/allocation/campaigns` |
+| **Expected Result** | HTTP 403 Forbidden. SM Admin role does NOT have access — admin endpoints are admin-only at this router. |
+| **Priority** | Critical |
 
 ---

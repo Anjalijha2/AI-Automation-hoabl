@@ -1,6 +1,16 @@
 # Test Cases — Tower and Unit Heatmap
 **Portal:** Sales Manager Portal
 **BRD Reference:** SM-FS-Tower-Heatmap.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/sm-portal/fsd-tower-heatmap.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- Towers + unit heatmap is **shared cross-role** via `GET /api/v1/towers` and `GET /api/v1/towers/:towerId/units` — accessible to `user`, `admin`, `sales_manager_admin`, `sales_manager`.
+- Real-time unit-status broadcast is via Python service `/units/status-sync` (admin) and WebSocket on client.
+- Status writes go through `Tower.update(hooks:false)` → AuditLog → Redis cache → Python broadcast (fire-and-forget).
 
 ---
 
@@ -127,5 +137,20 @@
 | **Test Steps** | 1. Keep heatmap open<br>2. Have another user/admin place a unit on HOLD<br>3. Observe SM view |
 | **Expected Result** | Unit colour transitions to orange without page refresh via WebSocket per BR 1.6.3 |
 | **Priority** | High |
+
+---
+
+## [FSD-CORRECTION] New TCs — Tower Heatmap source-verified
+
+### SM_HMP_FSD_011 — [FSD-CORRECTION] Heatmap endpoint shared across user/admin/sm-admin/sm roles
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Security |
+| **BRD/FRD Req** | FSD Towers §2 endpoint 11-12 |
+| **Pre-conditions** | Valid JWT for each role |
+| **Test Steps** | 1. Call `GET /api/v1/towers` and `GET /api/v1/towers/:towerId/units` with each of user/admin/sm-admin/sm JWTs |
+| **Expected Result** | All four roles get 200. Endpoint is `protect`-gated and shared. Behavior may vary by `?action=` query param. |
+| **Priority** | Medium |
 
 ---

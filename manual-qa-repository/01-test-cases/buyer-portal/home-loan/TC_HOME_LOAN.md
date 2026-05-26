@@ -1,6 +1,20 @@
 # Test Cases — Home Loan
 **Portal:** Buyer (Customer) Portal
 **BRD Reference:** BUYER-FS-Home-Loan.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-loan.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts (CRITICAL)
+
+- **Status ENUM is `('pending', 'approved', 'admin_rejected', 'admin_approved')`** — NOT `APPLIED/APPROVED/REJECTED` as BRD may have claimed.
+- **`approved` (lowercase) is UNREACHABLE from live code** — buyer-side write paths only set `pending`. Only admin paths set `admin_approved` / `admin_rejected`.
+- **Two independent state machines on the model**: `status` (`in_progress | completed`) and `loan_approval_status` (the 4-state enum above).
+- **`approvalSource` ENUM**: `user | admin`.
+- **`approvalMethod` ENUM**: `self | easiloan`.
+- **Documents stored in LeadSquared `mx_CustomObject_*` slots** — NOT in a dedicated home_loan_documents table. CIBIL floor 600 enforced via `xanaduService.getCibilScore`.
+- **Admin Home Loan Approval dispatches NO buyer notification** (see Customers FSD §5 row 3) — previously claimed SMS/WhatsApp does NOT happen.
 
 ---
 
@@ -380,6 +394,73 @@
 | **Pre-conditions** | Salaried form |
 | **Test Steps** | 1. Enter EMI equal to or greater than income<br>2. Submit |
 | **Expected Result** | Either rejected at frontend or Easiloan returns no offers; buyer sees "Not eligible" message |
+| **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — Home Loan source-verified gaps
+
+### BYR_LOAN_FSD_036 — [FSD-CORRECTION] loan_approval_status ENUM values are pending/approved/admin_rejected/admin_approved
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan / DB |
+| **BRD/FRD Req** | FSD §2.1 / model line 73-79 |
+| **Pre-conditions** | A buyer with active home-loan record |
+| **Test Steps** | 1. Inspect DB column `loan_approval_status` |
+| **Expected Result** | Only 4 values are valid: `pending`, `approved`, `admin_rejected`, `admin_approved`. Any UI showing "APPROVED" / "REJECTED" / "APPLIED" labels is presentation-layer mapping — backend uses these 4 only. |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_FSD_037 — [BUG-REF: BUG-LOAN-001] `approved` (lowercase) state is unreachable from live code
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan / Workflow |
+| **BRD/FRD Req** | FSD / no buyer write path sets `approved` |
+| **Pre-conditions** | Buyer completes home-loan flow |
+| **Test Steps** | 1. Walk every buyer-side path (self-loan opt out, easiloan eligibility, bank selection, sanction-letter upload)<br>2. Inspect resulting `loan_approval_status` |
+| **Expected Result** | Buyer paths only ever set `pending`. Only admin actions transition to `admin_approved` or `admin_rejected`. The `approved` value is defined in ENUM but unreachable in current code paths. Document as dead-state. |
+| **Priority** | Medium |
+
+---
+
+### BYR_LOAN_FSD_038 — [FSD-CORRECTION] Admin Home Loan Approval triggers NO buyer notification
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan / Notifications |
+| **BRD/FRD Req** | FSD Customers §5 row 3 / `services/registration-unit.service.js:349-387` |
+| **Pre-conditions** | Admin approves a buyer's home loan |
+| **Test Steps** | 1. Admin uses Home Loan Approval toggle and saves<br>2. Inspect buyer's phone for SMS/WhatsApp/email |
+| **Expected Result** | NO notification dispatched to the buyer. The buyer must check the portal manually to see the approved state. Previous BRD claim of "buyer notified" is INCORRECT. |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_FSD_039 — [FSD-CORRECTION] Two independent state machines (status vs loan_approval_status)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan / Workflow |
+| **BRD/FRD Req** | FSD §2.1 |
+| **Pre-conditions** | A home loan in step 2 with status='in_progress', loan_approval_status='pending' |
+| **Test Steps** | 1. Buyer completes step 2 (e.g. selects bank or uploads sanction)<br>2. Admin then approves<br>3. Inspect both columns |
+| **Expected Result** | Buyer completion moves `status: in_progress → completed`. Admin approval moves `loan_approval_status: pending → admin_approved`. The two columns are independent — UI must check both to render final state. |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_FSD_040 — [FSD-CORRECTION] KYC documents stored in LeadSquared mx_CustomObject slots (not in DB table)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan / Storage |
+| **BRD/FRD Req** | FSD §2.3 |
+| **Pre-conditions** | Buyer uploads PAN/Aadhar/salary slip/bank statement during home-loan flow |
+| **Test Steps** | 1. Upload documents<br>2. Look for `home_loan_documents` table — not present<br>3. Inspect LSQ lead `mx_CustomObject_1`..`mx_CustomObject_7` |
+| **Expected Result** | Files are stored as LSQ custom-object attachments. No dedicated XR table. Document blob retrieval requires LSQ API (out of scope per project constraint — flag for security/data-residency review). |
 | **Priority** | Medium |
 
 ---

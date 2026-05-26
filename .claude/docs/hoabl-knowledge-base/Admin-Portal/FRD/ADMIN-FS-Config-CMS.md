@@ -282,7 +282,8 @@ Download the sample file for current column headers. Upload with registration/bo
 5. Python unit status sync triggered.
 
 ## 8. Notifications
-- Kaleyra notification to affected buyers if cancellation notification is configured.
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **NONE.** `cancelUnitsExcel` handler sends zero notifications. // Source: admin.controller.js:cancelUnitsExcel
 
 ## 9. Audit & Logging
 - Admin user ID, filename, registrations cancelled, timestamp logged.
@@ -332,7 +333,8 @@ Download the sample file for current column headers.
 5. Python service notified.
 
 ## 8. Notifications
-- Kaleyra notification to affected buyers if configured.
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **NONE.** `refundBulk` handler sends zero notifications. // Source: admin.controller.js:refundBulk
 
 ## 9. Audit & Logging
 - Admin user ID, filename, registration IDs cancelled, timestamp logged.

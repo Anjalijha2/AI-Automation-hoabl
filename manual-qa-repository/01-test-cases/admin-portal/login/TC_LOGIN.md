@@ -1,6 +1,24 @@
 # Test Cases — Login
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-Login.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-login-auth.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Major behavior facts verified from source code
+
+- **OTP provider = Epinet** (`epinetinfo.in`), NOT Kaleyra. Kaleyra SMS/WhatsApp services are commented out in `services/communication.service.js:8-22`.
+- **OTP generation uses `Math.random()`** — NOT cryptographically secure (`controllers/auth.controller.js:52-54`).
+- **OTP is stored as plaintext** on `users.otp` column (no hashing).
+- **No rate limit on auth endpoints** — `authLimiter` middleware exists but is not wired (`middleware/rate-limiter.middleware.js:37-49`, `routes/auth.routes.js`).
+- **No resend cooldown** — cooldown block is commented out (`controllers/auth.controller.js:557-568`).
+- **Admin Master OTP** (`ADMIN_MASTER_OTP` env var) is accepted in ALL environments — there is no NODE_ENV gate (`controllers/auth.controller.js:725-731`).
+- **JWT lifetime** = 1 day default; payload is `{id: userId}` only (no role/email).
+- **Logout is client-side only** — JWT stateless, no blacklist on server (`controllers/auth.controller.js:36-46`).
+- **`lastLogin` field assigned but column commented out in model** — silently dropped (`models/user.model.js:321-324`).
+- **WhatsApp + SMS dispatch is fire-and-forget** — no `await`, controller returns "OTP sent successfully" even on delivery failure.
+- **Phone format regex `[6-9]\d{9}$` exists but is NOT enforced** at Yup validation level (regex `.test` is commented out).
 
 ---
 
@@ -298,14 +316,14 @@
 
 ---
 
-### ADM_LGN_025 — Multiple wrong OTP attempts no lockout
+### ADM_LGN_025 — [FSD-CORRECTION] [BUG-REF: BUG-AUTH-001] Unlimited wrong OTP attempts — no lockout, no rate limit
 
 | Field | Value |
 |-------|-------|
 | **Module** | ADM – Login |
 | **Pre-conditions** | OTP screen shown |
-| **Test Steps** | 1. Submit "111111"<br>2. Submit "222222"<br>3. Submit "333333"<br>4. Submit "258369" |
-| **Expected Result** | First 3 attempts rejected with error but no lockout; 4th attempt with correct OTP succeeds |
+| **Test Steps** | 1. Submit "111111"<br>2. Submit "222222"<br>3. Submit "333333"<br>4. Submit 50 more random 6-digit OTPs<br>5. Submit "258369" |
+| **Expected Result** | All wrong attempts rejected with HTTP 401 `"Invalid OTP"`. NO lockout ever applied. NO rate limit triggered. 54th attempt with correct OTP succeeds. Note: `authLimiter` middleware (50 req/min/IP) exists but is NOT wired to auth routes — verified from `routes/auth.routes.js` source. Flag as security gap. |
 | **Priority** | High |
 
 ---
@@ -346,14 +364,14 @@
 
 ---
 
-### ADM_LGN_029 — Click Re-Send OTP after timer expires
+### ADM_LGN_029 — [FSD-CORRECTION] Click Re-Send OTP after timer expires (UI-only cooldown)
 
 | Field | Value |
 |-------|-------|
 | **Module** | ADM – Login |
 | **Pre-conditions** | Timer expired; Re-Send OTP enabled |
 | **Test Steps** | 1. Click Re-Send OTP |
-| **Expected Result** | New OTP requested; timer restarts at 60s; Re-Send OTP disabled again |
+| **Expected Result** | New OTP requested; UI timer restarts at 60s; Re-Send OTP disabled again. NOTE: backend cooldown is COMMENTED OUT (`auth.controller.js:557-568`) — any number of resend calls bypassing UI (e.g. via direct API) will succeed. The 60s gate is purely client-side. |
 | **Priority** | High |
 
 ---
@@ -470,14 +488,14 @@
 
 ---
 
-### ADM_LGN_039 — Unregistered mobile number rejected at OTP verify
+### ADM_LGN_039 — [FSD-CORRECTION] Unregistered admin mobile rejected at SEND-OTP (not verify)
 
 | Field | Value |
 |-------|-------|
 | **Module** | ADM – Login |
 | **Pre-conditions** | Login page loaded |
-| **Test Steps** | 1. Enter unregistered "9999999999"<br>2. Click Send OTP<br>3. Enter "258369"<br>4. Click Submit OTP |
-| **Expected Result** | OTP verification fails; user not logged in |
+| **Test Steps** | 1. Enter unregistered "9999999999"<br>2. Click Send OTP |
+| **Expected Result** | Backend returns HTTP 400 `"User not found"` at the send-OTP step itself. UI surfaces error inline. OTP screen does NOT load. Note: `auth.controller.js:513-515` enforces this for admin / SM-admin / SM (NOT for CP — CP auto-creates). |
 | **Priority** | High |
 
 ---
@@ -491,5 +509,103 @@
 | **Test Steps** | 1. Resize to mobile viewport<br>2. Load /admin |
 | **Expected Result** | All elements visible and tappable; no overflow |
 | **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — Source-verified behaviour and known security gaps
+
+### ADM_LGN_FSD_041 — [BUG-REF: BUG-AUTH-002] OTP delivered via Epinet SMS (not Kaleyra)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login / API |
+| **Pre-conditions** | Network log capture available on backend; valid admin mobile |
+| **Test Steps** | 1. POST `/api/v1/auth/admin/send-otp` with `{phone:"8888888888"}`<br>2. Inspect outbound HTTP traffic from backend |
+| **Expected Result** | Outbound SMS hits `https://epinetinfo.in/api/pushsms` with user `HOABLDIGITAL`, DLT template id `1007393289666667759`, recipient `918888888888`. NO call to Kaleyra. Source: `services/api/whatsapp.service.js:92-122`. |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_FSD_042 — [BUG-REF: BUG-AUTH-003] OTP is generated with insecure Math.random()
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login / Security |
+| **Pre-conditions** | Source-code review or repeated OTP generation |
+| **Test Steps** | 1. Trigger 1000 OTP requests on UAT (script)<br>2. Analyse distribution and predictability of OTPs |
+| **Expected Result** | OTP is generated via `Math.floor(100000 + Math.random() * 900000)` — NOT `crypto.randomInt` or equivalent CSPRNG. Document as known security gap; recommend migration to `crypto.randomInt`. Source: `controllers/auth.controller.js:52-54`. |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_FSD_043 — [BUG-REF: BUG-AUTH-004] OTP stored as plaintext on users.otp
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login / DB |
+| **Pre-conditions** | DB query access |
+| **Test Steps** | 1. POST send-OTP for admin user<br>2. Query `SELECT otp, otpExpires FROM users WHERE phone='8888888888'` |
+| **Expected Result** | `otp` column contains the literal 6-digit code in plaintext. Document gap — should be hashed (bcrypt or HMAC). |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_FSD_044 — [FSD-CORRECTION] Admin Master OTP works in ALL environments including production
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login / Security |
+| **Pre-conditions** | `ADMIN_MASTER_OTP` configured in target environment |
+| **Test Steps** | 1. POST send-OTP for any admin user<br>2. POST verify-OTP with `ADMIN_MASTER_OTP` value |
+| **Expected Result** | Verify succeeds regardless of NODE_ENV — there is NO production gate on master OTP. Document operational risk; confirm with security team master OTP rotation policy. Source: `controllers/auth.controller.js:725-731` (no env check). |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_FSD_045 — Logout returns success but JWT remains valid until natural expiry
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login / Session |
+| **Pre-conditions** | Admin logged in with active JWT |
+| **Test Steps** | 1. Capture JWT bearer token<br>2. POST `/api/v1/auth/logout` with bearer token — expect 200<br>3. Immediately call any protected endpoint (e.g. `GET /api/v1/admin/dashboard/all-buyers`) using the same JWT |
+| **Expected Result** | Step 2: 200 `"Logged out successfully"`. Step 3: protected endpoint STILL returns 200 — JWT is stateless, no server-side blacklist exists. Token remains valid until `exp` claim expires (default 1d). Source: `controllers/auth.controller.js:36-46`. |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_FSD_046 — Fire-and-forget WhatsApp/SMS — "OTP sent successfully" returned even on dispatch failure
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login / Notifications |
+| **Pre-conditions** | Backend with simulated outbound network failure to epinet/botspice |
+| **Test Steps** | 1. Block outbound DNS to `epinetinfo.in` and `botspice` endpoints<br>2. POST send-OTP for admin |
+| **Expected Result** | Backend returns 200 `"OTP sent successfully"` even though no message actually left the system. The user object still has `otp` and `otpExpires` set. Verified: send calls are NOT awaited (`controllers/auth.controller.js:590-600`). |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_FSD_047 — Phone format regex defined but not enforced — any string passes
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login / API |
+| **Pre-conditions** | UAT admin user with phone `8888888888` |
+| **Test Steps** | 1. POST send-OTP with `phone:"abc"` — observe response<br>2. POST send-OTP with `phone:"12345"` — observe response |
+| **Expected Result** | Yup-level phone-format check (`/^[6-9]\d{9}$/`) is commented out (`validations/auth.validations.js:43`). Backend will accept any string and fail only on `User.findOne` lookup, returning `400 "User not found"`. Document validation gap. |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_FSD_048 — `lastLogin` assignment is silently dropped (column commented out)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login / DB |
+| **Pre-conditions** | Admin successfully logs in via OTP |
+| **Test Steps** | 1. Successful login<br>2. Query `SHOW COLUMNS FROM users LIKE 'last_login'` |
+| **Expected Result** | Column may or may not exist depending on migrations. The `user.lastLogin = new Date()` assignment in controller (`auth.controller.js:859-861`) is silently no-op when column absent — Sequelize drops unknown attributes. Document inconsistency. |
+| **Priority** | Low |
 
 ---

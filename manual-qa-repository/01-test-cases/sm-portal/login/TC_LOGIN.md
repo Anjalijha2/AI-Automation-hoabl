@@ -1,6 +1,19 @@
 # Test Cases — SM Portal Login
 **Portal:** Sales Manager Portal
 **BRD Reference:** SM-FS-Login.md / SM-BRD-SM-Portal.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/sm-portal/fsd-login.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- SM portal has TWO backend roles: **SM Admin = roleId 4**, **SM = roleId 5**.
+- Both share the same login endpoints; `req.body.role` differentiates them (trusted by middleware, validated by Yup `oneOf`).
+- An SM-Admin user can log in via the "SM" tab and vice-versa if registered to that role — there is no cross-blocking at auth.
+- Post-login route enforcement: `/api/v1/sales-manager/admin/*` is gated by `restrictTo('sales_manager_admin')`. Other SM routes allow both roles.
+- Same OTP provider (Epinet, not Kaleyra), same Math.random() OTP, same `ADMIN_MASTER_OTP` master OTP, same lack of rate limit / cooldown as Admin.
+- Inactive (`isActive=false`) accounts get `400 'Your access to the portal has been revoked'` at send-OTP.
 
 ---
 
@@ -94,14 +107,56 @@
 
 ---
 
-### SM_LGN_008 — Reject login for inactive SM account
+### SM_LGN_008 — [FSD-CORRECTION] Reject login for inactive SM at SEND-OTP step
 
 | Field | Value |
 |-------|-------|
 | **Module** | SM – Login |
+| **BRD/FRD Req** | FSD §3.1.b / `auth.controller.js:517-519` |
 | **Pre-conditions** | SM account exists with isActive = false |
-| **Test Steps** | 1. Enter inactive SM's mobile<br>2. Click Send OTP<br>3. Enter correct OTP<br>4. Click Verify OTP |
-| **Expected Result** | Login rejected with error "Account is not active. Contact admin." per BR 1.5.4; user remains on login page |
+| **Test Steps** | 1. Enter inactive SM's mobile<br>2. Click Send OTP |
+| **Expected Result** | Backend returns 400 `"Your access to the portal has been revoked"` at send-OTP. OTP screen does NOT load. (Previous BRD assumed rejection at verify-step — incorrect.) |
 | **Priority** | Critical |
+
+---
+
+## [FSD-CORRECTION] New TCs — SM Login source-verified gaps
+
+### SM_LGN_FSD_009 — [FSD-CORRECTION] SM Admin can log in via SM tab (role-trust at auth route)
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Login / Security |
+| **BRD/FRD Req** | FSD §5.3 / `routes/auth.routes.js:32` |
+| **Pre-conditions** | SM-Admin user with roleId=4 exists |
+| **Test Steps** | 1. From UI, select the "SM" tab<br>2. Enter SM-Admin's mobile<br>3. Backend receives `role:'sales_manager'` in body<br>4. Lookup fails — user is in roleId=4, not 5 |
+| **Expected Result** | Backend returns 400 "User not found" because `(phone, roleId=5)` lookup fails. SM Admin must use the SM-Admin tab to log in (which sends `role:'sales_manager_admin'`). Document UI/backend coupling. |
+| **Priority** | High |
+
+---
+
+### SM_LGN_FSD_010 — [FSD-CORRECTION] SM Admin has access to all SM routes + admin sub-routes
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Login / Security |
+| **BRD/FRD Req** | FSD §5.3 / `routes/sales-manager/index.js:8-15` |
+| **Pre-conditions** | Valid SM Admin JWT (roleId=4) |
+| **Test Steps** | 1. Call any `/api/v1/sales-manager/common/*` endpoint — expect 200<br>2. Call any `/api/v1/sales-manager/admin/*` endpoint — expect 200<br>3. As plain SM (roleId=5), call `/api/v1/sales-manager/admin/*` — expect 403 |
+| **Expected Result** | SM Admin sees both common and admin routes. SM is blocked from admin routes via `restrictTo('sales_manager_admin')`. |
+| **Priority** | Critical |
+
+---
+
+### SM_LGN_FSD_011 — [FSD-CORRECTION] SM portal master OTP = ADMIN_MASTER_OTP (not regular master)
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Login / Security |
+| **BRD/FRD Req** | FSD §7.4 / `auth.controller.js:725-731` |
+| **Pre-conditions** | `ADMIN_MASTER_OTP` configured (e.g. `258369`) |
+| **Test Steps** | 1. Send OTP for SM<br>2. Verify with `258369` |
+| **Expected Result** | Verify succeeds — SM/SM-Admin uses ADMIN_MASTER_OTP (not the regular masterOtp). Works in all environments. |
+| **Priority** | High |
 
 ---

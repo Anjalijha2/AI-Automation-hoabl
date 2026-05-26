@@ -1,6 +1,19 @@
 # Test Cases — Physical Allocation (In-Person Event)
 **Portal:** Sales Manager Portal
 **BRD Reference:** SM-FS-Physical-Allocation.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/sm-portal/fsd-physical-allocation.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- Available only when an `Allocation Campaign` of mode `PHYSICAL_EVENT` is active.
+- KYC PDF generation uses Puppeteer; storage = **Azure Blob** (not S3).
+- KYC PDF upload has **NO file size limit** — multer limits commented out (KNOWN BUG).
+- KYC tracking via **boolean flags on `registration_units`** (isKycSubmitted, eVerificationCompleted, selfKycSubmitted, etc.) — NOT a dedicated KYC model or `kyc_documents` table.
+- No admin KYC approval flow — self-attested only.
+- Notify Physical Event campaign dispatches QR codes via `POST /campaigns/:id/notify`.
 
 ---
 
@@ -228,14 +241,43 @@
 
 ---
 
-### SM_ALLOC_019 — KYC submission sets isKycSubmitted = true and generates PDF
+### SM_ALLOC_019 — [FSD-CORRECTION] KYC submission sets isKycSubmitted flag on registration_units (no dedicated KYC table)
 
 | Field | Value |
 |-------|-------|
 | **Module** | SM – Physical Allocation |
+| **BRD/FRD Req** | FSD §1 / `services/allocation.service.js:1850` (submitKycService) |
 | **Pre-conditions** | All applicants completed with all 4 documents each |
-| **Test Steps** | 1. Click Submit KYC<br>2. Wait for system response |
-| **Expected Result** | Success confirmation; KYC PDF generated via Puppeteer, stored in Azure Blob; isKycSubmitted = true on registration unit per FS 3.7 |
+| **Test Steps** | 1. Click Submit KYC<br>2. Wait for system response<br>3. Query `SELECT isKycSubmitted, isKycPdfSubmitted FROM registration_units WHERE id=<x>` |
+| **Expected Result** | Success confirmation; KYC PDF generated via Puppeteer, stored in **Azure Blob** (not S3); `isKycSubmitted=true` on `registration_units` row. NO `kyc_documents` table exists — KYC tracked entirely via boolean flags on registration_units. Self-attested; no admin approval flow exists. |
 | **Priority** | Critical |
+
+---
+
+## [FSD-CORRECTION] New TCs — Physical Allocation source-verified gaps
+
+### SM_ALLOC_FSD_020 — [BUG-REF: BUG-KYC-001] KYC PDF upload has NO file size limit
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Physical Allocation / Security |
+| **BRD/FRD Req** | FSD §6 / multer limits commented out |
+| **Pre-conditions** | A 500 MB dummy PDF prepared |
+| **Test Steps** | 1. Attempt KYC PDF upload with the 500 MB file |
+| **Expected Result** | Backend accepts the upload — multer file-size limit is commented out. This is a DoS / storage-cost risk. Document as critical security/operations bug. |
+| **Priority** | Critical |
+
+---
+
+### SM_ALLOC_FSD_021 — [FSD-CORRECTION] No admin KYC approval flow — self-attested only
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Physical Allocation / Admin |
+| **BRD/FRD Req** | FSD §1 (no admin approve route) |
+| **Pre-conditions** | A registration unit with `isKycSubmitted=true` |
+| **Test Steps** | 1. As admin, look for any UI/API to review or approve KYC documents |
+| **Expected Result** | No such admin endpoint exists. KYC submission is final on SM/buyer side — no review gate. Document as expected (self-attestation model). |
+| **Priority** | Medium |
 
 ---

@@ -44,12 +44,14 @@ Entry point of the Admin Portal. No session required. Covers Step 1 of the 2-ste
 ## 7. System Actions on Submit
 1. `POST /api/v1/auth/admin/send-otp` with body `{ "mobile": "<number>", "userType": "admin" }`.
 2. Backend validates mobile exists as an admin user.
-3. Generates 6-digit OTP and sends via Kaleyra SMS.
+3. Generates 6-digit OTP and sends via **Epinet SMS** (NOT Kaleyra).
 4. On UAT: SMS delivery skipped; static OTP `258369` accepted.
 5. UI transitions to OTP entry screen (Step 2).
 
+> **[FSD-CORRECTION 2026-05-25]:** OTP SMS is routed via **Epinet** (`https://epinetinfo.in/api/pushsms`, sender=`THOAL`). Kaleyra service files exist (`kaleyra-sms.service.js`) but are NOT used for OTP — Kaleyra imports are commented out in `communication.service.js:8-9`. Source: `auth.controller.js`, `communication.service.js`.
+
 ## 8. Notifications
-- SMS via Kaleyra: OTP sent to registered mobile number.
+- SMS via **Epinet** (NOT Kaleyra): OTP sent to registered mobile number.
 - On UAT: no real SMS sent; static OTP used.
 
 ## 9. Audit & Logging

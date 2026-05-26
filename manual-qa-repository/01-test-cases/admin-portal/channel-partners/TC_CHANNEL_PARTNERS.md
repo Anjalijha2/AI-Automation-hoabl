@@ -1,6 +1,20 @@
 # Test Cases — Channel Partners
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-Channel-Partners.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-channel-partners.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- CP = `users` row where `roleId = 3` AND `isCpRegistrationCompleted = true`.
+- CP types derived purely from columns: Master (`isLeadCp=true`), Member (`leadCpId IS NOT NULL`), Standalone (else).
+- **No admin endpoint exists for CP create / approve / reject / activate / deactivate / delete** — these features are NOT implemented in `admin-cp.controller.js`. Any TC asserting admin-side CP CRUD is INVALID.
+- **No notification, email, SMS, or WhatsApp** is dispatched on any admin CP action (list, view, mark-master, map, bulk-map). Verified by grep.
+- **No CP header/stats/count widget endpoint** — only `findAndCountAll.count` for paginated rows.
+- SM Admin role is NOT permitted on CP admin endpoints — only `restrictTo('admin')` applies.
+- Bulk-map Excel field name is `doc`.
 
 ---
 
@@ -515,5 +529,46 @@
 | **Test Steps** | 1. Select that CP<br>2. Map to Master B<br>3. Confirm |
 | **Expected Result** | Master HV Code updates from A to B; previous mapping replaced |
 | **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — CP admin source-verified gaps
+
+### ADM_CP_FSD_043 — [FSD-CORRECTION] No admin-side CP create / approve / activate / deactivate / delete
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Channel Partners / API |
+| **BRD/FRD Req** | FSD §1 Out-of-Scope |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Try to find any UI/API to create, approve, reject, activate, deactivate, or delete a CP from /admin/channel-partners |
+| **Expected Result** | No such UI or API exists. Verified by enumerating admin-cp routes (`routes/admin.routes.js:187-200`): only list/get/mark-master/map/bulk-map. Any BRD claim of CP CRUD from admin is INVALID. |
+| **Priority** | High |
+
+---
+
+### ADM_CP_FSD_044 — [FSD-CORRECTION] CP admin actions dispatch NO notification
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Channel Partners / Notifications |
+| **BRD/FRD Req** | FSD §1 / grep verification |
+| **Pre-conditions** | Admin performs `mark-master`, `map-master`, or `bulk-map-excel` |
+| **Test Steps** | 1. Mark a CP as master<br>2. Map members to a master<br>3. Inspect Kaleyra/epinet/email logs and CP phone |
+| **Expected Result** | NO SMS, NO WhatsApp, NO email dispatched. Only DB updates + audit log. |
+| **Priority** | Medium |
+
+---
+
+### ADM_CP_FSD_045 — [FSD-CORRECTION] SM Admin denied on CP admin endpoints
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Channel Partners / Security |
+| **BRD/FRD Req** | FSD §2 (`restrictTo('admin')`) |
+| **Pre-conditions** | Valid SM Admin JWT |
+| **Test Steps** | 1. SM Admin calls `GET /api/v1/admin/cp` |
+| **Expected Result** | HTTP 403 Forbidden — only `admin` role is allowed. |
+| **Priority** | High |
 
 ---

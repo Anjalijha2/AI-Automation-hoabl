@@ -126,7 +126,7 @@ There is no other way to reach the login page — it is the default page for the
 | Dependency | Why |
 |-----------|-----|
 | [Admin Portal Overview](BRD-Admin-Overview.md) | Login is the gateway to all admin modules |
-| SMS / OTP delivery service | The system sends the OTP via SMS or WhatsApp |
+| SMS / OTP delivery service | OTP sent via **Epinet SMS** (NOT Kaleyra/WhatsApp). // Source: communication.service.js; auth.controller.js |
 
 ---
 

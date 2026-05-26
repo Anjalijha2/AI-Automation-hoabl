@@ -1,6 +1,18 @@
 # Test Cases — Payment Transactions
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-Payment-Transactions.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-payment-transactions.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- Payment Transactions admin module is **READ-ONLY**. No admin-side create/update/refund/delete on individual transactions exists here.
+- 2 active endpoints: `GET /admin/payment-transactions` (list), `GET /admin/payment-transactions/milestone-types`.
+- `GET /admin/payment-transactions/:id` is declared but NOT IMPLEMENTED (controller returns TODO).
+- Mutations happen elsewhere: registration cancel/refund (`admin.controller.js`), milestone-payment offline (`milestone-payment.controller.js`), payment gateway webhooks (`payment.controller.js`).
+- Sibling sub-module Payment Gateways: 3 active endpoints (list active, get settings, PUT settings). `PUT /:id` is commented out.
 
 ---
 
@@ -432,6 +444,47 @@
 | **Pre-conditions** | Payments page loaded |
 | **Test Steps** | 1. Click Refresh button |
 | **Expected Result** | Table reloads with latest data from server |
+| **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — Payment Transactions source-verified gaps
+
+### ADM_PAY_FSD_036 — [FSD-CORRECTION] No admin create/update/refund/delete endpoints for individual transactions
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions / API |
+| **BRD/FRD Req** | FSD §1 / §2.1 |
+| **Pre-conditions** | Admin JWT |
+| **Test Steps** | 1. POST `/api/v1/admin/payment-transactions` — expect 404<br>2. PUT `/api/v1/admin/payment-transactions/:id` — expect 404<br>3. DELETE — expect 404 |
+| **Expected Result** | All return 404. The module is read-only at admin level. Mutations occur via cancel/refund/offline-milestone in other modules. |
+| **Priority** | High |
+
+---
+
+### ADM_PAY_FSD_037 — [FSD-CORRECTION] GET /payment-transactions/:id is unimplemented (returns TODO)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions / API |
+| **BRD/FRD Req** | FSD §2.1 Route 3 |
+| **Pre-conditions** | Admin JWT |
+| **Test Steps** | 1. GET `/api/v1/admin/payment-transactions/123` |
+| **Expected Result** | Endpoint exists in route file but controller returns TODO placeholder. UI should not render a per-transaction detail page. |
+| **Priority** | Medium |
+
+---
+
+### ADM_PAY_FSD_038 — [FSD-CORRECTION] Payment Gateways `PUT /:id` is commented out (cannot toggle individual gateway by id)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Gateways / API |
+| **BRD/FRD Req** | FSD §2.2 Route 7 |
+| **Pre-conditions** | Admin JWT |
+| **Test Steps** | 1. PUT `/api/v1/admin/payment-gateways/<id>` |
+| **Expected Result** | HTTP 404 — route disabled. Use bulk `PUT /payment-gateways/settings` instead. |
 | **Priority** | Medium |
 
 ---

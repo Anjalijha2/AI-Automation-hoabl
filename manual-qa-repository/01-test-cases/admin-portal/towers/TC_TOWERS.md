@@ -1,6 +1,18 @@
 # Test Cases — Towers
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-Towers.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-towers.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- All admin tower endpoints `restrictTo('admin')`. Common (read-only) endpoints `/towers`, `/units/:id` are shared across `user`, `admin`, `sm_admin`, `sm`.
+- Bulk update tower status writes `AuditLog` rows + refreshes Redis `tower_config` cache + broadcasts to Python `/broadcast-towers` (fire-and-forget).
+- Unit status sync to Python at `POST /units/status-sync` on AVAILABLE↔RESERVED toggle.
+- Project scoping: production → projectId=1, non-prod → projectId=2 (hardcoded).
+- No buyer-facing notification on tower or unit status changes.
 
 ---
 
@@ -466,6 +478,60 @@
 | **Pre-conditions** | Tower with all units sold |
 | **Test Steps** | 1. Click that tower in sidebar |
 | **Expected Result** | Grid loads with all red units; no available white cells |
+| **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — Towers source-verified gaps
+
+### ADM_TWR_FSD_039 — [FSD-CORRECTION] Tower status update fires audit log + Redis cache + Python broadcast
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Towers / Integration |
+| **BRD/FRD Req** | FSD §1 / `tower.controller.js:73-149` |
+| **Pre-conditions** | An OPEN tower (isActive=true) and admin JWT |
+| **Test Steps** | 1. PUT `/api/v1/admin/towers/status-update` with `{towers:[{id:1,isActive:false}]}`<br>2. Inspect `audit_logs` for `ADMIN_TOWER_STATUS_UPDATE` row<br>3. Inspect Redis `tower_config:<projectId>` — `is_active` updated<br>4. Inspect Python service log for `/broadcast-towers` call |
+| **Expected Result** | All three side effects fire. Python broadcast is fire-and-forget — errors do NOT roll back the DB change. |
+| **Priority** | High |
+
+---
+
+### ADM_TWR_FSD_040 — [FSD-CORRECTION] No-op tower status update skips DB write and audit
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Towers / DB |
+| **BRD/FRD Req** | FSD §3.2 step 4 |
+| **Pre-conditions** | Tower 1 already isActive=true |
+| **Test Steps** | 1. PUT with `{towers:[{id:1,isActive:true}]}`<br>2. Inspect audit_logs (should be no new row) |
+| **Expected Result** | No DB write, no audit log row. Idempotent. |
+| **Priority** | Medium |
+
+---
+
+### ADM_TWR_FSD_041 — [FSD-CORRECTION] Unit status (AVAILABLE↔RESERVED) syncs to Python
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Towers / Integration |
+| **BRD/FRD Req** | FSD §1 / `admin.controller.js:1325-1340` |
+| **Pre-conditions** | Unit status change triggered (via bulk update or cancel) |
+| **Test Steps** | 1. Cancel a WINNER unit (status flips to RESERVED)<br>2. Inspect Python service inbound for `POST /units/status-sync` |
+| **Expected Result** | Sync call fires. Fire-and-forget — errors do not roll back. |
+| **Priority** | High |
+
+---
+
+### ADM_TWR_FSD_042 — [FSD-CORRECTION] No buyer notification on tower or unit status changes
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Towers / Notifications |
+| **BRD/FRD Req** | FSD §1 (no notification calls in scope) |
+| **Pre-conditions** | Tower toggled inactive while buyers had registrations in that tower |
+| **Test Steps** | 1. Toggle tower inactive<br>2. Inspect buyer notifications |
+| **Expected Result** | NO buyer SMS/WhatsApp/email dispatched. Only inventory/cache side effects. |
 | **Priority** | Medium |
 
 ---

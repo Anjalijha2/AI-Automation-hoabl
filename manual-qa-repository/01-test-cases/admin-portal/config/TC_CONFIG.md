@@ -1,6 +1,19 @@
 # Test Cases — Config / CMS
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-Config-CMS.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-config.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- Config = typed key-value `master_configs` table. Typed columns: `valueText`, `valueNumber`, `valueBoolean`, `valueJson`, `valueDatetime`.
+- `projectId` is hardcoded by environment: production → 1, non-prod → 2. **`req.body.projectId` is explicitly IGNORED**.
+- Endpoints: `POST /admin/master-config/store` (admin), `GET /admin/master-config` (admin), `POST /master-config/fetch` (any authenticated).
+- Customer-actions endpoints (`/admin/customer-actions`) hard-overrides `'2 Bed Peak Home'` to `isAllowed=false, countAllowed=0` regardless of input.
+- `updateCustomerActions` has NO wrapping transaction → partial-commit risk on dual save.
+- "Customer Actions" duplicate detection returns 400 `"No Change Detected"` on byte-equal payloads.
 
 ---
 
@@ -621,5 +634,72 @@
 | **Test Steps** | 1. Click Update Tower Configuration |
 | **Expected Result** | Save completes without errors; toast shown |
 | **Priority** | Low |
+
+---
+
+## [FSD-CORRECTION] New TCs — Config source-verified gaps
+
+### ADM_CFG_FSD_051 — [FSD-CORRECTION] req.body.projectId is silently ignored
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config / API |
+| **BRD/FRD Req** | FSD §1 / `master-config.controller.js:19, 70, 126` |
+| **Pre-conditions** | Admin JWT on non-prod (projectId=2) |
+| **Test Steps** | 1. POST `/api/v1/admin/master-config/store` with `{projectId: 999, configs: [...]}`<br>2. Inspect saved row |
+| **Expected Result** | Saved row's `projectId = 2` (env default), NOT 999. The body projectId is discarded by controller. Document as expected behavior. |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_FSD_052 — [BUG-REF: BUG-CFG-001] '2 Bed Peak Home' is always force-disabled
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config / Customer Actions |
+| **BRD/FRD Req** | FSD Customers B-CUS-182 / `admin.controller.js:1591-1594` |
+| **Pre-conditions** | Admin opens Customer Actions config |
+| **Test Steps** | 1. POST `/api/v1/admin/customer-actions` with `addRegUnitsDetails=[{type:'2 Bed Peak Home', isAllowed:true, countAllowed:3}]`<br>2. GET `/api/v1/admin/customer-actions` |
+| **Expected Result** | Returned row shows `'2 Bed Peak Home': {isAllowed: false, countAllowed: 0}` — admin input was OVERRIDDEN with no audit-log of the override. Document as silent business rule. |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_FSD_053 — [FSD-CORRECTION] Byte-equal payload returns 400 "No Change Detected"
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config / API |
+| **BRD/FRD Req** | FSD Customers B-CUS-183 |
+| **Pre-conditions** | Existing customer-actions config saved |
+| **Test Steps** | 1. Submit POST with the exact same `addRegUnitsDetails` JSON (byte-equal) |
+| **Expected Result** | HTTP 400 `"No Change Detected"`. Server-side equality check rejects no-op writes. |
+| **Priority** | Medium |
+
+---
+
+### ADM_CFG_FSD_054 — [BUG-REF: BUG-CFG-002] updateCustomerActions has no wrapping transaction (partial-commit risk)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config / DB |
+| **BRD/FRD Req** | FSD §7 Bug #7 / `admin.controller.js:1617-1633` |
+| **Pre-conditions** | Inject controlled failure on second `MasterConfig.save()` |
+| **Test Steps** | 1. POST update with both `allow_additional_reg_unit` and `additional_reg_units_details` changes<br>2. Force second save to throw<br>3. Inspect DB |
+| **Expected Result** | First config row IS committed; second is NOT. State is inconsistent. Document as known DB-integrity bug. |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_FSD_055 — [FSD-CORRECTION] `/master-config/fetch` is accessible to any authenticated user (not admin-only)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config / Security |
+| **BRD/FRD Req** | FSD §2 (Route 3) |
+| **Pre-conditions** | Valid buyer JWT |
+| **Test Steps** | 1. As Buyer, POST `/api/v1/master-config/fetch` with key list |
+| **Expected Result** | Returns 200 with requested configs. The endpoint is `protect`-only, not `restrictTo('admin')`. Document as expected behavior — confirm any sensitive configs are excluded from buyer-readable keys. |
+| **Priority** | Medium |
 
 ---

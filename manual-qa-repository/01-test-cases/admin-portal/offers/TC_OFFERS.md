@@ -1,6 +1,18 @@
 # Test Cases — Offers
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-Offers.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-offers.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- 5 endpoints: GET, POST, PUT, PATCH toggle, DELETE — all `restrictTo('admin')`.
+- `offerCode` (`HOME_LOAN`, `VC_REQUEST`) is **NOT settable through admin APIs** — `offerCode` is absent from `createOfferSchema` and `updateOfferSchema`. Admin can only create generic AMOUNT/PERCENTAGE offers. Coded offers must be seeded via direct DB/migration.
+- `projectId` is the PUBLIC business id (string), not numeric PK — resolved via `Project.findOne({where:{projectId}})`.
+- Soft-delete enabled (`paranoid: true`); deleted offers excluded automatically.
+- No notification dispatched on offer create/update/toggle/delete.
 
 ---
 
@@ -438,14 +450,43 @@
 
 ---
 
-### ADM_OFR_036 — HOME_LOAN offer cannot be manually edited or deleted
+### ADM_OFR_036 — [FSD-CORRECTION] HOME_LOAN / VC_REQUEST offers cannot be CREATED by admin (offerCode not in API schema)
 
 | Field | Value |
 |-------|-------|
-| **Module** | ADM – Offers |
-| **Pre-conditions** | HOME_LOAN system offer exists |
-| **Test Steps** | 1. Try to delete or edit HOME_LOAN offer |
-| **Expected Result** | Edit/delete may be restricted for system-generated offers (or allowed with warning) |
+| **Module** | ADM – Offers / API |
+| **BRD/FRD Req** | FSD §1 GAP-1 / `admin.validations.js:341-365` |
+| **Pre-conditions** | Admin JWT |
+| **Test Steps** | 1. POST `/api/v1/admin/offers` with `{offerCode: 'HOME_LOAN', ...}` |
+| **Expected Result** | The `offerCode` field is stripped by Yup (not in `createOfferSchema`). Created offer has `offerCode = null`. Coded offers can only be seeded via direct DB. Edit existing HOME_LOAN offer via PUT will similarly fail to alter `offerCode`. |
+| **Priority** | High |
+
+---
+
+## [FSD-CORRECTION] New TCs — Offers source-verified gaps
+
+### ADM_OFR_FSD_037 — [FSD-CORRECTION] No notification on offer create/update/toggle/delete
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers / Notifications |
+| **BRD/FRD Req** | FSD §1, §3 (no notification calls in service) |
+| **Pre-conditions** | Admin creates/updates/toggles/deletes an offer |
+| **Test Steps** | 1. Perform each action<br>2. Inspect Kaleyra/epinet/email logs |
+| **Expected Result** | NO buyer-facing notification dispatched for any offer admin action. |
+| **Priority** | Medium |
+
+---
+
+### ADM_OFR_FSD_038 — [FSD-CORRECTION] projectId is the PUBLIC business id (string), not numeric PK
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers / API |
+| **BRD/FRD Req** | FSD §3.1 / `offer.service.js:13-17` |
+| **Pre-conditions** | Project with public `projectId='hoabl-growth-1'` exists |
+| **Test Steps** | 1. GET `/api/v1/admin/offers?projectId=1` (numeric PK)<br>2. GET `/api/v1/admin/offers?projectId=hoabl-growth-1` (public id) |
+| **Expected Result** | First returns `ApiError.notFound('Project not found')`. Second resolves and returns offers. |
 | **Priority** | Medium |
 
 ---

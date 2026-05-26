@@ -1,6 +1,19 @@
 # Test Cases — Sales Managers
 **Portal:** Admin Portal
 **BRD Reference:** ADMIN-BRD-Sales-Managers.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/admin/fsd-sales-managers.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts
+
+- **SM Admin = roleId 4**, **SM = roleId 5** (backend distinction, NOT a UI tab).
+- SM Admin (`roleId=4`) is FORCE-SET `isAvailable=0` — does NOT participate in ticket allocation.
+- SM (`roleId=5`) `isAvailable` is admin-controllable.
+- **No DELETE endpoint** — deactivation is via `isActive=false` on PUT update.
+- Endpoints: GET list, GET by id, POST create, PUT update, GET sample Excel, POST bulk Excel import (`doc` field).
+- Sales Managers themselves CANNOT call these admin-side endpoints — only `restrictTo('admin')`.
 
 ---
 
@@ -493,5 +506,46 @@
 | **Test Steps** | 1. Click Refresh on SM page |
 | **Expected Result** | New SMs from bulk upload now appear in the list |
 | **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — SM source-verified gaps
+
+### ADM_SM_FSD_041 — [FSD-CORRECTION] SM Admin (roleId=4) is FORCE-SET isAvailable=0
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers / DB |
+| **BRD/FRD Req** | FSD §1 / `services/sales-manager.service.js:124,155` |
+| **Pre-conditions** | Admin creates a new SM with roleId=4 and `isAvailable=true` in body |
+| **Test Steps** | 1. POST `/api/v1/admin/sales-managers/create` with `{roleId:4, isAvailable:true, ...}`<br>2. Query DB for the new row |
+| **Expected Result** | DB row has `isAvailable=0` regardless of input. SM Admins are excluded from ticket allocation rotation. |
+| **Priority** | High |
+
+---
+
+### ADM_SM_FSD_042 — [FSD-CORRECTION] No DELETE endpoint for SM — must deactivate via PUT
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers / API |
+| **BRD/FRD Req** | FSD §3.1 (no DELETE route) |
+| **Pre-conditions** | Existing SM record |
+| **Test Steps** | 1. DELETE `/api/v1/admin/sales-managers/<id>` |
+| **Expected Result** | HTTP 404 route not found. Must use PUT `/update/:id` with `{isActive:false}` to deactivate. Document as expected limitation. |
+| **Priority** | Medium |
+
+---
+
+### ADM_SM_FSD_043 — [FSD-CORRECTION] SM cannot call SM-admin management endpoints
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers / Security |
+| **BRD/FRD Req** | FSD §2 (`restrictTo('admin')`) |
+| **Pre-conditions** | Valid SM JWT (roleId=5) |
+| **Test Steps** | 1. As SM, call `GET /api/v1/admin/sales-managers` |
+| **Expected Result** | HTTP 403 Forbidden — only `admin` role allowed. SM-Admin (roleId=4) also denied. |
+| **Priority** | High |
 
 ---

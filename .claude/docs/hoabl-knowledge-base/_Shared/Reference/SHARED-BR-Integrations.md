@@ -21,7 +21,8 @@
 | Razorpay                  | Payment       | Outbound      | Secondary payment gateway             |
 | Easiloan                  | FinTech       | Bidirectional | Home loan eligibility and application |
 | Azure Blob Storage        | Cloud Storage | Bidirectional | Document and file storage             |
-| Kaleyra                   | Communication | Outbound      | SMS and WhatsApp messaging            |
+| Kaleyra                   | Communication | Outbound      | WhatsApp messaging (NOT OTP)          |
+| Epinet                    | Communication | Outbound      | OTP SMS delivery for all portals      |
 | Microsoft Teams           | Collaboration | Outbound      | Meeting link generation               |
 | OS Ticket                 | Support       | Bidirectional | Support ticket management             |
 | Strapi CMS                | Content       | Inbound       | Dynamic content and configuration     |
@@ -291,7 +292,10 @@ Booking IDs sent to Mavis are prefixed by environment to avoid collision:
 
 ---
 
-## 7. Kaleyra (SMS and WhatsApp)
+## 7. Kaleyra (WhatsApp — NOT OTP)
+
+<!-- FSD-CORRECTION 2026-05-25 -->
+> **OTP SMS is NOT sent via Kaleyra.** Kaleyra imports are commented out in `communication.service.js:8-9`. OTP delivery uses **Epinet** (see §7a below). // Source: communication.service.js; auth.controller.js
 
 **Type:** Communication Platform
 **Files:** `kaleyra.service.js`, `kaleyra-sms.service.js`, `kaleyra-whatsapp.service.js`, `whatsapp.service.js`
@@ -301,7 +305,7 @@ Booking IDs sent to Mavis are prefixed by environment to avoid collision:
 
 | Event | Channel | Recipient |
 |-------|---------|----------|
-| OTP for login | SMS / WhatsApp | Buyer/CP |
+| ~~OTP for login~~ | ~~SMS / WhatsApp~~ | ~~Buyer/CP~~ — **CORRECTED: Epinet, not Kaleyra** |
 | Registration confirmation | WhatsApp | Buyer |
 | Allocation event start | WhatsApp | All eligible buyers |
 | Unit allocation success | WhatsApp / SMS | Winning buyer |
@@ -310,6 +314,26 @@ Booking IDs sent to Mavis are prefixed by environment to avoid collision:
 | Callback scheduled | WhatsApp | Buyer |
 
 **Templates:** WhatsApp messages use pre-approved templates (required by WhatsApp Business API)
+
+---
+
+## 7a. Epinet (OTP SMS)
+
+<!-- FSD-CORRECTION 2026-05-25 -->
+**Type:** SMS Gateway
+**Files:** `communication.service.js`
+**Direction:** Outbound
+**Endpoint:** `https://epinetinfo.in/api/pushsms`
+**Sender ID:** `THOAL`
+**Auth:** Hardcoded API key in `communication.service.js:8-9`
+
+**Triggered Communications:**
+
+| Event | Channel | Recipient |
+|-------|---------|----------|
+| OTP for login | SMS | Admin, SM, Buyer, CP |
+
+// Source: communication.service.js; auth.controller.js
 
 ---
 

@@ -1,6 +1,20 @@
 # Test Cases — Callback Requests Management
 **Portal:** Sales Manager Portal
 **BRD Reference:** SM-FS-Callback-Requests.md / SM-WF-Callback-Requests.md
+**FSD Reference:** `manual-qa-repository/03-user-manual/sm-portal/fsd-callback-requests.md`
+**Last FSD Sync:** 2026-05-24
+
+---
+
+## [FSD-CORRECTION] Source-verified facts (CRITICAL changes from BRD)
+
+- **Round-robin auto-assign for SM Admin is DISABLED** — the code is COMMENTED OUT (`service:338-349`). When SM Admin creates a callback, ownership ALWAYS assigns to that SM Admin themselves, not distributed. Effective assignment method = **least-loaded** (manual via `/admin/callback-requests/assign`).
+- **`COMPLETED` ENUM state is UNREACHABLE** — code defensively catches `Data truncated for column 'status'` from MySQL and falls back to `CONFIRMED` (`service:78-92`). Buyer feedback WhatsApp link is SKIPPED in that fallback.
+- **No buyer-side cancel endpoint** for callback requests — only SM/SM-Admin can cancel; buyers have no API to cancel a callback they raised.
+- **States**: `REQUESTED → RESCHEDULED → SCHEDULED → CONFIRMED → COMPLETED` (but COMPLETED unreachable in practice).
+- **Role scoping**: SM (roleId=5) sees only `where.managerId = self.id`; SM Admin (roleId=4) sees all.
+- **Integrations**: Microsoft Teams (event + auto-recording), Kaleyra WhatsApp + click-to-call, LeadSquared activity sync.
+- **Public buyer feedback** endpoint (`/api/v1/callback-feedback/:code`) is unauthenticated — token in URL is the credential.
 
 ---
 
@@ -1631,5 +1645,85 @@
 | **Test Steps** | 1. Inspect audit log entry |
 | **Expected Result** | Record includes admin user ID, timestamp, old SM, new SM per FS 1.8 |
 | **Priority** | Medium |
+
+---
+
+## [FSD-CORRECTION] New TCs — SM Callback source-verified critical gaps
+
+### SM_CB_FSD_135 — [BUG-REF: BUG-SM-001] Round-robin auto-assign is DISABLED — SM Admin always assigns to self
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Callback Requests / Assignment |
+| **BRD/FRD Req** | FSD §3 / `service:338-349` (commented out) |
+| **Pre-conditions** | SM Admin logged in; multiple available SMs exist |
+| **Test Steps** | 1. SM Admin uses `POST /callback-requests/create-and-schedule` to create a new callback<br>2. Inspect created row's `managerId` |
+| **Expected Result** | `managerId = SM Admin's own id`, NOT distributed via round-robin. Round-robin code is COMMENTED OUT — auto-distribution NEVER fires. To distribute, SM Admin must call `PUT /admin/callback-requests/assign` manually. Document as known limitation. |
+| **Priority** | Critical |
+
+---
+
+### SM_CB_FSD_136 — [BUG-REF: BUG-SM-002] COMPLETED state is unreachable — falls back to CONFIRMED with no buyer feedback notification
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Callback Requests / State Machine |
+| **BRD/FRD Req** | FSD §3 / `service:78-92` |
+| **Pre-conditions** | A CONFIRMED callback request; SM submits feedback |
+| **Test Steps** | 1. POST `/callback-requests/:id/feedback` with valid feedback body<br>2. Query DB for the request — inspect `status` |
+| **Expected Result** | `isSmFeedbackSubmitted=1`. Status remains `CONFIRMED` because MySQL throws `Data truncated for column 'status'` when attempting `COMPLETED`, which the code catches and silently falls back. **The buyer WhatsApp feedback link is NOT sent in the fallback path.** Document as critical workflow bug. |
+| **Priority** | Critical |
+
+---
+
+### SM_CB_FSD_137 — [FSD-CORRECTION] No buyer-side cancel endpoint for callback requests
+
+| Field | Value |
+|-------|-------|
+| **Module** | Buyer Portal / Callback (cross-reference) |
+| **BRD/FRD Req** | FSD §2 (no buyer cancel route) |
+| **Pre-conditions** | Buyer raised a callback request |
+| **Test Steps** | 1. As Buyer, try to find/call any DELETE or cancel API for `/callback-requests/<id>` |
+| **Expected Result** | No such endpoint exists. Only SM or SM Admin can cancel. Document gap. |
+| **Priority** | High |
+
+---
+
+### SM_CB_FSD_138 — [FSD-CORRECTION] SM cannot see callbacks belonging to other SMs (managerId scoping)
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Callback Requests / Security |
+| **BRD/FRD Req** | FSD §1 / `service:626-628` |
+| **Pre-conditions** | SM A logged in (roleId=5); SM B owns a callback request |
+| **Test Steps** | 1. As SM A, GET `/callback-requests` — verify SM B's requests not shown<br>2. GET `/callback-requests/<SM B's id>` — verify forbidden or not-found |
+| **Expected Result** | List omits SM B's requests. Direct access by id returns not found / forbidden. Scoping is enforced via `where.managerId = smUser.id`. |
+| **Priority** | Critical |
+
+---
+
+### SM_CB_FSD_139 — [FSD-CORRECTION] Buyer feedback link uses unauthenticated token-in-URL endpoint
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Callback Requests / Public API |
+| **BRD/FRD Req** | FSD §2.3 / `routes/index.js:51-60` |
+| **Pre-conditions** | A buyer feedback token issued |
+| **Test Steps** | 1. GET `/api/v1/callback-feedback/<code>` without any auth header<br>2. POST `/api/v1/callback-feedback/<code>` with feedback body |
+| **Expected Result** | Both succeed without JWT. The URL token IS the credential. Document as public-by-design endpoint — verify token entropy and expiry policy. |
+| **Priority** | Medium |
+
+---
+
+### SM_CB_FSD_140 — [FSD-CORRECTION] click-to-call uses Kaleyra; click-to-call SMS template differs from notification SMS
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Callback Requests / Integration |
+| **BRD/FRD Req** | FSD §1 / `services/callback-request-sm.service.js:18-25` |
+| **Pre-conditions** | A confirmed callback; SM logged in |
+| **Test Steps** | 1. POST `/callback-requests/click-to-call`<br>2. Inspect outbound to Kaleyra |
+| **Expected Result** | Kaleyra click-to-call API invoked. Note: this is Kaleyra (different from OTP delivery which is Epinet). Channel separation by service. |
+| **Priority** | High |
 
 ---
