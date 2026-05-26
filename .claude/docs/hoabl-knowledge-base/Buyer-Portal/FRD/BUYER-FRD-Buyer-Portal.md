@@ -89,7 +89,7 @@ Buyer Portal
 **Login Flow:**
 1. Buyer visits the portal
 2. Buyer enters their mobile number
-3. System sends OTP via SMS (Kaleyra) or WhatsApp
+3. System sends OTP via **Epinet SMS** (NOT Kaleyra — Kaleyra imports commented out) <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js -->
 4. Buyer enters OTP to authenticate
 5. JWT token is issued and stored
 6. Buyer is redirected to the home dashboard

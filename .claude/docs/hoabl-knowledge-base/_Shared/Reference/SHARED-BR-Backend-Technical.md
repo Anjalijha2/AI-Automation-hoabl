@@ -83,7 +83,7 @@ backend/src/
 **OTP Login (Buyers and CPs):**
 1. User submits mobile number
 2. System generates a 6-digit OTP
-3. OTP is sent via SMS (Kaleyra) or WhatsApp
+3. OTP is sent via **Epinet SMS** (NOT Kaleyra — Kaleyra imports commented out in `communication.service.js:8-9`) <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js -->
 4. User submits OTP
 5. System validates OTP and expiry
 6. JWT token is issued with user ID and role ID

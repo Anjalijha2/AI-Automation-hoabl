@@ -155,7 +155,7 @@ Allow admins to open a new JBP commitment period by creating a named cycle with 
 5. Toast: *"Cycle created successfully"*
 
 ## 8. Notifications
-- No automatic notification to CPs on cycle creation (confirm with team if Kaleyra notification is configured).
+- **NONE.** No notification call exists in cycle creation handler — confirmed via source. <!-- FSD-CORRECTION 2026-05-25 // Source: admin.controller.js (JBP cycle create handler) -->
 
 ## 9. Audit & Logging
 - Admin user ID, cycle name, start date, end date, creation timestamp logged.

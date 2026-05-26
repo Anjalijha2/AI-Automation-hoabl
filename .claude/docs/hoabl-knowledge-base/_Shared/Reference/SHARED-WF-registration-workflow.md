@@ -52,7 +52,7 @@ Registration is the process by which a buyer formally expresses interest in purc
 1. BUYER AUTHENTICATION
    Buyer navigates to Buyer Portal
    Buyer enters mobile number
-   OTP sent via Kaleyra (SMS + WhatsApp)
+   OTP sent via **Epinet SMS** (NOT Kaleyra) <!-- FSD-CORRECTION 2026-05-25 // Source: communication.service.js -->
    Buyer enters OTP to authenticate
    System creates User record if first-time, or retrieves existing
    JWT token issued for session
