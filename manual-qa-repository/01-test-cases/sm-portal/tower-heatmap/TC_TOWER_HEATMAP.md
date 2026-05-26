@@ -52,6 +52,71 @@
 
 ---
 
+### SM_TH_012 — Unauthenticated user redirected to login when accessing /sales-manager/towers
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Security |
+| **BRD/FRD Req** | FS 1.3 / global auth gate |
+| **Pre-conditions** | No SM JWT in browser storage |
+| **Test Steps** | 1. Open /sales-manager/towers directly<br>2. Observe redirect |
+| **Expected Result** | User redirected to /sales-manager login; towers/units API not called; no inventory leaked |
+| **Priority** | Critical |
+
+---
+
+### SM_TH_013 — Loading state shown while tower list is fetching
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap |
+| **BRD/FRD Req** | FS 1.4 |
+| **Pre-conditions** | SM logged in; network throttled to Slow 3G |
+| **Test Steps** | 1. Throttle network in DevTools<br>2. Navigate to /sales-manager/towers<br>3. Observe sidebar during the GET /api/v1/towers request |
+| **Expected Result** | A loading skeleton or spinner shown in the tower list area until the response arrives; no blank/broken layout |
+| **Priority** | Medium |
+
+---
+
+### SM_TH_014 — Empty state shown when no active towers configured
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap |
+| **BRD/FRD Req** | FS 1.6.2 / FS 1.3 |
+| **Pre-conditions** | All towers in DB marked inactive |
+| **Test Steps** | 1. SM logs in<br>2. Navigate to /sales-manager/towers<br>3. Inspect the tower list and grid areas |
+| **Expected Result** | Friendly empty-state message such as "No towers available" displayed; no broken UI; no JS errors |
+| **Priority** | High |
+
+---
+
+### SM_TH_015 — Tower list is scrollable when many towers configured
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / UI |
+| **BRD/FRD Req** | FS 1.4 |
+| **Pre-conditions** | 10+ active towers configured |
+| **Test Steps** | 1. Navigate to towers page<br>2. Try scrolling the tower list sidebar<br>3. Click on a tower at the bottom of the list |
+| **Expected Result** | Sidebar scrolls smoothly; all towers reachable via scroll; bottom tower selectable and loads its grid |
+| **Priority** | Medium |
+
+---
+
+### SM_TH_016 — Default tower auto-selected on first load
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap |
+| **BRD/FRD Req** | FS 1.4 / FRD Module 2 |
+| **Pre-conditions** | SM logged in; multiple active towers |
+| **Test Steps** | 1. Navigate to /sales-manager/towers<br>2. Inspect which tower is selected by default<br>3. Verify the unit grid loaded |
+| **Expected Result** | First active tower (or last-viewed tower from session/local storage if persisted) is selected by default and its grid loaded; no manual click required to see units |
+| **Priority** | Medium |
+
+---
+
 ## Unit Status Colour Coding
 
 ### SM_HMP_004 — Available units display in white/green colour
@@ -140,6 +205,84 @@
 
 ---
 
+### SM_TH_017 — Outside active campaign, view reflects last-known DB state (no WebSocket)
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap |
+| **BRD/FRD Req** | FS 1.6.4 |
+| **Pre-conditions** | No active allocation campaign; SM viewing the heatmap |
+| **Test Steps** | 1. SM opens /sales-manager/towers<br>2. Inspect WebSocket connections in DevTools<br>3. Wait 60s and observe units |
+| **Expected Result** | Unit colours reflect the most recent DB state; no live updates flowing; WebSocket may be inactive or idle — view matches BR 1.6.4 |
+| **Priority** | High |
+
+---
+
+### SM_TH_018 — POST/PATCH from SM Portal to /towers/:id is rejected with 403
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Security |
+| **BRD/FRD Req** | FS 1.6.1 (read-only) |
+| **Pre-conditions** | Valid SM JWT (roleId=5); known tower ID |
+| **Test Steps** | 1. Using DevTools or Postman with the SM JWT, call PATCH /api/v1/towers/:id with a status change payload<br>2. Inspect response |
+| **Expected Result** | API returns 403 Forbidden (or 404 if route not exposed to SM); no DB write occurs; heatmap remains unchanged |
+| **Priority** | Critical |
+
+---
+
+### SM_TH_019 — WebSocket reconnects automatically after transient network drop
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Real-Time |
+| **BRD/FRD Req** | FS 1.6.3 / FSD WebSocket via Python /units/status-sync |
+| **Pre-conditions** | Active campaign; heatmap open with live updates working |
+| **Test Steps** | 1. In DevTools, set network to Offline for 10s<br>2. Set network back to Online<br>3. Have an admin change a unit status<br>4. Observe SM heatmap |
+| **Expected Result** | After reconnect, the latest unit status changes propagate to the SM heatmap; no need to refresh the page; no stale-state lock |
+| **Priority** | High |
+
+---
+
+### SM_TH_020 — Switching between towers preserves live-update subscription
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Real-Time |
+| **BRD/FRD Req** | FS 1.6.3 |
+| **Pre-conditions** | Active campaign; multiple active towers |
+| **Test Steps** | 1. View Tower A; admin changes a unit status in Tower A → observe update<br>2. Click Tower B in sidebar<br>3. Admin changes a unit status in Tower B → observe update |
+| **Expected Result** | Live updates flow for the currently-viewed tower; switching towers does not break the WebSocket subscription; updates for Tower B arrive in real time |
+| **Priority** | High |
+
+---
+
+### SM_TH_021 — No audit log entry written when SM merely views the heatmap
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Audit |
+| **BRD/FRD Req** | FS 1.7 |
+| **Pre-conditions** | SM logged in |
+| **Test Steps** | 1. Note current latest audit_log row<br>2. SM navigates to /sales-manager/towers and clicks several towers<br>3. Query audit_logs for any new entries from this SM in that timeframe |
+| **Expected Result** | No new audit_log rows from this SM (read-only screen — no write events recorded), confirming BR 1.7 |
+| **Priority** | Medium |
+
+---
+
+### SM_TH_022 — Unit status broadcast race — UI reconciles to final DB state on reload
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Real-Time |
+| **BRD/FRD Req** | FSD §3 (Tower.update hooks:false → Redis cache → Python broadcast fire-and-forget) |
+| **Pre-conditions** | Active campaign; rapid sequence of status changes possible on a specific unit |
+| **Test Steps** | 1. Have admin rapidly change a unit AVAILABLE → HOLD → BOOKED within 2 seconds<br>2. Observe heatmap during the burst<br>3. Refresh the page after the dust settles |
+| **Expected Result** | Final state on refresh matches the DB final state (BOOKED). Intermediate WebSocket frames may arrive in different order but reload reconciles to the canonical DB value. |
+| **Priority** | High |
+
+---
+
 ## [FSD-CORRECTION] New TCs — Tower Heatmap source-verified
 
 ### SM_HMP_FSD_011 — [FSD-CORRECTION] Heatmap endpoint shared across user/admin/sm-admin/sm roles
@@ -151,6 +294,112 @@
 | **Pre-conditions** | Valid JWT for each role |
 | **Test Steps** | 1. Call `GET /api/v1/towers` and `GET /api/v1/towers/:towerId/units` with each of user/admin/sm-admin/sm JWTs |
 | **Expected Result** | All four roles get 200. Endpoint is `protect`-gated and shared. Behavior may vary by `?action=` query param. |
+| **Priority** | Medium |
+
+---
+
+## General
+
+### SM_TH_023 — [FSD-CORRECTION] Green colour covers AVAILABLE / HOLD / PREBOOKED / RESERVED per source
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / UI |
+| **BRD/FRD Req** | FSD §3 colour mapping (common.service.js heatmap functions) |
+| **Pre-conditions** | Tower with units in AVAILABLE, HOLD, PREBOOKED, RESERVED states |
+| **Test Steps** | 1. Inspect unit cells of each state in the grid<br>2. Read the computed CSS background-color |
+| **Expected Result** | All four states render as `#00FF00` (green) per source — confirms FSD-CORRECTION colour map (orange/blue colours from old BRD do NOT exist in source). |
+| **Priority** | High |
+
+---
+
+### SM_TH_024 — [FSD-CORRECTION] Grey colour applied to REFUGE and synthetic NOT_AVAILABLE padding cells
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / UI |
+| **BRD/FRD Req** | FSD §3 colour mapping |
+| **Pre-conditions** | Tower with REFUGE floor and missing/padded units |
+| **Test Steps** | 1. Locate REFUGE units in the grid<br>2. Locate any NOT_AVAILABLE / padding cells<br>3. Inspect their colour |
+| **Expected Result** | Both REFUGE and NOT_AVAILABLE padding cells render in grey `#808080`; this matches the source-verified colour map. |
+| **Priority** | Medium |
+
+---
+
+### SM_TH_025 — Heatmap renders correctly on tablet viewport (768x1024)
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Responsive |
+| **BRD/FRD Req** | FS 1.4 |
+| **Pre-conditions** | SM logged in; DevTools viewport set to 768x1024 |
+| **Test Steps** | 1. Open /sales-manager/towers in tablet viewport<br>2. Inspect sidebar, grid, legend<br>3. Click a tower to load grid |
+| **Expected Result** | All elements visible without horizontal scroll on the page itself; unit cells readable; legend visible; tower selection works |
+| **Priority** | Medium |
+
+---
+
+### SM_TH_026 — Hover/tap on a unit cell shows unit number tooltip
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / UI |
+| **BRD/FRD Req** | FS 1.4 |
+| **Pre-conditions** | Tower selected; unit grid loaded |
+| **Expected Result** | Hovering (desktop) or tapping (mobile) a unit shows a tooltip/popover with at least the unit number and current status — supports BR 1.1 (guide customers on availability). |
+| **Test Steps** | 1. Hover over a unit cell (desktop) or tap (mobile)<br>2. Inspect the tooltip content |
+| **Priority** | Medium |
+
+---
+
+### SM_TH_027 — Tower grid handles 50+ floors without layout breaking
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / UI / Scale |
+| **BRD/FRD Req** | FS 1.4 |
+| **Pre-conditions** | A tower with 50+ floors configured |
+| **Test Steps** | 1. Load the large tower in heatmap<br>2. Scroll the grid<br>3. Inspect rendering performance in DevTools |
+| **Expected Result** | All floors render without layout breaks; smooth scroll (< 16ms per frame); no overlapping unit cells; legend remains visible |
+| **Priority** | Medium |
+
+---
+
+### SM_TH_028 — Logout from towers page clears WebSocket subscription
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Session |
+| **BRD/FRD Req** | FS 1.6.3 / session lifecycle |
+| **Pre-conditions** | Active campaign; SM viewing heatmap with live updates connected |
+| **Test Steps** | 1. Open DevTools → Network → WS tab and verify the WebSocket is open<br>2. Click Logout<br>3. Observe the WebSocket state |
+| **Expected Result** | WebSocket connection closes (status 1000 or 1001) on logout; no leaked subscription after JWT cleared |
+| **Priority** | High |
+
+---
+
+### SM_TH_029 — Heatmap API uses ?action= query param to scope response shape
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / API |
+| **BRD/FRD Req** | FSD Towers §2 (action query) |
+| **Pre-conditions** | Valid SM JWT; known tower ID |
+| **Test Steps** | 1. Call GET /api/v1/towers/:towerId/units (no action)<br>2. Call GET /api/v1/towers/:towerId/units?action=heatmap<br>3. Compare payload shapes |
+| **Expected Result** | The `?action=heatmap` variant returns the slim heatmap shape (id, status, colour); the default returns a richer payload; behaviour matches FSD note that "behavior may vary by ?action= query param" |
+| **Priority** | Medium |
+
+---
+
+### SM_TH_030 — Direct access to /sales-manager/towers/:invalidId shows graceful error
+
+| Field | Value |
+|-------|-------|
+| **Module** | SM – Tower Heatmap / Edge |
+| **BRD/FRD Req** | FS 1.4 |
+| **Pre-conditions** | SM logged in |
+| **Test Steps** | 1. Navigate directly to /sales-manager/towers/9999999 (non-existent tower)<br>2. Observe page state |
+| **Expected Result** | Page renders the sidebar with valid towers; a friendly "Tower not found" message replaces the grid area; no JS crash |
 | **Priority** | Medium |
 
 ---

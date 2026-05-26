@@ -92,6 +92,66 @@
 
 ---
 
+### BYR_ALLOC_058 — STATIC entry blocked when buyer status is Waitlisted
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Buyer status = Waitlisted, STATIC campaign active |
+| **Test Steps** | 1. Open Allotment page |
+| **Expected Result** | No Book Now button; message indicates current waitlist status; cannot enter unit selection flow |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_059 — STATIC entry shows campaign timer until close
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Active STATIC campaign with scheduled end time |
+| **Test Steps** | 1. Inspect AllocationEndTimer on Allotment page |
+| **Expected Result** | Countdown to campaign end visible and ticking; matches `campaigns/latest` data |
+| **Priority** | Medium |
+
+---
+
+### BYR_ALLOC_060 — Refresh during STATIC entry preserves Available state
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Available buyer on Allotment page, Book Now visible |
+| **Test Steps** | 1. Press F5<br>2. Observe page after reload |
+| **Expected Result** | Page reloads; Book Now still rendered; buyer remains in Available state; no broken state |
+| **Priority** | Medium |
+
+---
+
+### BYR_ALLOC_061 — Book Now disabled while previous order still in flight
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Buyer has HOLD on unit A (in-flight payment) |
+| **Test Steps** | 1. Open Allotment page<br>2. Inspect Book Now |
+| **Expected Result** | Book Now hidden or disabled; in-flight payment banner shown ("Payment under verification") |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_062 — Direct access to /allotment without active campaign shows waiting screen
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Buyer Available; no campaign running |
+| **Test Steps** | 1. Open `/allotment` URL directly |
+| **Expected Result** | WaitingForUnit screen rendered; no Book Now visible; matches BYR_ALLOC_001 behaviour |
+| **Priority** | Medium |
+
+---
+
 ## Allocation — STATIC Unit Selection
 
 ### BYR_ALLOC_008 — Left panel lists all towers with unit counts
@@ -374,6 +434,66 @@
 
 ---
 
+### BYR_ALLOC_063 — Hold timer visible to buyer during payment window
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Buyer holds unit (status HOLD), payment page open |
+| **Test Steps** | 1. Inspect timer element |
+| **Expected Result** | Countdown showing remaining hold time visible (counted down from 20 min from `paymentTransaction.createdAt`) |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_064 — Hold released when buyer closes browser mid-flow (lazy via cron)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Unit held by buyer |
+| **Test Steps** | 1. Close browser before paying<br>2. Wait until 20 min elapsed + next cron tick |
+| **Expected Result** | After reconcile cron runs: unit reverts to AVAILABLE; another buyer can select. Before cron tick: unit remains HOLD (BYR_ALLOC_054 / GAP-AE-02) |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_065 — Successful payment within hold window converts HOLD → WINNER
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Unit held; payment in progress |
+| **Test Steps** | 1. Complete payment within 20 minutes<br>2. Query RegistrationUnit |
+| **Expected Result** | Status transitions HOLD → WINNER with confirmationNumber populated; unit not released by cron |
+| **Priority** | Critical |
+
+---
+
+### BYR_ALLOC_066 — Payment after hold expiry rejected by reconcile
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Hold has lapsed >20 min; cron has reset unit to AVAILABLE |
+| **Test Steps** | 1. Late webhook confirms payment success<br>2. Inspect status |
+| **Expected Result** | Reconcile detects mismatch and either refunds or escalates; unit stays AVAILABLE for the other buyer; document race-condition behaviour |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_067 — Concurrent payment-failure with hold still active rolls back atomically
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Hold active; gateway returns failure |
+| **Test Steps** | 1. Inspect Unit, RegistrationUnit, ParkingInventory after failure |
+| **Expected Result** | All three revert atomically (Unit→AVAILABLE, RegistrationUnit→ALLOCATED, Parking→AVAILABLE) per BR-AE-10 (BYR_ALLOC_050) |
+| **Priority** | Critical |
+
+---
+
 ## Allocation — DYNAMIC Allocation
 
 ### BYR_ALLOC_031 — DYNAMIC campaign assigns unit automatically
@@ -531,6 +651,54 @@
 | **Test Steps** | 1. Inspect dashboard |
 | **Expected Result** | RegistrationUnit.status stays `WINNER` (terminal — bypasses campaign override per BR-DASH-007). |
 | **Priority** | Critical |
+
+---
+
+### BYR_ALLOC_068 — Post-campaign attempt to POST /allocation/order rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Campaign STOPPED |
+| **Test Steps** | 1. `POST /api/v1/user/allocation/order` with valid payload |
+| **Expected Result** | "Allotments are closed" error (BR-AE-01, BYR_ALLOC_044); no DB write; buyer status unchanged |
+| **Priority** | Critical |
+
+---
+
+### BYR_ALLOC_069 — Process Status badge updates to Complete KYC for WINNER post-campaign
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Buyer WINNER with KYC not submitted, campaign ended |
+| **Test Steps** | 1. Open dashboard |
+| **Expected Result** | Process Status column shows "Complete KYC" button; KYC flow accessible despite campaign closure |
+| **Priority** | High |
+
+---
+
+### BYR_ALLOC_070 — Waitlisted buyer sees NextChanceTime if next campaign scheduled
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Buyer reverted to Waitlisted; next campaign scheduled |
+| **Test Steps** | 1. Inspect Allotment page |
+| **Expected Result** | NextChanceTime widget shows next opportunity date/time; matches scheduled campaign start |
+| **Priority** | Medium |
+
+---
+
+### BYR_ALLOC_071 — Allocation closed message localised text exact match
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Allocation |
+| **Pre-conditions** | Campaign ended, buyer waitlisted |
+| **Test Steps** | 1. Open Allotment page<br>2. Inspect message text |
+| **Expected Result** | Text exactly = "Allocation window is closed for now." rendered in red (matches BYR_ALLOC_041) |
+| **Priority** | Low |
 
 ---
 

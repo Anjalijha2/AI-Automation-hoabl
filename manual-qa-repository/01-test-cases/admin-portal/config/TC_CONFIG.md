@@ -375,6 +375,67 @@
 
 ---
 
+### ADM_CFG_056 — Section 5 bulk booking cancellation blocked during active allocation campaign
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **BRD/FRD Req** | FSD Customers §4.2 (B-CUS-010 cancel-during-campaign) |
+| **Pre-conditions** | Allocation campaign is OPEN; XLSX with valid Booked registration numbers prepared |
+| **Test Steps** | 1. Upload XLSX in Section 5<br>2. Submit |
+| **Expected Result** | Backend rejects bulk cancel with campaign-active error; HTTP 400 returned; result file flags all rows as Error with reason |
+| **Priority** | Critical |
+
+---
+
+### ADM_CFG_057 — Bulk booking cancel with non-existent registration number flagged Error
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | XLSX with one valid + one invalid registration number "GHNG-9999999999-Z" |
+| **Test Steps** | 1. Upload XLSX in Section 5<br>2. Submit<br>3. Open result XLSX |
+| **Expected Result** | Valid row marked Cancelled; invalid row marked Error with "Registration not found"; valid row's status updates in Customers |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_058 — Bulk booking cancellation with already-cancelled rows shows Unchanged
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | XLSX containing a registration that is already Cancelled |
+| **Test Steps** | 1. Upload and Submit |
+| **Expected Result** | Result XLSX marks that row as Unchanged or Error (already cancelled); no duplicate action; no second refund transaction |
+| **Priority** | Medium |
+
+---
+
+### ADM_CFG_059 — Bulk booking cancellation accepts XLSX only — CSV rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | A .csv file with valid registration numbers |
+| **Test Steps** | 1. Try to upload .csv in Section 5<br>2. Submit |
+| **Expected Result** | Upload rejected with format error; only .xlsx accepted |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_060 — Bulk booking cancel releases all allotted units back to inventory
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | XLSX with 3 Booked registrations whose units were sold/red in Towers |
+| **Test Steps** | 1. Upload and Submit<br>2. Open Towers, navigate to affected towers<br>3. Locate the 3 unit cells |
+| **Expected Result** | All 3 unit cells return to AVAILABLE/RESERVED; Sold KPI decrements by 3; Available KPI increments |
+| **Priority** | Critical |
+
+---
+
 ## Section 6 — Bulk Registration Cancellation
 
 ### ADM_CFG_030 — Download registration cancellation sample
@@ -409,6 +470,67 @@
 | **Pre-conditions** | Cancellation just performed |
 | **Test Steps** | 1. Check Payment Transactions |
 | **Expected Result** | No automatic refund created |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_061 — Section 6 bulk registration cancellation blocked during active campaign
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **BRD/FRD Req** | FSD Customers §4.2 (B-CUS-012) |
+| **Pre-conditions** | Allocation campaign OPEN; XLSX with Registered/Waitlisted registration numbers |
+| **Test Steps** | 1. Upload XLSX in Section 6<br>2. Submit |
+| **Expected Result** | Backend rejects with campaign-active error (HTTP 400); result XLSX marks all rows Error; no rows cancelled |
+| **Priority** | Critical |
+
+---
+
+### ADM_CFG_062 — Section 6 Update=0 rows are skipped
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | XLSX with 5 registrations: 3 with Update=1 and 2 with Update=0 |
+| **Test Steps** | 1. Upload and Submit<br>2. Open result XLSX |
+| **Expected Result** | 3 Update=1 rows show Cancelled; 2 Update=0 rows marked Skipped/Unchanged; original status preserved on skipped rows |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_063 — Section 6 cancellation marks all sub-registrations Cancelled
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | A parent registration with sub-registrations -A, -B, -C exists in Registered state |
+| **Test Steps** | 1. Upload XLSX with parent registration number GHNG-XXX (Update=1)<br>2. Submit<br>3. Open Customers, search by buyer phone |
+| **Expected Result** | All sub-registration rows (-A, -B, -C) appear with Allocation Status = Cancelled; cascade is per BRD §6 |
+| **Priority** | Critical |
+
+---
+
+### ADM_CFG_064 — Section 6 invalid registration number returns Error in result file
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | XLSX with one bogus registration number "GHNG-FAKE-X" with Update=1 |
+| **Test Steps** | 1. Upload and Submit |
+| **Expected Result** | Result XLSX flags bogus row as Error with "Registration not found"; other valid rows processed normally |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_065 — Section 6 cancellation is irreversible
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | Bulk registration cancellation just performed |
+| **Test Steps** | 1. Search the cancelled registrations in Customers<br>2. Look for any Restore/Undo action |
+| **Expected Result** | No restore mechanism; rows permanently Cancelled per BRD §6 Rule 3 |
 | **Priority** | High |
 
 ---
@@ -471,6 +593,43 @@
 | **Pre-conditions** | Mixed upload completed |
 | **Test Steps** | 1. Open downloaded result file |
 | **Expected Result** | Each row marked Created / Updated / Unchanged / Error |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_066 — Section 7 SM bulk upload with IS_AVAILABLE=1 for roleId=4 is force-overridden
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config / DB |
+| **BRD/FRD Req** | FSD §1 / `sales-manager.service.js:124,155` |
+| **Pre-conditions** | XLSX with row: Role=SM Admin (roleId=4), IS_AVAILABLE=1 |
+| **Test Steps** | 1. Upload and Submit<br>2. Query DB for that SM row's isAvailable column |
+| **Expected Result** | DB shows `isAvailable=0` regardless of input — backend force-sets SM Admins to non-assignable |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_067 — Section 7 upload with empty mandatory fields flags row Error
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | XLSX with one row missing First Name |
+| **Test Steps** | 1. Upload and Submit<br>2. Open result XLSX |
+| **Expected Result** | Row marked Error with "First Name required"; SM not created/updated |
+| **Priority** | High |
+
+---
+
+### ADM_CFG_068 — Section 7 upload with invalid email format flags row Error
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Config |
+| **Pre-conditions** | XLSX with row containing Email = "notanemail" |
+| **Test Steps** | 1. Upload and Submit |
+| **Expected Result** | Result row marked Error with email validation message; SM not created |
 | **Priority** | High |
 
 ---

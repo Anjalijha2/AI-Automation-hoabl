@@ -314,6 +314,78 @@
 
 ---
 
+### CP_LEAD_041 — Refresh shows loading indicator while fetching from DB
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Leads page open with existing rows |
+| **Test Steps** | 1. Click the Refresh control<br>2. Observe UI state immediately after click |
+| **Expected Result** | Loading spinner / skeleton state shown over the table; existing rows hidden or dimmed; `GET /api/v1/cp/cp-user-leads` fired against `registration_drafts` (NOT LSQ); spinner clears on response. |
+| **Priority** | Medium |
+
+---
+
+### CP_LEAD_042 — Refresh after new lead capture surfaces the new row
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | CP has leads list open; in a second tab, CP captures a new lead via `POST /cp-user-register` |
+| **Test Steps** | 1. Return to leads tab<br>2. Click Refresh |
+| **Expected Result** | New `registration_drafts` row (status=`Open`) appears at the top of the list with UI label `Sent` (BR-CP-LEAD-13). |
+| **Priority** | High |
+
+---
+
+### CP_LEAD_043 — Refresh while applied filter persists the filter
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Status filter `Registered` currently applied |
+| **Test Steps** | 1. Click Refresh<br>2. Observe table contents after reload |
+| **Expected Result** | Refetch includes `?status=Registered` query parameter; filter state and dropdown selection preserved; only `Registered` rows displayed (BR-CP-LEAD-13, cp.validations.js:197). |
+| **Priority** | Medium |
+
+---
+
+### CP_LEAD_044 — Backend error during refresh surfaces inline error
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Network failure or backend 500 mocked |
+| **Test Steps** | 1. Click Refresh<br>2. Observe response handling |
+| **Expected Result** | Error toast / inline message displayed (e.g., "Failed to load leads. Try again."); previously rendered rows remain in place; no partial overwrite of the list. |
+| **Priority** | High |
+
+---
+
+### CP_LEAD_045 — Refunded → Open silent flip is visible after refresh
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Lead L is `status=Refunded`; CP triggers `GET /cp/send-registration-link/<L.slug>` in another tab |
+| **Test Steps** | 1. Return to leads tab<br>2. Click Refresh |
+| **Expected Result** | L now appears under `Sent` (DB `status=Open`) with NO audit indicator/banner (BR-CP-LEAD-20, GAP-LEAD-02). KPI `Sent` count incremented. Document the silent state mutation in QA notes. |
+| **Priority** | High |
+
+---
+
+### CP_LEAD_046 — Master CP refresh fetches sub-CP leads in one call
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Leads |
+| **Pre-conditions** | Master CP M (`isLeadCp=true`) with two member CPs each holding leads |
+| **Test Steps** | 1. Login as M<br>2. Click Refresh<br>3. Inspect network call |
+| **Expected Result** | Single `GET /cp/cp-user-leads` returns aggregated leads where owning CP's `masterHvCode = M.hvCode` (BR-CP-LEAD-10/11). Each row shows `leadOwner` indicator. No N+1 calls per sub-CP. |
+| **Priority** | High |
+
+---
+
 ## FSD Corrections Applied (2026-05-25)
 
 Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-leads-management.md`

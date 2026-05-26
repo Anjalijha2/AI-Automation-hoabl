@@ -202,6 +202,66 @@
 
 ---
 
+### ADM_OFR_039 — Percentage = 0 rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open; Type = Percentage Based |
+| **Test Steps** | 1. Enter Discount = 0<br>2. Submit |
+| **Expected Result** | Validation error; percentage must be > 0 |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_040 — Percentage = 100 boundary accepted
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open; Type = Percentage Based |
+| **Test Steps** | 1. Enter Discount = 100<br>2. Set dates and Submit |
+| **Expected Result** | Offer created at 100% boundary; All Inclusive Price drops to zero for eligible units (boundary case — verify business intent) |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_041 — Percentage with decimal (e.g. 5.5) accepted
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open; Type = Percentage Based |
+| **Test Steps** | 1. Enter Discount = 5.5<br>2. Submit |
+| **Expected Result** | Offer created with fractional percentage 5.5; Discount Value column shows "5.5%" |
+| **Priority** | Medium |
+
+---
+
+### ADM_OFR_042 — Percentage with negative value rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open; Type = Percentage Based |
+| **Test Steps** | 1. Enter Discount = -10<br>2. Submit |
+| **Expected Result** | Validation error; percentage must be positive |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_043 — Switching Type from Percentage to Amount clears discount value
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Add Offer form open; Type = Percentage Based; Discount = 5 entered |
+| **Test Steps** | 1. Change Type dropdown to Amount Based<br>2. Inspect Discount Value field |
+| **Expected Result** | Discount Value resets to blank to prevent invalid carry-over (5% would not be a meaningful ₹ amount) |
+| **Priority** | Medium |
+
+---
+
 ## Date Validity & Typology
 
 ### ADM_OFR_016 — Offer with End Date before Start Date rejected
@@ -385,6 +445,55 @@
 | **Test Steps** | 1. Click Cancel in dialog |
 | **Expected Result** | Dialog closes; offer remains in list |
 | **Priority** | Medium |
+
+---
+
+### ADM_OFR_044 — Deleted offer is soft-deleted (paranoid:true)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers / DB |
+| **BRD/FRD Req** | FSD §1 (paranoid model) |
+| **Pre-conditions** | Offer just deleted via UI |
+| **Test Steps** | 1. Note deleted offer id<br>2. Query DB: `SELECT * FROM offers WHERE id=<id>` |
+| **Expected Result** | Row still exists in DB with `deletedAt` timestamp populated; standard GET excludes it; offer no longer applies to pricing |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_045 — Delete confirmation dialog shows offer name
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offer "Festive 5%" exists |
+| **Test Steps** | 1. Click trash icon on that row |
+| **Expected Result** | Confirmation dialog text references "Festive 5%" by name to avoid accidental deletion |
+| **Priority** | High |
+
+---
+
+### ADM_OFR_046 — Delete an Active offer is allowed
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | Offer with Active = ON |
+| **Test Steps** | 1. Click trash icon, Confirm |
+| **Expected Result** | Active offer is deleted directly without requiring deactivation first; success toast shown |
+| **Priority** | Medium |
+
+---
+
+### ADM_OFR_047 — Deleting offer does not refund existing bookings that used it
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Offers |
+| **Pre-conditions** | A buyer has a completed booking that used Offer X; Offer X exists |
+| **Test Steps** | 1. Delete Offer X<br>2. Open Customers, locate the buyer's completed booking |
+| **Expected Result** | Booking amount unchanged; existing transactions and registrations are not affected by offer deletion |
+| **Priority** | High |
 
 ---
 

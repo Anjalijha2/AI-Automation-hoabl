@@ -140,6 +140,78 @@
 
 ---
 
+### CP_PROJ_037 — About section sources `information` field directly from Strapi
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | CP logged in; About page open; network tab visible |
+| **Test Steps** | 1. Navigate to `/project1/about`<br>2. Inspect network requests |
+| **Expected Result** | A `GET <StrapiBase>/api/projects/1?populate=deep` is fired directly from the CP browser; About content renders from `data.attributes.information` field (CP-PI-002, Urls.js:7). No XR backend call for project content. |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_038 — About content renders double-newline as paragraph break
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Strapi `information` field contains `Para A\n\nPara B` |
+| **Test Steps** | 1. Render About page<br>2. Inspect rendered HTML |
+| **Expected Result** | `\n\n` rendered as `<br /><br />`; single `\n` between sentences silently collapsed (CP-PI-009, projectInfo.jsx:14). Authors must use double-newlines for paragraph breaks. |
+| **Priority** | Low |
+
+---
+
+### CP_PROJ_039 — About content uses dangerouslySetInnerHTML — script tags execute
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Admin authors `<script>console.log("xss")</script>` in Strapi `information` |
+| **Test Steps** | 1. Open `/project1/about`<br>2. Inspect browser console |
+| **Expected Result** | Script executes — frontend uses `dangerouslySetInnerHTML` without sanitization (CP-PI-004, projectInfo.jsx:14). KNOWN SECURITY GAP: trust boundary lies entirely with Strapi authoring controls. |
+| **Priority** | High (Security) |
+
+---
+
+### CP_PROJ_040 — About section shows empty placeholder when `information` is null
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Strapi `information` field is null or empty string |
+| **Test Steps** | 1. Open About page |
+| **Expected Result** | Page renders heading; body shows empty placeholder or no content paragraph (NOT a JS error or broken layout). |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_041 — About reflects latest Strapi publish without hard refresh delay
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Admin updates `information` in Strapi and clicks Publish |
+| **Test Steps** | 1. CP performs hard refresh on `/project1/about` (Ctrl+Shift+R)<br>2. Read content |
+| **Expected Result** | Updated content appears immediately — no XR-side ISR/cache (CP-PI-007). Browser fetch hits Strapi live each load. |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_042 — About loads without redirect when CP session active
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Valid CP JWT in client storage |
+| **Test Steps** | 1. Open `/project1/about` directly in a new tab |
+| **Expected Result** | About page renders without redirect to `/login`; Strapi call fires once; no XR backend dependency for content (FSD §6.1). |
+| **Priority** | High |
+
+---
+
 ## Gallery
 
 ### CP_PROJ_012 — Gallery loads project photos in grid
@@ -200,6 +272,78 @@
 | **Pre-conditions** | Amenities open |
 | **Test Steps** | 1. Look for any input or edit action |
 | **Expected Result** | No editable controls available |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_043 — Amenities list sourced from Strapi `amenities` relation
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Amenities page open; network tab visible |
+| **Test Steps** | 1. Open `/project1/amenities`<br>2. Inspect Strapi response |
+| **Expected Result** | Amenity items rendered from `data.attributes.amenities.data[].attributes` returned by `GET <StrapiBase>/api/projects/1?populate=deep` (Urls.js:7). Each item shows name + icon URL. |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_044 — Amenity icons load from Strapi asset URLs without 404s
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Strapi amenities have published icon assets |
+| **Test Steps** | 1. Render Amenities list<br>2. Observe icon image requests in network tab |
+| **Expected Result** | Every icon URL (raw Strapi `attributes.url`) returns 200; no broken-image placeholders; unsigned URLs cacheable (CP-PI-005). |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_045 — Empty Amenities list shows graceful placeholder
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Strapi returns `amenities.data = []` |
+| **Test Steps** | 1. Open Amenities page |
+| **Expected Result** | Friendly empty-state copy displayed (e.g., "No amenities published yet"); UI does not error; section heading still renders. |
+| **Priority** | Low |
+
+---
+
+### CP_PROJ_046 — Strapi outage breaks Amenities section silently
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Block Strapi host in browser DevTools |
+| **Test Steps** | 1. Open `/project1/amenities` |
+| **Expected Result** | Frontend has NO XR-side fallback — section either white-screens or shows error boundary (CP-PI-007). No cached version served by XR backend. Document accessibility/UX gap. |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_047 — Amenities returns DRAFT entries via populate=deep (publish gating bug)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Admin creates an amenity in Strapi but does NOT publish it |
+| **Test Steps** | 1. Open Amenities page in CP |
+| **Expected Result** | Verify whether draft amenity appears. `populate=deep` may include DRAFT + PUBLISHED unless `publicationState=live` is passed (CP-PI-008, QA-Risk-14). If DRAFT visible → document as bug. |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_048 — Amenities list is identical for Master CP and Member CP
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Master CP M; Member CP N |
+| **Test Steps** | 1. Login as M, snapshot amenities list<br>2. Login as N, snapshot amenities list<br>3. Compare |
+| **Expected Result** | Lists are byte-identical — Strapi has no per-CP scoping; no CP-project assignment table (CP-PI-003). Both fetch same `projects/1?populate=deep`. |
 | **Priority** | Medium |
 
 ---
@@ -268,6 +412,78 @@
 
 ---
 
+### CP_PROJ_049 — Key Points sourced from Strapi `keyPoints` field
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Key Points page open; network tab visible |
+| **Test Steps** | 1. Open `/project1/keyPoints`<br>2. Inspect Strapi response |
+| **Expected Result** | List items rendered from `data.attributes.keyPoints` returned by `GET <StrapiBase>/api/projects/1?populate=deep` (Urls.js:7). No XR backend route involved. |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_050 — Key Points renders ordered list with correct sequence from Strapi
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Strapi has 5 key-point entries in defined order |
+| **Test Steps** | 1. Render Key Points page<br>2. Read items top → bottom |
+| **Expected Result** | Items render in the same order as the Strapi array; no client-side re-sort; numbering / bullets follow source ordering. |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_051 — Empty Key Points list shows placeholder
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Strapi `keyPoints` array is empty |
+| **Test Steps** | 1. Open Key Points page |
+| **Expected Result** | Page renders with heading and friendly empty-state copy (e.g., "No key points published yet"); no JS errors. |
+| **Priority** | Low |
+
+---
+
+### CP_PROJ_052 — Long key-point text wraps without horizontal scroll
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Strapi contains a key-point >300 chars |
+| **Test Steps** | 1. Render Key Points page on desktop and mobile viewport |
+| **Expected Result** | Text wraps within container; no horizontal scrollbar appears; layout intact across breakpoints. |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_053 — Key Points HTML content uses safe rendering (NOT dangerouslySetInnerHTML)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Strapi key-point contains `<script>alert(1)</script>` string |
+| **Test Steps** | 1. Open Key Points page<br>2. Inspect DOM |
+| **Expected Result** | Script tag rendered as escaped text (NOT executed). If it executes → file as XSS gap analogous to CP_PROJ_033 / CP-PI-004. Verify keyPoints uses safe text rendering. |
+| **Priority** | High (Security) |
+
+---
+
+### CP_PROJ_054 — Key Points reflects latest Strapi publish after hard refresh
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Admin publishes a new key-point in Strapi |
+| **Test Steps** | 1. CP performs Ctrl+Shift+R on `/project1/keyPoints` |
+| **Expected Result** | New point appears immediately — no XR-side cache (CP-PI-007). Browser request hits Strapi live. |
+| **Priority** | High |
+
+---
+
 ## Videos
 
 ### CP_PROJ_022 — Videos page lists video thumbnails
@@ -290,6 +506,78 @@
 | **Pre-conditions** | Video page has at least one item |
 | **Test Steps** | 1. Click a video<br>2. Click play |
 | **Expected Result** | Video plays inline using the embedded player; controls work |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_055 — Videos list sourced from Strapi `videos` relation
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Videos page open; network tab visible |
+| **Test Steps** | 1. Open `/project1/videos`<br>2. Inspect Strapi response |
+| **Expected Result** | Items rendered from `data.attributes.videos.data[]` returned by `GET <StrapiBase>/api/projects/1?populate=deep` (Urls.js:7). Each item supplies a video URL/embed code + thumbnail. |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_056 — Empty Videos list shows placeholder copy
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Strapi returns no videos |
+| **Test Steps** | 1. Open Videos page |
+| **Expected Result** | Empty-state copy (e.g., "No videos available yet"); section heading still renders; no broken layout. |
+| **Priority** | Low |
+
+---
+
+### CP_PROJ_057 — Video thumbnails load from Strapi asset URLs
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | At least 2 published videos in Strapi |
+| **Test Steps** | 1. Render Videos page<br>2. Inspect each `<img>` request |
+| **Expected Result** | Thumbnail URLs (raw Strapi asset) return 200; no 404s; unsigned URLs cacheable; same external-shareable trait as brochure assets (CP-PI-005). |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_058 — Video embed plays without leaking CP session credentials
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Video uses third-party embed (YouTube/Vimeo) |
+| **Test Steps** | 1. Click and play a video<br>2. Inspect outbound requests in network tab |
+| **Expected Result** | Requests go directly to third-party host; no XR JWT / cookies forwarded; embed renders inside iframe sandbox. |
+| **Priority** | Medium (Security) |
+
+---
+
+### CP_PROJ_059 — Broken/invalid video URL falls back gracefully
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | A Strapi video item has malformed URL |
+| **Test Steps** | 1. Open Videos page<br>2. Click the broken video |
+| **Expected Result** | Embedded player shows its own error UI (or thumbnail with "Unavailable" overlay); page does not crash; other videos remain playable. |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_060 — Videos page is identical for Master CP and Member CP
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Master CP M; Member CP N |
+| **Test Steps** | 1. Login as M, list videos<br>2. Login as N, list videos |
+| **Expected Result** | Same video list both times — no per-CP scoping in Strapi (CP-PI-003). Confirms no project-assignment table on CP side. |
 | **Priority** | Medium |
 
 ---
@@ -340,6 +628,54 @@
 | **Pre-conditions** | Master CP M; Member CP N |
 | **Test Steps** | 1. Login as M, monitor Strapi requests<br>2. Login as N, monitor Strapi requests |
 | **Expected Result** | Both fetch identical content from `<StrapiBase>/api/projects/1?populate=deep`. There is NO CP-project assignment table — every CP sees the same project (CP-PI-003). Document. |
+| **Priority** | Medium |
+
+---
+
+### CP_PROJ_061 — Shared section URL opens to logged-out user redirects to /login
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | CP copies URL of `/project1/amenities` and shares to logged-out user |
+| **Test Steps** | 1. Open shared URL in incognito window<br>2. Observe behaviour |
+| **Expected Result** | App shell route guard redirects to `/login` before fetching Strapi content (frontend-only redirect; no XR session check). After login, user routes back to original path. |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_062 — Brochure URL copied externally still serves PDF (no auth)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | CP copies brochure URL from `data.brochure.data.attributes.url` |
+| **Test Steps** | 1. Open URL in incognito browser (no CP session)<br>2. Observe |
+| **Expected Result** | PDF downloads/renders directly from Strapi without auth — raw asset URL with no expiry / signature (CP-PI-005). Document risk; confirm with security if acceptable. |
+| **Priority** | Medium (Security) |
+
+---
+
+### CP_PROJ_063 — Strapi DRAFT entries should not leak via `populate=deep`
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Admin creates a DRAFT entry in any populated relation (gallery/videos/keyPoints/amenities) without publishing |
+| **Test Steps** | 1. Open `/project1/<section>` as CP<br>2. Compare visible items vs Strapi admin |
+| **Expected Result** | Only PUBLISHED entries should render. If DRAFT appears → file as bug (CP-PI-008, QA-Risk-14). Fix is to add `publicationState=live` to Strapi URL. |
+| **Priority** | High |
+
+---
+
+### CP_PROJ_064 — Hard refresh always fetches latest Strapi state (no XR cache)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Project Info |
+| **Pre-conditions** | Admin publishes a content edit in Strapi |
+| **Test Steps** | 1. CP triggers Ctrl+Shift+R on any project section<br>2. Inspect network requests |
+| **Expected Result** | A fresh `GET <StrapiBase>/api/projects/1?populate=deep` is fired (no 304 / cache-hit on XR side); response reflects newly published content (CP-PI-007). Confirms no XR-side ISR / caching. |
 | **Priority** | Medium |
 
 ---

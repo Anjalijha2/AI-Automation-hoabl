@@ -519,6 +519,55 @@
 
 ---
 
+### ADM_JBP_052 — Cannot create cycle with Start Date in past beyond reasonable window
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP |
+| **Pre-conditions** | Create Cycle modal open; no OPEN cycle |
+| **Test Steps** | 1. Enter Name "Backdated"<br>2. Start Date = 1 year ago<br>3. End Date = today<br>4. Submit |
+| **Expected Result** | Either validation error (start date must be ≥ today) OR cycle created but auto-CLOSED on next list call because endDate is also in past — document observed behaviour |
+| **Priority** | Medium |
+
+---
+
+### ADM_JBP_053 — Submissions tab is empty when no CPs have submitted
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP |
+| **Pre-conditions** | A newly created OPEN cycle with zero submissions |
+| **Test Steps** | 1. Switch to Submissions tab<br>2. Filter by the new cycle |
+| **Expected Result** | Table shows empty state "No submissions yet" or zero rows; no error |
+| **Priority** | Medium |
+
+---
+
+### ADM_JBP_054 — Edit Requests filtered by status EXPIRED shows auto-expired requests
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP |
+| **BRD/FRD Req** | FSD §5.3 auto-EXPIRE sweep |
+| **Pre-conditions** | At least one APPROVED edit request whose editableUntil is in the past |
+| **Test Steps** | 1. Open Edit Requests tab (triggers auto-sweep)<br>2. Apply Status filter = EXPIRED |
+| **Expected Result** | Previously APPROVED request now appears with status EXPIRED; admin cannot re-approve/re-reject EXPIRED requests |
+| **Priority** | High |
+
+---
+
+### ADM_JBP_055 — Pagination works on Edit Requests table
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – JBP |
+| **Pre-conditions** | Edit Requests tab active; >10 entries |
+| **Test Steps** | 1. Click Next page in pagination |
+| **Expected Result** | Next page of edit requests loads; current filter preserved |
+| **Priority** | Medium |
+
+---
+
 ## [FSD-CORRECTION] New TCs — JBP source-verified gaps
 
 ### ADM_JBP_FSD_041 — [BUG-REF: BUG-JBP-001] WhatsApp template `${+91}` emits "91" (template-string bug)

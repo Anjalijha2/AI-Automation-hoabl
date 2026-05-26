@@ -250,6 +250,66 @@
 
 ---
 
+### ADM_PAY_050 — Export respects Status filter
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | Status = refunded filter applied; table shows 5 refunded rows |
+| **Test Steps** | 1. Click Export<br>2. Open downloaded file<br>3. Inspect Status column |
+| **Expected Result** | All rows in file have Status = refunded; row count matches filtered table count (5) |
+| **Priority** | High |
+
+---
+
+### ADM_PAY_051 — Export respects combined Source + Payment Type filter
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | Source = Online easebuzz AND Payment Type = Allocation filters applied |
+| **Test Steps** | 1. Click Export<br>2. Open file<br>3. Inspect Source and Payment Type columns |
+| **Expected Result** | All rows have Source = Online easebuzz AND Payment Type = Allocation |
+| **Priority** | High |
+
+---
+
+### ADM_PAY_052 — Export with zero filtered rows downloads empty file with headers only
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | Filter combination producing zero results applied (e.g. Status=bounced AND today date only) |
+| **Test Steps** | 1. Click Export<br>2. Open downloaded file |
+| **Expected Result** | File contains only the header row; zero data rows; file is still downloadable |
+| **Priority** | Medium |
+
+---
+
+### ADM_PAY_053 — Exported Amount values preserve precision (no rounding)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | A transaction with amount 32,99,000.50 exists |
+| **Test Steps** | 1. Apply filter that includes that transaction<br>2. Export<br>3. Inspect Amount column for that row in the file |
+| **Expected Result** | Amount column shows 3299000.50 (or formatted equivalent) with no rounding loss |
+| **Priority** | High |
+
+---
+
+### ADM_PAY_054 — Export file name includes date stamp
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | Payments page loaded |
+| **Test Steps** | 1. Click Export<br>2. Note the filename of downloaded file |
+| **Expected Result** | Filename contains date (e.g. `payment-transactions-2026-05-26.xlsx`) so multiple exports don't overwrite each other |
+| **Priority** | Medium |
+
+---
+
 ## Transaction Detail View
 
 ### ADM_PAY_020 — Click eye icon shows "Detail view coming soon" message
@@ -261,6 +321,91 @@
 | **Test Steps** | 1. Click eye icon in Actions column on any row |
 | **Expected Result** | Message or modal shows "Detail view coming soon" — feature not yet implemented |
 | **Priority** | Medium |
+
+---
+
+### ADM_PAY_055 — Eye icon visible on every row regardless of status
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | Payments page loaded with mixed status rows |
+| **Test Steps** | 1. Inspect Actions column on initiated, completed, failed, refunded, bounced rows |
+| **Expected Result** | Eye icon appears on each row; no row hides the icon |
+| **Priority** | Medium |
+
+---
+
+### ADM_PAY_056 — [FSD-CORRECTION] GET /payment-transactions/:id returns 501 / TODO body
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions / API |
+| **BRD/FRD Req** | FSD §2.1 Route 3 / controller TODO |
+| **Pre-conditions** | Admin JWT; valid transaction id |
+| **Test Steps** | 1. GET `/api/v1/admin/payment-transactions/<valid-id>` |
+| **Expected Result** | Response is either 501 Not Implemented or 200 with TODO placeholder body; UI is correct to show "coming soon" rather than render data |
+| **Priority** | Medium |
+
+---
+
+### ADM_PAY_057 — Clicking eye icon does not trigger network call to detail endpoint
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | Payments page loaded; DevTools Network tab open |
+| **Test Steps** | 1. Click eye icon on a row<br>2. Observe Network tab |
+| **Expected Result** | No GET request fires to `/payment-transactions/:id`; UI shows "coming soon" purely client-side |
+| **Priority** | Low |
+
+---
+
+### ADM_PAY_058 — Eye icon shows tooltip on hover
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | Payments page loaded |
+| **Test Steps** | 1. Hover over eye icon in Actions column |
+| **Expected Result** | Tooltip "View Details" (or equivalent) appears |
+| **Priority** | Low |
+
+---
+
+### ADM_PAY_059 — Eye icon click does not navigate away from list
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | Payments page loaded; current filters applied |
+| **Test Steps** | 1. Click eye icon on row 3<br>2. Dismiss the "coming soon" message |
+| **Expected Result** | URL remains /admin/payment-transactions; current filter and pagination state preserved |
+| **Priority** | Medium |
+
+---
+
+### ADM_PAY_060 — "Detail view coming soon" message can be dismissed
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | "Coming soon" toast/modal shown |
+| **Test Steps** | 1. Click X / OK / outside the message |
+| **Expected Result** | Message dismisses; user returns to list view |
+| **Priority** | Low |
+
+---
+
+### ADM_PAY_061 — Eye icon on offline transaction row also shows "coming soon"
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | An offline transaction exists in list |
+| **Test Steps** | 1. Click eye icon on the offline row |
+| **Expected Result** | Same "coming soon" message — detail view is not implemented for any source type |
+| **Priority** | Low |
 
 ---
 
@@ -335,6 +480,31 @@
 | **Test Steps** | 1. Check Razorpay checkbox<br>2. Click Update |
 | **Expected Result** | Razorpay re-enabled; immediately available for new buyer payments |
 | **Priority** | High |
+
+---
+
+### ADM_PAY_062 — Cancel/Close on gateway settings modal discards unsaved changes
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions |
+| **Pre-conditions** | Gateway settings modal open; both gateways currently enabled |
+| **Test Steps** | 1. Uncheck Razorpay<br>2. Click Close/X without clicking Update<br>3. Reopen Settings |
+| **Expected Result** | Razorpay checkbox is still checked (ON) — change was not persisted |
+| **Priority** | High |
+
+---
+
+### ADM_PAY_063 — [FSD-CORRECTION] PUT /payment-gateways/:id returns 404 (route commented out)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Payment Transactions / API |
+| **BRD/FRD Req** | FSD §2.2 Route 7 |
+| **Pre-conditions** | Admin JWT |
+| **Test Steps** | 1. PUT `/api/v1/admin/payment-gateways/1` with `{isActive:false}` |
+| **Expected Result** | HTTP 404 route not found; per-gateway-id toggling is disabled at routes level — must use bulk `PUT /settings` |
+| **Priority** | Medium |
 
 ---
 

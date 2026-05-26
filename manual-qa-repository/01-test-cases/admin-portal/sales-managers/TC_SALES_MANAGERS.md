@@ -275,6 +275,31 @@
 
 ---
 
+### ADM_SM_050 — Edit SM modal pre-fills all existing fields
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers |
+| **Pre-conditions** | Existing SM with First Name "Ravi", Last Name "Kumar", Email "ravi@hoabl.in", Phone "9123456780" |
+| **Test Steps** | 1. Click edit/three-dot icon on that SM row<br>2. Inspect form fields |
+| **Expected Result** | Form opens with all five fields populated with current values; Role field shown as read-only or non-editable; Assignable/Is Active toggles reflect current DB state |
+| **Priority** | High |
+
+---
+
+### ADM_SM_051 — Toggle Assignable on SM Admin (roleId=4) row is force-overridden to OFF
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers / DB |
+| **BRD/FRD Req** | FSD §1 / `sales-manager.service.js:124,155` |
+| **Pre-conditions** | An SM Admin row (Role = SM Admin / roleId=4) exists in list |
+| **Test Steps** | 1. Toggle Assignable to ON on that row<br>2. Refresh the page<br>3. Re-read the toggle state |
+| **Expected Result** | After refresh, Assignable shows OFF; backend force-sets `isAvailable=0` for roleId=4 regardless of input; SM Admin never appears in customer assignment dropdowns |
+| **Priority** | High |
+
+---
+
 ## Privacy Masking Settings
 
 ### ADM_SM_022 — Access privacy masking settings panel
@@ -345,6 +370,30 @@
 | **Pre-conditions** | Cost Masking currently ON |
 | **Test Steps** | 1. Toggle Cost Masking OFF<br>2. Save |
 | **Expected Result** | Pricing now visible to every SM immediately |
+| **Priority** | High |
+
+---
+
+### ADM_SM_052 — Masking toggles save without confirmation dialog
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers |
+| **Pre-conditions** | Masking panel open; Phone Masking currently OFF |
+| **Test Steps** | 1. Click Phone Masking toggle to ON<br>2. Observe |
+| **Expected Result** | Toggle flips immediately; success toast shown; no confirmation dialog prompted |
+| **Priority** | Medium |
+
+---
+
+### ADM_SM_053 — Masking state persists across admin logout/login
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers |
+| **Pre-conditions** | Email Masking just toggled ON |
+| **Test Steps** | 1. Logout admin<br>2. Log back in<br>3. Reopen masking panel |
+| **Expected Result** | Email Masking still ON — state persisted in master_configs table |
 | **Priority** | High |
 
 ---
@@ -505,6 +554,66 @@
 | **Pre-conditions** | SM list loaded; bulk upload just performed in another tab |
 | **Test Steps** | 1. Click Refresh on SM page |
 | **Expected Result** | New SMs from bulk upload now appear in the list |
+| **Priority** | Medium |
+
+---
+
+### ADM_SM_054 — Add SM with email containing only spaces is rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers |
+| **Pre-conditions** | Add SM modal open |
+| **Test Steps** | 1. Enter Email "   "<br>2. Fill other fields<br>3. Submit |
+| **Expected Result** | Validation error on Email (required + must be valid email format); SM not created |
+| **Priority** | High |
+
+---
+
+### ADM_SM_055 — Add SM with mobile starting with 5 is rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers |
+| **Pre-conditions** | Add SM modal open |
+| **Test Steps** | 1. Enter Phone "5123456789"<br>2. Fill other fields<br>3. Submit |
+| **Expected Result** | Validation error — Indian mobile must start with 6-9 per phone regex; SM not created |
+| **Priority** | High |
+
+---
+
+### ADM_SM_056 — Add SM with phone containing letters is blocked at input level
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers |
+| **Pre-conditions** | Add SM modal open |
+| **Test Steps** | 1. Try typing "98abcd1234" in Phone field |
+| **Expected Result** | Only digits accepted; field contains "981234" — non-digit keystrokes blocked |
+| **Priority** | Medium |
+
+---
+
+### ADM_SM_057 — Newly added SM with Is Active = OFF cannot log in
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers |
+| **Pre-conditions** | New SM created with Is Active = OFF |
+| **Test Steps** | 1. Open /sales-manager portal in incognito<br>2. Enter the new SM's phone<br>3. Submit Send OTP, then verify with master OTP 258369 |
+| **Expected Result** | Verify-OTP returns HTTP 400 `"Your access to the portal has been revoked"`; SM cannot enter portal |
+| **Priority** | Critical |
+
+---
+
+### ADM_SM_058 — Cancel button on Edit SM discards unsaved changes
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Sales Managers |
+| **Pre-conditions** | Edit SM modal open with field changes made |
+| **Test Steps** | 1. Change Last Name to "Changed"<br>2. Click Cancel (do not save)<br>3. Re-locate SM in list |
+| **Expected Result** | Modal closes; SM list shows the original Last Name unchanged; no PUT request fired |
 | **Priority** | Medium |
 
 ---

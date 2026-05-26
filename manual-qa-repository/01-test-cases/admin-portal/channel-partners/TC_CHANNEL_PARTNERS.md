@@ -360,6 +360,30 @@
 
 ---
 
+### ADM_CP_046 — Detail drawer shows KYC documents section when CP has KYC submitted
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Channel Partners |
+| **Pre-conditions** | Detail drawer open on a CP with KYC Status = Approved/Verified |
+| **Test Steps** | 1. Scroll within drawer to locate KYC section |
+| **Expected Result** | KYC section shows submitted documents (or document references) — admin can view but cannot edit/approve from drawer (FSD §1: no admin KYC mutation) |
+| **Priority** | Medium |
+
+---
+
+### ADM_CP_047 — Detail drawer for a Master CP shows mapped members count
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Channel Partners |
+| **Pre-conditions** | A Master CP with at least 3 mapped members |
+| **Test Steps** | 1. Click eye icon on the Master CP row<br>2. Inspect drawer for member count |
+| **Expected Result** | Drawer displays mapped Member CP count for the Master (e.g. "3 mapped members") |
+| **Priority** | Medium |
+
+---
+
 ## Mark as Master / Map to Master
 
 ### ADM_CP_029 — Three-dot menu shows Mark as Master option for Member CP
@@ -528,6 +552,44 @@
 | **Pre-conditions** | CP already mapped to Master A |
 | **Test Steps** | 1. Select that CP<br>2. Map to Master B<br>3. Confirm |
 | **Expected Result** | Master HV Code updates from A to B; previous mapping replaced |
+| **Priority** | Medium |
+
+---
+
+### ADM_CP_048 — Bulk Map via Excel upload uses `doc` multipart field
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Channel Partners / API |
+| **BRD/FRD Req** | FSD §1 — bulk-map-excel `doc` field |
+| **Pre-conditions** | XLSX prepared with columns: Member HV Code, Master HV Code (rows for 5 valid pairings) |
+| **Test Steps** | 1. Locate Bulk Map Excel upload control<br>2. Upload XLSX; capture network call |
+| **Expected Result** | POST `/api/v1/admin/cp/bulk-map-excel` is sent with multipart field name `doc` containing the file; response returns per-row outcome |
+| **Priority** | High |
+
+---
+
+### ADM_CP_049 — Mapping a Master CP under another Master is rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Channel Partners |
+| **BRD/FRD Req** | FSD §1 — CP type derivation (`isLeadCp=true` cannot also be member) |
+| **Pre-conditions** | Two Master CPs exist: Master A and Master B |
+| **Test Steps** | 1. Select Master B's row<br>2. Click Map Master CP<br>3. Choose Master A in dropdown<br>4. Confirm |
+| **Expected Result** | Backend rejects with 400 (Master cannot be mapped under another Master); Master B's `isLeadCp` remains true |
+| **Priority** | High |
+
+---
+
+### ADM_CP_050 — Selecting deselects when checkbox unchecked
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Channel Partners |
+| **Pre-conditions** | Two rows currently selected; Map Master CP enabled |
+| **Test Steps** | 1. Uncheck one of the selected rows<br>2. Uncheck the second row<br>3. Observe Map Master CP button |
+| **Expected Result** | After both unchecks, Map Master CP returns to disabled state; selection count drops to 0 |
 | **Priority** | Medium |
 
 ---

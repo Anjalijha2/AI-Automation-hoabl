@@ -276,6 +276,78 @@
 
 ---
 
+### CP_LGN_040 — Profile completion screen renders mandatory KYC fields
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Login |
+| **Pre-conditions** | CP routed to RegisterCp after verify-otp "Registration Pending" branch |
+| **Test Steps** | 1. Land on RegisterCp screen<br>2. Inspect form fields |
+| **Expected Result** | Form renders First Name, Last Name, Email, PAN, RERA number, and required KYC inputs; Submit button is disabled until mandatory fields populated (BR-CP-LOG-12 / c). |
+| **Priority** | High |
+
+---
+
+### CP_LGN_041 — Submit incomplete profile shows inline validation errors
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Login |
+| **Pre-conditions** | RegisterCp screen open |
+| **Test Steps** | 1. Leave First Name blank<br>2. Click Submit |
+| **Expected Result** | Inline error appears next to First Name (e.g., "First Name is required"); `POST /api/v1/cp/registration` is NOT called; user remains on RegisterCp screen. |
+| **Priority** | High |
+
+---
+
+### CP_LGN_042 — Reload during profile completion keeps CP on RegisterCp screen
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Login |
+| **Pre-conditions** | CP `isConsented=true, isCpRegistrationCompleted=false`; on RegisterCp screen |
+| **Test Steps** | 1. Refresh the browser (F5)<br>2. Observe routing |
+| **Expected Result** | Frontend re-runs verify-otp branch logic; routing returns "Registration Pending" → CP remains on RegisterCp screen (NOT redirected to `/login` or `/dashboard`) (BR-CP-LOG-12 / c). |
+| **Priority** | Medium |
+
+---
+
+### CP_LGN_043 — Direct `/dashboard` access by incomplete-profile CP redirects to RegisterCp
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Login |
+| **Pre-conditions** | CP `isCpRegistrationCompleted=false` and has client token (Consent done) |
+| **Test Steps** | 1. Manually navigate to `https://uat.xrportal.in/dashboard` |
+| **Expected Result** | Route guard blocks dashboard; user redirected to profile completion screen instead. Dashboard data NOT fetched (BR-CP-LOG-10). |
+| **Priority** | High |
+
+---
+
+### CP_LGN_044 — Profile submit endpoint is PUBLIC (no JWT required)
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Login |
+| **Pre-conditions** | CP in "Registration Pending" state (no JWT issued yet) |
+| **Test Steps** | 1. `POST /api/v1/cp/registration` with profile body and NO Authorization header |
+| **Expected Result** | 200/201 — profile saved (BR-CP-LOG-12 / c, GAP-LOG-07). Endpoint is intentionally public because no JWT exists pre-registration. Document as expected behaviour and security trade-off. |
+| **Priority** | High (Security) |
+
+---
+
+### CP_LGN_045 — Successful profile submit issues JWT and redirects to Dashboard
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – Login |
+| **Pre-conditions** | All mandatory profile fields filled on RegisterCp |
+| **Test Steps** | 1. Submit form<br>2. Capture response<br>3. Observe navigation |
+| **Expected Result** | Response includes `{ user, token }` (JWT, 1d expiry); `isCpRegistrationCompleted=true` persisted; CP redirected to `/dashboard`; subsequent calls use new JWT (BR-CP-LOG-13). |
+| **Priority** | Critical |
+
+---
+
 ## Session and Logout
 
 ### CP_LGN_023 — JWT session persists across page refresh

@@ -288,6 +288,66 @@
 
 ---
 
+### BYR_CB_046 — Close after partial entry shows no confirmation dialog
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | Modal with date filled but not submitted |
+| **Test Steps** | 1. Click X |
+| **Expected Result** | Modal closes immediately without "discard changes?" prompt; no API call; entered data not persisted |
+| **Priority** | Low |
+
+---
+
+### BYR_CB_047 — Reopening modal after close starts with empty form
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | Modal closed after partial entry |
+| **Test Steps** | 1. Click Request Callback again |
+| **Expected Result** | Modal opens with all fields cleared; no leftover data from previous open |
+| **Priority** | Medium |
+
+---
+
+### BYR_CB_048 — Modal cannot be submitted twice via double-click
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | Form filled validly |
+| **Test Steps** | 1. Double-click Submit rapidly |
+| **Expected Result** | Only one API call made; button disabled on first click; no duplicate row created in DB |
+| **Priority** | High |
+
+---
+
+### BYR_CB_049 — Click X during submission allowed only after API returns
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | Submit clicked, API in flight |
+| **Test Steps** | 1. Try clicking X during submission |
+| **Expected Result** | X disabled or close blocked until response; prevents race where buyer can dismiss but row is created |
+| **Priority** | Medium |
+
+---
+
+### BYR_CB_050 — Close after successful submit shows confirmation toast
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | Form submitted successfully |
+| **Test Steps** | 1. Modal auto-closes<br>2. Observe page |
+| **Expected Result** | Success toast/banner "Callback requested successfully"; toast auto-dismisses after a few seconds |
+| **Priority** | Medium |
+
+---
+
 ## Callback — Feedback Flow (Token-Based)
 
 ### BYR_CB_024 — Feedback URL accessible without login
@@ -397,6 +457,78 @@
 | **Test Steps** | 1. Switch tabs<br>2. Return |
 | **Expected Result** | Modal still open with data intact |
 | **Priority** | Low |
+
+---
+
+### BYR_CB_051 — Submit with missing requestedAt rejected by backend
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | API access |
+| **Test Steps** | 1. `POST /api/v1/user/callback-requests` body `{ registrationNumber }` (no requestedAt) |
+| **Expected Result** | 400 Yup validation error — `requestedAt` is required per FSD correction on BYR_CB_005 |
+| **Priority** | High |
+
+---
+
+### BYR_CB_052 — Submit with missing registrationNumber rejected by backend
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | API access |
+| **Test Steps** | 1. `POST /callback-requests` body `{ requestedAt: <future> }` (no registrationNumber) |
+| **Expected Result** | 400 Yup validation error — `registrationNumber` required |
+| **Priority** | High |
+
+---
+
+### BYR_CB_053 — Network failure on submit shows retry option
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | Modal filled, network offline |
+| **Test Steps** | 1. Click Submit |
+| **Expected Result** | Error toast "Submission failed, please retry"; modal stays open with values preserved; Submit re-enabled |
+| **Priority** | High |
+
+---
+
+### BYR_CB_054 — Date picker disables Sundays/weekends if configured
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | Calendar configured to disable weekends (verify product rule) |
+| **Test Steps** | 1. Open calendar<br>2. Try selecting next Sunday |
+| **Expected Result** | If product rule applies: Sunday greyed/unselectable. If not: Sunday selectable. Document actual behaviour. |
+| **Priority** | Low |
+
+---
+
+### BYR_CB_055 — Time picker hours limited to business window if configured
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | Time picker open |
+| **Test Steps** | 1. Inspect hour options |
+| **Expected Result** | Either 24h list available OR limited to business hours (e.g., 9 AM–8 PM). Document actual range. |
+| **Priority** | Low |
+
+---
+
+### BYR_CB_056 — Description with HTML/script tags sanitised on submit
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Callback |
+| **Pre-conditions** | Modal open |
+| **Test Steps** | 1. Enter `<script>alert('x')</script>` in Description<br>2. Submit |
+| **Expected Result** | Either rejected by validator or stored as escaped string; no script execution in SM portal or buyer portal viewing of the request |
+| **Priority** | High (Security) |
 
 ---
 

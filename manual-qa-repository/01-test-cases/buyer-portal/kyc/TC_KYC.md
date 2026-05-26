@@ -326,6 +326,66 @@
 
 ---
 
+### BYR_KYC_051 — Summary lists every applicant added in Step 1
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | 3 applicants entered in Step 1 |
+| **Test Steps** | 1. Open Step 3 summary<br>2. Count applicant rows/cards |
+| **Expected Result** | Exactly 3 applicant entries shown with names, relationships, PAN/Aadhaar masked |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_052 — Edit link on summary returns to Step 1 preserving data
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Step 3 summary visible |
+| **Test Steps** | 1. Click Edit / Back<br>2. Inspect Step 1 fields |
+| **Expected Result** | Returns to Step 1; all previously entered data still populated; not lost |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_053 — Document thumbnails on summary clickable for preview
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Step 3 summary with documents listed |
+| **Test Steps** | 1. Click each document thumbnail |
+| **Expected Result** | Preview opens in modal/new tab; document image renders |
+| **Priority** | Medium |
+
+---
+
+### BYR_KYC_054 — T&C link opens full terms in new tab
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Step 3 summary visible |
+| **Test Steps** | 1. Click "Terms & Conditions" link in checkbox label |
+| **Expected Result** | Terms document opens in new tab or modal; original page state preserved |
+| **Priority** | Medium |
+
+---
+
+### BYR_KYC_055 — Confirm click shows loading state while submitting
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Step 3 with T&C ticked |
+| **Test Steps** | 1. Click Confirm<br>2. Observe button state |
+| **Expected Result** | Button shows spinner/disabled state during submit-kyc API call; prevents double-click |
+| **Priority** | High |
+
+---
+
 ## KYC — Step 4 — E-Verification
 
 ### BYR_KYC_027 — OTP sent to registered mobile on Confirm (SM physical-event flow only)
@@ -361,6 +421,66 @@
 | **Test Steps** | 1. Enter valid OTP<br>2. Click Verify<br>3. Check backend flag |
 | **Expected Result** | `eVerificationCompleted = true`; proceeds to Step 5 success screen |
 | **Priority** | Critical |
+
+---
+
+### BYR_KYC_056 — OTP input accepts exactly 6 digits
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | E-verification OTP screen visible |
+| **Test Steps** | 1. Try typing 7 digits<br>2. Try typing alphabetic characters |
+| **Expected Result** | Input capped at 6 numeric digits; non-numeric rejected |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_057 — Verify button disabled until 6 OTP digits entered
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | OTP screen visible, OTP field empty |
+| **Test Steps** | 1. Inspect Verify button<br>2. Type 5 digits — recheck<br>3. Type 6th digit — recheck |
+| **Expected Result** | Disabled at 0/5 digits; enabled only at exactly 6 digits |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_058 — Resend OTP enabled after 60-second cooldown
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | OTP just sent |
+| **Test Steps** | 1. Observe Resend OTP state at t=0<br>2. Wait 60 seconds<br>3. Recheck |
+| **Expected Result** | Resend disabled with countdown for 60s; enabled after timer elapses |
+| **Priority** | Medium |
+
+---
+
+### BYR_KYC_059 — Expired OTP rejected with error
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | OTP issued and validity window elapsed |
+| **Test Steps** | 1. Wait beyond OTP validity period<br>2. Enter that OTP<br>3. Click Verify |
+| **Expected Result** | "OTP expired" error; user remains on OTP screen and can request new OTP |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_060 — Edit details link from OTP screen returns to Step 3 summary
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | OTP screen visible |
+| **Test Steps** | 1. Click "Edit details" / Back button |
+| **Expected Result** | Returns to Step 3 summary; T&C state and entered data preserved |
+| **Priority** | Medium |
 
 ---
 
@@ -436,6 +556,78 @@
 | **Pre-conditions** | Backend bypass test |
 | **Test Steps** | 1. Submit co-applicant with relationship "Friend" via API |
 | **Expected Result** | 400 Yup validation error — ENUM is exactly `self|father|mother|brother|sister|spouse` (models/applicants.model.js:105-109). "Spouse"/"Child"/"Sibling" via UI must map to this lowercase ENUM. |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_061 — Invalid PAN format on add-applicant rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | API/UI access |
+| **Test Steps** | 1. Submit applicant with PAN `12345ABCDE` (digits-then-letters)<br>2. Submit with `ABCDE12345` (letters-then-digits-only) |
+| **Expected Result** | Both rejected with validation error; valid PAN regex `[A-Z]{5}[0-9]{4}[A-Z]{1}` enforced |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_062 — Aadhaar with non-numeric chars rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Step 1 applicant card open |
+| **Test Steps** | 1. Type alphabetic characters into Aadhaar field<br>2. Type "1234-5678-9012" with hyphens |
+| **Expected Result** | Non-digit input stripped or rejected; field accepts only 12 contiguous digits |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_063 — Future DOB rejected at field level
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Step 1 visible |
+| **Test Steps** | 1. Enter tomorrow's date as DOB<br>2. Lose focus / try Next |
+| **Expected Result** | Error "DOB cannot be in future"; submission blocked |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_064 — Underage applicant (<18 years) rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Step 1 visible |
+| **Test Steps** | 1. Enter DOB making applicant 17 years old<br>2. Try Next |
+| **Expected Result** | Error: "Applicant must be at least 18 years old"; submission blocked |
+| **Priority** | High |
+
+---
+
+### BYR_KYC_065 — Browser back from Step 2 returns to Step 1 with data intact
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Step 1 completed, Step 2 visible |
+| **Test Steps** | 1. Click browser Back button<br>2. Inspect Step 1 fields |
+| **Expected Result** | Returns to Step 1; all entered applicant data still populated; no loss |
+| **Priority** | Medium |
+
+---
+
+### BYR_KYC_066 — Network failure during submit-kyc shows retry option
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – KYC |
+| **Pre-conditions** | Step 3 Confirm clicked; network throttled offline |
+| **Test Steps** | 1. Click Confirm with no network<br>2. Observe |
+| **Expected Result** | Error toast "Submission failed. Please try again."; T&C state preserved; Confirm button re-enabled for retry |
 | **Priority** | High |
 
 ---

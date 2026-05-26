@@ -235,6 +235,56 @@
 
 ---
 
+### ADM_CMS_038 — External CMS link href points to non-XR domain
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **BRD/FRD Req** | FSD §1 (Strapi is the external CMS) |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Right-click "CMS" item in sidebar → Copy Link Address |
+| **Expected Result** | URL points to a different domain than `uat-web.xrportal.in/admin` (Strapi-hosted CMS); confirms it is external |
+| **Priority** | Medium |
+
+---
+
+### ADM_CMS_039 — External CMS link has target="_blank" / rel="noopener"
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Inspect HTML of the CMS sidebar item via DevTools |
+| **Expected Result** | Anchor has `target="_blank"` and ideally `rel="noopener noreferrer"` so external CMS opens in a new tab without leaking session |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_040 — CMS link does not break admin session in original tab
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **Pre-conditions** | Admin logged in on /admin/customers |
+| **Test Steps** | 1. Click CMS link (opens new tab)<br>2. Return to original tab<br>3. Refresh /admin/customers |
+| **Expected Result** | Original tab still shows logged-in admin with Customers page; session unaffected by external CMS open |
+| **Priority** | High |
+
+---
+
+### ADM_CMS_041 — CMS link is separate from /admin/cms Config route
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Portal Shell |
+| **BRD/FRD Req** | FSD §1 (Config != CMS) |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Click "Config" → confirm URL = /admin/cms<br>2. Click "CMS" → confirm URL is external Strapi domain |
+| **Expected Result** | Two distinct sidebar items with different destinations: Config = internal /admin/cms config-console; CMS = external Strapi |
+| **Priority** | High |
+
+---
+
 ## Logout & Session
 
 ### ADM_CMS_019 — Logout button visible at bottom of sidebar

@@ -506,6 +506,58 @@
 
 ---
 
+### ADM_CUST_098 — Cancel Unit modal Close (X) button cancels without action
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers |
+| **BRD/FRD Req** | ADMIN-FS-Customers Cancel Unit §4 |
+| **Pre-conditions** | Cancel Unit modal opened on a Booked row |
+| **Test Steps** | 1. Tick both attestation checkboxes<br>2. Click X (close) instead of Submit<br>3. Locate the same row in the list |
+| **Expected Result** | Modal closes; no PUT request fired; row status remains Booked Online/Offline; unit not released |
+| **Priority** | High |
+
+---
+
+### ADM_CUST_099 — Cancel Unit on Booked Offline row releases unit to inventory
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers |
+| **BRD/FRD Req** | ADMIN-BRD-Customers §6 Rule 8 |
+| **Pre-conditions** | A row with Allocation Status = Booked Offline; note the allotted unit number |
+| **Test Steps** | 1. Click trash icon, tick both attestations, Submit<br>2. Open Towers, navigate to the tower of that unit<br>3. Locate the unit cell |
+| **Expected Result** | Unit cell colour returns to white (AVAILABLE) or grey (RESERVED) depending on status sync; the unit is no longer marked sold |
+| **Priority** | Critical |
+
+---
+
+### ADM_CUST_100 — Cancel Unit blocked when active allocation campaign exists
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers |
+| **BRD/FRD Req** | ADMIN-FS-Allocation FSD §1 / ADMIN-FS-Customers §4.2 |
+| **Pre-conditions** | An allocation campaign is currently OPEN; Booked row available |
+| **Test Steps** | 1. Click trash icon on Booked row<br>2. Tick both attestations<br>3. Click Submit |
+| **Expected Result** | Backend returns HTTP 400 `"Cannot cancel unit when campaign is active"`; toast shows the error; row status unchanged |
+| **Priority** | Critical |
+
+---
+
+### ADM_CUST_101 — Cancel Unit attestation checkboxes start unchecked on every modal open
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers |
+| **BRD/FRD Req** | ADMIN-FS-Customers Cancel Unit §4 |
+| **Pre-conditions** | Booked row available |
+| **Test Steps** | 1. Open Cancel Unit modal, tick both checkboxes, close with X<br>2. Reopen Cancel Unit modal on the same row |
+| **Expected Result** | Both attestation checkboxes are unticked on reopen; Submit button is disabled |
+| **Priority** | Medium |
+
+---
+
 ## Cancel Registration (Registered / Waitlisted rows) — NEW SPLIT
 
 ### TC_CUST_FUNC_045 — Trash icon on Registered/Waitlisted row opens "Cancel Registration" popup
@@ -556,6 +608,58 @@
 | **Pre-conditions** | A row exists with status = REFUND |
 | **Test Steps** | 1. Inspect the Actions cell |
 | **Expected Result** | Cell shows `-` — neither trash icon nor three-dot menu is rendered |
+| **Priority** | Medium |
+
+---
+
+### ADM_CUST_102 — Cancel Registration popup Cancel button discards action
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers |
+| **BRD/FRD Req** | ADMIN-FS-Customers Cancel Registration §4 |
+| **Pre-conditions** | Cancel Registration popup open on a Registered/Waitlisted row |
+| **Test Steps** | 1. Click "Cancel" (close) button instead of "Cancel Registration"<br>2. Re-locate the row |
+| **Expected Result** | Popup closes; row status remains Registered/Waitlisted; no refund transaction; ₹999 not refunded |
+| **Priority** | High |
+
+---
+
+### ADM_CUST_103 — Cancel Registration on Waitlisted row issues ₹999 refund
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers |
+| **BRD/FRD Req** | ADMIN-BRD-Customers §6 Rule 8 / FSD Customers §5 |
+| **Pre-conditions** | Row with Allocation Status = Waitlisted, ₹999 paid |
+| **Test Steps** | 1. Click trash icon on Waitlisted row<br>2. Click red Cancel Registration button<br>3. Open Payment Transactions and locate refund record |
+| **Expected Result** | Status of row → Cancelled; a refunded transaction of ₹999 appears in /admin/payment-transactions for that registration; toast "Registration refunded successfully" |
+| **Priority** | Critical |
+
+---
+
+### ADM_CUST_104 — Cancel Registration blocked when active allocation campaign exists
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers |
+| **BRD/FRD Req** | ADMIN-FS-Allocation FSD §1 / ADMIN-FS-Customers §4.2 |
+| **Pre-conditions** | Allocation campaign currently OPEN; Registered row available |
+| **Test Steps** | 1. Click trash icon<br>2. Click red Cancel Registration button |
+| **Expected Result** | Backend returns HTTP 400 `"Cannot refund registration when campaign is active"`; toast shows error; row status unchanged |
+| **Priority** | Critical |
+
+---
+
+### ADM_CUST_105 — Cancel Registration popup shows registration number and date
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Customers |
+| **BRD/FRD Req** | ADMIN-FS-Customers Cancel Registration §4 |
+| **Pre-conditions** | Cancel Registration popup open on a Registered/Waitlisted row |
+| **Test Steps** | 1. Inspect the registration details rendered in the popup |
+| **Expected Result** | Popup shows the registration number (format GHNG-XXXXXXXXXX-X), the registered phone, and ₹999 as refund amount before the confirm button |
 | **Priority** | Medium |
 
 ---

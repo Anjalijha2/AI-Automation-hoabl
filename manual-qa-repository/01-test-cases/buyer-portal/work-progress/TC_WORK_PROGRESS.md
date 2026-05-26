@@ -178,6 +178,78 @@
 
 ---
 
+### BYR_WRK_031 — No upload/replace photo control rendered
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Work Progress page open |
+| **Test Steps** | 1. Inspect DOM for `<input type=file>` or upload buttons |
+| **Expected Result** | No upload affordances anywhere on page; consumption-only UI |
+| **Priority** | High |
+
+---
+
+### BYR_WRK_032 — No delete/remove control on any milestone card
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Page with milestone cards |
+| **Test Steps** | 1. Hover over each card<br>2. Inspect for delete icon / kebab menu |
+| **Expected Result** | No delete or kebab menu rendered; cards are display-only |
+| **Priority** | High |
+
+---
+
+### BYR_WRK_033 — Right-click context menu does not expose admin actions
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Page open |
+| **Test Steps** | 1. Right-click on milestone card and image |
+| **Expected Result** | Only standard browser context menu; no custom admin/edit options leaked through |
+| **Priority** | Low |
+
+---
+
+### BYR_WRK_034 — Attempted PUT to Strapi from buyer rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Buyer JWT in hand |
+| **Test Steps** | 1. `PUT <strapi>/api/projects/1` with buyer auth header |
+| **Expected Result** | Rejected — Strapi requires admin auth; buyer JWT not accepted for writes (verify CORS/auth boundary) |
+| **Priority** | High (Security) |
+
+---
+
+### BYR_WRK_035 — Image right-click "save as" allowed (read-only consumption)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Page open |
+| **Test Steps** | 1. Right-click image → Save As |
+| **Expected Result** | Standard browser save dialog appears; image downloadable per public asset (no DRM expected) |
+| **Priority** | Low |
+
+---
+
+### BYR_WRK_036 — Buyer cannot inject milestone via direct API call
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Buyer token |
+| **Test Steps** | 1. `POST /api/v1/user/work-progress` or any guessed XR backend route |
+| **Expected Result** | 404 — no such route exists (FSD §6); confirms no buyer write surface |
+| **Priority** | High |
+
+---
+
 ## Work Progress — CMS Sync & Content Refresh
 
 ### BYR_WRK_015 — New milestone published in CMS appears on reload
@@ -212,6 +284,66 @@
 | **Pre-conditions** | Admin edits milestone description |
 | **Test Steps** | 1. Reload page |
 | **Expected Result** | New text shown |
+| **Priority** | Medium |
+
+---
+
+### BYR_WRK_037 — ISR revalidate=10s honoured — new content surfaces after 10s
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Admin publishes new tower image at T |
+| **Test Steps** | 1. Reload at T+5s<br>2. Reload at T+12s |
+| **Expected Result** | At T+5s may show stale; at T+12s new image present (Next.js ISR `revalidate=10`, per FSD note on BYR_WRK_015-017) |
+| **Priority** | Medium |
+
+---
+
+### BYR_WRK_038 — Reorder of images in Strapi reflected on next ISR cycle
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Admin reorders tower images |
+| **Test Steps** | 1. Wait 10+ seconds<br>2. Reload page |
+| **Expected Result** | Image order matches new Strapi order; first image is now the one promoted |
+| **Priority** | Low |
+
+---
+
+### BYR_WRK_039 — Caption text update propagates after revalidate window
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Admin edits image caption in Strapi |
+| **Test Steps** | 1. Reload after 10s |
+| **Expected Result** | New caption rendered beneath image (2-line ellipsis-clipped per TowerTabs.js); old caption not cached forever |
+| **Priority** | Medium |
+
+---
+
+### BYR_WRK_040 — Tower added/removed in Strapi reflected as new/removed tab
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Admin adds new tower entry / removes existing |
+| **Test Steps** | 1. Reload after 10s<br>2. Inspect tower tab strip |
+| **Expected Result** | New tab appears or removed tower's tab gone; remaining tabs unchanged |
+| **Priority** | High |
+
+---
+
+### BYR_WRK_041 — Banner video update reflected after revalidate
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Admin uploads new `workBannerVideo` |
+| **Test Steps** | 1. Reload after 10s |
+| **Expected Result** | New video URL active; muted+autoplay+loop attributes preserved (BYR_WRK_025) |
 | **Priority** | Medium |
 
 ---
@@ -263,6 +395,54 @@
 | **Test Steps** | 1. Reload page |
 | **Expected Result** | Placeholder/skeleton shown while images load |
 | **Priority** | Low |
+
+---
+
+### BYR_WRK_042 — Broken image URL inside towerImages does not break carousel
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | One image in tower returns 404 |
+| **Test Steps** | 1. Open tower with broken URL<br>2. Swipe through carousel |
+| **Expected Result** | Broken image slot shows placeholder; remaining slides render normally; Swiper not blocked |
+| **Priority** | Medium |
+
+---
+
+### BYR_WRK_043 — Tablet viewport (~768px) shows correct slidesPerView
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Resize to ~768px width |
+| **Test Steps** | 1. Inspect carousel |
+| **Expected Result** | slidesPerView = 3 (per breakpoint table BYR_WRK_027); no overflow, no overlap |
+| **Priority** | Low |
+
+---
+
+### BYR_WRK_044 — Caption text overflow handled (2-line ellipsis)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Tower image with caption >150 chars |
+| **Test Steps** | 1. Inspect caption rendering |
+| **Expected Result** | Caption truncates to 2 lines with ellipsis; no layout break (per FSD note on BYR_WRK_007-008) |
+| **Priority** | Low |
+
+---
+
+### BYR_WRK_045 — Page renders even when `project-section.tower-gallery` missing in Strapi
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Work Progress |
+| **Pre-conditions** | Strapi response without tower-gallery component |
+| **Test Steps** | 1. Open page |
+| **Expected Result** | TowerSection silently absent (no "No updates yet" message per BYR_WRK_018 / KB-4); rest of page (banner, header) renders without crash |
+| **Priority** | Medium |
 
 ---
 

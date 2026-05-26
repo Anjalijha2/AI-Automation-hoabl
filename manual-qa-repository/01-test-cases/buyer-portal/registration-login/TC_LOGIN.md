@@ -338,6 +338,54 @@
 
 ---
 
+### BYR_LGN_040 — Session active across multiple browser tabs
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | Buyer logged in on Tab 1 |
+| **Test Steps** | 1. Open new tab (Tab 2)<br>2. Navigate to `https://uat.xrportal.in/home`<br>3. Observe |
+| **Expected Result** | Tab 2 loads dashboard without re-authentication; same JWT used from local storage |
+| **Priority** | Medium |
+
+---
+
+### BYR_LGN_041 — Logout in one tab does not auto-logout other tabs (known limitation)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | Buyer logged in on Tab 1 and Tab 2 |
+| **Test Steps** | 1. Click Logout in Tab 1<br>2. Switch to Tab 2 and click any nav link |
+| **Expected Result** | Tab 2 still uses cached JWT until next protected fetch; only redirects to login on page refresh or unauthorized API response. Document multi-tab inconsistency. |
+| **Priority** | Medium |
+
+---
+
+### BYR_LGN_042 — Tampered JWT rejected with 401
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | Valid JWT captured |
+| **Test Steps** | 1. Modify any character of JWT payload<br>2. `GET /api/v1/user/profile` with tampered token |
+| **Expected Result** | 401 Unauthorized; signature verification fails server-side |
+| **Priority** | Critical (Security) |
+
+---
+
+### BYR_LGN_043 — Login page hides legacy password field
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Inspect DOM for `input[type=password]` |
+| **Expected Result** | No password field exists; only mobile + OTP flow rendered (mobile-OTP-only per FRD) |
+| **Priority** | Medium |
+
+---
+
 ## FSD Corrections Applied (2026-05-25)
 
 Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-login.md`

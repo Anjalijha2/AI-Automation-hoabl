@@ -462,6 +462,42 @@
 
 ---
 
+### ADM_LGN_063 — Session persists across browser close and reopen within JWT window
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Admin logged in; JWT stored in localStorage |
+| **Test Steps** | 1. Login successfully<br>2. Close browser completely<br>3. Reopen browser<br>4. Navigate to /admin/customers |
+| **Expected Result** | Session restored from localStorage; Customers page loads without redirect to login |
+| **Priority** | High |
+
+---
+
+### ADM_LGN_064 — Concurrent session on second device does not invalidate first
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Admin logged in on Device A |
+| **Test Steps** | 1. Login as same admin on Device B<br>2. Return to Device A<br>3. Access /admin/customers |
+| **Expected Result** | Both devices remain authenticated — JWT is stateless and not bound to a single device; no session blacklist exists (per FSD §3 §6) |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_065 — Tampered JWT token in localStorage forces redirect to login
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Admin logged in |
+| **Test Steps** | 1. Open DevTools → Application → localStorage<br>2. Edit JWT token (change a character in payload)<br>3. Reload /admin/customers |
+| **Expected Result** | API call fails with 401; user redirected to /admin login page |
+| **Priority** | High |
+
+---
+
 ## Security & Negative Cases
 
 ### ADM_LGN_037 — SQL injection in mobile field is blocked
@@ -509,6 +545,54 @@
 | **Test Steps** | 1. Resize to mobile viewport<br>2. Load /admin |
 | **Expected Result** | All elements visible and tappable; no overflow |
 | **Priority** | Medium |
+
+---
+
+### ADM_LGN_066 — Send OTP with leading-zero 10-digit mobile rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Enter "0123456789"<br>2. Click Send OTP |
+| **Expected Result** | Send OTP returns 400 "User not found" (no admin record with that mobile); UI does not advance to OTP screen |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_067 — Send OTP with spaces in mobile field rejected at input level
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | Login page loaded |
+| **Test Steps** | 1. Try entering "8888 888 888" with spaces<br>2. Click Send OTP |
+| **Expected Result** | Spaces blocked at input level (numeric-only); field stores only "8888888888"; OTP sent normally |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_068 — Paste 10-digit OTP into first OTP box auto-fills all six boxes
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP entry screen shown |
+| **Test Steps** | 1. Copy "258369" to clipboard<br>2. Click Box 1<br>3. Paste (Ctrl+V) |
+| **Expected Result** | All 6 boxes auto-populate with each digit; cursor lands in Box 6; Submit OTP becomes the focus target |
+| **Priority** | Medium |
+
+---
+
+### ADM_LGN_069 — Backspace on empty OTP box moves focus to previous box
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Login |
+| **Pre-conditions** | OTP screen; digits "258" entered in boxes 1-3 |
+| **Test Steps** | 1. Click Box 4 (empty)<br>2. Press Backspace |
+| **Expected Result** | Focus moves back to Box 3; existing digit "8" cleared from Box 3 |
+| **Priority** | Low |
 
 ---
 

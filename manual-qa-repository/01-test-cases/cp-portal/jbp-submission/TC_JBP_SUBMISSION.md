@@ -288,6 +288,66 @@
 
 ---
 
+### CP_JBP_041 — Submitted JBP read-only view shows all 15 activities ticked correctly
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | CP submitted with 3 selected activities (e.g., Tele-calling, Digital, Mall Activity) |
+| **Test Steps** | 1. Navigate to `/jbp`<br>2. Inspect Activities section |
+| **Expected Result** | Only the 3 selected activities show as ticked / highlighted; remaining 12 of the 15 `activityOptions` (cp.validations.js:87-103) shown as un-ticked indicators or omitted; no input controls active. |
+| **Priority** | High |
+
+---
+
+### CP_JBP_042 — Read-only view renders digital platform budgets per platform
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | CP submitted with `digitalPlatforms=['google','meta']` and `platformBudgets={google:50000, meta:30000}` |
+| **Test Steps** | 1. Open `/jbp`<br>2. Locate Go Live on Digital section |
+| **Expected Result** | Google and Meta shown ticked with their respective budgets (`₹50,000`, `₹30,000`) rendered as read-only labels. Non-selected platforms from whitelist `['google','meta','webpage','portal','others']` either hidden or shown un-ticked with no budget. |
+| **Priority** | High |
+
+---
+
+### CP_JBP_043 — Read-only view shows Yes/No fields based on stored integer count
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | Submission has Inserts=5, Standees=0, growthHub=true |
+| **Test Steps** | 1. Open `/jbp` read-only view<br>2. Inspect Inserts / Standees / Growth Hub fields |
+| **Expected Result** | Inserts renders as "Yes" (stored count >0), Standees renders as "No" (count=0), Growth Hub renders as "Yes" (boolean true). Display reflects FSD-correction: integer-count → Yes/No mapping for non-growthHub fields. |
+| **Priority** | High |
+
+---
+
+### CP_JBP_044 — EXPIRED v1 not shown in read-only view after v2 active
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | CP has v1=EXPIRED and v2=ACTIVE in `jbp_submissions` |
+| **Test Steps** | 1. Open `/jbp`<br>2. Read displayed version + values |
+| **Expected Result** | Only v2 values are rendered; EXPIRED v1 NOT displayed in main view (history may be accessible via `GET /api/v1/cp/jbp-history` separately). Version indicator shows `Version 2 — ACTIVE`. |
+| **Priority** | High |
+
+---
+
+### CP_JBP_045 — JBP history endpoint returns all versions for the cycle
+
+| Field | Value |
+|-------|-------|
+| **Module** | CP – JBP |
+| **Pre-conditions** | CP has v1=EXPIRED and v2=ACTIVE for current cycle |
+| **Test Steps** | 1. `GET /api/v1/cp/jbp-history?projectSlug=<slug>` with CP JWT |
+| **Expected Result** | Response returns both submissions ordered by version desc: `[{version:2, status:'ACTIVE', ...}, {version:1, status:'EXPIRED', ...}]`. Confirms historical record preserved (NOT deleted) even with FSD-noted BUG-CP-006 count drift. |
+| **Priority** | Medium |
+
+---
+
 ## Edit Request Flow
 
 ### CP_JBP_024 — Request Edit option visible after submission

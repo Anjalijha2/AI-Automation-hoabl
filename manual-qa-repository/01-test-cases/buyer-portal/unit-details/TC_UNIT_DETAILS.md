@@ -42,6 +42,66 @@
 
 ---
 
+### BYR_UNIT_038 — Page shows loading skeleton while unit data fetching
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | WINNER buyer; network throttled to slow 3G |
+| **Test Steps** | 1. Click My Unit<br>2. Observe page during fetch |
+| **Expected Result** | Skeleton/spinner placeholder rendered until `/allocation/unit-details` response arrives; no broken layout |
+| **Priority** | Medium |
+
+---
+
+### BYR_UNIT_039 — Logged-out access to /allotted-units redirects to login
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | No active session |
+| **Test Steps** | 1. Open `https://uat.xrportal.in/allotted-units` directly |
+| **Expected Result** | Redirected to login page; route guard enforced client-side |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_040 — Breadcrumb / Back returns to dashboard
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Unit Details page open |
+| **Test Steps** | 1. Click breadcrumb Home / Back |
+| **Expected Result** | Navigates to `/home` dashboard; unit page unmounts |
+| **Priority** | Low |
+
+---
+
+### BYR_UNIT_041 — Multiple registrations: only allotted unit shown for current registration
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Buyer has 2 registrations; one with WINNER unit, one Available |
+| **Test Steps** | 1. Open Unit Details |
+| **Expected Result** | Only WINNER unit rendered; Available registration not displayed in this view |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_042 — Refresh on /allotted-units reloads page state
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Unit Details page open |
+| **Test Steps** | 1. Press F5 / browser refresh |
+| **Expected Result** | Page reloads, unit details re-fetched; no redirect to dashboard or login (session valid) |
+| **Priority** | Medium |
+
+---
+
 ## Unit Details — Unit Details Section
 
 ### BYR_UNIT_004 — Unit number rendered
@@ -276,6 +336,66 @@
 
 ---
 
+### BYR_UNIT_043 — Tower View highlights buyer's unit with distinct colour
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Tower View loaded |
+| **Test Steps** | 1. Inspect buyer's unit colour vs other units |
+| **Expected Result** | Buyer's unit visually distinguishable (e.g., highlighted/coloured); tooltip on hover shows unit number |
+| **Priority** | Medium |
+
+---
+
+### BYR_UNIT_044 — Tower View tooltip on hover shows unit info
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Tower View rendered |
+| **Test Steps** | 1. Hover over buyer's unit on tower diagram |
+| **Expected Result** | Tooltip shows unit number, floor, status; consistent with allocated unit |
+| **Priority** | Low |
+
+---
+
+### BYR_UNIT_045 — Lightbox closes on ESC key
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Lightbox open with floor plan |
+| **Test Steps** | 1. Press ESC |
+| **Expected Result** | Lightbox closes; underlying Unit Details page restored |
+| **Priority** | Low |
+
+---
+
+### BYR_UNIT_046 — Floor plan image renders even when imageUrl contains pipe-delimited entries
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Unit's `imageUrl = "url1||url2||url3"` (BYR_UNIT_032 known schema) |
+| **Test Steps** | 1. Load Unit Details<br>2. Inspect floor plan section |
+| **Expected Result** | At least the first valid URL renders; trailing empty segments do not produce broken image |
+| **Priority** | Medium |
+
+---
+
+### BYR_UNIT_047 — Tower View handles missing image gracefully
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Tower image asset unavailable (404) |
+| **Test Steps** | 1. Open Unit Details with broken tower URL |
+| **Expected Result** | Placeholder/fallback shown instead of broken image; rest of page renders normally |
+| **Priority** | Low |
+
+---
+
 ## Unit Details — Payment Schedule Detail (embedded)
 
 ### BYR_UNIT_023 — Payment Schedule section embedded at bottom
@@ -302,6 +422,78 @@
 
 ---
 
+### BYR_UNIT_048 — Each milestone row shows label, amount, due date, status
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Payment Schedule loaded with at least 3 milestones |
+| **Test Steps** | 1. Inspect each row |
+| **Expected Result** | Every row renders: milestone name, ₹ amount, due date, status (Paid / Due / Upcoming) |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_049 — Paid milestone shows status badge "Paid" with date
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | At least one milestone with `hcfTransactionStatus=PAID` |
+| **Test Steps** | 1. Locate paid milestone row<br>2. Inspect status badge |
+| **Expected Result** | Badge "Paid" / green tick; paid date populated |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_050 — Upcoming milestone not actionable
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Schedule shows future milestone |
+| **Test Steps** | 1. Try clicking Pay button on future milestone |
+| **Expected Result** | Pay button absent or disabled with tooltip "Due on <date>"; cannot pay early |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_051 — Milestone in VERIFICATION shows pending state
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Milestone with `hcfTransactionStatus=VERIFICATION` |
+| **Test Steps** | 1. Inspect that row |
+| **Expected Result** | Status shown as "Verification" / "Processing"; Pay button hidden to prevent duplicate order |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_052 — Total of milestone amounts equals Net Payable
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Schedule visible with all milestones |
+| **Test Steps** | 1. Sum all milestone amounts<br>2. Compare to Net Payable from cost sheet |
+| **Expected Result** | Sum equals Net Payable within rounding tolerance |
+| **Priority** | Critical |
+
+---
+
+### BYR_UNIT_053 — Empty schedule fallback when no milestones configured
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Test unit with empty milestone list |
+| **Test Steps** | 1. Inspect Payment Schedule section |
+| **Expected Result** | Empty-state message "No payment milestones available yet"; no broken table |
+| **Priority** | Low |
+
+---
+
 ## Unit Details — Negative & Edge Cases
 
 ### BYR_UNIT_025 — Page handles missing floor plan image gracefully
@@ -324,6 +516,78 @@
 | **Pre-conditions** | Buyer not WINNER |
 | **Test Steps** | 1. Call `GET /api/users/allocation/unit-details?registrationNumber=X&unitId=Y` with this buyer's token (status != WINNER) |
 | **Expected Result** | 400 "Could not fetch unit data" (controllers/allocation.controller.js:271-275). Non-WINNER units can still use parking preview `?carParking=N` but won't get cost sheet. |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_054 — Expired session shows session-expired prompt on page load
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | JWT expired (post 24h) |
+| **Test Steps** | 1. Open `/allotted-units` with expired token |
+| **Expected Result** | 401 response triggers redirect to login or "Session expired" toast; no partial unit data leaked |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_055 — Invalid registrationNumber in API call returns 400
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Authenticated buyer |
+| **Test Steps** | 1. `GET /api/users/allocation/unit-details?registrationNumber=INVALID-XYZ&unitId=1` |
+| **Expected Result** | 400 "Could not fetch unit data" — no leakage of valid registrations (controllers/allocation.controller.js:271-275) |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_056 — Missing unitId query parameter rejected
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Authenticated buyer |
+| **Test Steps** | 1. `GET /api/users/user-unit-details?registrationNumber=R` (omit unitId) |
+| **Expected Result** | 400 "Missing required query parameters: registrationNumber and unitId" |
+| **Priority** | High |
+
+---
+
+### BYR_UNIT_057 — Page resilient when imageUrl is null
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Unit with `imageUrl=null` in DB |
+| **Test Steps** | 1. Load Unit Details |
+| **Expected Result** | Floor plan section shows placeholder; no JS crash; rest of page renders cost sheet + tower view |
+| **Priority** | Medium |
+
+---
+
+### BYR_UNIT_058 — Mobile viewport renders all sections without horizontal scroll
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | Resize browser to ≤480 px width |
+| **Test Steps** | 1. Scroll through page |
+| **Expected Result** | Unit details, cost sheet, tower view, payment schedule all stack vertically; no horizontal overflow |
+| **Priority** | Medium |
+
+---
+
+### BYR_UNIT_059 — Concurrent reload during HCF order does not duplicate payment intent
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Unit Details |
+| **Pre-conditions** | HCF order initiated, status=VERIFICATION |
+| **Test Steps** | 1. Refresh page during verification window<br>2. Inspect Pay button state |
+| **Expected Result** | Pay button stays disabled; "Verification in progress" shown; no second order initiation possible (see BYR_UNIT_034) |
 | **Priority** | High |
 
 ---

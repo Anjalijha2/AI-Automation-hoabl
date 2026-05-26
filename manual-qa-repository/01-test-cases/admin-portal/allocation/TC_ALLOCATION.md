@@ -180,6 +180,82 @@
 
 ---
 
+### ADM_ALLOC_039 — Dynamic campaign requires round configuration to be defined
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation |
+| **Pre-conditions** | Create Campaign form open; Type = Dynamic selected |
+| **Test Steps** | 1. Leave round configuration empty<br>2. Set valid Name and times<br>3. Click Save Campaign |
+| **Expected Result** | Validation error: at least one round must be configured for Dynamic campaign; campaign not created |
+| **Priority** | Critical |
+
+---
+
+### ADM_ALLOC_040 — Dynamic campaign with allotmentExcel file upload accepted
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation |
+| **BRD/FRD Req** | FSD §1 — `POST /campaigns` multipart fields |
+| **Pre-conditions** | Create Campaign form open; Type = Dynamic |
+| **Test Steps** | 1. Fill Name, Start, End times<br>2. Configure 1 round<br>3. Upload `allotmentExcel` file<br>4. Click Save |
+| **Expected Result** | Multipart POST `/admin/allocation/campaigns` includes `allotmentExcel` field; campaign created with status Upcoming |
+| **Priority** | High |
+
+---
+
+### ADM_ALLOC_041 — Physical Event campaign supports commonPoolExcel file upload
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation |
+| **BRD/FRD Req** | FSD §1 — `POST /campaigns` multipart fields |
+| **Pre-conditions** | Create Campaign form open; Type = Physical Event |
+| **Test Steps** | 1. Fill required fields<br>2. Upload `commonPoolExcel` file<br>3. Save |
+| **Expected Result** | Multipart POST includes `commonPoolExcel` field; campaign created |
+| **Priority** | High |
+
+---
+
+### ADM_ALLOC_042 — Physical Event campaign Notify endpoint dispatches QR codes
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Notifications |
+| **BRD/FRD Req** | FSD §2 endpoint 7 |
+| **Pre-conditions** | Physical Event campaign exists with registrants |
+| **Test Steps** | 1. Locate the Physical Event campaign row<br>2. Click Notify action<br>3. Inspect outbound dispatch logs |
+| **Expected Result** | POST `/api/v1/admin/allocation/campaigns/<id>/notify` fires; QR codes dispatched to registrants of that campaign only |
+| **Priority** | High |
+
+---
+
+### ADM_ALLOC_043 — Dynamic campaign type cannot be changed after creation
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation |
+| **Pre-conditions** | Dynamic campaign created with status Upcoming |
+| **Test Steps** | 1. Locate the Dynamic campaign<br>2. Attempt to edit and change Type to Static |
+| **Expected Result** | Type field is read-only post-creation; no PUT exists to mutate type — only Stop/Cancel/Notify actions are available |
+| **Priority** | Medium |
+
+---
+
+### ADM_ALLOC_053 — Physical Event campaign Notify button visible only on Physical Event rows
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation |
+| **BRD/FRD Req** | FSD §2 endpoint 7 |
+| **Pre-conditions** | List contains one Static, one Dynamic, one Physical Event campaign |
+| **Test Steps** | 1. Inspect Actions column on each row type |
+| **Expected Result** | Notify action appears only on Physical Event campaign row; Static and Dynamic rows do not show the Notify action |
+| **Priority** | High |
+
+---
+
 ## Campaign Lifecycle Transitions
 
 ### ADM_ALLOC_014 — Upcoming campaign auto-transitions to Active at start time
@@ -342,6 +418,84 @@
 
 ---
 
+### ADM_ALLOC_044 — Active campaign blocks single-cancel from Customers module
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Customers |
+| **BRD/FRD Req** | FSD Customers §4.2 (B-CUS-010) |
+| **Pre-conditions** | Allocation campaign is OPEN; a Booked row in the same project |
+| **Test Steps** | 1. Open Customers, locate Booked row<br>2. Click trash icon, tick attestations, Submit |
+| **Expected Result** | Backend returns HTTP 400 `"Cannot cancel unit when campaign is active"`; row unchanged |
+| **Priority** | Critical |
+
+---
+
+### ADM_ALLOC_045 — Active campaign blocks unit-swap from Customers module
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Customers |
+| **BRD/FRD Req** | FSD Customers §4.2 (B-CUS-011) |
+| **Pre-conditions** | Allocation campaign OPEN; Booked row in same project |
+| **Test Steps** | 1. Open three-dot → Unit swap, fill tower/unit, tick attestations, Submit |
+| **Expected Result** | HTTP 400 `"Cannot swap unit when campaign is active"`; current unit unchanged |
+| **Priority** | Critical |
+
+---
+
+### ADM_ALLOC_046 — Active campaign blocks update-parking from Customers module
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Customers |
+| **BRD/FRD Req** | FSD Customers §4.2 (B-CUS-013) |
+| **Pre-conditions** | Allocation campaign OPEN; Booked row with current parking config |
+| **Test Steps** | 1. Three-dot → Update Parking Details, toggle and Submit |
+| **Expected Result** | HTTP 400 `"Cannot update parking when campaign is active"`; parking row unchanged |
+| **Priority** | High |
+
+---
+
+### ADM_ALLOC_047 — Active campaign blocks single refund (Cancel Registration)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Customers |
+| **BRD/FRD Req** | FSD Customers §4.2 (B-CUS-012) |
+| **Pre-conditions** | Allocation campaign OPEN; Registered/Waitlisted row in same project |
+| **Test Steps** | 1. Click trash icon on Registered row<br>2. Click red Cancel Registration button |
+| **Expected Result** | HTTP 400 `"Cannot refund registration when campaign is active"`; row unchanged; ₹999 not refunded |
+| **Priority** | Critical |
+
+---
+
+### ADM_ALLOC_048 — Active campaign blocks bulk-cancel via Config Section 5
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Config |
+| **BRD/FRD Req** | FSD Customers §4.2 |
+| **Pre-conditions** | Allocation campaign OPEN; XLSX with registration numbers prepared |
+| **Test Steps** | 1. Open /admin/cms Section 5<br>2. Upload XLSX and Submit |
+| **Expected Result** | Bulk cancel rejected with campaign-active error; no rows cancelled |
+| **Priority** | High |
+
+---
+
+### ADM_ALLOC_049 — Tower toggle in Config is still allowed during active campaign
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Config |
+| **BRD/FRD Req** | FSD Towers §1 (no campaign gate on tower toggle) |
+| **Pre-conditions** | Allocation campaign OPEN |
+| **Test Steps** | 1. Open Config Section 1<br>2. Toggle a tower OFF and click Update Tower Configuration |
+| **Expected Result** | Update succeeds; tower deactivated; campaign Customers writes remain blocked but tower config is independent |
+| **Priority** | Medium |
+
+---
+
 ## Integration Verification
 
 ### ADM_ALLOC_027 — Active campaign triggers WebSocket connection for unit grid
@@ -401,6 +555,45 @@
 | **Test Steps** | 1. Verify Kaleyra SMS log or buyer SMS history |
 | **Expected Result** | Buyers eligible for campaign receive Active notification |
 | **Priority** | High |
+
+---
+
+### ADM_ALLOC_050 — Manual reconcile endpoint can be invoked
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / API |
+| **BRD/FRD Req** | FSD §1 — `POST /api/v1/admin/allocation/transaction/check` |
+| **Pre-conditions** | Admin JWT; a transaction with pending status exists |
+| **Test Steps** | 1. POST `/api/v1/admin/allocation/transaction/check` with payload referencing the pending transaction id |
+| **Expected Result** | Endpoint returns 200; manual reconcile attempts to verify status with gateway; pending may transition to completed/failed based on gateway response |
+| **Priority** | High |
+
+---
+
+### ADM_ALLOC_051 — Cron allocation operations endpoint exists
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / API |
+| **BRD/FRD Req** | FSD §1 — `GET /api/v1/cron-allocation-operations` |
+| **Pre-conditions** | Cron service credentials |
+| **Test Steps** | 1. GET `/api/v1/cron-allocation-operations` |
+| **Expected Result** | Returns 200; auto-transitions Upcoming → Active → Completed are processed for campaigns whose times have passed |
+| **Priority** | Medium |
+
+---
+
+### ADM_ALLOC_052 — Successful Assign Unit dispatches WhatsApp + SMS for +91 buyers (no email)
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Allocation / Notifications |
+| **BRD/FRD Req** | FSD §1 — `services/allocation.service.js:1816-1832` |
+| **Pre-conditions** | Buyer with countryCode +91; Preallocated unit |
+| **Test Steps** | 1. Admin completes Assign Offline Unit on the buyer<br>2. Inspect WhatsApp dispatch (`congrates_payment_success_27sept`)<br>3. Inspect SMS dispatch (`ALLOTMENT_PAYMENT_SUCCESS`)<br>4. Inspect email logs |
+| **Expected Result** | 1 WhatsApp dispatched; 1 SMS dispatched; ZERO emails dispatched |
+| **Priority** | Critical |
 
 ---
 

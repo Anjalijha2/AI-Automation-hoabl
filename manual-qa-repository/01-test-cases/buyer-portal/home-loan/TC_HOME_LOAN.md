@@ -132,6 +132,78 @@
 
 ---
 
+### BYR_LOAN_041 — Annual Profit field accepts decimal values
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Self-Employed form visible |
+| **Test Steps** | 1. Enter "1250000.50" in Annual Profit<br>2. Lose focus |
+| **Expected Result** | Decimal accepted; formatted with commas if applicable; no truncation |
+| **Priority** | Medium |
+
+---
+
+### BYR_LOAN_042 — Annual Turnover must be ≥ Annual Profit
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Self-Employed form |
+| **Test Steps** | 1. Enter Profit = 10,00,000; Turnover = 5,00,000<br>2. Try submit |
+| **Expected Result** | Validation error "Turnover must be greater than or equal to profit"; submit blocked |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_043 — Switch from Self-Employed back to Salaried resets fields
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Self-Employed form partly filled |
+| **Test Steps** | 1. Toggle to Salaried<br>2. Inspect form |
+| **Expected Result** | Self-Employed-specific fields hidden; Salaried fields shown; previously entered self-employed values cleared (or document persistence) |
+| **Priority** | Medium |
+
+---
+
+### BYR_LOAN_044 — Check Eligibility disabled until all 3 Self-Employed fields filled
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Self-Employed selected, only 2 of 3 fields filled |
+| **Test Steps** | 1. Inspect Check Eligibility button state |
+| **Expected Result** | Disabled; fill 3rd field → enabled |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_045 — Self-Employed submission stores homeLoanEmpType=self_employed
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Self-Employed form filled and submitted |
+| **Test Steps** | 1. Inspect backend `homeLoanEmpType` |
+| **Expected Result** | Value = `self_employed` (exact lowercase per BYR_LOAN_027) |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_046 — Maximum length on Turnover field prevents overflow
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Self-Employed form |
+| **Test Steps** | 1. Try entering 15-digit number in Turnover |
+| **Expected Result** | Field capped at reasonable length (e.g., 12 digits); excess rejected; no JS overflow error |
+| **Priority** | Low |
+
+---
+
 ## Home Loan — S1 Submit to Easiloan
 
 ### BYR_LOAN_010 — Submitting eligibility calls Easiloan API
@@ -360,6 +432,78 @@
 
 ---
 
+### BYR_LOAN_047 — Loan status badge reflects loan_approval_status
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Loan record with `loan_approval_status='pending'` |
+| **Test Steps** | 1. Open `/homeloan` tracking view |
+| **Expected Result** | Status badge shows "Pending" (or equivalent presentation mapping of `pending`); transitions visible when admin updates state |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_048 — Admin-approved loan reflects in buyer view after refresh
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Admin sets `loan_approval_status=admin_approved` |
+| **Test Steps** | 1. Refresh buyer's `/homeloan` page |
+| **Expected Result** | Status updates to "Approved" (presentation of `admin_approved`); no buyer notification sent (BYR_LOAN_FSD_038); buyer must refresh manually |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_049 — CIBIL score below 600 blocks loan offer fetch
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Buyer with simulated CIBIL = 580 (below 600 floor) |
+| **Test Steps** | 1. Submit eligibility check |
+| **Expected Result** | No offers returned; UI shows "You don't currently meet eligibility criteria" message; loan_approval_status stays `pending` |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_050 — Sanction letter upload accepts PDF only
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Pre-approved path with sanction-letter upload form |
+| **Test Steps** | 1. Try uploading `.jpg`<br>2. Try uploading `.pdf` |
+| **Expected Result** | JPG rejected with "PDF only" error; PDF accepted and stored in LSQ custom-object slot (BYR_LOAN_FSD_040) |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_051 — NOC list items rendered with bank-specific requirements
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Loan in progress for specific bank |
+| **Test Steps** | 1. Inspect HomeLoanData section |
+| **Expected Result** | NOC requirements specific to selected bank shown (not generic list); each item checkable/trackable |
+| **Priority** | Medium |
+
+---
+
+### BYR_LOAN_052 — Loan tracking page handles missing loan record gracefully
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Buyer who never started loan flow |
+| **Test Steps** | 1. Open `/homeloan` |
+| **Expected Result** | Default landing (LoanEligibilityCheck Step 1) shown; no broken tracking widget; no JS error |
+| **Priority** | Medium |
+
+---
+
 ## Home Loan — Negative & Edge Cases
 
 ### BYR_LOAN_028 — Buyer without allocation may see restricted access
@@ -394,6 +538,66 @@
 | **Pre-conditions** | Salaried form |
 | **Test Steps** | 1. Enter EMI equal to or greater than income<br>2. Submit |
 | **Expected Result** | Either rejected at frontend or Easiloan returns no offers; buyer sees "Not eligible" message |
+| **Priority** | Medium |
+
+---
+
+### BYR_LOAN_053 — Easiloan timeout shows retry option (no data loss)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Easiloan API simulated 30s timeout |
+| **Test Steps** | 1. Submit eligibility form<br>2. Wait for timeout |
+| **Expected Result** | Error toast "Request timed out, please retry"; form values preserved; retry button available |
+| **Priority** | Medium |
+
+---
+
+### BYR_LOAN_054 — Submit eligibility with empty income field blocked
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Salaried form empty |
+| **Test Steps** | 1. Click Check Eligibility without entering income |
+| **Expected Result** | Inline error "Monthly income is required" on the field; submit blocked at frontend before any API call |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_055 — Apply to multiple bank offers in sequence rejected (one selection only)
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Bank A already applied (RegistrationHomeLoan row exists) |
+| **Test Steps** | 1. Try selecting bank B and clicking Apply |
+| **Expected Result** | Action blocked or warning shown — only one home loan application per registration (matches state machine) |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_056 — Pre-approved path requires sanction letter upload before submit
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Pre-approved form with bank name + amount filled, no sanction letter uploaded |
+| **Test Steps** | 1. Click Submit |
+| **Expected Result** | Error "Please upload sanction letter"; submit blocked; homeLoanOptedOut not set |
+| **Priority** | High |
+
+---
+
+### BYR_LOAN_057 — Negative existing EMI value rejected client-side
+
+| Field | Value |
+|-------|-------|
+| **Module** | BYR – Home Loan |
+| **Pre-conditions** | Eligibility form open |
+| **Test Steps** | 1. Enter EMI = -5000<br>2. Lose focus / submit |
+| **Expected Result** | Validation error "Must be a positive number"; field outlined; submit blocked |
 | **Priority** | Medium |
 
 ---

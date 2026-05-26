@@ -176,6 +176,42 @@
 
 ---
 
+### ADM_TWR_043 — Clicking an Inactive tower in sidebar still loads its grid
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Towers |
+| **Pre-conditions** | A tower with "(Inactive)" label in sidebar |
+| **Test Steps** | 1. Click the Inactive tower in sidebar |
+| **Expected Result** | Grid loads showing units of that inactive tower; admin can still view (read-only); units typically appear with grey/inactive styling |
+| **Priority** | Medium |
+
+---
+
+### ADM_TWR_044 — Sidebar shows total tower count summary at top or bottom
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Towers |
+| **Pre-conditions** | Towers page loaded |
+| **Test Steps** | 1. Inspect sidebar header/footer area for summary text |
+| **Expected Result** | Sidebar lists exactly 18 tower entries — count matches Total Towers KPI of 18 |
+| **Priority** | Low |
+
+---
+
+### ADM_TWR_045 — Switching towers in sidebar closes any open Unit Detail panel
+
+| Field | Value |
+|-------|-------|
+| **Module** | ADM – Towers |
+| **Pre-conditions** | Crest selected with a white unit's detail panel open |
+| **Test Steps** | 1. Click Crown in sidebar while panel is open |
+| **Expected Result** | Detail panel closes; Crown's grid loads; no stale unit data shown |
+| **Priority** | Medium |
+
+---
+
 ## Floor/Unit Grid
 
 ### ADM_TWR_014 — Grid header shows tower-specific totals
