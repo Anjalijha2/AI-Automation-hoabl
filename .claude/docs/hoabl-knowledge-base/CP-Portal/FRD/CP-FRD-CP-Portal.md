@@ -145,7 +145,7 @@ CP Portal
    - `brokerId` set to CP's user ID
    - `walkInSourceXrCode` set to CP's hvCode
    - `availableForAllocation` defaults to true
-   - Customer notified via SMS/WhatsApp (Kaleyra)
+   - Customer notified via **WhatsApp (Botspice, NOT Kaleyra)** template `cp_link_share_latest`; NRI: email `nri-cp-referral` <!-- FSD-CORRECTION 2026-05-25 // Source: cp.controller.js registration notification handler -->
 10. New customer appears in CP's dashboard table
 
 **Registration Number Format (confirmed from test data):**

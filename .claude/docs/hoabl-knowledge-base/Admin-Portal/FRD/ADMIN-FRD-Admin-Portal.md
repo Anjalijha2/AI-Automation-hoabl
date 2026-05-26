@@ -509,7 +509,7 @@ Surface 2 — `/admin/cms` Section 7 (Sales Managers bulk upload): Bulk create/u
 **Note (Q-SM-002 still open):** Whether settings auto-save on toggle or require an explicit Save button click has not been confirmed by automated tests. Check the Settings drawer UI directly.
 
 **Business Rules:**
-- Sales managers are assigned callback requests in round-robin order based on `lastRequestAssignedAt`
+- Sales managers assigned callback requests via **least-loaded algorithm** (round-robin disabled) <!-- FSD-CORRECTION 2026-05-25 // Source: callback-request-sm.service.js:338-349 -->
 - `isAvailable` flag controls whether the sales manager receives new ticket assignments
 - Sales Manager Admin (role 4) has more privileges than Sales Manager (role 5)
 

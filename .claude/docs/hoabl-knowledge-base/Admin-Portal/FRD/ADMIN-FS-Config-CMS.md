@@ -396,7 +396,8 @@ Section 7 of the Config page. Provides bulk provisioning for the sales team.
 4. IS_AVAILABLE and IS_ACTIVE flags applied immediately.
 
 ## 8. Notifications
-- Kaleyra SMS to new SMs: account created with portal login instructions (if configured).
+<!-- FSD-CORRECTION 2026-05-25 -->
+- **NONE.** No notification dispatched on SM bulk upload — verified zero notification/mailer calls in handler. // Source: admin.controller.js:uploadSalesManagers
 
 ## 9. Audit & Logging
 - Admin user ID, filename, SMs created/updated, timestamp logged.

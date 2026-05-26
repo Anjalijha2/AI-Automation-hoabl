@@ -88,7 +88,7 @@ Sales Manager Portal
 | SCHEDULED | Sales manager has confirmed a time slot |
 | RESCHEDULED | Time slot was changed after initial scheduling |
 | CONFIRMED | Both parties have confirmed the meeting |
-| COMPLETED | The call/meeting has taken place |
+| COMPLETED | The call/meeting has taken place — **⚠️ UNREACHABLE in current backend** (service catches ENUM truncation and falls back to CONFIRMED) <!-- FSD-CORRECTION 2026-05-25 // Source: callback-request-sm.service.js:78-87 --> |
 
 **VC Outcome Labels (SM records after the call):**
 | Code | Label |
@@ -123,8 +123,8 @@ Sales Manager Portal
 - Conversion rate indicators
 
 **Assignment Logic:**
-- Callback requests are assigned to Sales Managers in round-robin order
-- The `lastRequestAssignedAt` timestamp determines who gets the next request
+- Callback requests assigned via **least-loaded algorithm** (SM with fewest active requests) <!-- FSD-CORRECTION 2026-05-25: round-robin code disabled at callback-request-sm.service.js:338-349 -->
+- `lastRequestAssignedAt` timestamp is stored but NOT used for assignment (round-robin that read it is commented out)
 - `isAvailable` flag must be true for a SM to receive assignments
 - CC email addresses can be added to the meeting invite
 
@@ -164,7 +164,7 @@ Sales Manager Portal
 - Conversion rate indicators
 
 **Assignment Logic:**
-- Requests are auto-assigned on round-robin basis ordered by `lastRequestAssignedAt` (earliest gets next request)
+- Requests auto-assigned via **least-loaded algorithm** — SM with fewest active requests. <!-- FSD-CORRECTION 2026-05-25: round-robin disabled at callback-request-sm.service.js:338-349 -->
 - SM must have `isAvailable = true` to receive assignments
 - SM Admin can manually reassign requests between SMs
 

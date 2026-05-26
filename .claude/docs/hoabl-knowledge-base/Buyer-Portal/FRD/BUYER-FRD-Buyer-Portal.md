@@ -608,7 +608,7 @@ Can be printed or saved as PDF from browser print preview.
 1. Buyer clicks "Request Callback" or "Schedule VC" button
 2. Buyer fills in the request modal (description, preferred time)
 3. Request is submitted
-4. System assigns to a sales manager (round-robin)
+4. System assigns to a sales manager via **least-loaded algorithm** (round-robin disabled) <!-- FSD-CORRECTION 2026-05-25 // Source: callback-request-sm.service.js:338-349 -->
 5. SM schedules and completes the call
 6. Buyer receives a feedback form URL (buyerFeedbackToken-based)
 7. Buyer submits post-call feedback (SubmitFeedbackModal)

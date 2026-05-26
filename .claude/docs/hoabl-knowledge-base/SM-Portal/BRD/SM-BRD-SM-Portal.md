@@ -53,7 +53,7 @@ Unlike the Admin Portal, the SM Portal is narrowly scoped to sales-side operatio
 ## 5. Admin Workflow — Callback Request End-to-End
 
 1. Buyer submits callback request via Buyer Portal
-2. System assigns to SM via round-robin
+2. System assigns to SM via **least-loaded algorithm** (round-robin code disabled) <!-- FSD-CORRECTION 2026-05-25 // Source: callback-request-sm.service.js:338-349 -->
 3. SM logs in, sees request in REQUESTED status
 4. SM opens request → clicks "Schedule Meeting" → picks date/time → optionally generates Teams link
 5. Status → SCHEDULED

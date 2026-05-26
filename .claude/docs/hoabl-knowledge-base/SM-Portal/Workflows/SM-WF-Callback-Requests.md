@@ -57,7 +57,7 @@ REQUESTED → SCHEDULED → CONFIRMED → COMPLETED
 1. Buyer clicks "Request Callback" in Buyer Portal
 2. Buyer fills request: preferred time, optional description
 3. System creates CallbackRequest (status = REQUESTED)
-4. **System auto-assigns SM via round-robin** — SM with earliest `lastRequestAssignedAt` and `isAvailable = true` gets the request
+4. **System auto-assigns SM via least-loaded algorithm** — SM with fewest active requests and `isAvailable = true` gets the request <!-- FSD-CORRECTION 2026-05-25: round-robin disabled at callback-request-sm.service.js:338-349 -->
 5. SM sees new request in their SM Portal callback list
 6. SM opens request, clicks **Schedule Meeting**, picks date/time
 7. **Microsoft Teams meeting link auto-generated**; meeting invite sent to buyer and SM (with CC emails if specified)

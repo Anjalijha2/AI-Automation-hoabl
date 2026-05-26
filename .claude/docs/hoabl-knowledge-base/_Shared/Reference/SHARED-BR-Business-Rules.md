@@ -261,7 +261,7 @@ CPs cannot directly edit a submitted JBP. They must raise an edit request, which
 ## 10. Sales Manager Rules
 
 ### SM-001: Callback Request Auto-Assignment
-Incoming callback requests are automatically assigned to the SM with `isAvailable=true` who has the oldest `lastRequestAssignedAt` timestamp (round-robin assignment).
+Incoming callback requests are automatically assigned to the SM with `isAvailable=true` who has the **fewest active requests (least-loaded)**. <!-- FSD-CORRECTION 2026-05-25: round-robin code disabled at callback-request-sm.service.js:338-349; `lastRequestAssignedAt` stored but not used for assignment -->
 
 ### SM-002: SM Admin vs SM Visibility
 - SM Admin (role=4): Can see ALL callback requests across all SMs

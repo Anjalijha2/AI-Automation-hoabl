@@ -82,7 +82,7 @@ This is the key business incentive: buyers who complete a video call with an SM 
 1. Buyer clicks "Request Callback" in Buyer Portal
 2. Buyer selects preferred time slot and optionally adds a description
 3. System creates `CallbackRequest` with status `REQUESTED`
-4. System auto-assigns an available SM (round-robin assignment)
+4. System auto-assigns an available SM via **least-loaded algorithm** (round-robin disabled) <!-- FSD-CORRECTION 2026-05-25 // Source: callback-request-sm.service.js:338-349 -->
 5. SM receives notification in SM Portal
 6. SM confirms the time slot → status: `SCHEDULED`
 7. System auto-generates a Microsoft Teams meeting link via Teams API
@@ -115,7 +115,7 @@ This is the key business incentive: buyers who complete a video call with an SM 
 
 ## 9. Business Rules
 
-1. SM assignment is automatic (round-robin) — admin can reassign manually.
+1. SM assignment is automatic (least-loaded, NOT round-robin) <!-- FSD-CORRECTION 2026-05-25 // Source: callback-request-sm.service.js:338-349 --> — admin can reassign manually.
 2. Teams meeting link is auto-generated on scheduling — not manual.
 3. `VC_DONE_PREFERENCE` and `VC_2_DONE` are the only outcomes that trigger the VC_REQUEST offer discount.
 4. Buyer feedback link uses a token (`buyerFeedbackToken`) — no login required for buyer to submit feedback.

@@ -393,7 +393,7 @@ initiated → pending → completed / failed / cancelled / dropped / bounced
 
 **Callback Request Flow:**
 1. Buyer submits callback request (from buyer portal)
-2. System assigns to available Sales Manager (round-robin by `lastRequestAssignedAt`)
+2. System assigns to available Sales Manager via **least-loaded algorithm** (round-robin disabled) <!-- FSD-CORRECTION 2026-05-25 // Source: callback-request-sm.service.js:338-349 -->
 3. SM schedules meeting via SM Portal
 4. Teams meeting auto-created (optional)
 5. SM records outcome after call

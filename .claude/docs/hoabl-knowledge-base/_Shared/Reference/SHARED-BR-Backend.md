@@ -82,7 +82,7 @@ The backend is the central business logic engine for the XR Portal platform. It 
 | Payment Gateway | Online payment collection |
 | SMS / WhatsApp | OTP delivery, booking confirmations, demand notices |
 | Email Service | Document delivery, receipts |
-| AWS S3 | Document and media storage |
+| Azure Blob Storage | Document and media storage <!-- FSD-CORRECTION 2026-05-25: Azure Blob not AWS S3 // Source: azure-blob.service.js --> |
 
 ---
 

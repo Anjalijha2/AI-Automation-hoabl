@@ -15,7 +15,7 @@ Allow buyers to request a callback or schedule a video call with a Sales Manager
 
 ### 1.2 Scope
 
-Buyer-side request submission. Once submitted, the request is handled by the SM Portal workflow (round-robin assignment → scheduling → call completion → feedback).
+Buyer-side request submission. Once submitted, the request is handled by the SM Portal workflow (least-loaded SM assignment → scheduling → call completion → feedback). <!-- FSD-CORRECTION 2026-05-25: round-robin disabled // Source: callback-request-sm.service.js:338-349 -->
 
 ### 1.3 Preconditions
 

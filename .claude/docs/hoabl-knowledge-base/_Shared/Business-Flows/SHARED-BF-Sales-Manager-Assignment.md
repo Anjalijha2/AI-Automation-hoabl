@@ -17,7 +17,7 @@ This document maps how callback requests are assigned to Sales Managers and how 
 | Actor | Role |
 |-------|------|
 | Buyer | Submits callback request |
-| System | Assigns request to SM via round-robin |
+| System | Assigns request to SM via **least-loaded algorithm** (round-robin disabled) <!-- FSD-CORRECTION 2026-05-25 // Source: callback-request-sm.service.js:338-349 --> |
 | Sales Manager | Schedules meeting, records VC outcome |
 | Microsoft Teams | Auto-generates meeting link |
 | Kaleyra | Sends WhatsApp/SMS notifications to buyer |
