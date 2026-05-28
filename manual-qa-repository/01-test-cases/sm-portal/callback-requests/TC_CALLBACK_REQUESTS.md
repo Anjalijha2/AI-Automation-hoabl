@@ -26,6 +26,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | No active SM session |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open browser<br>2. Navigate to https://uat-web.xrportal.in/sales-manager<br>3. Wait for render |
 | **Expected Result** | Login page displays with mobile input and Send OTP button |
 | **Priority** | Critical |
@@ -38,6 +39,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Registered SM account with isActive = true |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter mobile 8888888888<br>2. Click Send OTP |
 | **Expected Result** | OTP input field appears; toast confirms OTP sent via SMS/WhatsApp |
 | **Priority** | Critical |
@@ -50,6 +52,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | OTP request initiated |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter incorrect 6-digit OTP<br>2. Click Verify OTP |
 | **Expected Result** | Error "Invalid OTP" displayed; user stays on login page |
 | **Priority** | High |
@@ -62,6 +65,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | OTP sent and configured expiry window elapsed |
+| **Type** | NEG |
 | **Test Steps** | 1. Wait for OTP to expire<br>2. Enter the now-expired OTP<br>3. Click Verify OTP |
 | **Expected Result** | Error "OTP expired" displayed per FS 1.5.2; Resend OTP available |
 | **Priority** | High |
@@ -74,6 +78,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM account with isActive = false |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter inactive SM mobile<br>2. Receive OTP<br>3. Enter valid OTP<br>4. Click Verify OTP |
 | **Expected Result** | Login rejected with "Account not active" per BR 1.5.4 |
 | **Priority** | Critical |
@@ -86,6 +91,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | UAT credentials 8888888888 / 258369 |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter mobile<br>2. Send OTP<br>3. Enter OTP 258369<br>4. Click Verify OTP |
 | **Expected Result** | Redirect to /sales-manager/callback-requests; JWT issued |
 | **Priority** | Critical |
@@ -98,6 +104,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Login page open |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter wrong OTP repeatedly (5+ times)<br>2. Try Send OTP again |
 | **Expected Result** | Rate limit error shown; further attempts blocked temporarily per BR 1.5.3 |
 | **Priority** | High |
@@ -110,6 +117,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM logged in |
+| **Type** | FUNC |
 | **Test Steps** | 1. Refresh the page<br>2. Inspect URL and session state |
 | **Expected Result** | User remains logged in on /sales-manager/callback-requests; no redirect to login |
 | **Priority** | High |
@@ -124,6 +132,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM logged in on /sales-manager/callback-requests |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect top section of page |
 | **Expected Result** | KPI card row visible above the requests table |
 | **Priority** | High |
@@ -136,6 +145,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM has assigned callback requests |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Total VC Requested card<br>2. Cross-check count with API or table row count |
 | **Expected Result** | Card shows total number of callback requests assigned to SM |
 | **Priority** | High |
@@ -148,6 +158,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Some requests in SCHEDULED status |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect VC Link Sent card<br>2. Verify count matches SCHEDULED/RESCHEDULED rows |
 | **Expected Result** | Count equals number of requests with Teams link generated |
 | **Priority** | High |
@@ -160,6 +171,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Some requests in CONFIRMED status |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect VC Confirmed card |
 | **Expected Result** | Count equals number of requests with status = CONFIRMED |
 | **Priority** | High |
@@ -172,6 +184,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | At least one request with SM feedback recorded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect SM Feedback Submitted card |
 | **Expected Result** | Count equals requests where isSmFeedbackSubmitted = true |
 | **Priority** | High |
@@ -184,6 +197,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | At least one buyer has submitted feedback |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Customer Feedback Submitted card |
 | **Expected Result** | Count equals requests where isBuyerFeedbackSubmitted = true |
 | **Priority** | High |
@@ -196,6 +210,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Some requests in COMPLETED status |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Completed card |
 | **Expected Result** | Count equals number of requests with both feedback flags true and status COMPLETED |
 | **Priority** | High |
@@ -208,6 +223,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Multiple buyer ratings recorded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Avg Rating card<br>2. Verify numeric value to 1 or 2 decimals |
 | **Expected Result** | Computed average of buyer ratings displayed; updates when new feedback added |
 | **Priority** | Medium |
@@ -220,6 +236,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Fresh SM account with no requests |
+| **Type** | EDGE |
 | **Test Steps** | 1. Inspect all 7 KPI cards |
 | **Expected Result** | Each card shows 0 (or appropriate empty state) without errors |
 | **Priority** | Medium |
@@ -232,6 +249,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Multiple requests exist; filters available |
+| **Type** | FUNC |
 | **Test Steps** | 1. Apply a date range filter<br>2. Observe KPI card values |
 | **Expected Result** | KPI counts re-compute to reflect the filtered subset |
 | **Priority** | High |
@@ -244,6 +262,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM page loaded on desktop |
+| **Type** | UI |
 | **Test Steps** | 1. Resize browser to 375px width<br>2. Inspect KPI card layout |
 | **Expected Result** | Cards stack vertically or scroll horizontally; no content clipping |
 | **Priority** | Medium |
@@ -256,6 +275,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | KPI cards visible with non-zero counts |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click on "Completed" card<br>2. Observe table |
 | **Expected Result** | Table filters to show only COMPLETED requests (if click-through enabled per UX) |
 | **Priority** | Medium |
@@ -270,6 +290,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | At least one callback request assigned |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect table header |
 | **Expected Result** | Headers visible: Customer Name, Phone, Requested Date/Time, Status, Assigned SM, Meeting Link, VC Outcome per FS 1.4 |
 | **Priority** | Critical |
@@ -282,6 +303,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Requests exist with named buyers |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Customer Name column |
 | **Expected Result** | Full name displayed for each row; no truncation in default view |
 | **Priority** | High |
@@ -294,6 +316,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Requests exist |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Phone column |
 | **Expected Result** | 10-digit Indian mobile shown, optionally with +91 prefix |
 | **Priority** | High |
@@ -306,6 +329,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Requests with known requested datetimes |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Requested Date/Time column<br>2. Cross-check with DB value |
 | **Expected Result** | Date and time displayed in IST per portal convention |
 | **Priority** | High |
@@ -318,6 +342,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Requests covering all 5 statuses exist |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Status column for each row |
 | **Expected Result** | Badge labels REQUESTED / SCHEDULED / RESCHEDULED / CONFIRMED / COMPLETED rendered per FS 1.5 |
 | **Priority** | Critical |
@@ -330,6 +355,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | All statuses visible in table |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect badge colours |
 | **Expected Result** | Each status has a unique colour (e.g. REQUESTED yellow, SCHEDULED blue, COMPLETED green) |
 | **Priority** | Medium |
@@ -342,6 +368,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Requests assigned to known SMs |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Assigned SM column |
 | **Expected Result** | Name of assigned SM displayed; empty/dash if unassigned |
 | **Priority** | High |
@@ -354,6 +381,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request in SCHEDULED status with Teams link |
+| **Type** | INT |
 | **Test Steps** | 1. Locate Meeting Link cell<br>2. Click the link |
 | **Expected Result** | Cell shows clickable Teams URL; opens Microsoft Teams in new tab |
 | **Priority** | High |
@@ -366,6 +394,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request in REQUESTED status |
+| **Type** | UI |
 | **Test Steps** | 1. Locate Meeting Link cell for REQUESTED row |
 | **Expected Result** | Cell shows dash, empty, or "—" indicator |
 | **Priority** | Medium |
@@ -378,6 +407,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request with vcOutcome recorded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect VC Outcome column |
 | **Expected Result** | Human-readable label displayed e.g. "VC Done with Preference" not raw code |
 | **Priority** | High |
@@ -390,6 +420,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM account with zero assigned requests |
+| **Type** | EDGE |
 | **Test Steps** | 1. Load callback page |
 | **Expected Result** | Empty state message displayed e.g. "No callback requests assigned"; table headers may remain visible |
 | **Priority** | Medium |
@@ -402,6 +433,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | At least one request in table |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click on any request row |
 | **Expected Result** | Detail drawer / side panel opens with full request data |
 | **Priority** | Critical |
@@ -414,6 +446,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | 100+ requests in DB for SM |
+| **Type** | EDGE |
 | **Test Steps** | 1. Load callback page<br>2. Measure time-to-render |
 | **Expected Result** | Initial table render under 3 seconds; lazy load or pagination active |
 | **Priority** | Medium |
@@ -426,6 +459,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Refresh browser<br>2. Inspect API call |
 | **Expected Result** | Fresh GET to callback list endpoint fired; table re-populates |
 | **Priority** | Medium |
@@ -440,6 +474,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Multiple requests; one customer named "Anita" |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter "Anita" in name filter<br>2. Apply |
 | **Expected Result** | Table shows only rows matching name |
 | **Priority** | High |
@@ -452,6 +487,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Customer "Anita Sharma" exists |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter "anita sharma" lowercase<br>2. Apply |
 | **Expected Result** | Match returned regardless of case |
 | **Priority** | Medium |
@@ -464,6 +500,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Customer "Anita Sharma" exists |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter "Anit"<br>2. Apply |
 | **Expected Result** | Partial match returns the customer |
 | **Priority** | Medium |
@@ -476,6 +513,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request from phone 9000000001 |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter 9000000001 in phone filter<br>2. Apply |
 | **Expected Result** | Single matching row returned |
 | **Priority** | High |
@@ -488,6 +526,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Phone filter visible |
+| **Type** | VAL |
 | **Test Steps** | 1. Try entering alphabetic chars in phone filter |
 | **Expected Result** | Input strips non-numerics or shows validation error |
 | **Priority** | Low |
@@ -500,6 +539,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request from buyer with email anita@example.com |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter "anita@example.com" in email filter<br>2. Apply |
 | **Expected Result** | Matching rows returned |
 | **Priority** | High |
@@ -512,6 +552,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Multiple requests from @example.com buyers |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter "@example.com"<br>2. Apply |
 | **Expected Result** | All requests with that email domain returned |
 | **Priority** | Medium |
@@ -524,6 +565,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Requests across multiple dates |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open date range picker<br>2. Select start = 2026-05-01, end = 2026-05-15<br>3. Apply |
 | **Expected Result** | Only requests within range shown |
 | **Priority** | High |
@@ -536,6 +578,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Date range picker open |
+| **Type** | VAL |
 | **Test Steps** | 1. Set start = 2026-05-15<br>2. Try set end = 2026-05-01 |
 | **Expected Result** | End date earlier than start blocked or dates auto-swapped |
 | **Priority** | Medium |
@@ -548,6 +591,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Future-scheduled requests exist |
+| **Type** | EDGE |
 | **Test Steps** | 1. Pick a future date range<br>2. Apply |
 | **Expected Result** | Future requests returned without error |
 | **Priority** | Low |
@@ -560,6 +604,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Logged in as SM Admin |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open SM dropdown<br>2. Select an SM<br>3. Apply |
 | **Expected Result** | Table shows only that SM's requests |
 | **Priority** | High |
@@ -572,6 +617,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Logged in as standard SM (role 5) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect filter bar |
 | **Expected Result** | SM dropdown filter hidden; SM sees only own requests per BR 1.7.1 |
 | **Priority** | Critical |
@@ -584,6 +630,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Customer with GHNG ID exists |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter GHNG number in search<br>2. Apply |
 | **Expected Result** | Customer's callback request shown |
 | **Priority** | Medium |
@@ -596,6 +643,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Requests vary by name, phone, date |
+| **Type** | FUNC |
 | **Test Steps** | 1. Apply name + date range simultaneously<br>2. Inspect results |
 | **Expected Result** | Rows matching all conditions returned |
 | **Priority** | High |
@@ -608,6 +656,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | At least one filter applied |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Clear Filters / Reset<br>2. Inspect table |
 | **Expected Result** | All filters cleared; full request list restored |
 | **Priority** | High |
@@ -620,6 +669,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Filter set returns no matches |
+| **Type** | EDGE |
 | **Test Steps** | 1. Apply filter combination returning no data<br>2. Inspect table |
 | **Expected Result** | Empty state shown "No matching requests" |
 | **Priority** | Medium |
@@ -632,6 +682,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Filters applied |
+| **Type** | FUNC |
 | **Test Steps** | 1. Apply filters<br>2. Click a row to open detail<br>3. Close detail panel |
 | **Expected Result** | Filters still in effect; table not reset |
 | **Priority** | Medium |
@@ -644,6 +695,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Filters applied |
+| **Type** | FUNC |
 | **Test Steps** | 1. Refresh the page |
 | **Expected Result** | Filters reset to defaults unless URL query string applied |
 | **Priority** | Low |
@@ -658,6 +710,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Multiple requests with varied dates |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Requested Date column header<br>2. Verify ascending order |
 | **Expected Result** | Rows sorted oldest to newest |
 | **Priority** | High |
@@ -670,6 +723,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Date column sorted ascending |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Requested Date header again<br>2. Verify descending order |
 | **Expected Result** | Rows sorted newest to oldest |
 | **Priority** | High |
@@ -682,6 +736,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Multiple named customers |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Customer Name header<br>2. Verify A→Z order |
 | **Expected Result** | Names sorted alphabetically |
 | **Priority** | Medium |
@@ -694,6 +749,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Mixed statuses |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Status header<br>2. Inspect order |
 | **Expected Result** | Rows grouped by status alphabetically or by defined precedence |
 | **Priority** | Medium |
@@ -706,6 +762,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Fresh page load |
+| **Type** | FUNC |
 | **Test Steps** | 1. Load callback page<br>2. Inspect default row order |
 | **Expected Result** | Newest requests appear at top |
 | **Priority** | High |
@@ -718,6 +775,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | More requests than one page (e.g. 25+) |
+| **Type** | FUNC |
 | **Test Steps** | 1. Inspect bottom of table |
 | **Expected Result** | Pagination controls (Prev / Next / page numbers) rendered |
 | **Priority** | High |
@@ -730,6 +788,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Multiple pages exist |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Next page<br>2. Verify table updates |
 | **Expected Result** | Second page records loaded; URL or state reflects page 2 |
 | **Priority** | High |
@@ -742,6 +801,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | On page 2+ |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Previous<br>2. Verify table updates |
 | **Expected Result** | Page 1 records re-rendered |
 | **Priority** | Medium |
@@ -754,6 +814,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Page size dropdown visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Change page size 10 → 50<br>2. Inspect table row count |
 | **Expected Result** | Table displays 50 rows per page; total pages recalculated |
 | **Priority** | Medium |
@@ -766,6 +827,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM has <10 requests |
+| **Type** | EDGE |
 | **Test Steps** | 1. Load page<br>2. Inspect pagination area |
 | **Expected Result** | Pagination controls hidden or disabled |
 | **Priority** | Low |
@@ -780,6 +842,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Logged in as SM Admin (role 4) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect requests table |
 | **Expected Result** | Assign action visible on each row or in detail panel |
 | **Priority** | Critical |
@@ -792,6 +855,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Logged in as standard SM (role 5) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect requests table |
 | **Expected Result** | Assign action hidden per BR 1.7.1 |
 | **Priority** | Critical |
@@ -804,6 +868,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM Admin clicks Assign on a request |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open Assign modal<br>2. Inspect SM list |
 | **Expected Result** | All active SMs (isActive = true) listed in dropdown |
 | **Priority** | High |
@@ -816,6 +881,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | At least one inactive SM exists |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Assign modal<br>2. Verify inactive SM is absent from list |
 | **Expected Result** | Inactive SMs not selectable |
 | **Priority** | High |
@@ -828,6 +894,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Assign modal open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Select target SM<br>2. Click Confirm |
 | **Expected Result** | Request updated with new Assigned SM; toast confirms reassignment |
 | **Priority** | Critical |
@@ -840,6 +907,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Successful reassignment |
+| **Type** | FUNC |
 | **Test Steps** | 1. Close Assign modal<br>2. Inspect Assigned SM column |
 | **Expected Result** | New SM name reflected without refresh |
 | **Priority** | High |
@@ -852,6 +920,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request status = COMPLETED |
+| **Type** | BIZ |
 | **Test Steps** | 1. Try opening Assign on a completed row |
 | **Expected Result** | Assign blocked/disabled per BR 1.7.3 (COMPLETED is final) |
 | **Priority** | Critical |
@@ -864,6 +933,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Target SM has isAvailable = false |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Assign modal<br>2. Try selecting unavailable SM |
 | **Expected Result** | Warning shown or selection blocked per BR 1.7.5 |
 | **Priority** | High |
@@ -876,6 +946,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Assign modal open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Select an SM<br>2. Click Cancel |
 | **Expected Result** | Modal closes; original Assigned SM unchanged |
 | **Priority** | Medium |
@@ -888,6 +959,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Reassignment performed |
+| **Type** | DB |
 | **Test Steps** | 1. Inspect DB / audit log table |
 | **Expected Result** | New row records old SM, new SM, timestamp, admin user per FS 1.8 |
 | **Priority** | Medium |
@@ -902,6 +974,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request in REQUESTED status |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open detail panel for REQUESTED row<br>2. Inspect actions |
 | **Expected Result** | Schedule Meeting button enabled |
 | **Priority** | Critical |
@@ -914,6 +987,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Schedule Meeting clicked |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect modal |
 | **Expected Result** | Modal shows Date (required), Time (required), Generate Teams Link toggle, CC emails (optional) per FS 2.3 |
 | **Priority** | Critical |
@@ -926,6 +1000,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Schedule modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Leave Date empty<br>2. Fill Time<br>3. Click Schedule |
 | **Expected Result** | Validation error "Date required"; submission blocked per BR 2.4.1 |
 | **Priority** | Critical |
@@ -938,6 +1013,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Schedule modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Fill Date<br>2. Leave Time empty<br>3. Click Schedule |
 | **Expected Result** | Validation error "Time required"; submission blocked per BR 2.4.1 |
 | **Priority** | Critical |
@@ -950,6 +1026,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Schedule modal open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Teams toggle state on first open |
 | **Expected Result** | Toggle defaults to OFF unless org default is ON; user must opt-in |
 | **Priority** | Medium |
@@ -962,6 +1039,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Date and Time filled; Teams toggle ON |
+| **Type** | INT |
 | **Test Steps** | 1. Click Schedule<br>2. Wait for system response |
 | **Expected Result** | Microsoft Teams API called; meeting created; link stored on request per FS 2.5.2 |
 | **Priority** | Critical |
@@ -974,6 +1052,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Date and Time filled; Teams toggle OFF |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Schedule |
 | **Expected Result** | Request scheduled successfully; Meeting Link column remains empty per BR 2.4.2 |
 | **Priority** | High |
@@ -986,6 +1065,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Schedule modal open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Add "a@x.com, b@x.com" in CC field<br>2. Submit |
 | **Expected Result** | Both emails accepted; invite CC'd to both per BR 2.4.3 |
 | **Priority** | Medium |
@@ -998,6 +1078,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Schedule modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter "not-an-email" in CC field<br>2. Submit |
 | **Expected Result** | Validation error on CC field; submission blocked or email skipped |
 | **Priority** | Medium |
@@ -1010,6 +1091,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Schedule modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Try selecting yesterday's date<br>2. Submit |
 | **Expected Result** | Past date disabled in picker or validation blocks submission |
 | **Priority** | High |
@@ -1022,6 +1104,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request in REQUESTED |
+| **Type** | BIZ |
 | **Test Steps** | 1. Complete scheduling<br>2. Inspect Status badge |
 | **Expected Result** | Status changes to SCHEDULED per BR 2.4.4 |
 | **Priority** | Critical |
@@ -1034,6 +1117,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request in SCHEDULED |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open detail panel<br>2. Inspect actions |
 | **Expected Result** | Resend Invite button visible |
 | **Priority** | High |
@@ -1046,6 +1130,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Resend Invite clicked |
+| **Type** | INT |
 | **Test Steps** | 1. Click Resend<br>2. Confirm action |
 | **Expected Result** | Kaleyra notification re-sent to buyer; toast confirms resend |
 | **Priority** | High |
@@ -1058,6 +1143,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request SCHEDULED; user opens reschedule |
+| **Type** | BIZ |
 | **Test Steps** | 1. Change date/time<br>2. Submit Reschedule |
 | **Expected Result** | Status → RESCHEDULED; original meeting details preserved in JSON history array per BR 6.7 |
 | **Priority** | High |
@@ -1072,6 +1158,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request in SCHEDULED |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open detail panel<br>2. Inspect actions |
 | **Expected Result** | Confirm Meeting button enabled per FS 3 |
 | **Priority** | High |
@@ -1084,6 +1171,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request SCHEDULED |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click Confirm Meeting<br>2. Acknowledge confirmation modal |
 | **Expected Result** | Status → CONFIRMED per BR 3.3.1 |
 | **Priority** | High |
@@ -1096,6 +1184,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request SCHEDULED |
+| **Type** | BIZ |
 | **Test Steps** | 1. Skip Confirm<br>2. Proceed directly to Record Outcome |
 | **Expected Result** | Record Outcome action allowed from SCHEDULED state per BR 3.3.2 |
 | **Priority** | Medium |
@@ -1108,6 +1197,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request SCHEDULED or CONFIRMED; meeting time elapsed |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open detail panel<br>2. Inspect Record Outcome button |
 | **Expected Result** | Record Outcome button enabled |
 | **Priority** | Critical |
@@ -1120,6 +1210,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | New request in REQUESTED |
+| **Type** | E2E |
 | **Test Steps** | 1. Schedule meeting → SCHEDULED<br>2. Confirm → CONFIRMED<br>3. Record outcome + buyer feedback → COMPLETED |
 | **Expected Result** | Each transition observed in Status badge per WF section 3 |
 | **Priority** | Critical |
@@ -1132,6 +1223,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request SCHEDULED |
+| **Type** | BIZ |
 | **Test Steps** | 1. Reschedule with new time → RESCHEDULED<br>2. Confirm new time |
 | **Expected Result** | Status flows RESCHEDULED → CONFIRMED per WF section 3 |
 | **Priority** | High |
@@ -1144,6 +1236,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request COMPLETED |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open detail panel<br>2. Inspect action buttons |
 | **Expected Result** | All edit/schedule/reschedule actions disabled per BR 1.7.3 |
 | **Priority** | Critical |
@@ -1156,6 +1249,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Action performed in detail panel |
+| **Type** | FUNC |
 | **Test Steps** | 1. Perform Schedule/Confirm/Reschedule<br>2. Watch Status column |
 | **Expected Result** | Badge updates live without manual refresh |
 | **Priority** | High |
@@ -1168,6 +1262,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request in REQUESTED status (no meeting yet) |
+| **Type** | NEG |
 | **Test Steps** | 1. Try Record Outcome |
 | **Expected Result** | Action blocked per FS 4.2 (meeting must have taken place) |
 | **Priority** | High |
@@ -1180,6 +1275,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM has submitted feedback only |
+| **Type** | BIZ |
 | **Test Steps** | 1. Check status after SM feedback submission only |
 | **Expected Result** | Status not yet COMPLETED; waits for buyer feedback per BR 4.4.5 |
 | **Priority** | Critical |
@@ -1194,6 +1290,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request ready for outcome recording |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Record Outcome |
 | **Expected Result** | FeedbackDrawer opens with outcome selector and feedback form |
 | **Priority** | Critical |
@@ -1206,6 +1303,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open vcOutcome dropdown |
 | **Expected Result** | All 10 codes listed: VC_DONE_PREFERENCE, VC_DONE_NO_PREFERENCE, FUTURE_SCHEDULED, FUTURE_RESCHEDULED, MISSED_SCHEDULED_NC, NOT_INTERESTED_LOST, NEVER_CONNECTED, TL_LOST, VC_2_DONE, CP_TO_DRIVE_PREFERENCE per FS 4.3 |
 | **Priority** | Critical |
@@ -1218,6 +1316,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | VAL |
 | **Test Steps** | 1. Leave vcOutcome unselected<br>2. Click Submit |
 | **Expected Result** | Validation error "Select outcome"; submission blocked per BR 4.4.1 |
 | **Priority** | Critical |
@@ -1230,6 +1329,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Type 200 chars in feedback text<br>2. Verify saved on submit |
 | **Expected Result** | Feedback text stored verbatim on request record |
 | **Priority** | High |
@@ -1242,6 +1342,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | VAL |
 | **Test Steps** | 1. Leave rating unselected<br>2. Submit |
 | **Expected Result** | Error displayed if rating mandatory for outcome |
 | **Priority** | High |
@@ -1254,6 +1355,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | VAL |
 | **Test Steps** | 1. Leave interest level unset<br>2. Submit |
 | **Expected Result** | Validation error; submission blocked |
 | **Priority** | High |
@@ -1266,6 +1368,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open tower preference dropdown<br>2. Select option |
 | **Expected Result** | Selection saved on submit |
 | **Priority** | Medium |
@@ -1278,6 +1381,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter budget range<br>2. Submit |
 | **Expected Result** | Budget stored on request record |
 | **Priority** | Medium |
@@ -1290,6 +1394,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open; outcome = VC_DONE_PREFERENCE |
+| **Type** | BIZ |
 | **Test Steps** | 1. Select VC_DONE_PREFERENCE<br>2. Submit |
 | **Expected Result** | VC_REQUEST offer code created automatically for buyer per WF section 4 and BR 6.5 |
 | **Priority** | Critical |
@@ -1302,6 +1407,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | BIZ |
 | **Test Steps** | 1. Select VC_2_DONE<br>2. Submit |
 | **Expected Result** | VC_REQUEST offer applied to buyer per WF section 4 |
 | **Priority** | High |
@@ -1314,6 +1420,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Outcome = NOT_INTERESTED_LOST or similar |
+| **Type** | BIZ |
 | **Test Steps** | 1. Submit with non-trigger outcome<br>2. Inspect offer records for buyer |
 | **Expected Result** | No VC_REQUEST offer created per BR 6.5 |
 | **Priority** | High |
@@ -1326,6 +1433,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer filled |
+| **Type** | DB |
 | **Test Steps** | 1. Click Submit<br>2. Inspect DB record |
 | **Expected Result** | isSmFeedbackSubmitted flag set true per FS 4.5.5 |
 | **Priority** | Critical |
@@ -1338,6 +1446,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM submits feedback |
+| **Type** | INT |
 | **Test Steps** | 1. Submit feedback<br>2. Check buyer SMS/WhatsApp |
 | **Expected Result** | Unique token URL delivered to buyer for feedback submission per BR 4.4.4 |
 | **Priority** | Critical |
@@ -1350,6 +1459,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM feedback submitted |
+| **Type** | INT |
 | **Test Steps** | 1. Submit feedback<br>2. Verify LSQ sync logs |
 | **Expected Result** | VC outcome recorded in LSQ activity per BR 4.4.3 |
 | **Priority** | High |
@@ -1362,6 +1472,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open with partial data |
+| **Type** | FUNC |
 | **Test Steps** | 1. Fill some fields<br>2. Click Cancel |
 | **Expected Result** | Drawer closes; no data saved |
 | **Priority** | Medium |
@@ -1374,6 +1485,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM feedback already submitted |
+| **Type** | BIZ |
 | **Test Steps** | 1. Re-open Feedback drawer |
 | **Expected Result** | Form read-only or Submit disabled; previously submitted values shown |
 | **Priority** | High |
@@ -1386,6 +1498,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | EDGE |
 | **Test Steps** | 1. Enter exactly the max chars allowed<br>2. Submit |
 | **Expected Result** | Submission succeeds; text saved fully |
 | **Priority** | Low |
@@ -1398,6 +1511,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Feedback drawer open |
+| **Type** | EDGE |
 | **Test Steps** | 1. Type emojis and special chars in feedback<br>2. Submit |
 | **Expected Result** | Stored without corruption; renders back the same in detail panel |
 | **Priority** | Low |
@@ -1412,6 +1526,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | At least one request in table |
+| **Type** | UI |
 | **Test Steps** | 1. Click a row |
 | **Expected Result** | Detail panel slides in from right with full request info |
 | **Priority** | Critical |
@@ -1424,6 +1539,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Detail panel open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect tabs |
 | **Expected Result** | Callback Request tab present and selected by default |
 | **Priority** | High |
@@ -1436,6 +1552,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Detail panel open |
+| **Type** | UI |
 | **Test Steps** | 1. Click Feedback tab |
 | **Expected Result** | Feedback tab loads with SM and buyer feedback content if submitted |
 | **Priority** | High |
@@ -1448,6 +1565,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Callback tab open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect tab content |
 | **Expected Result** | Customer name, phone, email, requested datetime, status, assigned SM displayed |
 | **Priority** | Critical |
@@ -1460,6 +1578,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Request SCHEDULED with Teams link |
+| **Type** | UI |
 | **Test Steps** | 1. Open Callback tab |
 | **Expected Result** | Teams link rendered clickable; opens MS Teams in new tab |
 | **Priority** | High |
@@ -1472,6 +1591,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM feedback submitted |
+| **Type** | UI |
 | **Test Steps** | 1. Open Feedback tab |
 | **Expected Result** | vcOutcome label, notes, rating, interest level displayed |
 | **Priority** | High |
@@ -1484,6 +1604,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Buyer has submitted feedback |
+| **Type** | UI |
 | **Test Steps** | 1. Open Feedback tab |
 | **Expected Result** | Buyer rating and comments rendered alongside SM feedback |
 | **Priority** | High |
@@ -1496,6 +1617,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM feedback only |
+| **Type** | UI |
 | **Test Steps** | 1. Open Feedback tab |
 | **Expected Result** | Section indicates "Awaiting buyer feedback" or similar |
 | **Priority** | Medium |
@@ -1508,6 +1630,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Detail panel open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click close (X) button |
 | **Expected Result** | Panel closes; table view restored |
 | **Priority** | Medium |
@@ -1520,6 +1643,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Detail panel open |
+| **Type** | UI |
 | **Test Steps** | 1. Press ESC |
 | **Expected Result** | Panel closes via keyboard |
 | **Priority** | Low |
@@ -1534,6 +1658,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Logged in as SM Admin (role 4) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Load callback requests page<br>2. Inspect Assigned SM column distinct values |
 | **Expected Result** | Requests from all SMs visible per BR 1.7.2 |
 | **Priority** | Critical |
@@ -1546,6 +1671,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Logged in as standard SM (role 5) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Load callback page<br>2. Inspect Assigned SM column |
 | **Expected Result** | Only own name appears in Assigned SM column per BR 1.7.1 |
 | **Priority** | Critical |
@@ -1558,6 +1684,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Two sessions: SM Admin and standard SM |
+| **Type** | BIZ |
 | **Test Steps** | 1. Compare action menus side-by-side |
 | **Expected Result** | Assign visible only for SM Admin; absent for SM |
 | **Priority** | Critical |
@@ -1570,6 +1697,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM Admin and SM sessions |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect filter bar for each role |
 | **Expected Result** | SM dropdown filter visible only for SM Admin |
 | **Priority** | High |
@@ -1582,6 +1710,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Standard SM logged in with assigned requests |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open detail panel<br>2. Inspect available actions |
 | **Expected Result** | Schedule / Confirm / Record Outcome actions all enabled per role permissions |
 | **Priority** | Critical |
@@ -1594,6 +1723,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM Admin logged in |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open detail panel on any request<br>2. Inspect actions |
 | **Expected Result** | All SM actions enabled plus Reassign per BR section 2 |
 | **Priority** | High |
@@ -1606,6 +1736,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM Admin logged in |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect KPI cards<br>2. Compare against system totals |
 | **Expected Result** | KPI counts reflect all SMs combined |
 | **Priority** | High |
@@ -1618,6 +1749,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Standard SM logged in |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect KPI cards |
 | **Expected Result** | Counts reflect only own request set |
 | **Priority** | High |
@@ -1630,6 +1762,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | Standard SM JWT obtained |
+| **Type** | API |
 | **Test Steps** | 1. Send reassignment API request using SM token<br>2. Inspect response |
 | **Expected Result** | 403 Forbidden returned; role enforcement at API layer |
 | **Priority** | Critical |
@@ -1642,6 +1775,7 @@
 |-------|-------|
 | **Module** | SM – Callback Requests |
 | **Pre-conditions** | SM Admin performs reassignment |
+| **Type** | DB |
 | **Test Steps** | 1. Inspect audit log entry |
 | **Expected Result** | Record includes admin user ID, timestamp, old SM, new SM per FS 1.8 |
 | **Priority** | Medium |
@@ -1657,6 +1791,7 @@
 | **Module** | SM – Callback Requests / Assignment |
 | **BRD/FRD Req** | FSD §3 / `service:338-349` (commented out) |
 | **Pre-conditions** | SM Admin logged in; multiple available SMs exist |
+| **Type** | BIZ |
 | **Test Steps** | 1. SM Admin uses `POST /callback-requests/create-and-schedule` to create a new callback<br>2. Inspect created row's `managerId` |
 | **Expected Result** | `managerId = SM Admin's own id`, NOT distributed via round-robin. Round-robin code is COMMENTED OUT — auto-distribution NEVER fires. To distribute, SM Admin must call `PUT /admin/callback-requests/assign` manually. Document as known limitation. |
 | **Priority** | Critical |
@@ -1670,6 +1805,7 @@
 | **Module** | SM – Callback Requests / State Machine |
 | **BRD/FRD Req** | FSD §3 / `service:78-92` |
 | **Pre-conditions** | A CONFIRMED callback request; SM submits feedback |
+| **Type** | EDGE |
 | **Test Steps** | 1. POST `/callback-requests/:id/feedback` with valid feedback body<br>2. Query DB for the request — inspect `status` |
 | **Expected Result** | `isSmFeedbackSubmitted=1`. Status remains `CONFIRMED` because MySQL throws `Data truncated for column 'status'` when attempting `COMPLETED`, which the code catches and silently falls back. **The buyer WhatsApp feedback link is NOT sent in the fallback path.** Document as critical workflow bug. |
 | **Priority** | Critical |

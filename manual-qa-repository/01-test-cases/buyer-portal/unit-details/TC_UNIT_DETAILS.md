@@ -12,6 +12,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Buyer logged in |
+| **Type** | BIZ |
 | **Test Steps** | 1. Try opening `/allotted-units` while not WINNER<br>2. Then assign WINNER and retry |
 | **Expected Result** | Non-WINNER: blocked / redirected to dashboard. WINNER: page loads. |
 | **Priority** | Critical |
@@ -24,6 +25,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | WINNER status |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect main nav |
 | **Expected Result** | My Unit / Allotted Unit menu item visible and clickable |
 | **Priority** | High |
@@ -36,6 +38,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | WINNER status |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click My Unit from nav |
 | **Expected Result** | URL = `/allotted-units`; page renders unit information |
 | **Priority** | Critical |
@@ -48,6 +51,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | WINNER buyer; network throttled to slow 3G |
+| **Type** | UI |
 | **Test Steps** | 1. Click My Unit<br>2. Observe page during fetch |
 | **Expected Result** | Skeleton/spinner placeholder rendered until `/allocation/unit-details` response arrives; no broken layout |
 | **Priority** | Medium |
@@ -60,6 +64,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | No active session |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `https://uat.xrportal.in/allotted-units` directly |
 | **Expected Result** | Redirected to login page; route guard enforced client-side |
 | **Priority** | High |
@@ -72,6 +77,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Unit Details page open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click breadcrumb Home / Back |
 | **Expected Result** | Navigates to `/home` dashboard; unit page unmounts |
 | **Priority** | Low |
@@ -84,6 +90,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Buyer has 2 registrations; one with WINNER unit, one Available |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Unit Details |
 | **Expected Result** | Only WINNER unit rendered; Available registration not displayed in this view |
 | **Priority** | High |
@@ -96,6 +103,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Unit Details page open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Press F5 / browser refresh |
 | **Expected Result** | Page reloads, unit details re-fetched; no redirect to dashboard or login (session valid) |
 | **Priority** | Medium |
@@ -110,6 +118,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Unit Details card |
 | **Expected Result** | Unit number visible (e.g., "3502") matching allocation |
 | **Priority** | Critical |
@@ -122,6 +131,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Floor and Tower fields |
 | **Expected Result** | Floor number (e.g., "35") and Tower name (e.g., "Crest") rendered |
 | **Priority** | High |
@@ -134,6 +144,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect BHK/typology field |
 | **Expected Result** | Configuration shown (e.g., "1 Bed Growth Home") |
 | **Priority** | High |
@@ -146,6 +157,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Carpet Area and Saleable Area fields |
 | **Expected Result** | Both areas shown in sq.ft. (e.g., "323 sq.ft.") |
 | **Priority** | High |
@@ -158,6 +170,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Facing field |
 | **Expected Result** | Facing direction shown (East/West/North/South) |
 | **Priority** | Medium |
@@ -170,6 +183,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect floor plan image element |
 | **Expected Result** | Image fetched and rendered without 404; alt text present |
 | **Priority** | High |
@@ -184,6 +198,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll to Cost Sheet |
 | **Expected Result** | Itemised cost sheet section renders |
 | **Priority** | Critical |
@@ -196,6 +211,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Cost Sheet visible |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Basic Price row |
 | **Expected Result** | Label "Basic Price" with numeric ₹ value > 0 |
 | **Priority** | Critical |
@@ -208,6 +224,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Cost Sheet visible |
+| **Type** | UI |
 | **Test Steps** | 1. Verify each line item is present |
 | **Expected Result** | All 6 charge lines render with their labels and amounts (or 0 if not applicable) |
 | **Priority** | High |
@@ -220,6 +237,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Cost Sheet visible |
+| **Type** | UI |
 | **Test Steps** | 1. Locate GST row |
 | **Expected Result** | GST amount displayed separately from principal |
 | **Priority** | High |
@@ -232,6 +250,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Buyer's unit has parking charge |
+| **Type** | UI |
 | **Test Steps** | 1. Locate Parking row |
 | **Expected Result** | Parking amount shown; if zero, row shows 0 or is hidden by config |
 | **Priority** | Medium |
@@ -244,6 +263,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Cost Sheet visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Sum all charge rows<br>2. Compare to Total Unit Value |
 | **Expected Result** | Total Unit Value equals computed sum within rounding tolerance |
 | **Priority** | Critical |
@@ -256,6 +276,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | HOME_LOAN or VC_REQUEST offer applied |
+| **Type** | BIZ |
 | **Test Steps** | 1. Locate Offer/Discount row |
 | **Expected Result** | Discount line with negative value (e.g., "− ₹X") with offer name |
 | **Priority** | High |
@@ -268,6 +289,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Buyer eligible for early bird |
+| **Type** | BIZ |
 | **Test Steps** | 1. Locate Early Bird row |
 | **Expected Result** | Early bird discount line displayed with amount |
 | **Priority** | Medium |
@@ -280,6 +302,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Cost Sheet visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Compute Total − offers − early bird<br>2. Compare to Net Payable |
 | **Expected Result** | Net Payable matches computed amount within rounding tolerance |
 | **Priority** | Critical |
@@ -292,6 +315,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Admin changes offer config after this buyer's booking |
+| **Type** | BIZ |
 | **Test Steps** | 1. Reload Unit Details |
 | **Expected Result** | Cost sheet unchanged; matches values at time of allocation |
 | **Priority** | Critical |
@@ -306,6 +330,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll to Tower View section |
 | **Expected Result** | Tower diagram renders; buyer's unit visually highlighted |
 | **Priority** | High |
@@ -318,6 +343,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll to FloorUnitPlans |
 | **Expected Result** | Floor plan and unit plan images load; can be zoomed/clicked |
 | **Priority** | High |
@@ -330,6 +356,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Plans visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click plan image |
 | **Expected Result** | Lightbox/modal opens with zoomable larger view |
 | **Priority** | Medium |
@@ -342,6 +369,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Tower View loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect buyer's unit colour vs other units |
 | **Expected Result** | Buyer's unit visually distinguishable (e.g., highlighted/coloured); tooltip on hover shows unit number |
 | **Priority** | Medium |
@@ -354,6 +382,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Tower View rendered |
+| **Type** | UI |
 | **Test Steps** | 1. Hover over buyer's unit on tower diagram |
 | **Expected Result** | Tooltip shows unit number, floor, status; consistent with allocated unit |
 | **Priority** | Low |
@@ -366,6 +395,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Lightbox open with floor plan |
+| **Type** | FUNC |
 | **Test Steps** | 1. Press ESC |
 | **Expected Result** | Lightbox closes; underlying Unit Details page restored |
 | **Priority** | Low |
@@ -378,6 +408,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Unit's `imageUrl = "url1||url2||url3"` (BYR_UNIT_032 known schema) |
+| **Type** | EDGE |
 | **Test Steps** | 1. Load Unit Details<br>2. Inspect floor plan section |
 | **Expected Result** | At least the first valid URL renders; trailing empty segments do not produce broken image |
 | **Priority** | Medium |
@@ -390,6 +421,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Tower image asset unavailable (404) |
+| **Type** | NEG |
 | **Test Steps** | 1. Open Unit Details with broken tower URL |
 | **Expected Result** | Placeholder/fallback shown instead of broken image; rest of page renders normally |
 | **Priority** | Low |
@@ -404,6 +436,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll to bottom |
 | **Expected Result** | Embedded Payment Schedule renders milestone-by-milestone breakdown |
 | **Priority** | High |
@@ -416,6 +449,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Payment Schedule section visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Compare embedded schedule against `/paymentschedule` |
 | **Expected Result** | Identical milestone list, amounts and statuses |
 | **Priority** | Medium |
@@ -428,6 +462,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Payment Schedule loaded with at least 3 milestones |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect each row |
 | **Expected Result** | Every row renders: milestone name, ₹ amount, due date, status (Paid / Due / Upcoming) |
 | **Priority** | High |
@@ -440,6 +475,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | At least one milestone with `hcfTransactionStatus=PAID` |
+| **Type** | UI |
 | **Test Steps** | 1. Locate paid milestone row<br>2. Inspect status badge |
 | **Expected Result** | Badge "Paid" / green tick; paid date populated |
 | **Priority** | High |
@@ -452,6 +488,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Schedule shows future milestone |
+| **Type** | BIZ |
 | **Test Steps** | 1. Try clicking Pay button on future milestone |
 | **Expected Result** | Pay button absent or disabled with tooltip "Due on <date>"; cannot pay early |
 | **Priority** | High |
@@ -464,6 +501,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Milestone with `hcfTransactionStatus=VERIFICATION` |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect that row |
 | **Expected Result** | Status shown as "Verification" / "Processing"; Pay button hidden to prevent duplicate order |
 | **Priority** | High |
@@ -476,6 +514,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Schedule visible with all milestones |
+| **Type** | FUNC |
 | **Test Steps** | 1. Sum all milestone amounts<br>2. Compare to Net Payable from cost sheet |
 | **Expected Result** | Sum equals Net Payable within rounding tolerance |
 | **Priority** | Critical |
@@ -488,6 +527,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Test unit with empty milestone list |
+| **Type** | EDGE |
 | **Test Steps** | 1. Inspect Payment Schedule section |
 | **Expected Result** | Empty-state message "No payment milestones available yet"; no broken table |
 | **Priority** | Low |
@@ -502,6 +542,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Floor plan asset unavailable |
+| **Type** | NEG |
 | **Test Steps** | 1. Load page with broken plan URL |
 | **Expected Result** | Placeholder/fallback shown; no broken image icon; rest of page renders |
 | **Priority** | Low |
@@ -514,6 +555,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Buyer not WINNER |
+| **Type** | NEG |
 | **Test Steps** | 1. Call `GET /api/users/allocation/unit-details?registrationNumber=X&unitId=Y` with this buyer's token (status != WINNER) |
 | **Expected Result** | 400 "Could not fetch unit data" (controllers/allocation.controller.js:271-275). Non-WINNER units can still use parking preview `?carParking=N` but won't get cost sheet. |
 | **Priority** | High |
