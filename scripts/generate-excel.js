@@ -160,6 +160,26 @@ function normType(raw) {
   return '';
 }
 
+// Infer a TC's true feature area when it sits under an FSD-corrections section.
+// Matches scenario + steps against known feature-area names from the same module.
+function inferFeatureArea(scenario, steps, knownAreas) {
+  const text = ((scenario || '') + ' ' + (steps || '')).toLowerCase();
+  let best = null;
+  let bestScore = 0;
+  for (const area of knownAreas) {
+    if (/fsd|correction/i.test(area)) continue;
+    // Token match — split area name into words, count hits in text
+    const tokens = area.toLowerCase().split(/[\s\-&]+/).filter(t => t.length > 2 && !['and', 'the', 'for', 'with'].includes(t));
+    if (!tokens.length) continue;
+    let score = 0;
+    for (const tok of tokens) {
+      if (text.includes(tok)) score += tok.length;  // weight by token length
+    }
+    if (score > bestScore) { bestScore = score; best = area; }
+  }
+  return best;  // null if no match
+}
+
 // Heuristic: infer type from feature-area name when markdown lacks Type field
 function inferType(featureArea, scenario) {
   const s = (featureArea + ' ' + (scenario || '')).toLowerCase();
@@ -185,6 +205,7 @@ function parseMd(mdPath) {
   const lines = text.split('\n');
 
   const tcs = [];
+  const knownAreas = [];  // real feature-area names seen in this file (excludes FSD wrappers)
   let currentArea = null;
   let currentTc   = null;
 
@@ -209,11 +230,12 @@ function parseMd(mdPath) {
       const areaName = areaMatch[1].trim();
       flushTc();
       if (/fsd.?correction|corrections applied/i.test(areaName)) {
-        currentArea = 'FSD Source-Verified TCs';
+        currentArea = '__FSD__';  // marker — will be resolved per-TC after parse
       } else if (/changelog|change.?log/i.test(areaName)) {
         currentArea = null;  // genuine changelog text — drop
       } else {
         currentArea = areaName;
+        if (!knownAreas.includes(areaName)) knownAreas.push(areaName);
       }
       continue;
     }
@@ -270,6 +292,15 @@ function parseMd(mdPath) {
     }
   }
   flushTc();
+
+  // Post-pass: resolve __FSD__ marker → infer real feature area per TC
+  for (const tc of tcs) {
+    if (tc.featureArea === '__FSD__') {
+      const inferred = inferFeatureArea(tc.scenario, tc.steps, knownAreas);
+      tc.featureArea = inferred || 'FSD Source-Verified TCs';
+    }
+  }
+
   return tcs;
 }
 

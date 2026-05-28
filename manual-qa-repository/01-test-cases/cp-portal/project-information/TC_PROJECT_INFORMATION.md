@@ -12,6 +12,7 @@
 |-------|-------|
 | **Module** | CP – Project Info |
 | **Pre-conditions** | CP logged in |
+| **Type** | UI |
 | **Test Steps** | 1. Click **Project** in the navigation menu |
 | **Expected Result** | URL updates to `/project`; project overview page renders with section tabs |
 | **Priority** | High |
@@ -24,6 +25,7 @@
 |-------|-------|
 | **Module** | CP – Project Info |
 | **Pre-conditions** | Project overview open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect tab bar |
 | **Expected Result** | Tabs displayed: About, Gallery, Amenities, Documents, Key Points, Videos |
 | **Priority** | High |
@@ -36,6 +38,7 @@
 |-------|-------|
 | **Module** | CP – Project Info |
 | **Pre-conditions** | CP session active |
+| **Type** | UI |
 | **Test Steps** | 1. Navigate to `https://uat.xrportal.in/project1/about` |
 | **Expected Result** | About page loads with project background, location, developer info |
 | **Priority** | Critical |
@@ -48,6 +51,7 @@
 |-------|-------|
 | **Module** | CP – Project Info |
 | **Pre-conditions** | CP session active |
+| **Type** | UI |
 | **Test Steps** | 1. Navigate to `/project1/gallery` |
 | **Expected Result** | Gallery page loads with project photos |
 | **Priority** | High |
@@ -60,6 +64,7 @@
 |-------|-------|
 | **Module** | CP – Project Info |
 | **Pre-conditions** | CP session active |
+| **Type** | UI |
 | **Test Steps** | 1. Navigate to `/project1/amenities` |
 | **Expected Result** | Amenities list renders with feature names and possible icons |
 | **Priority** | High |
@@ -72,6 +77,7 @@
 |-------|-------|
 | **Module** | CP – Project Info |
 | **Pre-conditions** | CP session active |
+| **Type** | UI |
 | **Test Steps** | 1. Navigate to `/project1/documents` |
 | **Expected Result** | Documents page shows RERA, approvals, brochures with download links |
 | **Priority** | Critical |
@@ -84,6 +90,7 @@
 |-------|-------|
 | **Module** | CP – Project Info |
 | **Pre-conditions** | CP session active |
+| **Type** | UI |
 | **Test Steps** | 1. Navigate to `/project1/keyPoints` |
 | **Expected Result** | Key selling points list renders |
 | **Priority** | Medium |

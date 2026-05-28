@@ -12,6 +12,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP logged in; an OPEN JBP cycle exists |
+| **Type** | UI |
 | **Test Steps** | 1. Click **JBP** in navigation menu |
 | **Expected Result** | URL updates to `/jbp`; JBP submission form loads |
 | **Priority** | Critical |
@@ -24,6 +25,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | All JBP cycles are CLOSED |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `/jbp` |
 | **Expected Result** | Form is hidden; message displayed: "No open JBP cycle at this time" |
 | **Priority** | Critical |
@@ -36,6 +38,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | No session |
+| **Type** | BIZ |
 | **Test Steps** | 1. Navigate directly to `/jbp` |
 | **Expected Result** | Redirects to `/login` |
 | **Priority** | High |
@@ -48,6 +51,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP has submitted JBP in the current cycle |
+| **Type** | BIZ |
 | **Test Steps** | 1. Re-open `/jbp` |
 | **Expected Result** | "Add New JBP Entry" button is hidden; existing submission is shown in read-only |
 | **Priority** | Critical |
@@ -62,6 +66,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
+| **Type** | UI |
 | **Test Steps** | 1. Click Brokerage to be Earned dropdown |
 | **Expected Result** | Predefined brokerage range options are listed |
 | **Priority** | High |
@@ -74,6 +79,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
+| **Type** | UI |
 | **Test Steps** | 1. Click Net Booking Commitment dropdown |
 | **Expected Result** | Unit-count options are listed (e.g., 1–5, 6–10, 11–20) |
 | **Priority** | High |
@@ -86,6 +92,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
+| **Type** | UI |
 | **Test Steps** | 1. Drag the slider to value 5<br>2. Verify number input updates<br>3. Type 8 into number input<br>4. Verify slider moves |
 | **Expected Result** | Slider and number field stay in sync; both reflect the same numeric value |
 | **Priority** | Medium |
@@ -98,6 +105,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter `-3` in Manpower field |
 | **Expected Result** | Negative value is rejected; field clamps to 0 or shows validation error |
 | **Priority** | Medium |
@@ -110,6 +118,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll to List of Activities section<br>2. Count checkboxes |
 | **Expected Result** | 15 activity checkboxes (`activityOptions` in cp.validations.js:87-103): Tele-calling, WhatsApp Blast, Email Blast, SMS Blast, Personal Connect Calling, Digital, Portal Listing, Expo, Society Activity, Corporate Activity, Newspaper Insert, Club Activities, Mall Activity, Association Activity, Others. Validation requires min 1, all from this whitelist. |
 | **Priority** | High |
@@ -122,6 +131,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
+| **Type** | UI |
 | **Test Steps** | 1. Tick 3 different activity checkboxes<br>2. Scroll away and back |
 | **Expected Result** | All 3 remain checked; selection state preserved on scroll |
 | **Priority** | Medium |
@@ -134,6 +144,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll to Go Live on Digital section |
 | **Expected Result** | Channels listed include at least Google and Meta as checkboxes |
 | **Priority** | High |
@@ -146,6 +157,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
+| **Type** | UI |
 | **Test Steps** | 1. Locate Total Investment radio group |
 | **Expected Result** | Exactly 5 mutually-exclusive radio options displayed |
 | **Priority** | High |
@@ -158,6 +170,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Form open |
+| **Type** | UI |
 | **Test Steps** | 1. Select first range<br>2. Then click another range |
 | **Expected Result** | Only one option remains selected at any time |
 | **Priority** | Medium |
@@ -170,6 +183,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | JBP form open |
+| **Type** | UI |
 | **Test Steps** | 1. Verify each Yes/No field: Inserts, Standees, Kiosk, Tele Callers, SMS Blast, WhatsApp Blast, Growth Hub |
 | **Expected Result** | Each field offers Yes and No options; defaults are unselected |
 | **Priority** | High |
@@ -182,6 +196,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Try entering letters<br>2. Enter `25` |
 | **Expected Result** | Letters rejected; numeric value accepted |
 | **Priority** | Medium |
@@ -196,6 +211,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | All fields empty |
+| **Type** | VAL |
 | **Test Steps** | 1. Click Submit |
 | **Expected Result** | All required fields flagged with errors; submission rejected |
 | **Priority** | Critical |
@@ -208,6 +224,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | All fields filled except Brokerage to be Earned |
+| **Type** | VAL |
 | **Test Steps** | 1. Click Submit |
 | **Expected Result** | Inline error on Brokerage field; submission rejected |
 | **Priority** | High |
@@ -220,6 +237,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | All 14 fields completed validly; cycle OPEN; CP has no prior submission this cycle |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Submit<br>2. Wait for response |
 | **Expected Result** | JbpSubmission created with status=ACTIVE, version=1; CP redirected to `/jbp/thank-you` |
 | **Priority** | Critical |
@@ -232,6 +250,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Submission successful |
+| **Type** | UI |
 | **Test Steps** | 1. Observe page after submit |
 | **Expected Result** | URL is `/jbp/thank-you`; Thank You message displayed; back link/CTA visible |
 | **Priority** | High |
@@ -244,6 +263,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP already submitted JBP this cycle |
+| **Type** | NEG |
 | **Test Steps** | 1. Re-open `/jbp`<br>2. Try to submit again |
 | **Expected Result** | Existing submission shown read-only; no new form is offered; submit path blocked |
 | **Priority** | Critical |
@@ -258,6 +278,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP has an active submission |
+| **Type** | UI |
 | **Test Steps** | 1. Navigate to `/jbp` |
 | **Expected Result** | All 14 fields displayed in read-only mode with previously-submitted values |
 | **Priority** | Critical |
@@ -270,6 +291,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Active submission exists |
+| **Type** | UI |
 | **Test Steps** | 1. Open `/jbp`<br>2. Read the version indicator |
 | **Expected Result** | Version number is visible (e.g., "Version 1"); status shown as ACTIVE |
 | **Priority** | Medium |
@@ -282,6 +304,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | An admin-approved edit request exists for the CP |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open `/jbp`<br>2. Read version field |
 | **Expected Result** | Version shows 2; the older v1 is marked EXPIRED in backend, hidden or labelled in UI |
 | **Priority** | High |
@@ -294,6 +317,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP submitted with 3 selected activities (e.g., Tele-calling, Digital, Mall Activity) |
+| **Type** | UI |
 | **Test Steps** | 1. Navigate to `/jbp`<br>2. Inspect Activities section |
 | **Expected Result** | Only the 3 selected activities show as ticked / highlighted; remaining 12 of the 15 `activityOptions` (cp.validations.js:87-103) shown as un-ticked indicators or omitted; no input controls active. |
 | **Priority** | High |
@@ -306,6 +330,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP submitted with `digitalPlatforms=['google','meta']` and `platformBudgets={google:50000, meta:30000}` |
+| **Type** | UI |
 | **Test Steps** | 1. Open `/jbp`<br>2. Locate Go Live on Digital section |
 | **Expected Result** | Google and Meta shown ticked with their respective budgets (`₹50,000`, `₹30,000`) rendered as read-only labels. Non-selected platforms from whitelist `['google','meta','webpage','portal','others']` either hidden or shown un-ticked with no budget. |
 | **Priority** | High |
@@ -318,6 +343,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Submission has Inserts=5, Standees=0, growthHub=true |
+| **Type** | UI |
 | **Test Steps** | 1. Open `/jbp` read-only view<br>2. Inspect Inserts / Standees / Growth Hub fields |
 | **Expected Result** | Inserts renders as "Yes" (stored count >0), Standees renders as "No" (count=0), Growth Hub renders as "Yes" (boolean true). Display reflects FSD-correction: integer-count → Yes/No mapping for non-growthHub fields. |
 | **Priority** | High |
@@ -330,6 +356,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP has v1=EXPIRED and v2=ACTIVE in `jbp_submissions` |
+| **Type** | UI |
 | **Test Steps** | 1. Open `/jbp`<br>2. Read displayed version + values |
 | **Expected Result** | Only v2 values are rendered; EXPIRED v1 NOT displayed in main view (history may be accessible via `GET /api/v1/cp/jbp-history` separately). Version indicator shows `Version 2 — ACTIVE`. |
 | **Priority** | High |
@@ -342,6 +369,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP has v1=EXPIRED and v2=ACTIVE for current cycle |
+| **Type** | API |
 | **Test Steps** | 1. `GET /api/v1/cp/jbp-history?projectSlug=<slug>` with CP JWT |
 | **Expected Result** | Response returns both submissions ordered by version desc: `[{version:2, status:'ACTIVE', ...}, {version:1, status:'EXPIRED', ...}]`. Confirms historical record preserved (NOT deleted) even with FSD-noted BUG-CP-006 count drift. |
 | **Priority** | Medium |
@@ -356,6 +384,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP has an active submission; cycle still OPEN |
+| **Type** | UI |
 | **Test Steps** | 1. Open `/jbp`<br>2. Look for Request Edit action |
 | **Expected Result** | Request Edit button/link is visible |
 | **Priority** | High |
@@ -368,6 +397,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Edit request form open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Fill in "Changes requested" textarea<br>2. Provide revised values<br>3. Submit |
 | **Expected Result** | Edit request created; awaiting admin review; CP notified of pending status |
 | **Priority** | High |
@@ -380,6 +410,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Cycle has been CLOSED after CP submission |
+| **Type** | NEG |
 | **Test Steps** | 1. Attempt to open Request Edit |
 | **Expected Result** | Action is disabled or rejected; user informed that the cycle is closed |
 | **Priority** | High |
@@ -392,6 +423,7 @@
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Admin has rejected the CP's edit request with `adminComment` |
+| **Type** | INT |
 | **Test Steps** | 1. CP polls `/jbp-cycles` or `/jbp-edit-requests`<br>2. Open `/jbp` |
 | **Expected Result** | Original v1 submission remains ACTIVE. JbpEditRequest.status = REJECTED, adminComment visible. **NO push notification sent on approve/reject** (JBP-CP-005, admin.controller.js:3262-3365). CP must poll to discover state changes. |
 | **Priority** | Medium |
@@ -425,6 +457,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP with `users.prospect_id IS NULL` |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /api/v1/cp/jbp` valid body |
 | **Expected Result** | 400 "Something went wrong. Please try again." (cp.controller.js:541-543). Generic message — CP has no LSQ linkage. |
 | **Priority** | High |
@@ -437,6 +470,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Valid prospectId; invalid jbpCycleId |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /api/v1/cp/jbp` body with bogus jbpCycleId |
 | **Expected Result** | KNOWN BUG (JBP-CP-001): NPE on `jbpCycle.endDate` BEFORE null check — outer catch returns generic 500 "Failed to submit JBP. Please try again." (cp.controller.js:545-555). Should be specific 400. |
 | **Priority** | High |
@@ -449,6 +483,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | jbpCycleId with `status='CLOSED'` OR `endDate < today` |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /jbp` |
 | **Expected Result** | 400 "JBP cycle is not open to accept submission" (cp.controller.js:553-555). |
 | **Priority** | High |
@@ -461,6 +496,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Approved edit request with `editableUntil < now` |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /jbp` again |
 | **Expected Result** | 403 "Your edit window has expired. Please request a new edit approval" (cp.controller.js:575-580). |
 | **Priority** | High |
@@ -473,6 +509,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | ACTIVE submission exists, no APPROVED edit request |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /jbp` |
 | **Expected Result** | KNOWN BUG (JBP-CP-002): may NPE on `approvedEditRequest.editableUntil` BEFORE the null check that returns "Edit not allowed without approval" (cp.controller.js:568-584). Document. |
 | **Priority** | High |
@@ -485,6 +522,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Mock LSQ createActivity to return non-Success or missing RelatedId |
+| **Type** | INT |
 | **Test Steps** | 1. `POST /jbp` |
 | **Expected Result** | 500 "Failed to create Activity in LeadSquared"; NO `jbp_submissions` row created (cp.controller.js:623-637). |
 | **Priority** | High |
@@ -497,6 +535,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | createActivity returns success; captureLead fails |
+| **Type** | INT |
 | **Test Steps** | 1. `POST /jbp`<br>2. Retry on failure |
 | **Expected Result** | 500 returned; DB row NOT created. LSQ activity already created — retry will duplicate (JBP-CP-009, idempotency gap). |
 | **Priority** | Medium |
@@ -509,6 +548,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Successful submit |
+| **Type** | INT |
 | **Test Steps** | 1. `POST /jbp` valid<br>2. Inspect Botspice outbound |
 | **Expected Result** | Template `jbplaunchtwo_new` with 15 positional variables (firstName, brokerage, netBooking, manpower, activities, platforms, investment, inserts, standees, kiosk, telecallers, smsBlast, whatsappBlast, growthHub, regCommitment). Phone formatted as `"91<phone>"` (no `+`, JBP-CP-003 BUG). Fire-and-forget — failures swallowed (JBP-CP-004). |
 | **Priority** | High |
@@ -521,6 +561,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP not assigned to project P |
+| **Type** | BIZ |
 | **Test Steps** | 1. `POST /jbp` with `projectSlug` of P |
 | **Expected Result** | Succeeds — no membership/assignment check between user and project (JBP-CP-010, cp.controller.js:529-535). Document. |
 | **Priority** | Medium (Security) |
@@ -533,6 +574,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Submission S with PENDING edit request |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /api/v1/cp/jbp-edit-requests` for S again |
 | **Expected Result** | 409 "An edit request is already pending for this submission" (cp.controller.js:2046-2050). |
 | **Priority** | High |
@@ -545,6 +587,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Submission S has APPROVED edit request, still editable |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /jbp-edit-requests` for S |
 | **Expected Result** | 409 "You already have an approved edit request. Use it to edit your submission." (cp.controller.js:2052-2059). |
 | **Priority** | Medium |
@@ -557,6 +600,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | Cycle CLOSED |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /jbp-edit-requests` |
 | **Expected Result** | 400 "Edit requests are not allowed for CLOSED cycles" (cp.controller.js:2042-2044). |
 | **Priority** | High |
@@ -569,6 +613,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-jbp-submission.md
 |-------|-------|
 | **Module** | CP – JBP |
 | **Pre-conditions** | CP submitted in cycle N-1 (EXPIRED), not submitted in cycle N |
+| **Type** | NEG |
 | **Test Steps** | 1. Login → inspect `isJbpSubmitted` |
 | **Expected Result** | KNOWN BUG: returns `true` even though current cycle has no submission. Count query has no cycle/status filter (JBP-CP-006, cp.controller.js:452). |
 | **Priority** | Medium |

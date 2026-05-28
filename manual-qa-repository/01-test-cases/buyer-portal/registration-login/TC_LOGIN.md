@@ -12,6 +12,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer logged out, no active session cookie |
+| **Type** | UI |
 | **Test Steps** | 1. Open browser<br>2. Navigate to `https://uat.xrportal.in/`<br>3. Wait for page to render |
 | **Expected Result** | Login page loads with HoABL branding, nationality tabs, mobile input and Send OTP button visible |
 | **Priority** | Critical |
@@ -24,6 +25,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Login page open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect nationality tab strip on page load |
 | **Expected Result** | "Indian National" tab is highlighted/active by default; "NRI" tab is inactive |
 | **Priority** | High |
@@ -36,6 +38,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Login page open, Indian National tab active |
+| **Type** | UI |
 | **Test Steps** | 1. Click "NRI" tab<br>2. Observe mobile input area |
 | **Expected Result** | NRI tab becomes active; country-code dropdown/selector appears alongside mobile field |
 | **Priority** | High |
@@ -48,6 +51,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | NRI tab active |
+| **Type** | UI |
 | **Test Steps** | 1. Click "Indian National" tab |
 | **Expected Result** | Country code selector hidden; mobile field reverts to 10-digit Indian format |
 | **Priority** | Medium |
@@ -60,6 +64,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer logged out; valid CP hvCode available |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open `https://uat.xrportal.in/ref/<hvCode>`<br>2. Inspect URL/local storage<br>3. Proceed to login |
 | **Expected Result** | Referral hvCode stored in session/local storage; attributed to CP on registration completion |
 | **Priority** | High |
@@ -74,6 +79,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Indian National tab active |
+| **Type** | VAL |
 | **Test Steps** | 1. Click mobile input<br>2. Type "abc!@#"<br>3. Observe field |
 | **Expected Result** | Non-numeric characters rejected; field remains empty or strips invalid characters |
 | **Priority** | High |
@@ -86,6 +92,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Indian National tab active |
+| **Type** | VAL |
 | **Test Steps** | 1. Type 11 digits into mobile field<br>2. Observe |
 | **Expected Result** | Input capped at 10 digits; 11th digit not accepted |
 | **Priority** | High |
@@ -98,6 +105,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Login page open, mobile field empty |
+| **Type** | VAL |
 | **Test Steps** | 1. Type 9 digits<br>2. Check Send OTP state<br>3. Type 10th digit<br>4. Re-check |
 | **Expected Result** | Send OTP disabled at 9 digits; enabled at exactly 10 digits |
 | **Priority** | High |
@@ -110,6 +118,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Registered buyer mobile exists (e.g., 8888888888) |
+| **Type** | INT |
 | **Test Steps** | 1. Enter registered mobile<br>2. Click Send OTP<br>3. Wait for response |
 | **Expected Result** | OTP input appears; "OTP sent" toast displayed; Epinet SMS (epinetinfo.in/api/pushsms) + Botspice WhatsApp dispatched (NOT Kaleyra) |
 | **Priority** | Critical |
@@ -122,6 +131,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Unregistered mobile number known |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter unregistered 10-digit mobile<br>2. Click Send OTP |
 | **Expected Result** | Error message: buyer not registered; instructs to contact CP/sales |
 | **Priority** | High |
@@ -134,6 +144,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | OTP just sent |
+| **Type** | FUNC |
 | **Test Steps** | 1. Observe Resend button state immediately after Send OTP<br>2. Wait 60 seconds<br>3. Re-check Resend button |
 | **Expected Result** | Resend disabled with countdown for 60 seconds (frontend-only timer in `LoginForm.js:169`). Backend cooldown logic is commented out — direct API calls to `/auth/user/send-otp` bypass throttle. NOTE: backend does NOT enforce `lastOtpSentAt` cooldown. |
 | **Priority** | Medium |
@@ -146,6 +157,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | NRI tab active; valid registered NRI mobile (e.g., +971-XXXXXXXXX) |
+| **Type** | FUNC |
 | **Test Steps** | 1. Select country code<br>2. Enter NRI mobile<br>3. Click Send OTP |
 | **Expected Result** | OTP sent via configured NRI channel; OTP entry appears |
 | **Priority** | High |
@@ -160,6 +172,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | OTP sent, OTP input visible |
+| **Type** | VAL |
 | **Test Steps** | 1. Inspect OTP input boxes/length |
 | **Expected Result** | OTP field accepts exactly 6 numeric digits |
 | **Priority** | High |
@@ -172,6 +185,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | OTP entry visible |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter 5 digits<br>2. Check Verify button<br>3. Enter 6th digit<br>4. Re-check |
 | **Expected Result** | Verify OTP disabled at 5 digits, enabled at 6 |
 | **Priority** | High |
@@ -184,6 +198,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Valid OTP received (UAT static: 147258 / 258369) |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter correct OTP<br>2. Click Verify OTP |
 | **Expected Result** | JWT issued, session established, buyer redirected to `/home` |
 | **Priority** | Critical |
@@ -196,6 +211,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | OTP entry visible |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter wrong 6-digit OTP<br>2. Click Verify OTP |
 | **Expected Result** | "Invalid OTP" error; user stays on OTP screen |
 | **Priority** | Critical |
@@ -208,6 +224,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | OTP sent and validity window elapsed |
+| **Type** | NEG |
 | **Test Steps** | 1. Wait beyond OTP validity<br>2. Enter the OTP<br>3. Click Verify |
 | **Expected Result** | "OTP expired" error; prompt to request new OTP |
 | **Priority** | High |
@@ -220,6 +237,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | OTP screen visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "Edit number" or back<br>2. Modify mobile<br>3. Click Send OTP again |
 | **Expected Result** | Returns to mobile entry; new OTP issued for new number |
 | **Priority** | Medium |
@@ -234,6 +252,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | New buyer, `isConsented = null` |
+| **Type** | UI |
 | **Test Steps** | 1. Complete OTP verification |
 | **Expected Result** | T&C modal/screen appears before reaching dashboard |
 | **Priority** | Critical |
@@ -246,6 +265,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | T&C modal visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Scroll through T&C text<br>2. Tick "I agree" checkbox<br>3. Observe Proceed button |
 | **Expected Result** | Proceed button enabled only after checkbox is ticked |
 | **Priority** | High |
@@ -258,6 +278,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | T&C modal visible, checkbox ticked |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Proceed<br>2. Verify backend `isConsented` flag<br>3. Verify URL |
 | **Expected Result** | `isConsented = 1` persisted; buyer redirected to `/home` |
 | **Priority** | Critical |
@@ -270,6 +291,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | T&C modal visible |
+| **Type** | NEG |
 | **Test Steps** | 1. Click "Disagree" / close modal |
 | **Expected Result** | `isConsented = 0` recorded; full access not granted; restricted view or logged out |
 | **Priority** | High |
@@ -282,6 +304,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer with `isConsented = 1` |
+| **Type** | BIZ |
 | **Test Steps** | 1. Log in via OTP |
 | **Expected Result** | T&C modal not shown; lands on `/home` directly |
 | **Priority** | High |
@@ -296,6 +319,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | No active session |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `https://uat.xrportal.in/home` directly |
 | **Expected Result** | User redirected to login page |
 | **Priority** | High |
@@ -308,6 +332,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer logged in |
+| **Type** | FUNC |
 | **Test Steps** | 1. Refresh `/home` |
 | **Expected Result** | Dashboard reloads; no re-login required |
 | **Priority** | High |
@@ -320,6 +345,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer logged in |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Logout from menu<br>2. Try to open `/home` directly without token |
 | **Expected Result** | Local storage / cookies cleared client-side; `/home` access redirects to login. NOTE: JWT is NOT invalidated server-side — `auth.controller.js:36-46` returns 200 but does not blacklist token. Do NOT assert post-logout 401 from API — captured JWT remains valid until natural 24h expiry. |
 | **Priority** | High |
@@ -332,6 +358,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | OTP screen visible |
+| **Type** | NEG |
 | **Test Steps** | 1. Submit 100 wrong OTPs in rapid succession via API |
 | **Expected Result** | All 100 return `401 "Invalid OTP"` — backend has NO failed-attempt counter (no `otpAttempts` column on users model); `authLimiter` middleware is commented out in `app.js:40`. Document as KNOWN BUG (auth.controller.js:734-737). Frontend MAY show lockout but backend will keep accepting requests. |
 | **Priority** | High (Security) |
@@ -344,6 +371,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer logged in on Tab 1 |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open new tab (Tab 2)<br>2. Navigate to `https://uat.xrportal.in/home`<br>3. Observe |
 | **Expected Result** | Tab 2 loads dashboard without re-authentication; same JWT used from local storage |
 | **Priority** | Medium |
@@ -356,6 +384,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer logged in on Tab 1 and Tab 2 |
+| **Type** | EDGE |
 | **Test Steps** | 1. Click Logout in Tab 1<br>2. Switch to Tab 2 and click any nav link |
 | **Expected Result** | Tab 2 still uses cached JWT until next protected fetch; only redirects to login on page refresh or unauthorized API response. Document multi-tab inconsistency. |
 | **Priority** | Medium |
@@ -368,6 +397,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Valid JWT captured |
+| **Type** | NEG |
 | **Test Steps** | 1. Modify any character of JWT payload<br>2. `GET /api/v1/user/profile` with tampered token |
 | **Expected Result** | 401 Unauthorized; signature verification fails server-side |
 | **Priority** | Critical (Security) |
@@ -380,6 +410,7 @@
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Login page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect DOM for `input[type=password]` |
 | **Expected Result** | No password field exists; only mobile + OTP flow rendered (mobile-OTP-only per FRD) |
 | **Priority** | Medium |
@@ -404,6 +435,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | UAT environment, `MASTER_OTP=147258` set in backend env |
+| **Type** | BIZ |
 | **Test Steps** | 1. Send OTP to any buyer phone<br>2. Ignore actual OTP<br>3. Enter `147258`<br>4. Click Verify |
 | **Expected Result** | Login succeeds; backend logs `info: "Master OTP used for user: <id>"` (auth.controller.js:725-731). Must FAIL in production where MASTER_OTP env is unset. |
 | **Priority** | Critical |
@@ -416,6 +448,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | API access |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /api/v1/auth/user/send-otp` with empty body<br>2. Observe |
 | **Expected Result** | 400 "Phone number is required" (auth.controller.js:338) |
 | **Priority** | High |
@@ -428,6 +461,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | API access |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /api/v1/auth/user/send-otp` body `{ phone, nri:true, countryCode:'+971' }` (no email) |
 | **Expected Result** | 400 "Both email and phone are required for NRI users" (auth.controller.js:159-161) |
 | **Priority** | High |
@@ -440,6 +474,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Phone X registered as `isNri=false` |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST send-otp` body `{ phone:X, email:'a@b.com', nri:true, countryCode:'+971' }` |
 | **Expected Result** | 409 "Number already registered as Indian national." (auth.controller.js:181-183) |
 | **Priority** | High |
@@ -452,6 +487,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Phone Y registered as `isNri=true` |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST send-otp` body `{ phone:Y, nri:false }` |
 | **Expected Result** | 409 "Number already registered as NRI." (auth.controller.js:353-355) |
 | **Priority** | High |
@@ -464,6 +500,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | NRI user exists with phone Y, email `a@b.com` |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST send-otp` body `{ phone:Y, email:'wrong@b.com', nri:true, countryCode:'+971' }` |
 | **Expected Result** | 409 "Email address does not match with the phone number" (auth.controller.js:166-168) |
 | **Priority** | High |
@@ -476,6 +513,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | NRI user exists with phone Y, email `a@b.com`; OTP just sent |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST verify-otp` body `{ phone:Y, email:'differentemail@b.com', nri:true, otp:<valid> }` |
 | **Expected Result** | KNOWN BUG: returns 200 successful login via phone-only fallback in `auth.controller.js:708-715`. Document risk — auth bypass possible if email mismatch slipped through send-otp. |
 | **Priority** | High (Security) |
@@ -488,6 +526,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | JWT issued at time T |
+| **Type** | BIZ |
 | **Test Steps** | 1. Use token at T+23h59m on `/api/v1/user/profile`<br>2. Wait until T+24h01m<br>3. Reuse same token |
 | **Expected Result** | First call 200; second call 401 (JWT expired) — `expiresIn: '1d'` (config/app.js:78) |
 | **Priority** | High |
@@ -500,6 +539,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer phone Z |
+| **Type** | EDGE |
 | **Test Steps** | 1. Call send-otp twice in 5s for phone Z<br>2. Capture both OTPs (OTP1, OTP2)<br>3. Submit OTP1 to verify |
 | **Expected Result** | OTP1 rejected with 401 "Invalid OTP" (overwritten in `users.otp` column by OTP2 — auth.controller.js:574-577). Only OTP2 valid. |
 | **Priority** | Medium |
@@ -512,6 +552,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | API access |
+| **Type** | NEG |
 | **Test Steps** | 1. Send 200 `/auth/user/send-otp` calls in 60 seconds from same IP |
 | **Expected Result** | All 200 accepted — `authLimiter` middleware commented out in `app.js:40`. Document as known security gap; backend has zero abuse protection. |
 | **Priority** | High (Security) |
@@ -524,6 +565,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | NRI flow |
+| **Type** | VAL |
 | **Test Steps** | 1. `POST send-otp` body `{ phone, email, nri:true, countryCode:'91' }` (no plus)<br>2. Then retry with `countryCode:'+91-'` |
 | **Expected Result** | Both rejected with 400 validation error — regex `/^\+\d{1,3}$/` (validations/auth.validations.js:64) |
 | **Priority** | Medium |
@@ -536,6 +578,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-registration-l
 |-------|-------|
 | **Module** | BYR – Login |
 | **Pre-conditions** | Buyer with `registrations.status = 'Refund'` |
+| **Type** | NEG |
 | **Test Steps** | 1. Login as that buyer<br>2. Inspect `hasActiveRegistration` flag in verify-otp response |
 | **Expected Result** | KNOWN BUG: scope filter uses `status != 'REFUND'` (uppercase) but enum stores `'Refund'` — scope filters nothing (registration.model.js:201-207 vs :161). Refunded registrations leak as "active". |
 | **Priority** | Medium |

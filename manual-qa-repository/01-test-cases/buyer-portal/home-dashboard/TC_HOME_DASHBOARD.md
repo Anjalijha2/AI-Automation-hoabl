@@ -12,6 +12,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer logged in with `isConsented = 1` |
+| **Type** | FUNC |
 | **Test Steps** | 1. Complete login<br>2. Wait for redirect |
 | **Expected Result** | URL = `/home`; dashboard content renders end-to-end |
 | **Priority** | Critical |
@@ -24,6 +25,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Dashboard loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect top/side nav |
 | **Expected Result** | Menu items visible: Home, Project, My Unit, Payment Schedule, Home Loan, Work Progress, Support, Profile/Logout |
 | **Priority** | High |
@@ -36,6 +38,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer logged in |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect header profile area |
 | **Expected Result** | Buyer's first name or avatar visible; clicking opens profile menu |
 | **Priority** | Medium |
@@ -48,6 +51,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer in a journey state that triggers TopAlert (e.g., KYC pending) |
+| **Type** | UI |
 | **Test Steps** | 1. Load dashboard<br>2. Inspect top banner area |
 | **Expected Result** | TopAlert renders with state-specific message and CTA |
 | **Priority** | High |
@@ -60,6 +64,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Upcoming allocation campaign exists with future start time |
+| **Type** | UI |
 | **Test Steps** | 1. Load dashboard<br>2. Inspect Allocation Banner |
 | **Expected Result** | Banner shows countdown timer ticking down to campaign start |
 | **Priority** | High |
@@ -72,6 +77,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | An allocation campaign is currently active |
+| **Type** | UI |
 | **Test Steps** | 1. Load dashboard |
 | **Expected Result** | Banner displays LIVE status / "Allocation is live"; CTA to proceed |
 | **Priority** | High |
@@ -84,6 +90,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Creative tiles published in Strapi |
+| **Type** | INT |
 | **Test Steps** | 1. Scroll dashboard<br>2. Inspect creative section |
 | **Expected Result** | Strapi-managed marketing images and project highlights render |
 | **Priority** | Medium |
@@ -96,6 +103,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Strapi Home Popup is active for buyer's segment |
+| **Type** | UI |
 | **Test Steps** | 1. Load dashboard fresh |
 | **Expected Result** | Popup displayed with title, body and close button |
 | **Priority** | Medium |
@@ -108,6 +116,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Home Popup visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click X / dismiss<br>2. Navigate away and back to `/home` |
 | **Expected Result** | Popup closes; does not re-appear within the same session |
 | **Priority** | Low |
@@ -120,6 +129,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Marquee content configured in Strapi |
+| **Type** | UI |
 | **Test Steps** | 1. Load dashboard<br>2. Observe marquee strip |
 | **Expected Result** | Text scrolls horizontally; content matches CMS configuration |
 | **Priority** | Low |
@@ -134,6 +144,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer has 1+ registrations |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll to Registrations Table<br>2. Count rows |
 | **Expected Result** | One row per registration; all columns populated |
 | **Priority** | Critical |
@@ -146,6 +157,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Registration row visible |
+| **Type** | VAL |
 | **Test Steps** | 1. Inspect Registration Number column |
 | **Expected Result** | Value matches `GHNG-` prefix + 10 alphanumeric characters |
 | **Priority** | High |
@@ -158,6 +170,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Mix of registrations with/without home loan link |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Home Loan column |
 | **Expected Result** | Linked registrations show bank name or Yes; unlinked show No/dash |
 | **Priority** | Medium |
@@ -170,6 +183,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Registration without allocated unit |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Allotted Unit column |
 | **Expected Result** | Column is blank / shows "—" |
 | **Priority** | Medium |
@@ -182,6 +196,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer has WINNER status with allocated unit |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Allotted Unit column |
 | **Expected Result** | Shows format: `<unit#>-<tower> \| <BHK type> \| <sqft>` (e.g., "3502-Crest \| 1 Bed Growth Home \| 323 sq.ft.") |
 | **Priority** | Critical |
@@ -194,6 +209,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Registration with status Available |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Status column |
 | **Expected Result** | Green badge with text "Available" |
 | **Priority** | High |
@@ -206,6 +222,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Registration with status Waitlisted |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Status column |
 | **Expected Result** | Dark/grey badge with text "Waitlisted" |
 | **Priority** | High |
@@ -218,6 +235,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Registration with status Booked (payment complete) |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Status column |
 | **Expected Result** | Green badge with checkmark icon and "Booked" text |
 | **Priority** | High |
@@ -230,6 +248,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Registration with status Refunded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Status column |
 | **Expected Result** | Red badge with "Refunded" text |
 | **Priority** | Medium |
@@ -242,6 +261,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer Available, campaign Live |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Process Status column |
 | **Expected Result** | "Proceed to Confirm" CTA visible and clickable |
 | **Priority** | Critical |
@@ -254,6 +274,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer Waitlisted |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Process Status column |
 | **Expected Result** | No action button; placeholder or status text only |
 | **Priority** | High |
@@ -266,6 +287,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer WINNER, KYC not submitted |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Process Status column |
 | **Expected Result** | "Complete KYC" red/orange button with warning text "Required to complete the allotment!" |
 | **Priority** | Critical |
@@ -278,6 +300,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | KYC fully submitted (`isKycSubmitted = true`) |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Process Status column |
 | **Expected Result** | Text reads "KYC Completed"; no action CTA |
 | **Priority** | High |
@@ -290,6 +313,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer WINNER with a milestone marked due |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Payment Schedule column |
 | **Expected Result** | "Pay >" button visible; click navigates to payment screen |
 | **Priority** | High |
@@ -304,6 +328,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Available + Live status visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "Proceed to Confirm" |
 | **Expected Result** | Navigates to Allotment page (`/alloted`) |
 | **Priority** | Critical |
@@ -316,6 +341,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Process Status shows Complete KYC |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Complete KYC button |
 | **Expected Result** | Navigates to `/kyc` and loads Step 1 KycForm |
 | **Priority** | Critical |
@@ -328,6 +354,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Pay button visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Pay > |
 | **Expected Result** | Navigates to `/paymentschedule` with the due milestone highlighted |
 | **Priority** | High |
@@ -340,6 +367,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer has 2+ registrations |
+| **Type** | UI |
 | **Test Steps** | 1. Count rows<br>2. Verify each has independent status/actions |
 | **Expected Result** | Each registration is a distinct row with independent state |
 | **Priority** | High |
@@ -352,6 +380,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer on dashboard, campaign scheduled to start imminently |
+| **Type** | FUNC |
 | **Test Steps** | 1. Wait for campaign start time<br>2. Observe banner / Process Status |
 | **Expected Result** | Without refresh, banner switches to LIVE and Process Status updates via WebSocket |
 | **Priority** | High |
@@ -366,6 +395,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer logged in but no registrations exist |
+| **Type** | UI |
 | **Test Steps** | 1. Load dashboard |
 | **Expected Result** | Empty state message shown ("No registrations yet"); table not rendered or shows placeholder |
 | **Priority** | Medium |
@@ -378,6 +408,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Backend API simulated 500 |
+| **Type** | NEG |
 | **Test Steps** | 1. Block dashboard API in DevTools<br>2. Reload `/home` |
 | **Expected Result** | Friendly error message displayed; retry option offered; no app crash |
 | **Priority** | Medium |
@@ -390,6 +421,7 @@
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Dashboard loaded, then navigated to `/project` |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click browser Back |
 | **Expected Result** | Returns to `/home`; previous scroll position approximately preserved |
 | **Priority** | Low |
@@ -414,6 +446,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer with `paymentStatus != 'success'`; slug `?slug=<projectSlug>` |
+| **Type** | FUNC |
 | **Test Steps** | 1. `GET /api/v1/registration?slug=<slug>` |
 | **Expected Result** | 200 `{ registrationNumber: null, draft: <json|null> }` (controllers/registration.controller.js:2427-2441) |
 | **Priority** | High |
@@ -426,6 +459,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Admin sets `projects.ticker_clock = 12345` for active project |
+| **Type** | BIZ |
 | **Test Steps** | 1. `GET /api/v1/registration-count`<br>2. Insert a new registration row<br>3. Re-call endpoint |
 | **Expected Result** | Both calls return `{ registrationCount: 12345 }` — value does NOT auto-increment with new registrations (BUG-DASH-003). |
 | **Priority** | Medium |
@@ -438,6 +472,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Authenticated buyer |
+| **Type** | NEG |
 | **Test Steps** | 1. `GET /api/v1/user-unit-details?registrationNumber=GHNG-XXX` (omit unitId) |
 | **Expected Result** | 400 "Missing required query parameters: registrationNumber and unitId" (milestone-payment.controller.js:1491-1493) |
 | **Priority** | Medium |
@@ -450,6 +485,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer has `registration_home_loans.loanApprovalStatus = 'admin_rejected'` |
+| **Type** | BIZ |
 | **Test Steps** | 1. `GET /user-registrations`<br>2. Inspect `homeLoanId` for that row |
 | **Expected Result** | `homeLoanId = null` (LEFT JOIN filter `loanApprovalStatus != 'admin_rejected'` in services/registration.service.js:97-102). Home Loan ENUM: `pending / approved / admin_rejected / admin_approved` — NOT APPLIED/APPROVED/REJECTED. |
 | **Priority** | High |
@@ -462,6 +498,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Dynamic campaign RUNNING; unit DB `status=WAITLIST`, `availableForAllocation=true`; Redis key absent |
+| **Type** | BIZ |
 | **Test Steps** | 1. `GET /user-registrations`<br>2. Inspect row `allocationStatus` |
 | **Expected Result** | `allocationStatus = 'WAITLIST'` despite availableForAllocation=true (services/registration.service.js:159-166) |
 | **Priority** | High |
@@ -474,6 +511,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Unit with `status=WINNER`; no campaign running |
+| **Type** | BIZ |
 | **Test Steps** | 1. `GET /user-registrations` |
 | **Expected Result** | `allocationStatus='WINNER'` regardless of campaign state (services/registration.service.js:133, 137-140) |
 | **Priority** | High |
@@ -486,6 +524,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Buyer with one unit in `status='REFUND'` (uppercase ENUM) |
+| **Type** | NEG |
 | **Test Steps** | 1. `GET /registration?slug=<slug>`<br>2. Inspect `units[]` |
 | **Expected Result** | KNOWN BUG: refunded unit still appears in units[] — filter uses lowercase `'refund'` (controllers/registration.controller.js:2390 vs models/registration-unit.model.js:122). Document, do not pass. |
 | **Priority** | High |
@@ -498,6 +537,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | No JWT |
+| **Type** | NEG |
 | **Test Steps** | 1. `GET /api/v1/registration` without Authorization header |
 | **Expected Result** | 401 unauthorized (`protect` middleware in routes/user.routes.js:49) |
 | **Priority** | Critical (Security) |
@@ -510,6 +550,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-home-dashboard
 |-------|-------|
 | **Module** | BYR – Dashboard |
 | **Pre-conditions** | Valid buyer JWT |
+| **Type** | NEG |
 | **Test Steps** | 1. Use buyer token on admin-only endpoint |
 | **Expected Result** | 403 forbidden (`restrictTo('user')` middleware in routes/user.routes.js:50) |
 | **Priority** | High (Security) |

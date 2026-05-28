@@ -12,6 +12,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | CP successfully logged in |
+| **Type** | UI |
 | **Test Steps** | 1. Complete login flow<br>2. Wait for landing page |
 | **Expected Result** | URL is `/dashboard`; customer table is rendered |
 | **Priority** | Critical |
@@ -24,6 +25,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Dashboard open |
+| **Type** | UI |
 | **Test Steps** | 1. Read column headers left-to-right |
 | **Expected Result** | Columns: Customer Name, Registration Number, Unit Allocated, Allocation Status, KYC Completion, Payment Status |
 | **Priority** | Critical |
@@ -36,6 +38,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | At least one customer in the table |
+| **Type** | UI |
 | **Test Steps** | 1. Read the Registration Number for a row |
 | **Expected Result** | Number matches `GHNG-` followed by exactly 10 digits |
 | **Priority** | High |
@@ -48,6 +51,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Dashboard rows exist |
+| **Type** | UI |
 | **Test Steps** | 1. Read Allocation Status values across rows |
 | **Expected Result** | Status is one of: WAITLIST, PREALLOCATED, ALLOCATED, WINNER, HOLD, REFUND |
 | **Priority** | High |
@@ -60,6 +64,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Two CPs with different registered customers |
+| **Type** | BIZ |
 | **Test Steps** | 1. Login as CP A, note customer list<br>2. Logout, login as CP B<br>3. Verify rows visible |
 | **Expected Result** | Each CP sees only rows where `brokerId` matches their user ID |
 | **Priority** | Critical |
@@ -72,6 +77,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | CP has not registered any customer yet |
+| **Type** | UI |
 | **Test Steps** | 1. Open Dashboard |
 | **Expected Result** | Friendly empty-state message shown along with a Register Customer call-to-action |
 | **Priority** | Medium |
@@ -84,6 +90,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Customer exists with no allocation |
+| **Type** | UI |
 | **Test Steps** | 1. Locate the customer's row<br>2. Read Unit Allocated cell |
 | **Expected Result** | Cell is blank or shows a dash; no unit number displayed |
 | **Priority** | Medium |
@@ -96,6 +103,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | CP is on Dashboard |
+| **Type** | FUNC |
 | **Test Steps** | 1. Submit a new customer registration<br>2. Return to Dashboard |
 | **Expected Result** | New customer row appears immediately at top (or per default sort) with status Open and KYC Pending |
 | **Priority** | High |
@@ -110,6 +118,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | CP on Dashboard |
+| **Type** | UI |
 | **Test Steps** | 1. Click **Register Customer** button |
 | **Expected Result** | Registration form opens with all field labels and an empty/default state |
 | **Priority** | Critical |
@@ -122,6 +131,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Registration form open |
+| **Type** | UI |
 | **Test Steps** | 1. Scan the form top to bottom |
 | **Expected Result** | First Name, Last Name, Mobile, Email, Purchase Purpose, Home Loan Intent, Budget, Floor Range, Walk-in Source, and T&C checkbox are all visible |
 | **Priority** | Critical |
@@ -134,6 +144,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Registration form open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect labels for First Name, Last Name, Mobile, Email, Purchase Purpose, Home Loan Intent, Budget, T&C |
 | **Expected Result** | Required-field indicator (asterisk or "required" hint) is present on each mandatory field |
 | **Priority** | Medium |
@@ -146,6 +157,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form open |
+| **Type** | UI |
 | **Test Steps** | 1. Click Purchase Purpose dropdown<br>2. Read all options |
 | **Expected Result** | Options include at least "Investment" and "Own use"; no default pre-selection |
 | **Priority** | High |
@@ -158,6 +170,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form open |
+| **Type** | UI |
 | **Test Steps** | 1. Open Home Loan Intent control |
 | **Expected Result** | Two options: Yes and No |
 | **Priority** | Medium |
@@ -170,6 +183,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form open |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click country code selector on Mobile field<br>2. Verify multiple codes appear |
 | **Expected Result** | Country code dropdown is available with India default and international codes; NRI flow supported |
 | **Priority** | Medium |
@@ -184,6 +198,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form open, all fields blank |
+| **Type** | VAL |
 | **Test Steps** | 1. Click Submit without filling any field |
 | **Expected Result** | All required fields show inline errors; form does not submit |
 | **Priority** | Critical |
@@ -196,6 +211,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter `notanemail` in Email field<br>2. Blur the field |
 | **Expected Result** | Inline error "Enter a valid email address" appears |
 | **Priority** | High |
@@ -208,6 +224,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form open; India country code selected |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter `99999` in Mobile field<br>2. Blur field |
 | **Expected Result** | Inline error "Enter a valid 10-digit mobile number" appears |
 | **Priority** | High |
@@ -220,6 +237,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Type `abcd123456` in Mobile field |
 | **Expected Result** | Field rejects letters; only digits accepted |
 | **Priority** | Medium |
@@ -232,6 +250,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Try to enter alphabetic chars in Budget<br>2. Try numeric value `5000000` |
 | **Expected Result** | Letters are blocked; numeric values are accepted |
 | **Priority** | Medium |
@@ -244,6 +263,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form filled with all required fields except T&C |
+| **Type** | VAL |
 | **Test Steps** | 1. Leave T&C unchecked<br>2. Attempt to submit |
 | **Expected Result** | Submit is disabled OR submission rejected with error "Please accept the Terms and Conditions" |
 | **Priority** | Critical |
@@ -256,6 +276,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | All fields filled except Purchase Purpose |
+| **Type** | VAL |
 | **Test Steps** | 1. Leave Purchase Purpose unselected<br>2. Click Submit |
 | **Expected Result** | Inline error on Purchase Purpose; submission rejected |
 | **Priority** | High |
@@ -268,6 +289,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Floor Min = 10, Floor Max = 5<br>2. Blur fields |
 | **Expected Result** | Validation error indicating max must be ≥ min |
 | **Priority** | Low |
@@ -282,6 +304,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | All required fields valid; T&C checked |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Submit<br>2. Wait for response |
 | **Expected Result** | Success toast displayed; form closes; new GHNG-XXXXXXXXXX number issued and shown |
 | **Priority** | Critical |
@@ -294,6 +317,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Customer with mobile `9999900001` already registered for current project |
+| **Type** | NEG |
 | **Test Steps** | 1. Fill form with the same mobile, different email<br>2. Submit |
 | **Expected Result** | Submission rejected with duplicate error referencing mobile already exists |
 | **Priority** | Critical |
@@ -306,6 +330,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Customer with email `dup@test.com` exists in this project |
+| **Type** | NEG |
 | **Test Steps** | 1. Fill form with the same email, different mobile<br>2. Submit |
 | **Expected Result** | Submission rejected with duplicate email error |
 | **Priority** | Critical |
@@ -318,6 +343,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Customer already has registration GHNG-1234567890; system supports additional units |
+| **Type** | FUNC |
 | **Test Steps** | 1. Initiate additional-unit registration for the same customer<br>2. Submit |
 | **Expected Result** | New registration is issued as GHNG-1234567890-A; next would be -B, -C |
 | **Priority** | Medium |
@@ -330,6 +356,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Botspice WhatsApp integration active |
+| **Type** | INT |
 | **Test Steps** | 1. Submit a valid `POST /api/v1/cp/cp-user-register`<br>2. Observe customer's WhatsApp |
 | **Expected Result** | Buyer receives WhatsApp template `cp_link_share_latest` (Botspice NOT Kaleyra), params `["<firstName> <lastName>", "${app.registrationUrl}/ref/${encryptedSlug}"]`. NRI Buyer with email also gets `nri-cp-referral` email. NO confirmation back to CP. |
 | **Priority** | High |
@@ -342,6 +369,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Registration just submitted |
+| **Type** | FUNC |
 | **Test Steps** | 1. Return to Dashboard |
 | **Expected Result** | New row visible; Allocation Status implies pre-allocation state; Payment Status = Pending |
 | **Priority** | High |
@@ -354,6 +382,7 @@
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Form partially filled |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Cancel / close icon<br>2. Confirm discard if prompted |
 | **Expected Result** | Form closes; no record is created; data is not retained when reopening the form |
 | **Priority** | Medium |
@@ -383,6 +412,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registra
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | None |
+| **Type** | API |
 | **Test Steps** | 1. Without any JWT, call `POST /api/v1/cp/registration` (CP self-KYC) with valid body |
 | **Expected Result** | CRITICAL SECURITY GAP: route is mounted BEFORE `router.use(protect)` (routes/cp.routes.js:19-37). Endpoint is public. A bad actor knowing a CP phone with `isCpRegistrationCompleted=false` can re-submit KYC and overwrite legitimate data (QA-Risk-9, fsd-login.md §8.9). Document. |
 | **Priority** | Critical (Security) |
@@ -395,6 +425,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registra
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Valid Buyer JWT (roleId=2) |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /api/v1/cp/cp-user-register` with Buyer JWT |
 | **Expected Result** | 403 from `restrictTo('cp')` middleware (routes/cp.routes.js:36-37). |
 | **Priority** | High (Security) |
@@ -407,6 +438,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registra
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Buyer B exists with `firstName='Old'`; no draft from CP A |
+| **Type** | DB |
 | **Test Steps** | 1. CP A captures Buyer B with `firstName='New'`<br>2. Query `users.first_name` |
 | **Expected Result** | KNOWN BUG: existing-user branch does NOT update firstName/lastName/email/countryCode/isNri — only creates new draft (KB-CPR-08, cp.controller.js:794-822). `users.first_name` still 'Old'. Document. |
 | **Priority** | Medium |
@@ -419,6 +451,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registra
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Any env |
+| **Type** | BIZ |
 | **Test Steps** | 1. Capture lead<br>2. Query `registration_drafts.project_id` |
 | **Expected Result** | Always 1 (prod) or 2 (non-prod) (KB-CPR-05, cp.controller.js:782). Multi-project rollout requires code change. |
 | **Priority** | Medium |
@@ -431,6 +464,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registra
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Master CP M; member CP X |
+| **Type** | BIZ |
 | **Test Steps** | 1. M attempts to capture lead with cpId=X<br>2. Inspect created draft |
 | **Expected Result** | KNOWN GAP: endpoint always sets `cpId = req.user.id` — no override. Master cannot create on behalf of member (KB-CPR-06). Inconsistent with `cp-user-leads?leadOwner=cp:<id>` which DOES allow scoping for visibility. |
 | **Priority** | Medium |
@@ -443,6 +477,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registra
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Capture NRI buyer (`nri:true, countryCode:'+971'`) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Submit capture<br>2. Inspect WhatsApp dispatch + DB |
 | **Expected Result** | WhatsApp goes to `+971<phone>` (effectiveCountryCode). BUT `users.countryCode` may be stored as raw body value (could be empty) — `effectiveCountryCode` NOT persisted to User row (KB-CPR-04, cp.controller.js:777, 843). |
 | **Priority** | Medium |
@@ -455,6 +490,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registra
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Same userId + hvCode |
+| **Type** | EDGE |
 | **Test Steps** | 1. Inspect `encrypt(<userId>/<hvCode>)` for two captures with same inputs |
 | **Expected Result** | Verify whether `encrypt` is deterministic. `RegistrationDraft.slug` likely has UNIQUE constraint — collision-prone if deterministic (QA-Risk-2, cp.controller.js:853-854). |
 | **Priority** | Medium |
@@ -467,6 +503,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registra
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | Buyer phone P not yet in users |
+| **Type** | EDGE |
 | **Test Steps** | 1. CP A and CP B simultaneously POST cp-user-register for P |
 | **Expected Result** | Race condition possible — both pass `User.findOne` then `User.create`. No unique constraint on `users.phone`; may insert two duplicate buyer rows (QA-Risk-6, GAP-LOG-02). Document. |
 | **Priority** | Medium |
@@ -479,6 +516,7 @@ Source FSD: `manual-qa-repository/03-user-manual/cp-portal/fsd-customer-registra
 |-------|-------|
 | **Module** | CP – Customer Registration |
 | **Pre-conditions** | After successful capture |
+| **Type** | DB |
 | **Test Steps** | 1. Query `registration_drafts.draft` JSON |
 | **Expected Result** | `draft.idDraft = true` present but no reader uses it (KB-CPR-09, cp.controller.js:878). Document as dead field. |
 | **Priority** | Low |
