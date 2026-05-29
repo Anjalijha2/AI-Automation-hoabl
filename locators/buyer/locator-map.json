@@ -1,8 +1,506 @@
 {
   "_meta": {
     "portal": "buyer",
-    "version": "1.0.0",
-    "lastUpdated": "2026-05-17",
-    "maintainer": "Tech Lead Agent"
+    "version": "1.1.0",
+    "lastUpdated": "2026-05-29",
+    "maintainer": "Tech Lead Agent",
+    "changelog": [
+      "1.1.0 — live-crawl pass on 2026-05-29 for registration-login, home-dashboard, kyc, unit-details, project-information, payment-schedule, home-loan, allocation-experience, callback-request, support-tickets, work-progress"
+    ]
+  },
+  "registration-login": {
+    "previousSlide": {
+      "selector": "[aria-label=\"Previous slide\"]",
+      "type": "aria",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "nextSlide": {
+      "selector": "[aria-label=\"Next slide\"]",
+      "type": "aria",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "sendOTPButton": {
+      "selector": "button:has-text(\"Send OTP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "termsConditionsLink": {
+      "selector": "a:has-text(\"Terms & Conditions\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "privacyPolicyLink": {
+      "selector": "a:has-text(\"Privacy Policy\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterMobileNumberInput": {
+      "selector": "input[placeholder=\"Enter Mobile Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcTabs0Tab1": {
+      "selector": "#rc-tabs-0-tab-1",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "tab",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcTabs0Tab2": {
+      "selector": "#rc-tabs-0-tab-2",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "tab",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "aPPLICANTLOGINHeading": {
+      "selector": "h2:has-text(\"APPLICANT LOGIN\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "home-dashboard": {
+    "404Heading": {
+      "selector": "h1:has-text(\"404\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h1",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "thisPageCouldNotBeFoundHeading": {
+      "selector": "h2:has-text(\"This page could not be found.\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "kyc": {
+    "previousSlide": {
+      "selector": "[aria-label=\"Previous slide\"]",
+      "type": "aria",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "nextSlide": {
+      "selector": "[aria-label=\"Next slide\"]",
+      "type": "aria",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "sendOTPButton": {
+      "selector": "button:has-text(\"Send OTP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "termsConditionsLink": {
+      "selector": "a:has-text(\"Terms & Conditions\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "privacyPolicyLink": {
+      "selector": "a:has-text(\"Privacy Policy\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterMobileNumberInput": {
+      "selector": "input[placeholder=\"Enter Mobile Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcTabs0Tab1": {
+      "selector": "#rc-tabs-0-tab-1",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "tab",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcTabs0Tab2": {
+      "selector": "#rc-tabs-0-tab-2",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "tab",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "aPPLICANTLOGINHeading": {
+      "selector": "h2:has-text(\"APPLICANT LOGIN\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "unit-details": {
+    "404Heading": {
+      "selector": "h1:has-text(\"404\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h1",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "thisPageCouldNotBeFoundHeading": {
+      "selector": "h2:has-text(\"This page could not be found.\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "project-information": {
+    "404Heading": {
+      "selector": "h1:has-text(\"404\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h1",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "thisPageCouldNotBeFoundHeading": {
+      "selector": "h2:has-text(\"This page could not be found.\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "payment-schedule": {
+    "404Heading": {
+      "selector": "h1:has-text(\"404\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h1",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "thisPageCouldNotBeFoundHeading": {
+      "selector": "h2:has-text(\"This page could not be found.\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "home-loan": {
+    "404Heading": {
+      "selector": "h1:has-text(\"404\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h1",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "thisPageCouldNotBeFoundHeading": {
+      "selector": "h2:has-text(\"This page could not be found.\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "allocation-experience": {
+    "404Heading": {
+      "selector": "h1:has-text(\"404\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h1",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "thisPageCouldNotBeFoundHeading": {
+      "selector": "h2:has-text(\"This page could not be found.\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "callback-request": {
+    "404Heading": {
+      "selector": "h1:has-text(\"404\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h1",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "thisPageCouldNotBeFoundHeading": {
+      "selector": "h2:has-text(\"This page could not be found.\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "support-tickets": {
+    "404Heading": {
+      "selector": "h1:has-text(\"404\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h1",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "thisPageCouldNotBeFoundHeading": {
+      "selector": "h2:has-text(\"This page could not be found.\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "work-progress": {
+    "previousSlide": {
+      "selector": "[aria-label=\"Previous slide\"]",
+      "type": "aria",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "nextSlide": {
+      "selector": "[aria-label=\"Next slide\"]",
+      "type": "aria",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "sendOTPButton": {
+      "selector": "button:has-text(\"Send OTP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "termsConditionsLink": {
+      "selector": "a:has-text(\"Terms & Conditions\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "privacyPolicyLink": {
+      "selector": "a:has-text(\"Privacy Policy\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterMobileNumberInput": {
+      "selector": "input[placeholder=\"Enter Mobile Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcTabs1Tab1": {
+      "selector": "#rc-tabs-1-tab-1",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "tab",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcTabs1Tab2": {
+      "selector": "#rc-tabs-1-tab-2",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "tab",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "aPPLICANTLOGINHeading": {
+      "selector": "h2:has-text(\"APPLICANT LOGIN\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
   }
 }

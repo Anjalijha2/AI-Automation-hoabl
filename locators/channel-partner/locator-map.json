@@ -1,8 +1,958 @@
 {
   "_meta": {
     "portal": "channel-partner",
-    "version": "1.0.0",
-    "lastUpdated": "2026-05-17",
-    "maintainer": "Tech Lead Agent"
+    "version": "1.1.0",
+    "lastUpdated": "2026-05-29",
+    "maintainer": "Tech Lead Agent",
+    "changelog": [
+      "1.1.0 — live-crawl pass on 2026-05-29 for login, leads-management, customer-registration, kyc-assistance, jbp-submission, project-information"
+    ]
+  },
+  "login": {
+    "sendOTPButton": {
+      "selector": "button:has-text(\"Send OTP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "termsConditionsLink": {
+      "selector": "a:has-text(\"Terms & Conditions\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "privacyPolicyLink": {
+      "selector": "a:has-text(\"Privacy Policy\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterMobileNumberInput": {
+      "selector": "input[placeholder=\"Enter Mobile Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "gROWTHPARTNERLOGINHeading": {
+      "selector": "h2:has-text(\"GROWTH PARTNER LOGIN\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "leads-management": {
+    "logoutButton": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resendNotificationButton": {
+      "selector": "button:has-text(\"Resend Notification\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "copyLinkButton": {
+      "selector": "button:has-text(\"Copy Link\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resendNotificationButton2": {
+      "selector": "button:has-text(\"Resend Notification\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "copyLinkButton2": {
+      "selector": "button:has-text(\"Copy Link\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resendNotificationButton3": {
+      "selector": "button:has-text(\"Resend Notification\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "copyLinkButton3": {
+      "selector": "button:has-text(\"Copy Link\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "homeLink": {
+      "selector": "a:has-text(\"Home\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "kYCLink": {
+      "selector": "a:has-text(\"KYC\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "jBPLink": {
+      "selector": "a:has-text(\"JBP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "leadsLink": {
+      "selector": "a:has-text(\"Leads\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect1": {
+      "selector": "#rc_select_1",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect0": {
+      "selector": "#rc_select_0",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "searchCustomerInput": {
+      "selector": "input[placeholder=\"Search Customer\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect2": {
+      "selector": "#rc_select_2",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "leadsHeading": {
+      "selector": "h3:has-text(\"Leads\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h3",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "customer-registration": {
+    "logoutButton": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "copyLinkButton": {
+      "selector": "button:has-text(\"Copy link\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "downloadQRCodeButton": {
+      "selector": "button:has-text(\"Download QR Code\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "createLeadButton": {
+      "selector": "button:has-text(\"Create Lead\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resetBtn": {
+      "selector": "button.reset-btn",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resetBtn2": {
+      "selector": "button.reset-btn",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resetBtn3": {
+      "selector": "button.reset-btn",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "homeLink": {
+      "selector": "a:has-text(\"Home\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "kYCLink": {
+      "selector": "a:has-text(\"KYC\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "jBPLink": {
+      "selector": "a:has-text(\"JBP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "leadsLink": {
+      "selector": "a:has-text(\"Leads\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "r2Input": {
+      "selector": "input[name=\":r2:\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "r2Input2": {
+      "selector": "input[name=\":r2:\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterMobileNumberInput": {
+      "selector": "input[placeholder=\"Enter Mobile Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect0": {
+      "selector": "#rc_select_0",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "searchCustomerInput": {
+      "selector": "input[placeholder=\"Search Customer\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect1": {
+      "selector": "#rc_select_1",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "welcomeGPTestNameHeading": {
+      "selector": "h2:has-text(\"Welcome, GP test name\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "customersHeading": {
+      "selector": "h3:has-text(\"Customers\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h3",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "kyc-assistance": {
+    "logoutButton": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "cancelButton": {
+      "selector": "button:has-text(\"Cancel\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "submitButton": {
+      "selector": "button:has-text(\"Submit\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "homeLink": {
+      "selector": "a:has-text(\"Home\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "kYCLink": {
+      "selector": "a:has-text(\"KYC\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "jBPLink": {
+      "selector": "a:has-text(\"JBP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "leadsLink": {
+      "selector": "a:has-text(\"Leads\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterNameInput": {
+      "selector": "input[placeholder=\"Enter Name\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterFullAddressInput": {
+      "selector": "input[placeholder=\"Enter Full Address\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect0": {
+      "selector": "#rc_select_0",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterNameInput2": {
+      "selector": "input[placeholder=\"Enter Name\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterEmailIDInput": {
+      "selector": "input[placeholder=\"Enter Email ID\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterMobileNumberInput": {
+      "selector": "input[placeholder=\"Enter Mobile Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterPinCodeInput": {
+      "selector": "input[placeholder=\"Enter Pin Code\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterPANNumberInput": {
+      "selector": "input[placeholder=\"Enter PAN Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterRERANumberInput": {
+      "selector": "input[placeholder=\"Enter RERA Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "kYCHeading": {
+      "selector": "h2:has-text(\"KYC\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "jbp-submission": {
+    "logoutButton": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "homeLink": {
+      "selector": "a:has-text(\"Home\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "kYCLink": {
+      "selector": "a:has-text(\"KYC\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "jBPLink": {
+      "selector": "a:has-text(\"JBP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "leadsLink": {
+      "selector": "a:has-text(\"Leads\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcTabs0Tab1": {
+      "selector": "#rc-tabs-0-tab-1",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "tab",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcTabs0Tab2": {
+      "selector": "#rc-tabs-0-tab-2",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "tab",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcTabs0Tab3": {
+      "selector": "#rc-tabs-0-tab-3",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "tab",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "jBPDashboardHeading": {
+      "selector": "h2:has-text(\"JBP Dashboard\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "project-information": {
+    "logoutButton": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "copyLinkButton": {
+      "selector": "button:has-text(\"Copy link\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "downloadQRCodeButton": {
+      "selector": "button:has-text(\"Download QR Code\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "createLeadButton": {
+      "selector": "button:has-text(\"Create Lead\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resetBtn": {
+      "selector": "button.reset-btn",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resetBtn2": {
+      "selector": "button.reset-btn",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resetBtn3": {
+      "selector": "button.reset-btn",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "homeLink": {
+      "selector": "a:has-text(\"Home\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "kYCLink": {
+      "selector": "a:has-text(\"KYC\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "jBPLink": {
+      "selector": "a:has-text(\"JBP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "leadsLink": {
+      "selector": "a:has-text(\"Leads\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "riInput": {
+      "selector": "input[name=\":ri:\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "riInput2": {
+      "selector": "input[name=\":ri:\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterMobileNumberInput": {
+      "selector": "input[placeholder=\"Enter Mobile Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect0": {
+      "selector": "#rc_select_0",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "searchCustomerInput": {
+      "selector": "input[placeholder=\"Search Customer\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect1": {
+      "selector": "#rc_select_1",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "welcomeGPTestNameHeading": {
+      "selector": "h2:has-text(\"Welcome, GP test name\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "customersHeading": {
+      "selector": "h3:has-text(\"Customers\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h3",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
   }
 }

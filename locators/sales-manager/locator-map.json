@@ -1,8 +1,624 @@
 {
   "_meta": {
     "portal": "sales-manager",
-    "version": "1.0.0",
-    "lastUpdated": "2026-05-17",
-    "maintainer": "Tech Lead Agent"
+    "version": "1.1.0",
+    "lastUpdated": "2026-05-29",
+    "maintainer": "Tech Lead Agent",
+    "changelog": [
+      "1.1.0 — live-crawl pass on 2026-05-29 for login, callback-requests, tower-heatmap, physical-allocation"
+    ]
+  },
+  "login": {
+    "sendOTPButton": {
+      "selector": "button:has-text(\"Send OTP\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "enterMobileNumberInput": {
+      "selector": "input[placeholder=\"Enter Mobile Number\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "roleInput": {
+      "selector": "input[name=\"role\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "roleInput2": {
+      "selector": "input[name=\"role\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "sALESMANAGERLOGINHeading": {
+      "selector": "h2:has-text(\"SALES MANAGER LOGIN\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h2",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "callback-requests": {
+    "logoutButton": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "assign0Button": {
+      "selector": "button:has-text(\"Assign (0)\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "createCallbackRequestButton": {
+      "selector": "button:has-text(\"Create Callback Request\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "refreshButton": {
+      "selector": "button:has-text(\"Refresh\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "exportButton": {
+      "selector": "button:has-text(\"Export\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "sendInviteButton": {
+      "selector": "button:has-text(\"Send Invite\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "meetingDoneButton": {
+      "selector": "button:has-text(\"Meeting Done\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "completedButton": {
+      "selector": "button:has-text(\"Completed\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "resendInviteButton": {
+      "selector": "button:has-text(\"Resend Invite\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "meetingDoneButton2": {
+      "selector": "button:has-text(\"Meeting Done\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "copyLinkBtn": {
+      "selector": "button.copy-link-btn",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "completedButton2": {
+      "selector": "button:has-text(\"Completed\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "sendInviteButton2": {
+      "selector": "button:has-text(\"Send Invite\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "meetingDoneButton3": {
+      "selector": "button:has-text(\"Meeting Done\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "completedButton3": {
+      "selector": "button:has-text(\"Completed\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "completedButton4": {
+      "selector": "button:has-text(\"Completed\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "completedButton5": {
+      "selector": "button:has-text(\"Completed\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "completedButton6": {
+      "selector": "button:has-text(\"Completed\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "completedButton7": {
+      "selector": "button:has-text(\"Completed\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "callbackRequestsLink": {
+      "selector": "a:has-text(\"Callback Requests\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "towersLink": {
+      "selector": "a:has-text(\"Towers\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "allocationLink": {
+      "selector": "a:has-text(\"Allocation\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "startDateInput": {
+      "selector": "input[placeholder=\"Start Date\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "endDateInput": {
+      "selector": "input[placeholder=\"End Date\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "searchByNamePhoneEmailRegNoInput": {
+      "selector": "input[placeholder=\"Search by name, phone, email, reg no...\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect0": {
+      "selector": "#rc_select_0",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "selectAll": {
+      "selector": "[aria-label=\"Select all\"]",
+      "type": "aria",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "selectAll2": {
+      "selector": "[aria-label=\"Select all\"]",
+      "type": "aria",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput2": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput3": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput4": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput5": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput6": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput7": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput8": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput9": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "checkboxInput10": {
+      "selector": "input[type=\"checkbox\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "rcSelect1": {
+      "selector": "#rc_select_1",
+      "type": "id",
+      "fallback": "",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "tower-heatmap": {
+    "logoutButton": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "reset": {
+      "selector": "button.reset",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "callbackRequestsLink": {
+      "selector": "a:has-text(\"Callback Requests\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "towersLink": {
+      "selector": "a:has-text(\"Towers\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "allocationLink": {
+      "selector": "a:has-text(\"Allocation\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "physical-allocation": {
+    "logoutButton": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "refreshButton": {
+      "selector": "button:has-text(\"Refresh\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "callbackRequestsLink": {
+      "selector": "a:has-text(\"Callback Requests\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "towersLink": {
+      "selector": "a:has-text(\"Towers\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "allocationLink": {
+      "selector": "a:has-text(\"Allocation\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "noActiveCampaignHeading": {
+      "selector": "h3:has-text(\"No Active Campaign\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "h3",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    }
   }
 }
