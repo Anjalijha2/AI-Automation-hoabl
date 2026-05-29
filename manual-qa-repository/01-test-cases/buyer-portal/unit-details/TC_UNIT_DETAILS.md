@@ -568,6 +568,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | JWT expired (post 24h) |
+| **Type** | NEG |
 | **Test Steps** | 1. Open `/allotted-units` with expired token |
 | **Expected Result** | 401 response triggers redirect to login or "Session expired" toast; no partial unit data leaked |
 | **Priority** | High |
@@ -580,6 +581,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Authenticated buyer |
+| **Type** | API |
 | **Test Steps** | 1. `GET /api/users/allocation/unit-details?registrationNumber=INVALID-XYZ&unitId=1` |
 | **Expected Result** | 400 "Could not fetch unit data" — no leakage of valid registrations (controllers/allocation.controller.js:271-275) |
 | **Priority** | High |
@@ -592,6 +594,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Authenticated buyer |
+| **Type** | API |
 | **Test Steps** | 1. `GET /api/users/user-unit-details?registrationNumber=R` (omit unitId) |
 | **Expected Result** | 400 "Missing required query parameters: registrationNumber and unitId" |
 | **Priority** | High |
@@ -604,6 +607,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Unit with `imageUrl=null` in DB |
+| **Type** | NEG |
 | **Test Steps** | 1. Load Unit Details |
 | **Expected Result** | Floor plan section shows placeholder; no JS crash; rest of page renders cost sheet + tower view |
 | **Priority** | Medium |
@@ -616,6 +620,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Resize browser to ≤480 px width |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll through page |
 | **Expected Result** | Unit details, cost sheet, tower view, payment schedule all stack vertically; no horizontal overflow |
 | **Priority** | Medium |
@@ -628,6 +633,7 @@
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | HCF order initiated, status=VERIFICATION |
+| **Type** | EDGE |
 | **Test Steps** | 1. Refresh page during verification window<br>2. Inspect Pay button state |
 | **Expected Result** | Pay button stays disabled; "Verification in progress" shown; no second order initiation possible (see BYR_UNIT_034) |
 | **Priority** | High |
@@ -651,6 +657,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Authenticated WINNER buyer |
+| **Type** | API |
 | **Test Steps** | 1. `GET /api/users/user-unit-details?registrationNumber=GHNG-XXX` (omit unitId) |
 | **Expected Result** | 400 "Missing required query parameters: registrationNumber and unitId" (controllers/milestone-payment.controller.js:1491-1493) |
 | **Priority** | High |
@@ -663,6 +670,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Buyer A authenticated; registration unit belongs to Buyer B |
+| **Type** | NEG |
 | **Test Steps** | 1. `GET /api/users/registration-units/booking-form-data/<B's registrationUnitId>` with A's token |
 | **Expected Result** | 500 "Something went wrong" (controllers/user.controller.js:919-922) — should be 403/404 but intentionally opaque. Document as security-by-obscurity. |
 | **Priority** | High (Security) |
@@ -675,6 +683,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | WINNER buyer |
+| **Type** | API |
 | **Test Steps** | 1. Search backend routes for allotment-letter download |
 | **Expected Result** | NOT FOUND in routes/user.routes.js or routes/user/*.js. `InitialAllotment` model exists with association but no PDF endpoint. Any UI "Download Allotment Letter" must be either client-side react-to-print OR built off `getRegistrationUnitBookingFormData` Azure SAS URLs. Do NOT write TCs asserting a server PDF endpoint. |
 | **Priority** | Medium |
@@ -687,6 +696,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | WINNER buyer with KYC submitted |
+| **Type** | INT |
 | **Test Steps** | 1. `GET /api/users/registration-units/booking-form-data/<id>`<br>2. Inspect `applicants[*].documents` |
 | **Expected Result** | Each document has Azure Blob SAS URL (NOT S3) — pre-signed per request (not cached). URL expiry must be tested at SAS lifetime boundary (controllers/user.controller.js:1059-1077). |
 | **Priority** | High |
@@ -699,6 +709,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Unit with applicants having relations: spouse, sister, self, father |
+| **Type** | API |
 | **Test Steps** | 1. `GET /booking-form-data/:id`<br>2. Inspect applicants[] order |
 | **Expected Result** | `self` returned first via raw `CASE WHEN`, then ascending by id (controllers/user.controller.js:1017-1020). Relations title-cased on response (`'sister' → 'Sister'`). |
 | **Priority** | Medium |
@@ -711,6 +722,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Unit with multiple images |
+| **Type** | DB |
 | **Test Steps** | 1. Inspect `imageUrl` field<br>2. Set value to `"url1||url2||"` (trailing) then `""` |
 | **Expected Result** | Field returns raw delimited string; client must split by `||`. Trailing/leading delimiters and pipe-containing URLs corrupt parsing. Document BUG (models/unit.model.js:424-429). |
 | **Priority** | Low |
@@ -723,6 +735,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | Inspect ENUM |
+| **Type** | DB |
 | **Test Steps** | 1. Query schema for `units.status` ENUM values |
 | **Expected Result** | ENUM = `AVAILABLE, HOLD, BOOKED, REFUGE, PREBOOKED, PBT, RESERVED`. `REFUGE` is almost certainly a typo for REFUND/REFUSED (models/unit.model.js:177). Document as schema BUG. |
 | **Priority** | Low |
@@ -735,6 +748,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | WINNER unit U; no in-flight milestone order |
+| **Type** | EDGE |
 | **Test Steps** | 1. Fire two simultaneous `POST /api/users/milestone-payment/order` for U + same milestoneKey<br>2. Compare responses |
 | **Expected Result** | One returns 200 with order ID; second returns error "Milestone payment already in verification" (controllers/milestone-payment.controller.js:474-481). |
 | **Priority** | High |
@@ -747,6 +761,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | WINNER unit, HCF order created (`hcfTransactionStatus='VERIFICATION'`) |
+| **Type** | DB |
 | **Test Steps** | 1. Trigger offline HCF commit<br>2. Query `registration_units` |
 | **Expected Result** | `hcfTransactionStatus='PAID'`, `hcfTransactionId` populated (controllers/milestone-payment.controller.js:1411-1419). FAILED also valid terminal. |
 | **Priority** | High |
@@ -759,6 +774,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | WINNER unit with offers + early-bird + home loan |
+| **Type** | FUNC |
 | **Test Steps** | 1. `GET /allocation/unit-details?registrationNumber=X&unitId=Y`<br>2. Compute manually: `round(agreementValue + totalParkingAmount − earlyBirdBenefit − homeLoanDiscountAmount − offerDiscountAmount)` |
 | **Expected Result** | `finalAgreementValue` in response matches manual computation (controllers/allocation.controller.js:485-491). |
 | **Priority** | Critical |
@@ -771,6 +787,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-unit-details.m
 |-------|-------|
 | **Module** | BYR – Unit Details |
 | **Pre-conditions** | WINNER unit; buyer has NO home loan record |
+| **Type** | BIZ |
 | **Test Steps** | 1. Compute cost sheet via API |
 | **Expected Result** | `homeLoanDiscountAmount` NOT subtracted from finalAgreementValue (controllers/allocation.controller.js:304, 489). Home Loan ENUM: `pending / approved / admin_rejected / admin_approved`. |
 | **Priority** | High |

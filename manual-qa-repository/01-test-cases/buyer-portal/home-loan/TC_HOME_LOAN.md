@@ -26,6 +26,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Buyer has confirmed unit allocation |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect main nav |
 | **Expected Result** | Home Loan nav item visible and clickable |
 | **Priority** | High |
@@ -38,6 +39,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Allocation confirmed |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Home Loan menu |
 | **Expected Result** | URL = `/homeloan`; LoanEligibilityCheck (Step 1) renders |
 | **Priority** | Critical |
@@ -50,6 +52,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Home Loan landing visible |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect available options |
 | **Expected Result** | Two CTAs: "Check Eligibility" (Easiloan path) and "I Have a Pre-Approved Sanction Letter" |
 | **Priority** | High |
@@ -64,6 +67,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Step 1 open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect employment toggle |
 | **Expected Result** | "Salaried" preselected by default |
 | **Priority** | Medium |
@@ -76,6 +80,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Salaried selected |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect form fields |
 | **Expected Result** | Two fields visible: Monthly Income (required), Existing EMI Obligations (required) |
 | **Priority** | High |
@@ -88,6 +93,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Salaried form visible |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter "abc"<br>2. Enter "-5000"<br>3. Enter "50000" |
 | **Expected Result** | Non-numeric and negatives rejected; positive accepted |
 | **Priority** | High |
@@ -100,6 +106,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Salaried form empty |
+| **Type** | VAL |
 | **Test Steps** | 1. Inspect Check Eligibility button<br>2. Fill all fields<br>3. Re-inspect |
 | **Expected Result** | Disabled until all required fields valid; then enabled |
 | **Priority** | High |
@@ -114,6 +121,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Step 1 open |
+| **Type** | UI |
 | **Test Steps** | 1. Toggle to Self-Employed<br>2. Inspect fields |
 | **Expected Result** | Three fields shown: Annual Profit, Annual Turnover, Existing EMI Obligations |
 | **Priority** | High |
@@ -126,6 +134,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Self-Employed form visible |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter invalid then valid values in each field |
 | **Expected Result** | Non-numeric/negative rejected; positives accepted |
 | **Priority** | High |
@@ -138,6 +147,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Self-Employed form visible |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter "1250000.50" in Annual Profit<br>2. Lose focus |
 | **Expected Result** | Decimal accepted; formatted with commas if applicable; no truncation |
 | **Priority** | Medium |
@@ -150,6 +160,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Self-Employed form |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Profit = 10,00,000; Turnover = 5,00,000<br>2. Try submit |
 | **Expected Result** | Validation error "Turnover must be greater than or equal to profit"; submit blocked |
 | **Priority** | High |
@@ -162,6 +173,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Self-Employed form partly filled |
+| **Type** | FUNC |
 | **Test Steps** | 1. Toggle to Salaried<br>2. Inspect form |
 | **Expected Result** | Self-Employed-specific fields hidden; Salaried fields shown; previously entered self-employed values cleared (or document persistence) |
 | **Priority** | Medium |
@@ -174,6 +186,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Self-Employed selected, only 2 of 3 fields filled |
+| **Type** | VAL |
 | **Test Steps** | 1. Inspect Check Eligibility button state |
 | **Expected Result** | Disabled; fill 3rd field → enabled |
 | **Priority** | High |
@@ -186,6 +199,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Self-Employed form filled and submitted |
+| **Type** | DB |
 | **Test Steps** | 1. Inspect backend `homeLoanEmpType` |
 | **Expected Result** | Value = `self_employed` (exact lowercase per BYR_LOAN_027) |
 | **Priority** | High |
@@ -198,6 +212,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Self-Employed form |
+| **Type** | EDGE |
 | **Test Steps** | 1. Try entering 15-digit number in Turnover |
 | **Expected Result** | Field capped at reasonable length (e.g., 12 digits); excess rejected; no JS overflow error |
 | **Priority** | Low |
@@ -212,6 +227,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Form filled with valid values |
+| **Type** | INT |
 | **Test Steps** | 1. Click Check Eligibility<br>2. Observe network call |
 | **Expected Result** | POST to Easiloan API made with employment + financial data |
 | **Priority** | Critical |
@@ -224,6 +240,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Eligibility submitted successfully |
+| **Type** | DB |
 | **Test Steps** | 1. Verify backend `homeLoanStep` flag |
 | **Expected Result** | `homeLoanStep = 1` persisted |
 | **Priority** | High |
@@ -236,6 +253,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Easiloan API simulated down |
+| **Type** | INT |
 | **Test Steps** | 1. Submit eligibility |
 | **Expected Result** | Error message; retry available; no data corruption |
 | **Priority** | Medium |
@@ -250,6 +268,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Easiloan returns 3+ offers |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect LoanOffersReview list |
 | **Expected Result** | One card per offer; all returned banks shown |
 | **Priority** | High |
@@ -262,6 +281,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Offer cards visible |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect each card |
 | **Expected Result** | Loan amount, interest rate %, monthly EMI, and bank name all rendered |
 | **Priority** | High |
@@ -274,6 +294,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Multiple offers visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click offer A<br>2. Click offer B |
 | **Expected Result** | Selection moves to B; A deselected; radio-style behaviour |
 | **Priority** | High |
@@ -286,6 +307,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | No offer selected |
+| **Type** | VAL |
 | **Test Steps** | 1. Inspect Apply button<br>2. Select offer<br>3. Re-inspect |
 | **Expected Result** | Disabled when no selection; enabled once selected |
 | **Priority** | High |
@@ -298,6 +320,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Offer selected and Apply clicked |
+| **Type** | DB |
 | **Test Steps** | 1. Inspect backend `homeLoanBankSelected` |
 | **Expected Result** | JSON of selected bank offer stored |
 | **Priority** | High |
@@ -312,6 +335,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Apply clicked on Step 2 |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Apply Loan screen |
 | **Expected Result** | Selected bank, amount, rate, EMI summarised before final submit |
 | **Priority** | High |
@@ -324,6 +348,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Apply Loan visible |
+| **Type** | E2E |
 | **Test Steps** | 1. Click Confirm<br>2. Verify backend |
 | **Expected Result** | RegistrationHomeLoan record created with selected bank and offer; homeLoanStep = 2 |
 | **Priority** | Critical |
@@ -338,6 +363,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Home Loan landing visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "I Have a Pre-Approved Sanction Letter" |
 | **Expected Result** | Navigates to PreapprovedLoan screen; Easiloan flow bypassed |
 | **Priority** | High |
@@ -350,6 +376,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Pre-approved path completed |
+| **Type** | DB |
 | **Test Steps** | 1. Submit pre-approved details<br>2. Verify backend |
 | **Expected Result** | `homeLoanOptedOut = true` persisted |
 | **Priority** | High |
@@ -362,6 +389,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | PreapprovedLoan screen open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect form fields |
 | **Expected Result** | Fields for bank name, amount, sanction letter upload |
 | **Priority** | Medium |
@@ -376,6 +404,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Step 3 or 4 confirmed |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect final screen |
 | **Expected Result** | Congratulations screen with success message and next steps |
 | **Priority** | High |
@@ -388,6 +417,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Buyer eligible for HOME_LOAN offer, application complete |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Unit Details → Cost Sheet<br>2. Inspect Offers row |
 | **Expected Result** | HOME_LOAN discount applied; Agreement Value reduced |
 | **Priority** | Critical |
@@ -400,6 +430,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Admin sets `loanApprovalStatus = admin_rejected` |
+| **Type** | NEG |
 | **Test Steps** | 1. Refresh Home Loan view<br>2. Inspect status |
 | **Expected Result** | Rejected record excluded from customer list per BR 4 |
 | **Priority** | Medium |
@@ -414,6 +445,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Loan application in progress |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect HomeLoanData section |
 | **Expected Result** | NOC requirements for bank disbursement clearly listed |
 | **Priority** | Medium |
@@ -426,6 +458,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Eligibility submitted with each employment type |
+| **Type** | DB |
 | **Test Steps** | 1. Verify backend value |
 | **Expected Result** | Either `salaried` or `self_employed` stored exactly |
 | **Priority** | Medium |
@@ -438,6 +471,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Loan record with `loan_approval_status='pending'` |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `/homeloan` tracking view |
 | **Expected Result** | Status badge shows "Pending" (or equivalent presentation mapping of `pending`); transitions visible when admin updates state |
 | **Priority** | High |
@@ -450,6 +484,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Admin sets `loan_approval_status=admin_approved` |
+| **Type** | BIZ |
 | **Test Steps** | 1. Refresh buyer's `/homeloan` page |
 | **Expected Result** | Status updates to "Approved" (presentation of `admin_approved`); no buyer notification sent (BYR_LOAN_FSD_038); buyer must refresh manually |
 | **Priority** | High |
@@ -462,6 +497,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Buyer with simulated CIBIL = 580 (below 600 floor) |
+| **Type** | NEG |
 | **Test Steps** | 1. Submit eligibility check |
 | **Expected Result** | No offers returned; UI shows "You don't currently meet eligibility criteria" message; loan_approval_status stays `pending` |
 | **Priority** | High |
@@ -474,6 +510,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Pre-approved path with sanction-letter upload form |
+| **Type** | VAL |
 | **Test Steps** | 1. Try uploading `.jpg`<br>2. Try uploading `.pdf` |
 | **Expected Result** | JPG rejected with "PDF only" error; PDF accepted and stored in LSQ custom-object slot (BYR_LOAN_FSD_040) |
 | **Priority** | High |
@@ -486,6 +523,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Loan in progress for specific bank |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect HomeLoanData section |
 | **Expected Result** | NOC requirements specific to selected bank shown (not generic list); each item checkable/trackable |
 | **Priority** | Medium |
@@ -498,6 +536,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Buyer who never started loan flow |
+| **Type** | EDGE |
 | **Test Steps** | 1. Open `/homeloan` |
 | **Expected Result** | Default landing (LoanEligibilityCheck Step 1) shown; no broken tracking widget; no JS error |
 | **Priority** | Medium |
@@ -512,6 +551,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | No allocation; configuration restricts pre-allocation access |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `/homeloan` |
 | **Expected Result** | Per configuration: either accessible (pre-allocation allowed) or blocked with message |
 | **Priority** | Medium |
@@ -524,6 +564,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Salaried form |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter income = 0<br>2. Submit |
 | **Expected Result** | Validation error; submission blocked |
 | **Priority** | Medium |
@@ -536,6 +577,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Salaried form |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter EMI equal to or greater than income<br>2. Submit |
 | **Expected Result** | Either rejected at frontend or Easiloan returns no offers; buyer sees "Not eligible" message |
 | **Priority** | Medium |
@@ -548,6 +590,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Easiloan API simulated 30s timeout |
+| **Type** | INT |
 | **Test Steps** | 1. Submit eligibility form<br>2. Wait for timeout |
 | **Expected Result** | Error toast "Request timed out, please retry"; form values preserved; retry button available |
 | **Priority** | Medium |
@@ -560,6 +603,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Salaried form empty |
+| **Type** | VAL |
 | **Test Steps** | 1. Click Check Eligibility without entering income |
 | **Expected Result** | Inline error "Monthly income is required" on the field; submit blocked at frontend before any API call |
 | **Priority** | High |
@@ -572,6 +616,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Bank A already applied (RegistrationHomeLoan row exists) |
+| **Type** | NEG |
 | **Test Steps** | 1. Try selecting bank B and clicking Apply |
 | **Expected Result** | Action blocked or warning shown — only one home loan application per registration (matches state machine) |
 | **Priority** | High |
@@ -584,6 +629,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Pre-approved form with bank name + amount filled, no sanction letter uploaded |
+| **Type** | VAL |
 | **Test Steps** | 1. Click Submit |
 | **Expected Result** | Error "Please upload sanction letter"; submit blocked; homeLoanOptedOut not set |
 | **Priority** | High |
@@ -596,6 +642,7 @@
 |-------|-------|
 | **Module** | BYR – Home Loan |
 | **Pre-conditions** | Eligibility form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter EMI = -5000<br>2. Lose focus / submit |
 | **Expected Result** | Validation error "Must be a positive number"; field outlined; submit blocked |
 | **Priority** | Medium |
@@ -611,6 +658,7 @@
 | **Module** | BYR – Home Loan / DB |
 | **BRD/FRD Req** | FSD §2.1 / model line 73-79 |
 | **Pre-conditions** | A buyer with active home-loan record |
+| **Type** | DB |
 | **Test Steps** | 1. Inspect DB column `loan_approval_status` |
 | **Expected Result** | Only 4 values are valid: `pending`, `approved`, `admin_rejected`, `admin_approved`. Any UI showing "APPROVED" / "REJECTED" / "APPLIED" labels is presentation-layer mapping — backend uses these 4 only. |
 | **Priority** | High |
@@ -624,6 +672,7 @@
 | **Module** | BYR – Home Loan / Workflow |
 | **BRD/FRD Req** | FSD / no buyer write path sets `approved` |
 | **Pre-conditions** | Buyer completes home-loan flow |
+| **Type** | BIZ |
 | **Test Steps** | 1. Walk every buyer-side path (self-loan opt out, easiloan eligibility, bank selection, sanction-letter upload)<br>2. Inspect resulting `loan_approval_status` |
 | **Expected Result** | Buyer paths only ever set `pending`. Only admin actions transition to `admin_approved` or `admin_rejected`. The `approved` value is defined in ENUM but unreachable in current code paths. Document as dead-state. |
 | **Priority** | Medium |
@@ -637,6 +686,7 @@
 | **Module** | BYR – Home Loan / Notifications |
 | **BRD/FRD Req** | FSD Customers §5 row 3 / `services/registration-unit.service.js:349-387` |
 | **Pre-conditions** | Admin approves a buyer's home loan |
+| **Type** | INT |
 | **Test Steps** | 1. Admin uses Home Loan Approval toggle and saves<br>2. Inspect buyer's phone for SMS/WhatsApp/email |
 | **Expected Result** | NO notification dispatched to the buyer. The buyer must check the portal manually to see the approved state. Previous BRD claim of "buyer notified" is INCORRECT. |
 | **Priority** | High |
@@ -650,6 +700,7 @@
 | **Module** | BYR – Home Loan / Workflow |
 | **BRD/FRD Req** | FSD §2.1 |
 | **Pre-conditions** | A home loan in step 2 with status='in_progress', loan_approval_status='pending' |
+| **Type** | BIZ |
 | **Test Steps** | 1. Buyer completes step 2 (e.g. selects bank or uploads sanction)<br>2. Admin then approves<br>3. Inspect both columns |
 | **Expected Result** | Buyer completion moves `status: in_progress → completed`. Admin approval moves `loan_approval_status: pending → admin_approved`. The two columns are independent — UI must check both to render final state. |
 | **Priority** | High |
@@ -663,6 +714,7 @@
 | **Module** | BYR – Home Loan / Storage |
 | **BRD/FRD Req** | FSD §2.3 |
 | **Pre-conditions** | Buyer uploads PAN/Aadhar/salary slip/bank statement during home-loan flow |
+| **Type** | INT |
 | **Test Steps** | 1. Upload documents<br>2. Look for `home_loan_documents` table — not present<br>3. Inspect LSQ lead `mx_CustomObject_1`..`mx_CustomObject_7` |
 | **Expected Result** | Files are stored as LSQ custom-object attachments. No dedicated XR table. Document blob retrieval requires LSQ API (out of scope per project constraint — flag for security/data-residency review). |
 | **Priority** | Medium |

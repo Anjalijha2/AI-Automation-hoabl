@@ -1089,6 +1089,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-FS-Customers-Parking §4.2 |
 | **Pre-conditions** | Modal toggle ON |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter Count = 3<br>2. Enter Amount = 250000<br>3. Observe preview |
 | **Expected Result** | Preview displays 750000 (or formatted ₹7,50,000) |
 | **Priority** | Medium |
@@ -1102,6 +1103,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-FS-Customers-Parking §7 |
 | **Pre-conditions** | Booked row, parking modal valid (toggle ON or OFF) |
+| **Type** | FUNC |
 | **Test Steps** | 1. Submit |
 | **Expected Result** | PUT to `apiUrls.admin.registrationUnitUpdate/:id` with `{event:"update-parking", payload:{additionalParkingEnabled, parkingCount, parkingAmount}}`. Toast "Parking details updated successfully". Table refetches with current filters. |
 | **Priority** | Critical |
@@ -1115,6 +1117,7 @@
 | **Module** | ADM – Customers / API |
 | **BRD/FRD Req** | Tech Lead TBC #6 |
 | **Pre-conditions** | Existing parkingCount = 2 on the registration unit |
+| **Type** | NEG |
 | **Test Steps** | 1. Open modal — toggle ON, Count=2, Amount=any<br>2. Submit |
 | **Expected Result** | Backend returns 400 `"No change in parking count"` because delta === 0 |
 | **Priority** | High |
@@ -1128,6 +1131,7 @@
 | **Module** | ADM – Customers / API |
 | **BRD/FRD Req** | Tech Lead TBC #6 |
 | **Pre-conditions** | Available parking pool = 1 for the typology |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter Count=5 (delta exceeds pool)<br>2. Submit |
 | **Expected Result** | Backend returns 400 `"Available parking count (X) is less than required (Y)"` |
 | **Priority** | High |
@@ -1141,6 +1145,7 @@
 | **Module** | ADM – Customers / Notifications |
 | **BRD/FRD Req** | Tech Lead TBC #3 |
 | **Pre-conditions** | A successful parking update |
+| **Type** | NEG |
 | **Test Steps** | 1. Inspect notification logs / buyer phone |
 | **Expected Result** | No buyer-facing notification dispatched. Audit log ADMIN_UPDATE_PARKING is the only post-action artefact. |
 | **Priority** | Medium |
@@ -1156,6 +1161,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-FS-Customers Feature 4 |
 | **Pre-conditions** | Customers page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "Download" button (top right)<br>2. Wait for download |
 | **Expected Result** | File "RegistrationData.xlsx" downloads automatically |
 | **Priority** | High |
@@ -1169,6 +1175,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-FS-Customers Feature 4 §6 |
 | **Pre-conditions** | RegistrationData.xlsx downloaded |
+| **Type** | UI |
 | **Test Steps** | 1. Open downloaded file in Excel<br>2. Count columns |
 | **Expected Result** | Excel sheet has 17 columns of registration data |
 | **Priority** | Medium |
@@ -1182,6 +1189,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-BRD-Customers §6 Rule 5 / TechSpec §3 |
 | **Pre-conditions** | Filter applied (e.g. Allocation Status = Cancelled) |
+| **Type** | FUNC |
 | **Test Steps** | 1. Apply a filter<br>2. Click Download<br>3. Open file and count rows |
 | **Expected Result** | Downloaded XLSX contains only the records matching the currently active filter. If Allocation Status = Cancelled filter is active, XLSX row count equals the Cancelled KPI count. If no filter is active, XLSX contains all records. The `isDownload=1` flag removes pagination only — it does NOT bypass filter `where[Op.and]` conditions. |
 | **Priority** | High |
@@ -1195,6 +1203,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-BRD-Customers §6 Rule 5 / TechSpec §3 |
 | **Pre-conditions** | Apply `allotmentStatus=refunded` filter (Cancelled rows visible in table) |
+| **Type** | FUNC |
 | **Test Steps** | 1. With filter active, click Download<br>2. Open XLSX and count data rows |
 | **Expected Result** | XLSX contains only refunded/cancelled records. Row count matches Cancelled KPI value. Row count is strictly less than the unfiltered export row count. |
 | **Priority** | Critical |
@@ -1208,6 +1217,7 @@
 | **Module** | ADM – Customers / API |
 | **BRD/FRD Req** | ADMIN-FS-Customers Feature 1 §7 / TechSpec §2 |
 | **Pre-conditions** | Valid admin JWT |
+| **Type** | API |
 | **Test Steps** | 1. GET `/api/v1/admin/dashboard/all-buyers?allotmentStatus=booked_online&isDownload=1`<br>2. Inspect response |
 | **Expected Result** | 200 OK. All rows have `allocationPaymentSource != 'admin'` AND `status='WINNER'` AND `allocationTransactionId != null` (booked_online predicate set per TechSpec §2.1). |
 | **Priority** | High |
@@ -1221,6 +1231,7 @@
 | **Module** | ADM – Customers / API |
 | **BRD/FRD Req** | TechSpec §3 |
 | **Pre-conditions** | Valid admin JWT; refunded rows exist in data set; refunded rows are a subset (not 100%) of total |
+| **Type** | API |
 | **Test Steps** | 1. GET `/api/v1/admin/dashboard/all-buyers?isDownload=1&allotmentStatus=refunded` — capture body length<br>2. GET `/api/v1/admin/dashboard/all-buyers?isDownload=1` — capture body length<br>3. Compare |
 | **Expected Result** | Filtered row count is strictly less than total row count — confirms `isDownload=1` does NOT bypass filter `where[Op.and]` conditions. |
 | **Priority** | High |
@@ -1234,6 +1245,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | TechSpec §2 row 1 / §7.1 item 1 |
 | **Pre-conditions** | Customers page loaded; a known buyer exists with first name "Rahul" |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter the buyer's first name "Rahul" in the Search by Phone field<br>2. Wait for table to filter |
 | **Expected Result** | Empty state shown OR unfiltered table — the search does NOT match on name. `globalSearch` performs LIKE %value% against `User.phone` ONLY. OR branches for first_name, last_name, registration_number, confirmation_number, unit_no, tower_name are commented out in source. |
 | **Priority** | High |
@@ -1247,6 +1259,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | TechSpec §4 — KPI uses separate aggregate query |
 | **Pre-conditions** | Customers page loaded; baseline KPI values captured |
+| **Type** | NEG |
 | **Test Steps** | 1. Note all 6 KPI card values (Registered, Inactive, Cancelled, KYC Pending, Confirmed, Active Towers)<br>2. Apply `allotmentStatus=registered` filter<br>3. Re-read all 6 KPI card values |
 | **Expected Result** | All 6 KPI card values are unchanged. KPIs are computed by a separate database aggregate query that does NOT apply active table filters, search, or sort. KPI values always reflect global project totals. |
 | **Priority** | High |
@@ -1262,6 +1275,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-BRD-Customers §4 — Search |
 | **Pre-conditions** | Customers page loaded |
+| **Type** | EDGE |
 | **Test Steps** | 1. Type "1234567890" (non-existent) in search<br>2. Wait |
 | **Expected Result** | Table shows empty state or "No records found"; header count unchanged |
 | **Priority** | Medium |
@@ -1275,6 +1289,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-BRD-Customers §6 Rule 6 |
 | **Pre-conditions** | Customer with multiple sub-registrations exists |
+| **Type** | UI |
 | **Test Steps** | 1. Search for the customer phone<br>2. Inspect Registration Details column |
 | **Expected Result** | Each sub-registration (GHNG-XXXX-A, -B, -C) appears as its own row |
 | **Priority** | Medium |
@@ -1288,6 +1303,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-BRD-Customers §6 Rule 3 |
 | **Pre-conditions** | A registration just cancelled |
+| **Type** | BIZ |
 | **Test Steps** | 1. Locate the now-cancelled row<br>2. Try to find an "Undo" or restore option |
 | **Expected Result** | No restore mechanism; status remains Cancelled permanently |
 | **Priority** | High |
@@ -1301,6 +1317,7 @@
 | **Module** | ADM – Customers |
 | **BRD/FRD Req** | ADMIN-BRD-Customers §4 KPI |
 | **Pre-conditions** | Cancellation just performed |
+| **Type** | REG |
 | **Test Steps** | 1. Note Cancelled Registrations KPI before<br>2. Cancel one registration<br>3. Refresh and note KPI |
 | **Expected Result** | Cancelled Registrations count increments by 1 |
 | **Priority** | Medium |
@@ -1316,6 +1333,7 @@
 | **Module** | ADM – Customers / Notifications |
 | **BRD/FRD Req** | FSD §5 row 1 — `controllers/admin.controller.js:3367-3700` |
 | **Pre-conditions** | A Booked unit (status=WINNER) successfully cancelled via PUT /api/v1/admin/cancel-units |
+| **Type** | NEG |
 | **Test Steps** | 1. Perform single-unit cancel<br>2. Inspect Kaleyra, epinet, email service logs<br>3. Inspect buyer's phone SMS/WhatsApp |
 | **Expected Result** | No WhatsApp call. No SMS call. No email. Only `syncCancelledUnitsToPython` post-commit (integration sync, NOT a notification). Previous BRD assumption of "Notification sent" is INCORRECT. |
 | **Priority** | High |
@@ -1329,6 +1347,7 @@
 | **Module** | ADM – Customers / Notifications |
 | **BRD/FRD Req** | FSD §5 row 2 — `controllers/admin.controller.js:2301-2689` |
 | **Pre-conditions** | Bulk cancel completed for 5+ booked units via Excel upload |
+| **Type** | NEG |
 | **Test Steps** | 1. Upload bulk-cancel Excel, complete submission<br>2. Inspect notification logs for any of the 5+ buyers |
 | **Expected Result** | No notification of any kind dispatched to any cancelled buyer. Previous BRD claim INCORRECT. |
 | **Priority** | High |
@@ -1342,6 +1361,7 @@
 | **Module** | ADM – Customers / Notifications |
 | **BRD/FRD Req** | FSD §5 row 8 — `services/registration-unit.service.js:285-347` |
 | **Pre-conditions** | Successful Update Parking on a Booked unit |
+| **Type** | NEG |
 | **Test Steps** | 1. Update parking (toggle on, count=2, amount=250000), submit<br>2. Inspect notifications |
 | **Expected Result** | No buyer SMS/WhatsApp/email. Audit log ADMIN_UPDATE_PARKING is the only post-action artefact. Confirms previous BRD assumption INCORRECT. |
 | **Priority** | Medium |
@@ -1355,6 +1375,7 @@
 | **Module** | ADM – Customers / Notifications |
 | **BRD/FRD Req** | FSD §5 row 10 — `controllers/milestone-payment.controller.js:1063-1484` |
 | **Pre-conditions** | Admin submits an offline milestone payment on a Winner unit |
+| **Type** | NEG |
 | **Test Steps** | 1. Submit offline milestone (paymentType=1, amount = full outstanding)<br>2. Inspect notification logs and buyer phone |
 | **Expected Result** | No buyer notification dispatched. Only LSQ opportunity update and Mavis sync fire (integration sync, NOT buyer comms). Previous BRD claim of "Notification sent" is INCORRECT. |
 | **Priority** | High |
@@ -1368,6 +1389,7 @@
 | **Module** | ADM – Customers / Notifications |
 | **BRD/FRD Req** | FSD §5 row 4 — `services/allocation.service.js:1816-1832` |
 | **Pre-conditions** | A Preallocated unit; buyer with `countryCode='+91'` |
+| **Type** | INT |
 | **Test Steps** | 1. Admin completes Assign Offline Unit<br>2. Inspect notification dispatch |
 | **Expected Result** | 1 WhatsApp call to `congrates_payment_success_27sept` (vars: firstName, "tower - allocatedUnit"). 1 SMS to `ALLOTMENT_PAYMENT_SUCCESS`. NO email. For non-+91 buyers, SMS is suppressed (WhatsApp only). |
 | **Priority** | Critical |
@@ -1381,6 +1403,7 @@
 | **Module** | ADM – Customers / Notifications |
 | **BRD/FRD Req** | FSD §5 row 4 — `services/allocation.service.js:1830-1832` |
 | **Pre-conditions** | Buyer NRI with `countryCode != '+91'` (e.g. '+1') |
+| **Type** | EDGE |
 | **Test Steps** | 1. Admin completes Assign Offline Unit on NRI buyer<br>2. Inspect notification dispatch |
 | **Expected Result** | 1 WhatsApp call. ZERO SMS calls. SMS dispatcher is gated by `if (smsData.countryCode === '+91')`. |
 | **Priority** | High |
@@ -1394,6 +1417,7 @@
 | **Module** | ADM – Customers / DB |
 | **BRD/FRD Req** | FSD §7 Bug #1 — `services/registration-unit.service.js:511` |
 | **Pre-conditions** | Admin uses the `allocation_transaction_update` event |
+| **Type** | DB |
 | **Test Steps** | 1. Submit allocation transaction update for a Booked unit<br>2. Query `SELECT gateway FROM payment_transactions WHERE id = <new txn id>` |
 | **Expected Result** | `gateway` column = `'easebuzz'` even though this is an admin manual update. Document data-quality bug — gateway value misattributes the channel for audits. |
 | **Priority** | Medium |

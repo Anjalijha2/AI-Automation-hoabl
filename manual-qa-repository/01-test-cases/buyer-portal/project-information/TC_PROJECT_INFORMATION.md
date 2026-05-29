@@ -12,6 +12,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Buyer logged in |
+| **Type** | FUNC |
 | **Test Steps** | 1. Inspect main nav<br>2. Click Project menu item |
 | **Expected Result** | Navigation succeeds; URL = `/project`; project page renders |
 | **Priority** | Critical |
@@ -24,6 +25,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Buyer logged in (any status: pre-allocation, Available, WINNER, Waitlisted) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `/project` |
 | **Expected Result** | Page loads for all buyer journey states |
 | **Priority** | High |
@@ -36,6 +38,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Project page open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect TopBarProject tabs |
 | **Expected Result** | Tabs visible: Overview, Towers, Gallery, Documents, Videos |
 | **Priority** | High |
@@ -48,6 +51,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Buyer logged in |
+| **Type** | FUNC |
 | **Test Steps** | 1. Type `https://uat.xrportal.in/project` directly in address bar |
 | **Expected Result** | Project page loads without redirect; Overview tab active |
 | **Priority** | Medium |
@@ -60,6 +64,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | No active session |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `/project` URL directly |
 | **Expected Result** | Redirected to login page; project content not exposed pre-auth |
 | **Priority** | High |
@@ -72,6 +77,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Towers tab active |
+| **Type** | FUNC |
 | **Test Steps** | 1. Press F5 |
 | **Expected Result** | Page reloads with Towers tab active (URL/query state preserved) OR consistently defaults to Overview (document behaviour) |
 | **Priority** | Low |
@@ -84,6 +90,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Overview tab active |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Towers tab<br>2. Monitor network |
 | **Expected Result** | Only relevant component re-renders; no full document reload; smooth transition |
 | **Priority** | Medium |
@@ -96,6 +103,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Project page open |
+| **Type** | UI |
 | **Test Steps** | 1. Click each tab in turn |
 | **Expected Result** | Selected tab clearly highlighted (underline / background) while others stay inactive |
 | **Priority** | Low |
@@ -110,6 +118,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Project page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Check which tab is active on load |
 | **Expected Result** | Overview tab active by default; overview content visible |
 | **Priority** | Medium |
@@ -122,6 +131,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Strapi has overview content published |
+| **Type** | INT |
 | **Test Steps** | 1. Inspect overview text/images |
 | **Expected Result** | Project description, hero image and highlights render per Strapi config |
 | **Priority** | High |
@@ -134,6 +144,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Overview tab visible, Strapi has hero image published |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect network requests for hero image |
 | **Expected Result** | Image returns 200; rendered with alt text; no broken-image icon |
 | **Priority** | High |
@@ -146,6 +157,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Strapi has at least 3 highlight items |
+| **Type** | INT |
 | **Test Steps** | 1. Inspect highlights section |
 | **Expected Result** | All highlight items rendered in list/grid; text matches Strapi entries |
 | **Priority** | High |
@@ -158,6 +170,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Strapi overview content unpublished |
+| **Type** | EDGE |
 | **Test Steps** | 1. Open Overview tab |
 | **Expected Result** | No broken sections; either placeholder text or empty container; no JS error |
 | **Priority** | Low |
@@ -170,6 +183,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Overview content includes rich text |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect rendered DOM for `<p>`, `<strong>`, escaped chars |
 | **Expected Result** | Rich text rendered as HTML, not displayed as raw markup like `**bold**` |
 | **Priority** | Medium |
@@ -182,6 +196,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Buyer has WINNER unit (mahareraNumber available via allocation/unit-details) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect overview footer / compliance section |
 | **Expected Result** | MahaRERA registration number visible per legal requirement (sourced from getDynamicTemplateData per FSD note) |
 | **Priority** | High |
@@ -194,6 +209,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Network throttled, fresh page load |
+| **Type** | UI |
 | **Test Steps** | 1. Open `/project`<br>2. Observe overview area during fetch |
 | **Expected Result** | Skeleton/spinner shown while Strapi fetch in flight; content swapped in on response |
 | **Priority** | Low |
@@ -208,6 +224,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Project page open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Towers tab |
 | **Expected Result** | TowerSection renders; tower list (Crest, Crown, Blossom, Pinnacle, Bright, etc.) visible |
 | **Priority** | High |
@@ -220,6 +237,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Towers tab active |
+| **Type** | UI |
 | **Test Steps** | 1. Click each TowerTabs entry<br>2. Inspect specs panel |
 | **Expected Result** | Per-tower data renders: height, typologies, configurations, total units |
 | **Priority** | High |
@@ -232,6 +250,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Tower specs visible |
+| **Type** | BIZ |
 | **Test Steps** | 1. Try clicking values / editing |
 | **Expected Result** | No editable inputs; everything read-only |
 | **Priority** | Medium |
@@ -244,6 +263,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Towers tab clicked |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect which tower tab is active by default |
 | **Expected Result** | First tower (alphabetical or per Strapi order) preselected; its specs visible |
 | **Priority** | Medium |
@@ -256,6 +276,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Towers tab open, Tower A active |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Tower B<br>2. Inspect specs panel |
 | **Expected Result** | Specs panel updates to show Tower B data; rest of page (header, footer) unchanged |
 | **Priority** | High |
@@ -268,6 +289,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | One tower in Strapi has empty spec list |
+| **Type** | EDGE |
 | **Test Steps** | 1. Click that tower tab |
 | **Expected Result** | Empty-state message ("Specifications not available yet"); no broken layout |
 | **Priority** | Low |
@@ -280,6 +302,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Tower specs loaded |
+| **Type** | VAL |
 | **Test Steps** | 1. Inspect numeric values |
 | **Expected Result** | Heights show units (e.g., "60m"); unit counts integer; no NaN or undefined leaks |
 | **Priority** | Medium |
@@ -292,6 +315,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | ≥5 towers configured, viewport ≤480px |
+| **Type** | UI |
 | **Test Steps** | 1. Observe tower tab strip |
 | **Expected Result** | Horizontal scroll or carousel enabled; all tower tabs reachable |
 | **Priority** | Low |
@@ -306,6 +330,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Project page open, Gallery content published |
+| **Type** | UI |
 | **Test Steps** | 1. Click Gallery tab |
 | **Expected Result** | Photo thumbnails render in grid layout |
 | **Priority** | High |
@@ -318,6 +343,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Gallery loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click any thumbnail |
 | **Expected Result** | Lightbox/modal opens with larger image, prev/next controls |
 | **Priority** | Medium |
@@ -330,6 +356,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Lightbox open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Next arrow<br>2. Click Prev arrow |
 | **Expected Result** | Image cycles through gallery in both directions |
 | **Priority** | Low |
@@ -342,6 +369,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Lightbox open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Press ESC<br>2. Reopen and click X |
 | **Expected Result** | Both close the lightbox |
 | **Priority** | Low |
@@ -354,6 +382,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Strapi gallery empty |
+| **Type** | EDGE |
 | **Test Steps** | 1. Open Gallery tab |
 | **Expected Result** | Empty state message ("No images yet") rendered; no broken thumbnails |
 | **Priority** | Low |
@@ -368,6 +397,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Documents published in Strapi |
+| **Type** | UI |
 | **Test Steps** | 1. Click Documents tab |
 | **Expected Result** | List of documents renders (RERA, approvals, brochures) with titles |
 | **Priority** | Critical |
@@ -380,6 +410,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | RERA document published |
+| **Type** | BIZ |
 | **Test Steps** | 1. Locate "RERA Registration" document<br>2. Inspect availability |
 | **Expected Result** | RERA document listed and downloadable |
 | **Priority** | Critical |
@@ -392,6 +423,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Document list visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click View or Download on a document |
 | **Expected Result** | PDF opens in new tab or downloads to disk |
 | **Priority** | High |
@@ -404,6 +436,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Brochure published |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click brochure download |
 | **Expected Result** | Brochure PDF downloaded |
 | **Priority** | Medium |
@@ -418,6 +451,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Videos published in Strapi |
+| **Type** | UI |
 | **Test Steps** | 1. Click Videos tab |
 | **Expected Result** | Video thumbnails render with titles and play button |
 | **Priority** | High |
@@ -430,6 +464,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Videos tab loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click thumbnail / play button |
 | **Expected Result** | Video player loads and starts streaming |
 | **Priority** | High |
@@ -442,6 +477,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Video playing |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect controls (play/pause, volume, fullscreen, scrub) |
 | **Expected Result** | All controls functional |
 | **Priority** | Medium |
@@ -454,6 +490,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Strapi videos empty |
+| **Type** | EDGE |
 | **Test Steps** | 1. Open Videos tab |
 | **Expected Result** | Empty state shown; no broken video boxes |
 | **Priority** | Low |
@@ -468,6 +505,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | New content published in Strapi |
+| **Type** | INT |
 | **Test Steps** | 1. Reload project page |
 | **Expected Result** | New content visible without code deploy |
 | **Priority** | High |
@@ -480,6 +518,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Strapi API simulated unreachable |
+| **Type** | INT |
 | **Test Steps** | 1. Open `/project` |
 | **Expected Result** | Page does not crash; cached content or empty-state with retry |
 | **Priority** | Medium |
@@ -492,6 +531,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Documents tab open, navigated to another page |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click browser Back |
 | **Expected Result** | Returns to Documents tab specifically (deep-link or state preserved) |
 | **Priority** | Low |
@@ -504,6 +544,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Strapi response delayed (5+ seconds) |
+| **Type** | INT |
 | **Test Steps** | 1. Open `/project`<br>2. Observe page during fetch |
 | **Expected Result** | Loader/spinner shown until content arrives; no blank screen >2s |
 | **Priority** | Medium |
@@ -516,6 +557,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Tab A clicked, fetch in flight |
+| **Type** | EDGE |
 | **Test Steps** | 1. Quickly click Tab B before Tab A response arrives |
 | **Expected Result** | Final view shows Tab B content (latest selection); Tab A response discarded; no flicker between two views |
 | **Priority** | Medium |
@@ -528,6 +570,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Document SAS URL has expired |
+| **Type** | NEG |
 | **Test Steps** | 1. Click Download |
 | **Expected Result** | User-facing error toast ("Link expired, please refresh"); page does not crash; refresh regenerates new SAS |
 | **Priority** | Medium |
@@ -540,6 +583,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Strapi returns 500 for `/api/projects/1` |
+| **Type** | NEG |
 | **Test Steps** | 1. Open `/project` |
 | **Expected Result** | User-friendly error banner ("Unable to load project info"); rest of portal nav remains operational |
 | **Priority** | Medium |
@@ -552,6 +596,7 @@
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Project page open |
+| **Type** | UI |
 | **Test Steps** | 1. Press Tab to focus tab strip<br>2. Press arrow Right/Left |
 | **Expected Result** | Focus moves between tabs; Enter activates selected tab; accessibility compliant |
 | **Priority** | Low |
@@ -576,6 +621,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-project-inform
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Seed Project row with `registrationNumberPrefix=NULL` for active projectId |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /api/v1/registration/order` (EOI submit) |
 | **Expected Result** | 400 "Invalid project" (controllers/registration.controller.js:1213-1218) |
 | **Priority** | High |
@@ -588,6 +634,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-project-inform
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | UAT environment (backend DB projectId=2) |
+| **Type** | INT |
 | **Test Steps** | 1. Monitor outbound calls to Strapi during EOI submit |
 | **Expected Result** | Strapi URL = `GET <STRAPI_BASE>/api/projects/1?populate=deep` (services/strapi.service.js:117). Hardcoded `1` — does NOT match backend project resolution. Document drift. |
 | **Priority** | Medium |
@@ -600,6 +647,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-project-inform
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Set `projects.is_active=false` for active projectId |
+| **Type** | BIZ |
 | **Test Steps** | 1. Login and submit EOI |
 | **Expected Result** | EOI still processes — `isActive` is NOT filtered in buyer paths (BUG GAP, FSD §7.2). Document as risk. |
 | **Priority** | Medium |
@@ -612,6 +660,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-project-inform
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Strapi master does not contain apartmentType "5BHK Penthouse" |
+| **Type** | NEG |
 | **Test Steps** | 1. Submit EOI with `apartmentType: "5BHK Penthouse"` |
 | **Expected Result** | 400 "Invalid Apartment Type" (controllers/registration.controller.js:1123-1137) |
 | **Priority** | High |
@@ -624,6 +673,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-project-inform
 |-------|-------|
 | **Module** | BYR – Project Info |
 | **Pre-conditions** | Any environment |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect backend env<br>2. Compare projectId in registration flows |
 | **Expected Result** | production → 1, non-prod → 2 (controllers/registration.controller.js:1170, 2337). Documented as known constraint — multi-project rollout requires code change, not config (BUG-DASH-004). |
 | **Priority** | Medium |

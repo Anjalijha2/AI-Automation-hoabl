@@ -12,6 +12,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer Available, no active campaign |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click Proceed to Confirm from dashboard |
 | **Expected Result** | WaitingForUnit screen shown with "Allocation hasn't started yet" message |
 | **Priority** | Critical |
@@ -24,6 +25,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Future campaign scheduled |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect AllocationEndTimer |
 | **Expected Result** | Countdown ticks down towards scheduled start time |
 | **Priority** | High |
@@ -36,6 +38,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer on waitlist for next round |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect NextChanceTime |
 | **Expected Result** | Buyer's next opportunity time/date shown |
 | **Priority** | Medium |
@@ -48,6 +51,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer on waiting screen at campaign start time |
+| **Type** | INT |
 | **Test Steps** | 1. Wait for campaign start; monitor network tab |
 | **Expected Result** | Frontend POLLS `GET /api/v1/user/allocation/campaigns/latest` periodically (NO WebSocket / SSE infrastructure exists — verified absent from backend; FSD §1 GAP-AE-01). Screen transitions on next poll cycle. Do NOT assert WebSocket events. |
 | **Priority** | Critical |
@@ -62,6 +66,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | STATIC campaign active, buyer Available |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click Proceed to Confirm<br>2. Inspect allotment page |
 | **Expected Result** | Green "Book Now" badge visible |
 | **Priority** | Critical |
@@ -74,6 +79,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Allotment page open with Book Now |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Book Now |
 | **Expected Result** | "Select Unit >" link visible in center panel |
 | **Priority** | High |
@@ -86,6 +92,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Select Unit visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Select Unit > |
 | **Expected Result** | Unit Selection screen opens with 3-panel layout (towers / grid / details) |
 | **Priority** | Critical |
@@ -98,6 +105,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer status = Waitlisted, STATIC campaign active |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Allotment page |
 | **Expected Result** | No Book Now button; message indicates current waitlist status; cannot enter unit selection flow |
 | **Priority** | High |
@@ -110,6 +118,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Active STATIC campaign with scheduled end time |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect AllocationEndTimer on Allotment page |
 | **Expected Result** | Countdown to campaign end visible and ticking; matches `campaigns/latest` data |
 | **Priority** | Medium |
@@ -122,6 +131,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Available buyer on Allotment page, Book Now visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Press F5<br>2. Observe page after reload |
 | **Expected Result** | Page reloads; Book Now still rendered; buyer remains in Available state; no broken state |
 | **Priority** | Medium |
@@ -134,6 +144,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer has HOLD on unit A (in-flight payment) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Allotment page<br>2. Inspect Book Now |
 | **Expected Result** | Book Now hidden or disabled; in-flight payment banner shown ("Payment under verification") |
 | **Priority** | High |
@@ -146,6 +157,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer Available; no campaign running |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `/allotment` URL directly |
 | **Expected Result** | WaitingForUnit screen rendered; no Book Now visible; matches BYR_ALLOC_001 behaviour |
 | **Priority** | Medium |
@@ -160,6 +172,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit selection screen open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect left panel |
 | **Expected Result** | Towers (Crest, Crown, Blossom, Pinnacle, Bright) with available unit counts |
 | **Priority** | High |
@@ -172,6 +185,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Towers listed |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click any tower |
 | **Expected Result** | Center panel shows floor-by-floor grid for that tower |
 | **Priority** | High |
@@ -184,6 +198,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit grid loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect a white unit<br>2. Click it |
 | **Expected Result** | White units selectable; click highlights them |
 | **Priority** | High |
@@ -196,6 +211,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | White unit clicked |
+| **Type** | UI |
 | **Test Steps** | 1. Observe colour |
 | **Expected Result** | Unit colour changes from white to green |
 | **Priority** | High |
@@ -208,6 +224,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Another buyer holds a unit |
+| **Type** | BIZ |
 | **Test Steps** | 1. Try to click orange unit |
 | **Expected Result** | Click ignored or tooltip "Currently in payment" shown |
 | **Priority** | Critical |
@@ -220,6 +237,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit already booked |
+| **Type** | BIZ |
 | **Test Steps** | 1. Try to click red unit |
 | **Expected Result** | Not selectable; tooltip "Sold" or similar |
 | **Priority** | High |
@@ -232,6 +250,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit selected |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect right panel |
 | **Expected Result** | Unit No, BHK, carpet area, Agreement Value, offers, total price displayed |
 | **Priority** | Critical |
@@ -244,6 +263,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit selected |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "Floor & Unit Plan >" |
 | **Expected Result** | Plan view opens with floor layout and unit dimensions |
 | **Priority** | Medium |
@@ -256,6 +276,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit selected |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "Cost Sheet >" |
 | **Expected Result** | Itemised cost sheet shown for selected unit |
 | **Priority** | High |
@@ -268,6 +289,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit selected |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Change Unit<br>2. Pick a different white unit |
 | **Expected Result** | Old unit deselected (green → white); new unit selected |
 | **Priority** | Medium |
@@ -280,6 +302,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit selected |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click Cancel |
 | **Expected Result** | Selection cleared per business rule; hold state preserved or released as configured |
 | **Priority** | Medium |
@@ -292,6 +315,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit selected in grid |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Add |
 | **Expected Result** | Returns to Allotment page; center panel shows selected unit with reg number |
 | **Priority** | Critical |
@@ -306,6 +330,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit added on Allotment page |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect T&C checkbox |
 | **Expected Result** | Unchecked by default |
 | **Priority** | High |
@@ -318,6 +343,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Allotment page with unit added |
+| **Type** | VAL |
 | **Test Steps** | 1. Inspect Pay button<br>2. Tick T&C<br>3. Re-inspect |
 | **Expected Result** | Disabled when unchecked; enabled when ticked (TC-CST-012 rule) |
 | **Priority** | Critical |
@@ -330,6 +356,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Allotment page |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect checkbox label |
 | **Expected Result** | Label = "I confirm to HoABL Terms & Conditions and Privacy Policy" |
 | **Priority** | Medium |
@@ -342,6 +369,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | T&C ticked, Pay enabled |
+| **Type** | INT |
 | **Test Steps** | 1. Click "Confirmation Amount Pay Rs. 27,000" |
 | **Expected Result** | Easebuzz gateway opens with Impactum Lands Pvt Ltd as merchant |
 | **Priority** | Critical |
@@ -354,6 +382,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Easebuzz opened |
+| **Type** | INT |
 | **Test Steps** | 1. Inspect validity timer |
 | **Expected Result** | Approx. 15-minute countdown visible |
 | **Priority** | Medium |
@@ -366,6 +395,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Easebuzz opened |
+| **Type** | INT |
 | **Test Steps** | 1. Inspect method tabs |
 | **Expected Result** | Credit Card / Debit Card / UPI / NetBanking / Wallets all present |
 | **Priority** | High |
@@ -378,6 +408,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Valid payment completed |
+| **Type** | E2E |
 | **Test Steps** | 1. Complete payment |
 | **Expected Result** | "Payment successful!" screen with green checkmark, unit details, applicant list |
 | **Priority** | Critical |
@@ -390,6 +421,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Payment success |
+| **Type** | BIZ |
 | **Test Steps** | 1. Return to dashboard |
 | **Expected Result** | Status badge = Booked; Allotted Unit column populated; Process Status = Complete KYC |
 | **Priority** | Critical |
@@ -404,6 +436,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit selection confirmed |
+| **Type** | BIZ |
 | **Test Steps** | 1. Note hold start time<br>2. Wait 20 minutes without paying |
 | **Expected Result** | After 20 min hold expires; unit released to others |
 | **Priority** | Critical |
@@ -416,6 +449,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer holds unit A |
+| **Type** | BIZ |
 | **Test Steps** | 1. Try to hold unit B simultaneously via API |
 | **Expected Result** | Second hold rejected; only one unit reserved per buyer |
 | **Priority** | High |
@@ -428,6 +462,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Two buyers attempt same unit simultaneously |
+| **Type** | BIZ |
 | **Test Steps** | 1. Both click Add at same moment |
 | **Expected Result** | Only one succeeds; the other sees unit as orange/unavailable |
 | **Priority** | Critical |
@@ -440,6 +475,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer holds unit (status HOLD), payment page open |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect timer element |
 | **Expected Result** | Countdown showing remaining hold time visible (counted down from 20 min from `paymentTransaction.createdAt`) |
 | **Priority** | High |
@@ -452,6 +488,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit held by buyer |
+| **Type** | BIZ |
 | **Test Steps** | 1. Close browser before paying<br>2. Wait until 20 min elapsed + next cron tick |
 | **Expected Result** | After reconcile cron runs: unit reverts to AVAILABLE; another buyer can select. Before cron tick: unit remains HOLD (BYR_ALLOC_054 / GAP-AE-02) |
 | **Priority** | High |
@@ -464,6 +501,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Unit held; payment in progress |
+| **Type** | BIZ |
 | **Test Steps** | 1. Complete payment within 20 minutes<br>2. Query RegistrationUnit |
 | **Expected Result** | Status transitions HOLD → WINNER with confirmationNumber populated; unit not released by cron |
 | **Priority** | Critical |
@@ -476,6 +514,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Hold has lapsed >20 min; cron has reset unit to AVAILABLE |
+| **Type** | BIZ |
 | **Test Steps** | 1. Late webhook confirms payment success<br>2. Inspect status |
 | **Expected Result** | Reconcile detects mismatch and either refunds or escalates; unit stays AVAILABLE for the other buyer; document race-condition behaviour |
 | **Priority** | High |
@@ -488,6 +527,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Hold active; gateway returns failure |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect Unit, RegistrationUnit, ParkingInventory after failure |
 | **Expected Result** | All three revert atomically (Unit→AVAILABLE, RegistrationUnit→ALLOCATED, Parking→AVAILABLE) per BR-AE-10 (BYR_ALLOC_050) |
 | **Priority** | Critical |
@@ -502,6 +542,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | DYNAMIC campaign active, buyer's slot |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Allotment page during slot |
 | **Expected Result** | OpenAllottedUnit component renders system-assigned unit details |
 | **Priority** | Critical |
@@ -514,6 +555,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | DYNAMIC round configured (e.g., 20 min) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Wait beyond window without paying |
 | **Expected Result** | Round expires; buyer may receive next assignment or move to Waitlist |
 | **Priority** | High |
@@ -526,6 +568,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | OpenAllottedUnit visible |
+| **Type** | INT |
 | **Test Steps** | 1. Click Proceed to Pay<br>2. Monitor network |
 | **Expected Result** | Backend hits `POST /api/v1/user/allocation/order`; Easebuzz gateway opens (default gateway per BR-AE-12). No WebSocket event fired — no socket.io / SSE infrastructure exists. |
 | **Priority** | Critical |
@@ -538,6 +581,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Payment completes within round window |
+| **Type** | BIZ |
 | **Test Steps** | 1. Complete payment<br>2. Check status |
 | **Expected Result** | Buyer status = WINNER; KYC flow unlocked |
 | **Priority** | Critical |
@@ -550,6 +594,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Multiple rounds elapsed |
+| **Type** | FUNC |
 | **Test Steps** | 1. Inspect WatchingUnitList |
 | **Expected Result** | All previously assigned units listed |
 | **Priority** | Medium |
@@ -562,6 +607,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer missed at least one assignment |
+| **Type** | FUNC |
 | **Test Steps** | 1. Inspect YourMissedChances |
 | **Expected Result** | Missed units listed from lost_units history |
 | **Priority** | Medium |
@@ -574,6 +620,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | DYNAMIC round timed out without payment |
+| **Type** | BIZ |
 | **Test Steps** | 1. Wait for next assignment |
 | **Expected Result** | New unit assigned in same typology if available |
 | **Priority** | High |
@@ -586,6 +633,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | All units in typology exhausted |
+| **Type** | BIZ |
 | **Test Steps** | 1. Trigger reallocation attempt |
 | **Expected Result** | Buyer placed on Waitlist status |
 | **Priority** | High |
@@ -598,6 +646,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer on Allotment during DYNAMIC campaign |
+| **Type** | INT |
 | **Test Steps** | 1. Another buyer books a unit<br>2. Wait for next polling cycle |
 | **Expected Result** | Popup appears on NEXT poll of `/campaigns/latest` or unit-availability endpoint. NO backend push exists — comments in allocation.service.js:325, 1698 refer to non-existent WebSocket. Latency = polling interval (likely matches `roundTime` for DYNAMIC). |
 | **Priority** | Low |
@@ -612,6 +661,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Campaign ended without buyer completing booking |
+| **Type** | BIZ |
 | **Test Steps** | 1. Refresh dashboard |
 | **Expected Result** | Status changes from Available to Waitlisted |
 | **Priority** | High |
@@ -624,6 +674,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Campaign ended, buyer waitlisted |
+| **Type** | UI |
 | **Test Steps** | 1. Open Allotment page |
 | **Expected Result** | Red text "Allocation window is closed for now." shown in center panel |
 | **Priority** | High |
@@ -636,6 +687,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Campaign ended, buyer waitlisted |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect Allotment page |
 | **Expected Result** | No Select Unit or Book Now buttons rendered |
 | **Priority** | High |
@@ -648,6 +700,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer Booked before campaign end |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect dashboard |
 | **Expected Result** | RegistrationUnit.status stays `WINNER` (terminal — bypasses campaign override per BR-DASH-007). |
 | **Priority** | Critical |
@@ -660,6 +713,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Campaign STOPPED |
+| **Type** | API |
 | **Test Steps** | 1. `POST /api/v1/user/allocation/order` with valid payload |
 | **Expected Result** | "Allotments are closed" error (BR-AE-01, BYR_ALLOC_044); no DB write; buyer status unchanged |
 | **Priority** | Critical |
@@ -672,6 +726,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer WINNER with KYC not submitted, campaign ended |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open dashboard |
 | **Expected Result** | Process Status column shows "Complete KYC" button; KYC flow accessible despite campaign closure |
 | **Priority** | High |
@@ -684,6 +739,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer reverted to Waitlisted; next campaign scheduled |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect Allotment page |
 | **Expected Result** | NextChanceTime widget shows next opportunity date/time; matches scheduled campaign start |
 | **Priority** | Medium |
@@ -696,6 +752,7 @@
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Campaign ended, buyer waitlisted |
+| **Type** | UI |
 | **Test Steps** | 1. Open Allotment page<br>2. Inspect message text |
 | **Expected Result** | Text exactly = "Allocation window is closed for now." rendered in red (matches BYR_ALLOC_041) |
 | **Priority** | Low |
@@ -721,6 +778,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Campaign status = `NOT_STARTED` or `STOPPED` |
+| **Type** | API |
 | **Test Steps** | 1. `POST /api/v1/user/allocation/order` body with valid items |
 | **Expected Result** | Error "Allotments are closed" (allocation.service.js:519-527 / BR-AE-01) |
 | **Priority** | Critical |
@@ -733,6 +791,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer has units in two different registrations R1 and R2 |
+| **Type** | API |
 | **Test Steps** | 1. `POST /allocation/order` with items spanning R1 and R2 |
 | **Expected Result** | Rejected — all items in one order must share same `registrationId` (BR-AE-02, allocation.service.js:475-480) |
 | **Priority** | High |
@@ -745,6 +804,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | RegistrationUnit U is `WINNER` with `confirmationNumber` set |
+| **Type** | API |
 | **Test Steps** | 1. `POST /allocation/order` with U in items |
 | **Expected Result** | "Unit already confirmed" + `confirmationNumber` returned (BR-AE-03) |
 | **Priority** | High |
@@ -757,6 +817,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | RegistrationUnit U is `HOLD` |
+| **Type** | API |
 | **Test Steps** | 1. Submit second order on U |
 | **Expected Result** | "Your Payment is under Verification" + `confirmationNumber` (BR-AE-04) |
 | **Priority** | High |
@@ -769,6 +830,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Two buyers attempt same unit at same instant |
+| **Type** | DB |
 | **Test Steps** | 1. Both fire `POST /allocation/order`<br>2. Compare responses |
 | **Expected Result** | First succeeds; second sees "Unit … is already under booking" — protected by `UPDATE ... WHERE status='AVAILABLE'` returning affectedRows=0 (BR-AE-08, allocation.service.js:630-642). |
 | **Priority** | Critical |
@@ -781,6 +843,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | All parking slots BOOKED in inventory |
+| **Type** | API |
 | **Test Steps** | 1. `POST /allocation/order` with `isParkingSelected:true` |
 | **Expected Result** | "Parking slots are no longer available" (BR-AE-07, allocation.service.js:598-603) |
 | **Priority** | High |
@@ -793,6 +856,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Easebuzz returns error on initiate |
+| **Type** | INT |
 | **Test Steps** | 1. `POST /allocation/order` triggering gateway fail<br>2. Inspect Unit, RegistrationUnit, ParkingInventory |
 | **Expected Result** | All three revert: Unit→AVAILABLE, RegistrationUnit→ALLOCATED, Parking→AVAILABLE (BR-AE-10, allocation.service.js:789-826) |
 | **Priority** | Critical |
@@ -805,6 +869,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer with `countryCode='+91'` completes payment |
+| **Type** | INT |
 | **Test Steps** | 1. Complete payment<br>2. Inspect WhatsApp and SMS gateway logs |
 | **Expected Result** | WhatsApp template `congrates_payment_success_27sept` with args `[firstName, "{towerName} - {allocatedUnit}"]` via Botspice; SMS code `ALLOTMENT_PAYMENT_SUCCESS` via Epinet. NOT Kaleyra. |
 | **Priority** | Critical |
@@ -817,6 +882,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | NRI buyer with `countryCode='+971'` |
+| **Type** | INT |
 | **Test Steps** | 1. Complete payment<br>2. Inspect channels |
 | **Expected Result** | WhatsApp fires; SMS NOT dispatched — guard `countryCode === '+91'` literal (GAP-AE-08, allocation.service.js:1830-1832). |
 | **Priority** | Medium |
@@ -829,6 +895,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Gateway returns `cancelled` / `bounced` / `failed` |
+| **Type** | INT |
 | **Test Steps** | 1. Inspect WhatsApp/SMS logs |
 | **Expected Result** | WhatsApp template `payment_unsuccessful_27sept` (empty args array); SMS code `ALLOTMENT_PAYMENT_FAILED` if `+91`. Status reset to AVAILABLE / ALLOCATED. |
 | **Priority** | High |
@@ -841,6 +908,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | HOLD created at T |
+| **Type** | BIZ |
 | **Test Steps** | 1. At T+21 min, query unit status WITHOUT triggering cron<br>2. Wait for next `allocation-payment-reconcile.cron.js` tick<br>3. Re-query |
 | **Expected Result** | Before cron tick: unit still HOLD even though > 20 min elapsed. After cron tick: unit reset to AVAILABLE (GAP-AE-02). |
 | **Priority** | High |
@@ -853,6 +921,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Buyer A authenticated; registrationNumber R belongs to Buyer B |
+| **Type** | API |
 | **Test Steps** | 1. `GET /api/v1/user/allocation/unit-details?registrationNumber=R&unitId=X` |
 | **Expected Result** | 401 / "Invalid resource access" (BR-AE-15, allocation.controller.js:257-264) |
 | **Priority** | Critical (Security) |
@@ -865,6 +934,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | RegistrationUnit U with `isKycSubmitted=false` |
+| **Type** | API |
 | **Test Steps** | 1. `GET /allocation/unit-details?unitId=X&registrationNumber=R&applicationDetails=true` |
 | **Expected Result** | 400 "KYC Incomplete" (BR-AE-14, allocation.controller.js:245-247) |
 | **Priority** | High |
@@ -877,6 +947,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-allocation-exp
 |-------|-------|
 | **Module** | BYR – Allocation |
 | **Pre-conditions** | Authenticated buyer |
+| **Type** | API |
 | **Test Steps** | 1. Fire 50 `POST /allocation/order` in 5 seconds |
 | **Expected Result** | All requests accepted (no `rateLimit`/`throttle` middleware on route — GAP-AE-10). Document as security gap; buyer could DoS gateway. |
 | **Priority** | Medium (Security) |

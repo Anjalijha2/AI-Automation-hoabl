@@ -23,6 +23,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Buyer logged in |
+| **Type** | BIZ |
 | **Test Steps** | 1. Try `/paymentschedule` before KYC<br>2. Complete KYC<br>3. Retry |
 | **Expected Result** | Pre-KYC: blocked / empty state. Post-KYC: schedule renders. |
 | **Priority** | Critical |
@@ -35,6 +36,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Buyer's plan type (construction-linked / time-linked / down payment) known |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect schedule structure |
 | **Expected Result** | Milestone count and triggers reflect the buyer's selected plan type |
 | **Priority** | High |
@@ -47,6 +49,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | A milestone marked due, Pay > visible on dashboard |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Pay > on dashboard |
 | **Expected Result** | Navigates to `/paymentschedule` with the due milestone visible/highlighted |
 | **Priority** | High |
@@ -59,6 +62,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Unit Details loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click embedded Payment Schedule link or scroll-anchor |
 | **Expected Result** | Schedule accessible from Unit Details page |
 | **Priority** | Medium |
@@ -73,6 +77,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Schedule loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect milestone list order |
 | **Expected Result** | Milestones rendered top-to-bottom in construction order |
 | **Priority** | High |
@@ -85,6 +90,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Schedule loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect each milestone card |
 | **Expected Result** | Trigger description visible (e.g., "Foundation completion", "Plinth", "Slab N") |
 | **Priority** | High |
@@ -97,6 +103,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Milestone with all 3 components |
+| **Type** | UI |
 | **Test Steps** | 1. Expand milestone breakdown |
 | **Expected Result** | Principal, GST and Parking amounts shown as separate line items |
 | **Priority** | High |
@@ -109,6 +116,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Milestone visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Sum components<br>2. Compare to displayed total |
 | **Expected Result** | Total equals computed sum within rounding tolerance |
 | **Priority** | Critical |
@@ -121,6 +129,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Unpaid milestone exists |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect status |
 | **Expected Result** | "Pending" badge (e.g., grey/amber) rendered |
 | **Priority** | High |
@@ -133,6 +142,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Milestone with paidAmount < total |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect status |
 | **Expected Result** | "Partial" badge with paid/outstanding breakdown |
 | **Priority** | High |
@@ -145,6 +155,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Milestone fully paid |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect status |
 | **Expected Result** | "Paid" badge (green) rendered; no Pay button |
 | **Priority** | High |
@@ -157,6 +168,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Milestone with partial payment |
+| **Type** | FUNC |
 | **Test Steps** | 1. Inspect Already Paid field |
 | **Expected Result** | Matches actual paidAmount in DB |
 | **Priority** | High |
@@ -169,6 +181,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Milestone partially paid |
+| **Type** | FUNC |
 | **Test Steps** | 1. Compute Total − Already Paid<br>2. Compare to Outstanding shown |
 | **Expected Result** | Values match |
 | **Priority** | Critical |
@@ -181,6 +194,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Buyer has linked home loan |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect "Bank disbursement" line on milestones |
 | **Expected Result** | Amount expected from bank disbursement displayed per milestone |
 | **Priority** | High |
@@ -193,6 +207,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Buyer eligible for early bird |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect schedule summary |
 | **Expected Result** | Early bird discount line visible and deducted from total |
 | **Priority** | Medium |
@@ -207,6 +222,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Mix of triggered and non-triggered milestones |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect each milestone |
 | **Expected Result** | Pay button visible only when demand letter issued; hidden otherwise |
 | **Priority** | Critical |
@@ -219,6 +235,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Triggered milestone with Pay button |
+| **Type** | INT |
 | **Test Steps** | 1. Click Pay |
 | **Expected Result** | Easebuzz gateway opens in same or new window with correct amount and merchant info |
 | **Priority** | Critical |
@@ -231,6 +248,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Easebuzz opened |
+| **Type** | INT |
 | **Test Steps** | 1. Inspect merchant field |
 | **Expected Result** | Merchant = "Impactum Lands Private Limited" |
 | **Priority** | High |
@@ -243,6 +261,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Easebuzz opened |
+| **Type** | INT |
 | **Test Steps** | 1. Inspect tabs/options |
 | **Expected Result** | Credit Card, Debit Card, UPI, NetBanking, Wallets all available |
 | **Priority** | High |
@@ -255,6 +274,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Pay clicked, valid card/UPI used |
+| **Type** | E2E |
 | **Test Steps** | 1. Complete payment<br>2. Reload schedule |
 | **Expected Result** | Milestone shows Paid status; Outstanding = 0; receipt generated |
 | **Priority** | Critical |
@@ -267,6 +287,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Milestone triggered |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "View Demand Letter" or similar |
 | **Expected Result** | Demand letter PDF opens with milestone details and due amount |
 | **Priority** | High |
@@ -281,6 +302,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | ENV = uat |
+| **Type** | REG |
 | **Test Steps** | 1. Attempt real payment in UAT |
 | **Expected Result** | Test marked skip in automation (`test.skip(ENV==='uat')`) |
 | **Priority** | Medium |
@@ -293,6 +315,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Pay clicked, gateway returns FAILURE |
+| **Type** | NEG |
 | **Test Steps** | 1. Simulate failed payment |
 | **Expected Result** | Milestone status stays Pending; error toast shown; retry possible |
 | **Priority** | High |
@@ -305,6 +328,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | Milestone fully paid |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect milestone row |
 | **Expected Result** | Pay button replaced by "Paid" badge or receipt link |
 | **Priority** | High |
@@ -317,6 +341,7 @@
 |-------|-------|
 | **Module** | BYR – Payment Schedule |
 | **Pre-conditions** | No home loan linked |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect milestone breakdown |
 | **Expected Result** | Bank disbursement line not rendered |
 | **Priority** | Medium |
@@ -332,6 +357,7 @@
 | **Module** | BYR – Payment Schedule / Frontend |
 | **BRD/FRD Req** | FSD §1 / `PaymentSchedule.jsx` |
 | **Pre-conditions** | Buyer on Payment Schedule page |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "Download" / "Print Schedule"<br>2. Inspect network calls — verify NO server GET to a `/pdf` or `/download-schedule` endpoint<br>3. Verify browser print dialog opens |
 | **Expected Result** | Browser print dialog opens via react-to-print. No server PDF generation; no server file stored. Document as expected design. Output is client-rendered. |
 | **Priority** | Medium |
@@ -345,6 +371,7 @@
 | **Module** | BYR – Payment Schedule / DB |
 | **BRD/FRD Req** | FSD §2.2 — model.status enum mismatch |
 | **Pre-conditions** | Initiate a milestone payment via Easebuzz and trigger gateway failure callback |
+| **Type** | DB |
 | **Test Steps** | 1. Initiate online payment for an outstanding milestone<br>2. Force Easebuzz failure callback<br>3. Inspect DB and backend logs |
 | **Expected Result** | Controller attempts `MilestonePaymentTracking.status = 'FAILED'` but model ENUM allows only `VERIFICATION` / `PAID`. MySQL throws `Data truncated for column 'status'`. Either: (a) error is caught silently and row state is inconsistent, or (b) error bubbles to client. Document as code-vs-schema bug. |
 | **Priority** | Critical |
@@ -358,6 +385,7 @@
 | **Module** | BYR – Payment Schedule / Notifications |
 | **BRD/FRD Req** | FSD §1 / verified by source grep |
 | **Pre-conditions** | Buyer completes a milestone payment successfully (or fails) |
+| **Type** | INT |
 | **Test Steps** | 1. Pay a milestone via Easebuzz<br>2. Inspect notification logs and buyer phone |
 | **Expected Result** | NO SMS, NO WhatsApp, NO email dispatched. Buyer must check the portal manually. Previous BRD assumption INCORRECT. |
 | **Priority** | High |

@@ -24,6 +24,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Admin logged in |
+| **Type** | UI |
 | **Test Steps** | 1. Click "Offers" in sidebar<br>2. Observe URL |
 | **Expected Result** | URL is /admin/offers; offers list and Add Offer button visible |
 | **Priority** | Critical |

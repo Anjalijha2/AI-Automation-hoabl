@@ -25,6 +25,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Admin logged in |
+| **Type** | UI |
 | **Test Steps** | 1. Click "Sales Managers" in left sidebar<br>2. Observe URL and page |
 | **Expected Result** | URL becomes /admin/sales-managers; SM list table loads |
 | **Priority** | Critical |
@@ -37,6 +38,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Observe page header |
 | **Expected Result** | Header shows total SM count; "Add Sales Manager" button visible at top right |
 | **Priority** | High |
@@ -49,6 +51,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect table column headers |
 | **Expected Result** | Columns include First Name, Last Name, Email, Phone, Role, Assignable toggle, Is Active toggle, Actions |
 | **Priority** | High |
@@ -61,6 +64,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Assignable column on a row |
 | **Expected Result** | Toggle is shown ON (green) or OFF (grey) reflecting IS_AVAILABLE flag |
 | **Priority** | High |
@@ -73,6 +77,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Is Active column on a row |
 | **Expected Result** | Toggle shown ON or OFF reflecting IS_ACTIVE flag |
 | **Priority** | High |
@@ -85,6 +90,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Type SM phone in search field<br>2. Wait |
 | **Expected Result** | Table filters to matching SM only |
 | **Priority** | High |
@@ -97,6 +103,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Type SM email in search field<br>2. Wait |
 | **Expected Result** | Table filters to SMs matching email |
 | **Priority** | Medium |
@@ -109,6 +116,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded; multiple pages |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Next arrow in pagination |
 | **Expected Result** | Next 10 SMs loaded |
 | **Priority** | Medium |
@@ -123,6 +131,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "Add Sales Manager" button |
 | **Expected Result** | Modal opens with fields: First Name, Last Name, Email, Phone, Role, Assignable, Is Active |
 | **Priority** | Critical |
@@ -135,6 +144,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Add SM modal open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter First Name "Test"<br>2. Enter Last Name "SM"<br>3. Enter Email "test.sm@hoabl.in"<br>4. Enter Phone "9876543210"<br>5. Select Role "Sales Manager"<br>6. Toggle Assignable ON, Is Active ON<br>7. Click Submit |
 | **Expected Result** | Success toast appears; modal closes; new SM appears in list |
 | **Priority** | Critical |
@@ -147,6 +157,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Add SM modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Leave First Name empty<br>2. Fill other fields<br>3. Click Submit |
 | **Expected Result** | Validation error shown on First Name field; SM not created |
 | **Priority** | High |
@@ -159,6 +170,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Add SM modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Email "notanemail"<br>2. Fill other fields<br>3. Click Submit |
 | **Expected Result** | Email format error shown; SM not created |
 | **Priority** | High |
@@ -171,6 +183,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Add SM modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Phone "987654321" (9 digits)<br>2. Fill other fields<br>3. Click Submit |
 | **Expected Result** | Phone validation error; must be 10 digits |
 | **Priority** | High |
@@ -183,6 +196,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM just created with Is Active = ON |
+| **Type** | E2E |
 | **Test Steps** | 1. Open /sales-manager portal in new window<br>2. Enter the new SM's phone<br>3. Complete OTP login |
 | **Expected Result** | New SM successfully logs in to SM Portal |
 | **Priority** | Critical |
@@ -195,6 +209,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Add SM modal open with partial data |
+| **Type** | FUNC |
 | **Test Steps** | 1. Fill some fields<br>2. Click Cancel/Close |
 | **Expected Result** | Modal closes; SM list unchanged; no new SM created |
 | **Priority** | Medium |
@@ -209,6 +224,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM with Assignable = ON |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click Assignable toggle on SM row<br>2. Confirm if prompted |
 | **Expected Result** | Toggle switches OFF; SM immediately removed from customer assignment dropdowns system-wide |
 | **Priority** | Critical |
@@ -221,6 +237,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM with Is Active = ON |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click Is Active toggle on SM row |
 | **Expected Result** | Toggle switches OFF; SM can no longer log in to SM portal |
 | **Priority** | Critical |
@@ -233,6 +250,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM with Assignable = OFF |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click Assignable toggle to ON |
 | **Expected Result** | SM appears in customer assignment dropdowns again |
 | **Priority** | High |
@@ -245,6 +263,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM with Is Active = OFF |
+| **Type** | E2E |
 | **Test Steps** | 1. Click Is Active toggle to ON<br>2. Have SM attempt OTP login |
 | **Expected Result** | SM can log in to SM portal again |
 | **Priority** | High |
@@ -257,6 +276,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM exists in list |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click edit/three-dot icon on SM row<br>2. Update Last Name<br>3. Save |
 | **Expected Result** | SM record updated; new Last Name displayed in list |
 | **Priority** | High |
@@ -269,6 +289,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect Actions column for any delete button |
 | **Expected Result** | No delete option exists — SMs are only deactivated via Is Active = OFF |
 | **Priority** | High |
@@ -281,6 +302,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Existing SM with First Name "Ravi", Last Name "Kumar", Email "ravi@hoabl.in", Phone "9123456780" |
+| **Type** | UI |
 | **Test Steps** | 1. Click edit/three-dot icon on that SM row<br>2. Inspect form fields |
 | **Expected Result** | Form opens with all five fields populated with current values; Role field shown as read-only or non-editable; Assignable/Is Active toggles reflect current DB state |
 | **Priority** | High |
@@ -294,6 +316,7 @@
 | **Module** | ADM – Sales Managers / DB |
 | **BRD/FRD Req** | FSD §1 / `sales-manager.service.js:124,155` |
 | **Pre-conditions** | An SM Admin row (Role = SM Admin / roleId=4) exists in list |
+| **Type** | BIZ |
 | **Test Steps** | 1. Toggle Assignable to ON on that row<br>2. Refresh the page<br>3. Re-read the toggle state |
 | **Expected Result** | After refresh, Assignable shows OFF; backend force-sets `isAvailable=0` for roleId=4 regardless of input; SM Admin never appears in customer assignment dropdowns |
 | **Priority** | High |
@@ -308,6 +331,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Locate and open privacy/masking settings |
 | **Expected Result** | Three toggles visible: Email Masking, Phone Masking, Cost Masking |
 | **Priority** | High |
@@ -320,6 +344,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Masking settings open; Email Masking OFF |
+| **Type** | BIZ |
 | **Test Steps** | 1. Toggle Email Masking ON<br>2. Save<br>3. Log in as SM in another window |
 | **Expected Result** | Customer email addresses appear masked or hidden in SM portal |
 | **Priority** | Critical |
