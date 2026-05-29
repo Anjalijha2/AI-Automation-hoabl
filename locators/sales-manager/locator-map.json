@@ -1,11 +1,13 @@
 {
   "_meta": {
     "portal": "sales-manager",
-    "version": "1.1.0",
+    "version": "1.3.0",
     "lastUpdated": "2026-05-29",
     "maintainer": "Tech Lead Agent",
     "changelog": [
-      "1.1.0 — live-crawl pass on 2026-05-29 for login, callback-requests, tower-heatmap, physical-allocation"
+      "1.1.0 — live-crawl pass on 2026-05-29 for login, callback-requests, tower-heatmap, physical-allocation",
+      "1.2.0 — live-crawl pass on 2026-05-29 for tower-heatmap",
+      "1.3.0 — live-crawl pass on 2026-05-29 for physical-allocation"
     ]
   },
   "login": {
@@ -551,6 +553,61 @@
       "changelog": [
         "2026-05-29 — added via live crawl"
       ]
+    },
+    "logoutButton2": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "reset2": {
+      "selector": "button.reset",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "callbackRequestsLink2": {
+      "selector": "a:has-text(\"Callback Requests\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "towersLink2": {
+      "selector": "a:has-text(\"Towers\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "allocationLink2": {
+      "selector": "a:has-text(\"Allocation\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
     }
   },
   "physical-allocation": {
@@ -614,6 +671,72 @@
       "type": "text",
       "fallback": "",
       "aria_role": "h3",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "logoutButton2": {
+      "selector": "button:has-text(\"Logout\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "scanQRButton": {
+      "selector": "button:has-text(\"Scan QR\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "callbackRequestsLink2": {
+      "selector": "a:has-text(\"Callback Requests\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "towersLink2": {
+      "selector": "a:has-text(\"Towers\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "allocationLink2": {
+      "selector": "a:has-text(\"Allocation\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "a",
+      "deprecated": false,
+      "added": "2026-05-29",
+      "changelog": [
+        "2026-05-29 — added via live crawl"
+      ]
+    },
+    "searchByPhoneOrRegistrationNumberInput": {
+      "selector": "input[placeholder=\"Search by Phone or Registration Number...\"]",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "input",
       "deprecated": false,
       "added": "2026-05-29",
       "changelog": [
