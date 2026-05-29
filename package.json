@@ -13,6 +13,7 @@
     "test:regression:admin": "npx playwright test tests/regression/admin/ --config automation-repository/playwright.config.js --project=regression --workers=1",
     "test:api": "npx playwright test tests/api/ --config automation-repository/playwright.config.js --project=api --workers=1",
     "test:db": "npx playwright test tests/db/ --config automation-repository/playwright.config.js --project=db --workers=1",
+    "db:ping": "node -e \"const{sequelize,ping}=require('./db/connection');ping().then(i=>{console.log('OK',i);return sequelize.close();}).catch(e=>{console.error('FAIL',e.message);process.exit(1);})\"",
     "test:smoke": "npx playwright test --config automation-repository/playwright.config.js --project=smoke --workers=1",
     "test:chrome": "npx playwright test --config automation-repository/playwright.config.js --project=chromium --workers=1",
     "test:firefox": "npx playwright test --config automation-repository/playwright.config.js --project=firefox --workers=1",
@@ -37,5 +38,9 @@
     "exceljs": "^4.4.0",
     "playwright": "^1.58.2",
     "xlsx": "^0.18.5"
+  },
+  "dependencies": {
+    "mysql2": "^3.22.4",
+    "sequelize": "^6.37.8"
   }
 }
