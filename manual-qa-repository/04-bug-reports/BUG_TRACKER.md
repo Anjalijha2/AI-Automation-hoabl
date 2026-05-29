@@ -1,12 +1,88 @@
 # Bug Tracker
 
-**Project:** XR Portal Admin  
-**Format:** `BUG_NNN`  
-**Next ID:** BUG_011
+**Project:** XR Portal (all portals)
+**Formats in use:**
+- `BUG_NNN` — sequential project-wide IDs (legacy)
+- `BUG-<MODULE>-NNN` — FSD-source-verified gaps (added 2026-05-29 from TC FSD-corrections)
+
+**Next sequential ID:** BUG_011
 
 ---
 
-## Open Bugs
+## Open Bugs — FSD-Source-Verified (from TC corrections)
+
+These are documented in TC markdown files under `[BUG-REF: ...]` headers. Each entry traces to a backend behaviour observed in code review and contradicting BRD/FRD intent.
+
+### Auth (Admin Login)
+
+| Bug ID | Severity | Title | Source TC |
+|--------|----------|-------|-----------|
+| BUG-AUTH-001 | P1 (security) | Unlimited wrong OTP attempts — no lockout, no rate limit | ADM_LGN_025 |
+| BUG-AUTH-002 | P2 (docs) | OTP delivered via Epinet SMS, NOT Kaleyra as BRD claims | ADM_LGN_FSD_041 |
+| BUG-AUTH-003 | P1 (security) | OTP generated with `Math.random()` — not cryptographically secure | ADM_LGN_FSD_042 |
+| BUG-AUTH-004 | P1 (security) | OTP stored as plaintext on `users.otp` column (no hashing) | ADM_LGN_FSD_043 |
+
+### KYC (Buyer + SM physical-allocation)
+
+| Bug ID | Severity | Title | Source TC |
+|--------|----------|-------|-----------|
+| BUG-KYC-001 | P1 (security) | KYC PDF upload has NO file size limit (multer cap commented out) | BYR_KYC, SM_ALLOC_FSD_020 |
+| BUG-KYC-002 | P2 (security) | Debug route `/cronPdfGenerationJob` exposed without auth | BYR_KYC |
+| BUG-KYC-004 | P3 | `submit-kyc` idempotent path returns different response shape vs create path | BYR_KYC_037 |
+| BUG-KYC-005 | P2 | Partial failure returns HTTP 207 with `success:true` — tests must assert status code not field | BYR_KYC_038 |
+| BUG-KYC-006 | P3 | "Token verification in progress" error also returned when `lsqBookingActivityId` missing — ambiguous | BYR_KYC |
+
+### SM (Callback Requests)
+
+| Bug ID | Severity | Title | Source TC |
+|--------|----------|-------|-----------|
+| BUG-SM-001 | P1 (functional) | Round-robin auto-assign DISABLED — SM Admin always assigns to self | SM_CB_FSD_135 |
+| BUG-SM-002 | P2 (functional) | `COMPLETED` state is unreachable — falls back to CONFIRMED, buyer feedback notification skipped | SM_CB_FSD_136 |
+
+### Home Loan (Buyer)
+
+| Bug ID | Severity | Title | Source TC |
+|--------|----------|-------|-----------|
+| BUG-LOAN-001 | P3 | `approved` (lowercase) state is unreachable in live code | BYR_LOAN_FSD_037 |
+
+### Payment Schedule (Buyer)
+
+| Bug ID | Severity | Title | Source TC |
+|--------|----------|-------|-----------|
+| BUG-PAY-001 | P2 | Milestone status `FAILED` unsupported by model — write triggers `Data truncated` | BYR_PAY_FSD_027 |
+
+### Home Dashboard (Buyer)
+
+| Bug ID | Severity | Title | Source TC |
+|--------|----------|-------|-----------|
+| BUG-DASH-003 | P2 | `registrationCount` value does NOT auto-increment with new registrations | BYR_DASH |
+| BUG-DASH-004 | P3 | Project ID hardcoded: production=1, non-prod=2 — multi-project rollout requires code change | BYR_PROJ |
+
+### JBP (Admin)
+
+| Bug ID | Severity | Title | Source TC |
+|--------|----------|-------|-----------|
+| BUG-JBP-001 | P2 | WhatsApp template `${+91}` template-string emits literal `"91"` (no `+`) | ADM_JBP_FSD_041 |
+| BUG-JBP-002 | P3 | Approve flow clamps `editableUntil` to cycle `endDate` | ADM_JBP_FSD_047 |
+| BUG-JBP-003 | P2 | `submitJbp` NPE on null cycle — `jbpCycle.endDate` read before null check | ADM_JBP_FSD_050 |
+
+### CP (Channel Partner)
+
+| Bug ID | Severity | Title | Source TC |
+|--------|----------|-------|-----------|
+| BUG-CP-006 | P3 | `isJbpSubmitted` count includes EXPIRED rows — version-bump drift | CP_JBP_023 |
+| BUG-CPK-03 | P3 | WhatsApp template `${+91}${phone}` renders as `"91<phone>"` (no `+`) | CP_KYC |
+
+### Config (Admin)
+
+| Bug ID | Severity | Title | Source TC |
+|--------|----------|-------|-----------|
+| BUG-CFG-001 | P3 | "2 Bed Peak Home" is always force-disabled | ADM_CFG_FSD_052 |
+| BUG-CFG-002 | P2 (data integrity) | `updateCustomerActions` has no wrapping transaction — partial-commit risk | ADM_CFG_FSD_054 |
+
+---
+
+## Open Bugs — Sequential
 
 | Bug ID | Module | Severity | Title | Reported | Assigned | Status |
 |--------|--------|----------|-------|----------|----------|--------|
@@ -49,4 +125,19 @@
 | Sprint 2 | 4 | 0 | 2 | 1 | 1 | 4 | 0 |
 | Sprint 3 | 1 | 0 | 0 | 0 | 1 | 1 | 0 |
 | Sprint 4 | 1 | 0 | 0 | 1 | 0 | 0 | 1 |
-| **Total** | **10** | **0** | **3** | **4** | **3** | **9** | **1** |
+| **Total (legacy)** | **10** | **0** | **3** | **4** | **3** | **9** | **1** |
+
+### FSD-Verified Bugs (2026-05-29 audit)
+
+| Module | Count |
+|--------|-------|
+| AUTH | 4 |
+| KYC | 5 |
+| SM | 2 |
+| LOAN | 1 |
+| PAY | 1 |
+| DASH | 2 |
+| JBP | 3 |
+| CP | 2 |
+| CFG | 2 |
+| **Total** | **22** |
