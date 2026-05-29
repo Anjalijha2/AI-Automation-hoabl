@@ -357,6 +357,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Phone Masking OFF |
+| **Type** | BIZ |
 | **Test Steps** | 1. Toggle Phone Masking ON<br>2. Save |
 | **Expected Result** | Customer phones hidden from every SM simultaneously |
 | **Priority** | Critical |
@@ -369,6 +370,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Cost Masking OFF |
+| **Type** | BIZ |
 | **Test Steps** | 1. Toggle Cost Masking ON<br>2. Save |
 | **Expected Result** | Unit pricing hidden from all SMs |
 | **Priority** | Critical |
@@ -381,6 +383,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Masking settings open |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect masking panel for any per-SM granularity option |
 | **Expected Result** | Only system-wide toggles exist; no per-SM masking configuration |
 | **Priority** | Medium |
@@ -393,6 +396,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Cost Masking currently ON |
+| **Type** | BIZ |
 | **Test Steps** | 1. Toggle Cost Masking OFF<br>2. Save |
 | **Expected Result** | Pricing now visible to every SM immediately |
 | **Priority** | High |
@@ -405,6 +409,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Masking panel open; Phone Masking currently OFF |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Phone Masking toggle to ON<br>2. Observe |
 | **Expected Result** | Toggle flips immediately; success toast shown; no confirmation dialog prompted |
 | **Priority** | Medium |
@@ -417,6 +422,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Email Masking just toggled ON |
+| **Type** | DB |
 | **Test Steps** | 1. Logout admin<br>2. Log back in<br>3. Reopen masking panel |
 | **Expected Result** | Email Masking still ON — state persisted in master_configs table |
 | **Priority** | High |
@@ -431,6 +437,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Admin logged in |
+| **Type** | UI |
 | **Test Steps** | 1. Open /admin/cms<br>2. Scroll to Section 7 "Sales Managers" |
 | **Expected Result** | Section 7 visible with Download Sample, Upload File, Submit controls |
 | **Priority** | High |
@@ -443,6 +450,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Section 7 visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "Sample File Download" in Section 7 |
 | **Expected Result** | XLSX template downloads with columns: Role, First Name, Last Name, Email, Phone, IS_AVAILABLE, IS_ACTIVE |
 | **Priority** | High |
@@ -455,6 +463,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Sample XLSX filled with 3 new SMs (phones not in system) |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Upload File, select XLSX<br>2. Click Submit |
 | **Expected Result** | Result file downloads showing 3 Created entries; new SMs appear in SM list |
 | **Priority** | Critical |
@@ -467,6 +476,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | XLSX has row with existing SM phone but new Last Name |
+| **Type** | BIZ |
 | **Test Steps** | 1. Upload XLSX<br>2. Submit |
 | **Expected Result** | Result shows Updated for that row; SM's Last Name in list updates |
 | **Priority** | Critical |
@@ -479,6 +489,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | XLSX has row with IS_AVAILABLE=0 |
+| **Type** | BIZ |
 | **Test Steps** | 1. Upload and submit |
 | **Expected Result** | SM created/updated with Assignable toggle OFF |
 | **Priority** | High |
@@ -491,6 +502,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | XLSX has row with IS_ACTIVE=0 |
+| **Type** | BIZ |
 | **Test Steps** | 1. Upload and submit |
 | **Expected Result** | SM created/updated with Is Active toggle OFF |
 | **Priority** | High |
@@ -503,6 +515,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | XLSX has row with 9-digit phone |
+| **Type** | VAL |
 | **Test Steps** | 1. Upload and submit |
 | **Expected Result** | Result XLSX shows that row flagged as Error with phone validation message |
 | **Priority** | High |
@@ -515,6 +528,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Section 7 visible |
+| **Type** | VAL |
 | **Test Steps** | 1. Try to upload a .csv file<br>2. Click Submit |
 | **Expected Result** | Upload rejected with format error; only .xlsx accepted |
 | **Priority** | High |
@@ -527,6 +541,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Bulk upload with mixed rows submitted |
+| **Type** | UI |
 | **Test Steps** | 1. Open downloaded result XLSX |
 | **Expected Result** | Each row marked Created / Updated / Unchanged / Error with message |
 | **Priority** | High |
@@ -539,6 +554,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | XLSX has 2 rows with same email but different phones |
+| **Type** | BIZ |
 | **Test Steps** | 1. Upload and submit |
 | **Expected Result** | Both rows processed successfully; email is not a uniqueness constraint |
 | **Priority** | Medium |
@@ -553,6 +569,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM has assigned customers; toggling Assignable OFF |
+| **Type** | BIZ |
 | **Test Steps** | 1. Toggle Assignable OFF<br>2. Check existing customer assignments for that SM |
 | **Expected Result** | Existing customer-SM relationships remain; manual reassignment required |
 | **Priority** | High |
@@ -565,6 +582,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Add SM modal open |
+| **Type** | NEG |
 | **Test Steps** | 1. Enter phone matching existing SM<br>2. Submit |
 | **Expected Result** | Error shown; SM not created (phone is unique merge key) |
 | **Priority** | High |
@@ -577,6 +595,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | SM list loaded; bulk upload just performed in another tab |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Refresh on SM page |
 | **Expected Result** | New SMs from bulk upload now appear in the list |
 | **Priority** | Medium |
@@ -589,6 +608,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Add SM modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Email "   "<br>2. Fill other fields<br>3. Submit |
 | **Expected Result** | Validation error on Email (required + must be valid email format); SM not created |
 | **Priority** | High |
@@ -601,6 +621,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Add SM modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Phone "5123456789"<br>2. Fill other fields<br>3. Submit |
 | **Expected Result** | Validation error — Indian mobile must start with 6-9 per phone regex; SM not created |
 | **Priority** | High |
@@ -613,6 +634,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Add SM modal open |
+| **Type** | VAL |
 | **Test Steps** | 1. Try typing "98abcd1234" in Phone field |
 | **Expected Result** | Only digits accepted; field contains "981234" — non-digit keystrokes blocked |
 | **Priority** | Medium |
@@ -625,6 +647,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | New SM created with Is Active = OFF |
+| **Type** | NEG |
 | **Test Steps** | 1. Open /sales-manager portal in incognito<br>2. Enter the new SM's phone<br>3. Submit Send OTP, then verify with master OTP 258369 |
 | **Expected Result** | Verify-OTP returns HTTP 400 `"Your access to the portal has been revoked"`; SM cannot enter portal |
 | **Priority** | Critical |
@@ -637,6 +660,7 @@
 |-------|-------|
 | **Module** | ADM – Sales Managers |
 | **Pre-conditions** | Edit SM modal open with field changes made |
+| **Type** | FUNC |
 | **Test Steps** | 1. Change Last Name to "Changed"<br>2. Click Cancel (do not save)<br>3. Re-locate SM in list |
 | **Expected Result** | Modal closes; SM list shows the original Last Name unchanged; no PUT request fired |
 | **Priority** | Medium |
@@ -652,6 +676,7 @@
 | **Module** | ADM – Sales Managers / DB |
 | **BRD/FRD Req** | FSD §1 / `services/sales-manager.service.js:124,155` |
 | **Pre-conditions** | Admin creates a new SM with roleId=4 and `isAvailable=true` in body |
+| **Type** | DB |
 | **Test Steps** | 1. POST `/api/v1/admin/sales-managers/create` with `{roleId:4, isAvailable:true, ...}`<br>2. Query DB for the new row |
 | **Expected Result** | DB row has `isAvailable=0` regardless of input. SM Admins are excluded from ticket allocation rotation. |
 | **Priority** | High |
@@ -665,6 +690,7 @@
 | **Module** | ADM – Sales Managers / API |
 | **BRD/FRD Req** | FSD §3.1 (no DELETE route) |
 | **Pre-conditions** | Existing SM record |
+| **Type** | API |
 | **Test Steps** | 1. DELETE `/api/v1/admin/sales-managers/<id>` |
 | **Expected Result** | HTTP 404 route not found. Must use PUT `/update/:id` with `{isActive:false}` to deactivate. Document as expected limitation. |
 | **Priority** | Medium |
@@ -678,6 +704,7 @@
 | **Module** | ADM – Sales Managers / Security |
 | **BRD/FRD Req** | FSD §2 (`restrictTo('admin')`) |
 | **Pre-conditions** | Valid SM JWT (roleId=5) |
+| **Type** | NEG |
 | **Test Steps** | 1. As SM, call `GET /api/v1/admin/sales-managers` |
 | **Expected Result** | HTTP 403 Forbidden — only `admin` role allowed. SM-Admin (roleId=4) also denied. |
 | **Priority** | High |

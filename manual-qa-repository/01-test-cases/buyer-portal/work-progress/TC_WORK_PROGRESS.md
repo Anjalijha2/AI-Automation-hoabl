@@ -12,6 +12,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Buyer logged in (any status) |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect main nav |
 | **Expected Result** | Work Progress menu item visible regardless of allocation status |
 | **Priority** | High |
@@ -24,6 +25,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Nav visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Work Progress |
 | **Expected Result** | URL = `/work-progress`; page loads |
 | **Priority** | Critical |
@@ -36,6 +38,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Buyer in any journey state |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `/work-progress` in pre-allocation and post-allocation states |
 | **Expected Result** | Same content accessible in both states |
 | **Priority** | Medium |
@@ -48,6 +51,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Page open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect H1 / header |
 | **Expected Result** | Title clearly identifies "Work Progress" / "Construction Updates" |
 | **Priority** | Low |
@@ -62,6 +66,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | CMS has at least one milestone published |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll through page |
 | **Expected Result** | Each milestone card shows photo, title and description |
 | **Priority** | Critical |
@@ -74,6 +79,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Page open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect network requests for image loads |
 | **Expected Result** | All images return 200; no broken image icons |
 | **Priority** | High |
@@ -86,6 +92,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Page open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect milestone cards |
 | **Expected Result** | Date label rendered (e.g., "March 2026") for each milestone |
 | **Priority** | High |
@@ -98,6 +105,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Page open |
+| **Type** | UI |
 | **Test Steps** | 1. Read description per card |
 | **Expected Result** | Text describes the construction stage as configured in CMS |
 | **Priority** | High |
@@ -110,6 +118,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Multiple milestones exist |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect date order of cards |
 | **Expected Result** | Cards sorted (typically newest first or chronological per CMS config) |
 | **Priority** | Medium |
@@ -122,6 +131,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Milestone has multiple photos |
+| **Type** | FUNC |
 | **Test Steps** | 1. Use next/prev arrows or thumbnails |
 | **Expected Result** | Photo cycles through that milestone's set |
 | **Priority** | Medium |
@@ -134,6 +144,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Photo visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click a photo |
 | **Expected Result** | Lightbox opens with full-size image; controls to close and navigate |
 | **Priority** | Medium |
@@ -146,6 +157,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Lightbox open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Press ESC<br>2. Reopen, click X |
 | **Expected Result** | Both close the lightbox |
 | **Priority** | Low |
@@ -160,6 +172,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Page open |
+| **Type** | UI |
 | **Test Steps** | 1. Scan UI for input boxes, edit/delete icons |
 | **Expected Result** | No editable controls; buyer cannot add content |
 | **Priority** | High |
@@ -172,6 +185,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Buyer token in hand |
+| **Type** | API |
 | **Test Steps** | 1. Attempt to POST to a comment/edit endpoint for work progress |
 | **Expected Result** | 404 or 403 — no buyer-write endpoint exists |
 | **Priority** | High |
@@ -184,6 +198,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Work Progress page open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect DOM for `<input type=file>` or upload buttons |
 | **Expected Result** | No upload affordances anywhere on page; consumption-only UI |
 | **Priority** | High |
@@ -196,6 +211,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Page with milestone cards |
+| **Type** | UI |
 | **Test Steps** | 1. Hover over each card<br>2. Inspect for delete icon / kebab menu |
 | **Expected Result** | No delete or kebab menu rendered; cards are display-only |
 | **Priority** | High |
@@ -208,6 +224,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Page open |
+| **Type** | NEG |
 | **Test Steps** | 1. Right-click on milestone card and image |
 | **Expected Result** | Only standard browser context menu; no custom admin/edit options leaked through |
 | **Priority** | Low |
@@ -220,6 +237,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Buyer JWT in hand |
+| **Type** | NEG |
 | **Test Steps** | 1. `PUT <strapi>/api/projects/1` with buyer auth header |
 | **Expected Result** | Rejected — Strapi requires admin auth; buyer JWT not accepted for writes (verify CORS/auth boundary) |
 | **Priority** | High (Security) |
@@ -232,6 +250,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Page open |
+| **Type** | UI |
 | **Test Steps** | 1. Right-click image → Save As |
 | **Expected Result** | Standard browser save dialog appears; image downloadable per public asset (no DRM expected) |
 | **Priority** | Low |
@@ -244,6 +263,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Buyer token |
+| **Type** | NEG |
 | **Test Steps** | 1. `POST /api/v1/user/work-progress` or any guessed XR backend route |
 | **Expected Result** | 404 — no such route exists (FSD §6); confirms no buyer write surface |
 | **Priority** | High |
@@ -258,6 +278,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Admin publishes new milestone in CMS |
+| **Type** | INT |
 | **Test Steps** | 1. Reload `/work-progress` |
 | **Expected Result** | New milestone card visible without code deploy |
 | **Priority** | High |
@@ -270,6 +291,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Admin unpublishes a milestone |
+| **Type** | INT |
 | **Test Steps** | 1. Reload page |
 | **Expected Result** | Card no longer rendered |
 | **Priority** | Medium |
@@ -282,6 +304,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Admin edits milestone description |
+| **Type** | INT |
 | **Test Steps** | 1. Reload page |
 | **Expected Result** | New text shown |
 | **Priority** | Medium |
@@ -294,6 +317,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Admin publishes new tower image at T |
+| **Type** | INT |
 | **Test Steps** | 1. Reload at T+5s<br>2. Reload at T+12s |
 | **Expected Result** | At T+5s may show stale; at T+12s new image present (Next.js ISR `revalidate=10`, per FSD note on BYR_WRK_015-017) |
 | **Priority** | Medium |
@@ -306,6 +330,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Admin reorders tower images |
+| **Type** | INT |
 | **Test Steps** | 1. Wait 10+ seconds<br>2. Reload page |
 | **Expected Result** | Image order matches new Strapi order; first image is now the one promoted |
 | **Priority** | Low |
@@ -318,6 +343,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Admin edits image caption in Strapi |
+| **Type** | INT |
 | **Test Steps** | 1. Reload after 10s |
 | **Expected Result** | New caption rendered beneath image (2-line ellipsis-clipped per TowerTabs.js); old caption not cached forever |
 | **Priority** | Medium |
@@ -330,6 +356,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Admin adds new tower entry / removes existing |
+| **Type** | INT |
 | **Test Steps** | 1. Reload after 10s<br>2. Inspect tower tab strip |
 | **Expected Result** | New tab appears or removed tower's tab gone; remaining tabs unchanged |
 | **Priority** | High |
@@ -342,6 +369,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Admin uploads new `workBannerVideo` |
+| **Type** | INT |
 | **Test Steps** | 1. Reload after 10s |
 | **Expected Result** | New video URL active; muted+autoplay+loop attributes preserved (BYR_WRK_025) |
 | **Priority** | Medium |
@@ -356,6 +384,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | CMS has zero milestones |
+| **Type** | EDGE |
 | **Test Steps** | 1. Open page |
 | **Expected Result** | Empty state ("No updates yet") shown; no broken layout |
 | **Priority** | Medium |
@@ -368,6 +397,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | CMS API simulated down |
+| **Type** | NEG |
 | **Test Steps** | 1. Open page |
 | **Expected Result** | Friendly error or cached content; no app crash |
 | **Priority** | Medium |
@@ -380,6 +410,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Resize to mobile (≤480px) |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect layout |
 | **Expected Result** | Cards stack vertically; photos resize without overflow |
 | **Priority** | Medium |
@@ -392,6 +423,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Throttle network to 3G |
+| **Type** | UI |
 | **Test Steps** | 1. Reload page |
 | **Expected Result** | Placeholder/skeleton shown while images load |
 | **Priority** | Low |
@@ -404,6 +436,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | One image in tower returns 404 |
+| **Type** | EDGE |
 | **Test Steps** | 1. Open tower with broken URL<br>2. Swipe through carousel |
 | **Expected Result** | Broken image slot shows placeholder; remaining slides render normally; Swiper not blocked |
 | **Priority** | Medium |
@@ -416,6 +449,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Resize to ~768px width |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect carousel |
 | **Expected Result** | slidesPerView = 3 (per breakpoint table BYR_WRK_027); no overflow, no overlap |
 | **Priority** | Low |
@@ -428,6 +462,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Tower image with caption >150 chars |
+| **Type** | EDGE |
 | **Test Steps** | 1. Inspect caption rendering |
 | **Expected Result** | Caption truncates to 2 lines with ellipsis; no layout break (per FSD note on BYR_WRK_007-008) |
 | **Priority** | Low |
@@ -440,6 +475,7 @@
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Strapi response without tower-gallery component |
+| **Type** | EDGE |
 | **Test Steps** | 1. Open page |
 | **Expected Result** | TowerSection silently absent (no "No updates yet" message per BYR_WRK_018 / KB-4); rest of page (banner, header) renders without crash |
 | **Priority** | Medium |
@@ -467,6 +503,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-work-progress.
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Buyer allocated to project ≠ 1 |
+| **Type** | INT |
 | **Test Steps** | 1. Open `/work-progress`<br>2. Monitor network for Strapi URL |
 | **Expected Result** | URL = `<strapi>/api/projects/1?populate=deep` regardless of buyer's actual project (KB-1, urls.js:8). Document multi-project rollout BUG. |
 | **Priority** | High |
@@ -479,6 +516,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-work-progress.
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Buyer allocated to one tower (e.g., Crest) |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open `/work-progress`<br>2. Inspect tower tab list |
 | **Expected Result** | ALL towers configured in Strapi shown, not just buyer's. Filter logic at TowerSection.js:14-31 is commented out (KB-2). |
 | **Priority** | Medium |
@@ -491,6 +529,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-work-progress.
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Block Strapi URL in network |
+| **Type** | NEG |
 | **Test Steps** | 1. Open `/work-progress` |
 | **Expected Result** | Banner section renders (or doesn't, depending on cache). Tower section shows "Loading tower data..." indefinitely; error state is commented out (KB-5, TowerSection.js:11). |
 | **Priority** | Medium |
@@ -503,6 +542,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-work-progress.
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | `data.attributes.workBannerVideo.data.attributes.url` populated in Strapi |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect `<video>` element |
 | **Expected Result** | Attributes: `muted, autoplay, loop, playsInline, preload="auto"`, NO `controls`. Buyer cannot pause/seek (KB-6, work-progress/page.js:37-48). |
 | **Priority** | Low |
@@ -515,6 +555,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-work-progress.
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Strapi has `projectSection[?].__component === 'project-section.video-caption-configration'` with `VideoName='workBannerVideo'` |
+| **Type** | INT |
 | **Test Steps** | 1. Inspect H2 + P below video |
 | **Expected Result** | H2 = `.title`, P = `.subtitle` from that entry. If absent: H2 and P render empty without showing "undefined" (work-progress/page.js:17-19, 25-26). |
 | **Priority** | Medium |
@@ -527,6 +568,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-work-progress.
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Tower with ≥4 images |
+| **Type** | UI |
 | **Test Steps** | 1. Resize viewport to 320 / 640 / 1024 / 1200 / 1600 px |
 | **Expected Result** | slidesPerView = 1 / 2 / 3 / 4 / 4 respectively (TowerTabs.js:36-56). |
 | **Priority** | Low |
@@ -539,6 +581,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-work-progress.
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Tower carousel visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Manually drag a slide<br>2. Wait 3 seconds |
 | **Expected Result** | Autoplay resumes at 2500ms delay (TowerTabs.js:31-34). |
 | **Priority** | Low |
@@ -551,6 +594,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-work-progress.
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Admin uploads new tower image in Strapi |
+| **Type** | INT |
 | **Test Steps** | 1. Check email inbox<br>2. Check WhatsApp<br>3. Check in-app notifications |
 | **Expected Result** | NO buyer notification on any channel. No mailer, push, WebSocket, or in-app badge for work-progress events (KB-9, FSD §5). Buyer must visit page to see updates. Document as missing-feature. |
 | **Priority** | Medium |
@@ -563,6 +607,7 @@ Source FSD: `manual-qa-repository/03-user-manual/buyer-portal/fsd-work-progress.
 |-------|-------|
 | **Module** | BYR – Work Progress |
 | **Pre-conditions** | Tower carousel visible |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect page for last-updated text |
 | **Expected Result** | None rendered (KB-8). Buyer cannot tell whether images are current. Document UX gap. |
 | **Priority** | Low |

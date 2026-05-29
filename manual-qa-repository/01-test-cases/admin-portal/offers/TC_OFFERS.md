@@ -37,6 +37,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect table column headers |
 | **Expected Result** | Columns: Offer Name, Type, Discount Value, Start Date, End Date, Typology, Active toggle, Action (trash) |
 | **Priority** | High |
@@ -49,6 +50,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Locate "Add New Offer" button |
 | **Expected Result** | Button visible at top of page |
 | **Priority** | High |
@@ -61,6 +63,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Read distinct Type values |
 | **Expected Result** | Values are: Amount Based or Percentage Based |
 | **Priority** | High |
@@ -73,6 +76,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Admin previously approved a Home Loan in Customers |
+| **Type** | BIZ |
 | **Test Steps** | 1. Locate offer with code HOME_LOAN |
 | **Expected Result** | HOME_LOAN offer exists in list; created by system after Home Loan Approval |
 | **Priority** | High |
@@ -85,6 +89,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | SM recorded VC_DONE_PREFERENCE or VC_2_DONE outcome |
+| **Type** | BIZ |
 | **Test Steps** | 1. Locate offer with code VC_REQUEST |
 | **Expected Result** | VC_REQUEST offer exists; was auto-created |
 | **Priority** | Medium |
@@ -99,6 +104,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offers page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Add New Offer |
 | **Expected Result** | Form/modal opens with fields: Offer Name, Type, Discount Value, Start Date, End Date, Typology |
 | **Priority** | Critical |
@@ -111,6 +117,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Enter Name "Early Bird 27K"<br>2. Select Type = Amount Based<br>3. Enter Discount = 27000<br>4. Set Start Date = today<br>5. Set End Date = today + 30 days<br>6. Click Create Offer |
 | **Expected Result** | Offer created; appears in list with Active = ON |
 | **Priority** | Critical |
@@ -123,6 +130,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Amount Based offer created |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Discount Value column |
 | **Expected Result** | Value shown as "₹27,000" |
 | **Priority** | Medium |
@@ -135,6 +143,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Discount = -500<br>2. Submit |
 | **Expected Result** | Validation error; discount must be positive |
 | **Priority** | High |
@@ -147,6 +156,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Discount = 0<br>2. Submit |
 | **Expected Result** | Validation error; discount must be > 0 |
 | **Priority** | High |
@@ -159,6 +169,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Leave Name empty<br>2. Fill other fields<br>3. Submit |
 | **Expected Result** | Name required error |
 | **Priority** | High |
@@ -173,6 +184,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Name "Festive 5%"<br>2. Type = Percentage Based<br>3. Discount = 5<br>4. Set dates<br>5. Create |
 | **Expected Result** | Offer created; Discount Value column shows "5%" |
 | **Priority** | High |
@@ -185,6 +197,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Type = Percentage Based<br>2. Discount = 150<br>3. Submit |
 | **Expected Result** | Validation error; percentage cannot exceed 100 |
 | **Priority** | High |
@@ -197,6 +210,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Percentage offer created |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Discount Value column |
 | **Expected Result** | Value shown with % suffix (e.g. "5%") |
 | **Priority** | Medium |
@@ -209,6 +223,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open; Type = Percentage Based |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Discount = 0<br>2. Submit |
 | **Expected Result** | Validation error; percentage must be > 0 |
 | **Priority** | High |
@@ -221,6 +236,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open; Type = Percentage Based |
+| **Type** | EDGE |
 | **Test Steps** | 1. Enter Discount = 100<br>2. Set dates and Submit |
 | **Expected Result** | Offer created at 100% boundary; All Inclusive Price drops to zero for eligible units (boundary case — verify business intent) |
 | **Priority** | High |
@@ -233,6 +249,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open; Type = Percentage Based |
+| **Type** | EDGE |
 | **Test Steps** | 1. Enter Discount = 5.5<br>2. Submit |
 | **Expected Result** | Offer created with fractional percentage 5.5; Discount Value column shows "5.5%" |
 | **Priority** | Medium |
@@ -245,6 +262,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open; Type = Percentage Based |
+| **Type** | VAL |
 | **Test Steps** | 1. Enter Discount = -10<br>2. Submit |
 | **Expected Result** | Validation error; percentage must be positive |
 | **Priority** | High |
@@ -257,6 +275,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open; Type = Percentage Based; Discount = 5 entered |
+| **Type** | FUNC |
 | **Test Steps** | 1. Change Type dropdown to Amount Based<br>2. Inspect Discount Value field |
 | **Expected Result** | Discount Value resets to blank to prevent invalid carry-over (5% would not be a meaningful ₹ amount) |
 | **Priority** | Medium |
@@ -271,6 +290,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | VAL |
 | **Test Steps** | 1. Start Date = 2026-06-01<br>2. End Date = 2026-05-15<br>3. Submit |
 | **Expected Result** | Validation error: end date must be after start date |
 | **Priority** | High |
@@ -283,6 +303,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | BIZ |
 | **Test Steps** | 1. Start Date = yesterday<br>2. End Date = today + 7<br>3. Submit |
 | **Expected Result** | Offer created; valid because Start ≤ today ≤ End |
 | **Priority** | Medium |
@@ -295,6 +316,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | BIZ |
 | **Test Steps** | 1. Select Typology = "1 Bed Growth Home"<br>2. Fill other fields and create |
 | **Expected Result** | Offer applies only to 1 Bed Growth Home units; other typology units not discounted |
 | **Priority** | High |
@@ -307,6 +329,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Add Offer form open |
+| **Type** | BIZ |
 | **Test Steps** | 1. Leave Typology blank/All<br>2. Create offer |
 | **Expected Result** | Offer applies across all unit typologies |
 | **Priority** | High |
@@ -319,6 +342,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offer with Start Date = tomorrow |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Towers and click an eligible unit |
 | **Expected Result** | All Inclusive Price does NOT include this future offer |
 | **Priority** | High |
@@ -331,6 +355,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offer with End Date = yesterday |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Towers and click an eligible unit |
 | **Expected Result** | Expired offer not deducted from price |
 | **Priority** | High |
@@ -345,6 +370,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | New offer just created |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect Active column on new offer row |
 | **Expected Result** | Toggle is ON by default |
 | **Priority** | High |
@@ -357,6 +383,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Active offer exists |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click toggle in Action column |
 | **Expected Result** | Toggle switches to OFF instantly with no confirmation dialog |
 | **Priority** | Critical |
@@ -369,6 +396,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offer just deactivated |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open Towers in buyer view<br>2. Click a unit that was previously discounted |
 | **Expected Result** | All Inclusive Price no longer includes that offer's discount |
 | **Priority** | Critical |
@@ -381,6 +409,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Inactive offer exists |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click toggle to ON |
 | **Expected Result** | Offer reactivated immediately; discount applies again |
 | **Priority** | High |
@@ -393,6 +422,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Active campaign; offer ON |
+| **Type** | BIZ |
 | **Test Steps** | 1. Admin toggles offer OFF<br>2. Refresh buyer's unit view |
 | **Expected Result** | Buyer sees price without that discount |
 | **Priority** | Critical |
@@ -407,6 +437,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Action column |
 | **Expected Result** | Trash icon visible per offer row |
 | **Priority** | High |
@@ -419,6 +450,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offer exists |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click trash icon |
 | **Expected Result** | Confirmation dialog opens with offer name and Delete/Cancel buttons |
 | **Priority** | Critical |
@@ -431,6 +463,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Delete confirmation open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Delete in dialog |
 | **Expected Result** | Offer removed from list; success toast shown |
 | **Priority** | Critical |
@@ -443,6 +476,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Delete confirmation open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Cancel in dialog |
 | **Expected Result** | Dialog closes; offer remains in list |
 | **Priority** | Medium |
@@ -456,6 +490,7 @@
 | **Module** | ADM – Offers / DB |
 | **BRD/FRD Req** | FSD §1 (paranoid model) |
 | **Pre-conditions** | Offer just deleted via UI |
+| **Type** | DB |
 | **Test Steps** | 1. Note deleted offer id<br>2. Query DB: `SELECT * FROM offers WHERE id=<id>` |
 | **Expected Result** | Row still exists in DB with `deletedAt` timestamp populated; standard GET excludes it; offer no longer applies to pricing |
 | **Priority** | High |
@@ -468,6 +503,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offer "Festive 5%" exists |
+| **Type** | UI |
 | **Test Steps** | 1. Click trash icon on that row |
 | **Expected Result** | Confirmation dialog text references "Festive 5%" by name to avoid accidental deletion |
 | **Priority** | High |
@@ -480,6 +516,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offer with Active = ON |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click trash icon, Confirm |
 | **Expected Result** | Active offer is deleted directly without requiring deactivation first; success toast shown |
 | **Priority** | Medium |
@@ -492,6 +529,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | A buyer has a completed booking that used Offer X; Offer X exists |
+| **Type** | BIZ |
 | **Test Steps** | 1. Delete Offer X<br>2. Open Customers, locate the buyer's completed booking |
 | **Expected Result** | Booking amount unchanged; existing transactions and registrations are not affected by offer deletion |
 | **Priority** | High |
@@ -506,6 +544,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Two active offers applicable to same typology |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open eligible unit in Towers<br>2. Inspect All Inclusive Price |
 | **Expected Result** | All Inclusive Price = Agreement Value - sum of both offer discounts |
 | **Priority** | Critical |
@@ -518,6 +557,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Buyer viewing pricing with offer; admin toggles offer OFF |
+| **Type** | EDGE |
 | **Test Steps** | 1. Buyer clicks Proceed to Pay after admin toggles OFF |
 | **Expected Result** | Discount disappears from final booking amount per BRD race condition rule |
 | **Priority** | High |
@@ -530,6 +570,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Buyer completed booking with offer applied |
+| **Type** | BIZ |
 | **Test Steps** | 1. Toggle the offer OFF<br>2. Check buyer's booking record |
 | **Expected Result** | Existing booking amount unchanged; offer change applies only to future bookings |
 | **Priority** | Critical |
@@ -542,6 +583,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | More than 10 offers exist |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Next page |
 | **Expected Result** | Next page loads with remaining offers |
 | **Priority** | Medium |
@@ -554,6 +596,7 @@
 |-------|-------|
 | **Module** | ADM – Offers |
 | **Pre-conditions** | Offers page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Use search field to type partial offer name |
 | **Expected Result** | List filters to matching offers |
 | **Priority** | Medium |
@@ -567,6 +610,7 @@
 | **Module** | ADM – Offers / API |
 | **BRD/FRD Req** | FSD §1 GAP-1 / `admin.validations.js:341-365` |
 | **Pre-conditions** | Admin JWT |
+| **Type** | API |
 | **Test Steps** | 1. POST `/api/v1/admin/offers` with `{offerCode: 'HOME_LOAN', ...}` |
 | **Expected Result** | The `offerCode` field is stripped by Yup (not in `createOfferSchema`). Created offer has `offerCode = null`. Coded offers can only be seeded via direct DB. Edit existing HOME_LOAN offer via PUT will similarly fail to alter `offerCode`. |
 | **Priority** | High |
@@ -582,6 +626,7 @@
 | **Module** | ADM – Offers / Notifications |
 | **BRD/FRD Req** | FSD §1, §3 (no notification calls in service) |
 | **Pre-conditions** | Admin creates/updates/toggles/deletes an offer |
+| **Type** | INT |
 | **Test Steps** | 1. Perform each action<br>2. Inspect Kaleyra/epinet/email logs |
 | **Expected Result** | NO buyer-facing notification dispatched for any offer admin action. |
 | **Priority** | Medium |
@@ -595,6 +640,7 @@
 | **Module** | ADM – Offers / API |
 | **BRD/FRD Req** | FSD §3.1 / `offer.service.js:13-17` |
 | **Pre-conditions** | Project with public `projectId='hoabl-growth-1'` exists |
+| **Type** | API |
 | **Test Steps** | 1. GET `/api/v1/admin/offers?projectId=1` (numeric PK)<br>2. GET `/api/v1/admin/offers?projectId=hoabl-growth-1` (public id) |
 | **Expected Result** | First returns `ApiError.notFound('Project not found')`. Second resolves and returns offers. |
 | **Priority** | Medium |

@@ -24,6 +24,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Admin logged in |
+| **Type** | UI |
 | **Test Steps** | 1. Click "Towers" in left sidebar<br>2. Observe URL |
 | **Expected Result** | URL is /admin/towers; KPI cards and tower list render |
 | **Priority** | Critical |
@@ -36,6 +37,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Read Total Towers card |
 | **Expected Result** | Card displays "18" (fixed value for Xanadu project) |
 | **Priority** | High |
@@ -48,6 +50,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Crest and Crown active in Config |
+| **Type** | UI |
 | **Test Steps** | 1. Read Active Towers card |
 | **Expected Result** | Card shows count of currently active towers (e.g. 2) |
 | **Priority** | High |
@@ -60,6 +63,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | 2 active towers |
+| **Type** | UI |
 | **Test Steps** | 1. Read Inactive Towers card |
 | **Expected Result** | Card shows 16 (= 18 - active count) |
 | **Priority** | Medium |
@@ -72,6 +76,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Read Total Units card |
 | **Expected Result** | Card displays sum of all units across all 18 towers |
 | **Priority** | High |
@@ -84,6 +89,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Read Available Units card |
 | **Expected Result** | Card shows total units with white (available) status |
 | **Priority** | High |
@@ -96,6 +102,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Read Sold Units card |
 | **Expected Result** | Card shows count of units with red (sold) status |
 | **Priority** | High |
@@ -108,6 +115,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Read Disabled Units card |
 | **Expected Result** | Card shows count of grey (reserved/blocked/refuge) units |
 | **Priority** | Medium |
@@ -122,6 +130,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect tower sidebar list |
 | **Expected Result** | All 18 names present: Crest, Crown, Blossom, Bright, Pinnacle, Triumph, Prestige, Horizon, Dawn, Aura, Glory, Pride, Grace, Aspire, Prime, Fortune, Radiance, Grand |
 | **Priority** | High |
@@ -134,6 +143,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect a tower row in sidebar |
 | **Expected Result** | Row shows tower name and "N Units Available" (e.g. "159 Units Available") |
 | **Priority** | High |
@@ -146,6 +156,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Tower with Inactive status in Config |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect that tower row in sidebar |
 | **Expected Result** | Row name suffixed with "(Inactive)" |
 | **Priority** | High |
@@ -158,6 +169,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click "Crest" in sidebar |
 | **Expected Result** | Floor/unit grid for Crest loads in main area within 3 seconds |
 | **Priority** | Critical |
@@ -170,6 +182,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | A tower selected |
+| **Type** | UI |
 | **Test Steps** | 1. Click Crest<br>2. Observe sidebar row |
 | **Expected Result** | Selected row highlighted/styled differently from others |
 | **Priority** | Medium |
@@ -182,6 +195,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | A tower with "(Inactive)" label in sidebar |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click the Inactive tower in sidebar |
 | **Expected Result** | Grid loads showing units of that inactive tower; admin can still view (read-only); units typically appear with grey/inactive styling |
 | **Priority** | Medium |
@@ -194,6 +208,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect sidebar header/footer area for summary text |
 | **Expected Result** | Sidebar lists exactly 18 tower entries — count matches Total Towers KPI of 18 |
 | **Priority** | Low |
@@ -206,6 +221,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Crest selected with a white unit's detail panel open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Crown in sidebar while panel is open |
 | **Expected Result** | Detail panel closes; Crown's grid loads; no stale unit data shown |
 | **Priority** | Medium |
@@ -220,6 +236,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Crest selected |
+| **Type** | UI |
 | **Test Steps** | 1. Read header bar above grid |
 | **Expected Result** | Header shows Total, Available, Sold, Disabled counts for Crest only |
 | **Priority** | High |
@@ -232,6 +249,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | A tower selected |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect grid structure |
 | **Expected Result** | Each row = a floor; each column = a unit position; cells represent units |
 | **Priority** | High |
@@ -244,6 +262,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Tower grid loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Identify a white unit cell<br>2. Note its border color |
 | **Expected Result** | White fill with light border indicates Available status |
 | **Priority** | High |
@@ -256,6 +275,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Tower grid loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Identify a red unit cell |
 | **Expected Result** | Red fill indicates Sold (booked and paid) |
 | **Priority** | High |
@@ -268,6 +288,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Active campaign with buyer in payment |
+| **Type** | UI |
 | **Test Steps** | 1. Identify an orange unit cell |
 | **Expected Result** | Orange fill indicates another buyer currently in payment for that unit |
 | **Priority** | High |
@@ -280,6 +301,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Tower grid loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Identify a grey unit cell |
 | **Expected Result** | Grey fill indicates Reserved, Blocked, Refuge, or Special allocation |
 | **Priority** | Medium |
@@ -294,6 +316,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Crest grid loaded with white units visible |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click a white unit cell |
 | **Expected Result** | Unit detail panel slides in from right side |
 | **Priority** | Critical |
@@ -306,6 +329,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Unit detail panel open |
+| **Type** | UI |
 | **Test Steps** | 1. Read Unit Number field |
 | **Expected Result** | Format shown as "NNNN – TowerName" (e.g. "3502 – Crest") |
 | **Priority** | High |
@@ -318,6 +342,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Unit detail panel open |
+| **Type** | UI |
 | **Test Steps** | 1. Read BHK Type field |
 | **Expected Result** | Shows BHK config (e.g. "1 BHK Growth Home") |
 | **Priority** | High |
@@ -330,6 +355,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Unit detail panel open |
+| **Type** | UI |
 | **Test Steps** | 1. Read Size field |
 | **Expected Result** | Size shown with unit "sq.ft." (e.g. "323 sq.ft.") |
 | **Priority** | High |
@@ -342,6 +368,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Unit detail panel open |
+| **Type** | UI |
 | **Test Steps** | 1. Read Agreement Value field |
 | **Expected Result** | Shown formatted with ₹ prefix (e.g. "₹32,99,000") |
 | **Priority** | Critical |
@@ -354,6 +381,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Unit detail panel open |
+| **Type** | UI |
 | **Test Steps** | 1. Read Early Bird Discount field |
 | **Expected Result** | Shown with ₹ prefix (e.g. "₹27,000") if discount applies |
 | **Priority** | High |
@@ -366,6 +394,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Unit detail panel open |
+| **Type** | BIZ |
 | **Test Steps** | 1. Read All Inclusive Price field |
 | **Expected Result** | Calculated price shown (Agreement Value minus applicable offers) |
 | **Priority** | High |
@@ -378,6 +407,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Detail panel open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click X / close button on panel |
 | **Expected Result** | Panel slides out; grid resumes full width |
 | **Priority** | Medium |
@@ -390,6 +420,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Tower grid loaded with red units |
+| **Type** | NEG |
 | **Test Steps** | 1. Click a red unit cell |
 | **Expected Result** | No panel opens; no action triggered |
 | **Priority** | High |
@@ -402,6 +433,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Tower grid loaded with grey units |
+| **Type** | NEG |
 | **Test Steps** | 1. Click a grey unit cell |
 | **Expected Result** | No panel opens; no action triggered |
 | **Priority** | Medium |
@@ -414,6 +446,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Active campaign with orange unit |
+| **Type** | NEG |
 | **Test Steps** | 1. Click an orange unit cell |
 | **Expected Result** | No panel opens; cell is non-interactive |
 | **Priority** | Medium |
@@ -428,6 +461,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded |
+| **Type** | BIZ |
 | **Test Steps** | 1. Inspect entire page for any edit/save buttons |
 | **Expected Result** | Page is fully read-only; no controls to change tower or unit status |
 | **Priority** | High |
@@ -440,6 +474,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Crest currently selected |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Crown in sidebar |
 | **Expected Result** | Grid replaces Crest with Crown's floor/unit layout; header updates |
 | **Priority** | High |
@@ -452,6 +487,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Admin on /admin/cms Section 1 |
+| **Type** | FUNC |
 | **Test Steps** | 1. Locate green "View Tower >" link next to a tower<br>2. Click it |
 | **Expected Result** | /admin/towers opens with that tower already selected; its grid visible |
 | **Priority** | High |
@@ -464,6 +500,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Active offer applicable to the unit's typology |
+| **Type** | BIZ |
 | **Test Steps** | 1. Open unit detail<br>2. Compare Agreement Value to All Inclusive Price |
 | **Expected Result** | All Inclusive Price = Agreement Value - active offers; difference reflects offers |
 | **Priority** | High |
@@ -476,6 +513,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Admin just uploaded new pricing via Config Section 4 |
+| **Type** | INT |
 | **Test Steps** | 1. Open Towers, navigate to affected tower<br>2. Click an updated unit |
 | **Expected Result** | Agreement Value reflects newly uploaded pricing |
 | **Priority** | Critical |
@@ -488,6 +526,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Towers page loaded; Active Towers = 2 |
+| **Type** | INT |
 | **Test Steps** | 1. Toggle one more tower active in Config and Update<br>2. Return to Towers page; refresh |
 | **Expected Result** | Active Towers KPI now = 3 |
 | **Priority** | High |
@@ -500,6 +539,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Tower with 159+ units |
+| **Type** | EDGE |
 | **Test Steps** | 1. Click tower with high inventory<br>2. Time grid render |
 | **Expected Result** | Grid fully renders within 3 seconds |
 | **Priority** | Medium |
@@ -512,6 +552,7 @@
 |-------|-------|
 | **Module** | ADM – Towers |
 | **Pre-conditions** | Tower with all units sold |
+| **Type** | EDGE |
 | **Test Steps** | 1. Click that tower in sidebar |
 | **Expected Result** | Grid loads with all red units; no available white cells |
 | **Priority** | Medium |
@@ -527,6 +568,7 @@
 | **Module** | ADM – Towers / Integration |
 | **BRD/FRD Req** | FSD §1 / `tower.controller.js:73-149` |
 | **Pre-conditions** | An OPEN tower (isActive=true) and admin JWT |
+| **Type** | INT |
 | **Test Steps** | 1. PUT `/api/v1/admin/towers/status-update` with `{towers:[{id:1,isActive:false}]}`<br>2. Inspect `audit_logs` for `ADMIN_TOWER_STATUS_UPDATE` row<br>3. Inspect Redis `tower_config:<projectId>` — `is_active` updated<br>4. Inspect Python service log for `/broadcast-towers` call |
 | **Expected Result** | All three side effects fire. Python broadcast is fire-and-forget — errors do NOT roll back the DB change. |
 | **Priority** | High |
@@ -540,6 +582,7 @@
 | **Module** | ADM – Towers / DB |
 | **BRD/FRD Req** | FSD §3.2 step 4 |
 | **Pre-conditions** | Tower 1 already isActive=true |
+| **Type** | DB |
 | **Test Steps** | 1. PUT with `{towers:[{id:1,isActive:true}]}`<br>2. Inspect audit_logs (should be no new row) |
 | **Expected Result** | No DB write, no audit log row. Idempotent. |
 | **Priority** | Medium |
@@ -553,6 +596,7 @@
 | **Module** | ADM – Towers / Integration |
 | **BRD/FRD Req** | FSD §1 / `admin.controller.js:1325-1340` |
 | **Pre-conditions** | Unit status change triggered (via bulk update or cancel) |
+| **Type** | INT |
 | **Test Steps** | 1. Cancel a WINNER unit (status flips to RESERVED)<br>2. Inspect Python service inbound for `POST /units/status-sync` |
 | **Expected Result** | Sync call fires. Fire-and-forget — errors do not roll back. |
 | **Priority** | High |
@@ -566,6 +610,7 @@
 | **Module** | ADM – Towers / Notifications |
 | **BRD/FRD Req** | FSD §1 (no notification calls in scope) |
 | **Pre-conditions** | Tower toggled inactive while buyers had registrations in that tower |
+| **Type** | INT |
 | **Test Steps** | 1. Toggle tower inactive<br>2. Inspect buyer notifications |
 | **Expected Result** | NO buyer SMS/WhatsApp/email dispatched. Only inventory/cache side effects. |
 | **Priority** | Medium |

@@ -26,6 +26,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Admin logged in |
+| **Type** | UI |
 | **Test Steps** | 1. Click "Channel Partners" in sidebar<br>2. Observe URL |
 | **Expected Result** | URL is /admin/channel-partners; CP list table loads |
 | **Priority** | Critical |
@@ -38,6 +39,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Read header title |
 | **Expected Result** | Title shows "2705 Channel Partners" (or current total); count does NOT change with filters |
 | **Priority** | High |
@@ -50,6 +52,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect header buttons |
 | **Expected Result** | Three buttons visible: "Map Master CP" (disabled by default), "Reset Filters", "Refresh" |
 | **Priority** | High |
@@ -62,6 +65,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | No rows selected |
+| **Type** | UI |
 | **Test Steps** | 1. Observe Map Master CP button state |
 | **Expected Result** | Button is disabled/greyed out |
 | **Priority** | Critical |
@@ -74,6 +78,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect column headers |
 | **Expected Result** | Columns: Owner Name, Firm Name, HV Code, Master HV Code, Business Region, Pincode, Phone, CP Type, SM Name, SM Email ID, SM Mobile Number, KYC Status, Actions |
 | **Priority** | High |
@@ -86,6 +91,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect leftmost column |
 | **Expected Result** | Checkbox column visible for row selection |
 | **Priority** | High |
@@ -98,6 +104,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect Actions column on a row |
 | **Expected Result** | Eye icon (view) and three-dot (more actions) menu present |
 | **Priority** | High |
@@ -110,6 +117,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Read CP Type values |
 | **Expected Result** | Values are "Master CP" or "Member CP" only |
 | **Priority** | High |
@@ -122,6 +130,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Read KYC Status column values |
 | **Expected Result** | Values: Pending, Approved, Rejected, or Verified |
 | **Priority** | High |
@@ -134,6 +143,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP without assigned SM |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect SM Name, SM Email ID, SM Mobile Number for that CP |
 | **Expected Result** | All three columns show "-" |
 | **Priority** | Medium |
@@ -148,6 +158,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded; known CP phone |
+| **Type** | FUNC |
 | **Test Steps** | 1. Type phone number in search field at top<br>2. Wait |
 | **Expected Result** | Table filters to matching CPs immediately |
 | **Priority** | Critical |
@@ -160,6 +171,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Phone search applied |
+| **Type** | UI |
 | **Test Steps** | 1. Observe header count after search |
 | **Expected Result** | Header still shows total "2705 Channel Partners" — fixed count |
 | **Priority** | High |
@@ -172,6 +184,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click magnifying glass on Owner Name<br>2. Type partial name |
 | **Expected Result** | Table filters to matching owner names |
 | **Priority** | High |
@@ -184,6 +197,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click search icon on Firm Name<br>2. Type firm name |
 | **Expected Result** | Table filters to matching firm |
 | **Priority** | High |
@@ -196,6 +210,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click search icon on HV Code<br>2. Type code |
 | **Expected Result** | Table filters by HV Code |
 | **Priority** | High |
@@ -208,6 +223,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click search icon on Pincode<br>2. Type pincode |
 | **Expected Result** | Table filters by pincode |
 | **Priority** | Medium |
@@ -220,6 +236,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click funnel icon on Master HV Code<br>2. Select a Master from dropdown |
 | **Expected Result** | Table filters to CPs mapped under selected Master |
 | **Priority** | High |
@@ -232,6 +249,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click funnel icon on Business Region<br>2. Select a region |
 | **Expected Result** | Table filters to that region |
 | **Priority** | Medium |
@@ -244,6 +262,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click funnel icon on CP Type<br>2. Select Master CP |
 | **Expected Result** | Table shows only Master CPs |
 | **Priority** | High |
@@ -256,6 +275,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Filter CP Type = Member CP |
 | **Expected Result** | Table shows only Member CPs |
 | **Priority** | High |
@@ -268,6 +288,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Multiple filters applied |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Reset Filters |
 | **Expected Result** | All inputs cleared; full CP list reloaded from server |
 | **Priority** | High |
@@ -280,6 +301,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Refresh |
 | **Expected Result** | Data reloaded; current filters preserved |
 | **Priority** | Medium |
@@ -294,6 +316,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click eye icon on a CP row |
 | **Expected Result** | Detail drawer slides in from right |
 | **Priority** | Critical |
@@ -306,6 +329,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Detail drawer open |
+| **Type** | UI |
 | **Test Steps** | 1. Locate Basic Information section |
 | **Expected Result** | Shows HV Code, CP type, KYC status fields |
 | **Priority** | High |
@@ -318,6 +342,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Detail drawer open |
+| **Type** | UI |
 | **Test Steps** | 1. Locate Firm Details section |
 | **Expected Result** | Shows Business name, registration details |
 | **Priority** | High |
@@ -330,6 +355,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Detail drawer open |
+| **Type** | UI |
 | **Test Steps** | 1. Locate Contact Details section |
 | **Expected Result** | Shows Phone, email, address |
 | **Priority** | High |
@@ -342,6 +368,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Detail drawer open |
+| **Type** | UI |
 | **Test Steps** | 1. Locate Additional Details section |
 | **Expected Result** | Shows additional business info |
 | **Priority** | Medium |
@@ -354,6 +381,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Detail drawer open |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click X button on drawer |
 | **Expected Result** | Drawer slides out; table view resumes |
 | **Priority** | Medium |
@@ -366,6 +394,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Detail drawer open on a CP with KYC Status = Approved/Verified |
+| **Type** | UI |
 | **Test Steps** | 1. Scroll within drawer to locate KYC section |
 | **Expected Result** | KYC section shows submitted documents (or document references) — admin can view but cannot edit/approve from drawer (FSD §1: no admin KYC mutation) |
 | **Priority** | Medium |
@@ -378,6 +407,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | A Master CP with at least 3 mapped members |
+| **Type** | UI |
 | **Test Steps** | 1. Click eye icon on the Master CP row<br>2. Inspect drawer for member count |
 | **Expected Result** | Drawer displays mapped Member CP count for the Master (e.g. "3 mapped members") |
 | **Priority** | Medium |
@@ -392,6 +422,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Row is a Member CP |
+| **Type** | UI |
 | **Test Steps** | 1. Click three-dot menu on Member CP row |
 | **Expected Result** | Dropdown shows "Mark as Master" option |
 | **Priority** | High |
@@ -404,6 +435,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Member CP row identified |
+| **Type** | FUNC |
 | **Test Steps** | 1. Open three-dot menu<br>2. Click Mark as Master<br>3. Confirm if prompted |
 | **Expected Result** | CP Type changes from Member CP to Master CP in list; CP now appears in Master HV Code dropdowns |
 | **Priority** | Critical |
@@ -416,6 +448,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Check checkbox on one Member CP row<br>2. Observe Map Master CP button |
 | **Expected Result** | Map Master CP button becomes enabled |
 | **Priority** | Critical |
@@ -428,6 +461,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | UI |
 | **Test Steps** | 1. Check 3 rows<br>2. Observe button |
 | **Expected Result** | Map Master CP enabled; count "3" may show somewhere |
 | **Priority** | High |
@@ -440,6 +474,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | At least one row selected |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Map Master CP |
 | **Expected Result** | Modal titled "Map CPs to Master" opens with Master HV Code dropdown |
 | **Priority** | Critical |
@@ -452,6 +487,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | 3 rows selected; modal open |
+| **Type** | UI |
 | **Test Steps** | 1. Inspect modal for selection count |
 | **Expected Result** | Modal indicates "3 CPs will be mapped" or similar |
 | **Priority** | High |
@@ -464,6 +500,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Map modal open |
+| **Type** | BIZ |
 | **Test Steps** | 1. Click Master HV Code dropdown |
 | **Expected Result** | Dropdown lists only CPs with CP Type = Master CP |
 | **Priority** | High |
@@ -476,6 +513,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Map modal open; no Master selected |
+| **Type** | VAL |
 | **Test Steps** | 1. Click Confirm |
 | **Expected Result** | Validation error; Master must be selected |
 | **Priority** | High |
@@ -488,6 +526,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | 2 CPs selected; Master chosen in modal |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Confirm |
 | **Expected Result** | Master HV Code column updates for those 2 rows; modal closes; success toast |
 | **Priority** | Critical |
@@ -502,6 +541,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP has assigned SM in Sales Managers module |
+| **Type** | INT |
 | **Test Steps** | 1. Locate that CP in list |
 | **Expected Result** | SM Name, SM Email ID, SM Mobile Number columns show that SM's details |
 | **Priority** | High |
@@ -514,6 +554,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP has registered buyers |
+| **Type** | INT |
 | **Test Steps** | 1. Open Customers module<br>2. Find registration registered by this CP |
 | **Expected Result** | Growth Partner column shows the CP's HV Code |
 | **Priority** | High |
@@ -526,6 +567,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | NEG |
 | **Test Steps** | 1. Type "0000000000" in phone search |
 | **Expected Result** | Table empty; header count still shows total |
 | **Priority** | Medium |
@@ -538,6 +580,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP page loaded |
+| **Type** | FUNC |
 | **Test Steps** | 1. Click Next page in pagination |
 | **Expected Result** | Next 10 CPs load |
 | **Priority** | Medium |
@@ -550,6 +593,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | CP already mapped to Master A |
+| **Type** | EDGE |
 | **Test Steps** | 1. Select that CP<br>2. Map to Master B<br>3. Confirm |
 | **Expected Result** | Master HV Code updates from A to B; previous mapping replaced |
 | **Priority** | Medium |
@@ -563,6 +607,7 @@
 | **Module** | ADM – Channel Partners / API |
 | **BRD/FRD Req** | FSD §1 — bulk-map-excel `doc` field |
 | **Pre-conditions** | XLSX prepared with columns: Member HV Code, Master HV Code (rows for 5 valid pairings) |
+| **Type** | API |
 | **Test Steps** | 1. Locate Bulk Map Excel upload control<br>2. Upload XLSX; capture network call |
 | **Expected Result** | POST `/api/v1/admin/cp/bulk-map-excel` is sent with multipart field name `doc` containing the file; response returns per-row outcome |
 | **Priority** | High |
@@ -576,6 +621,7 @@
 | **Module** | ADM – Channel Partners |
 | **BRD/FRD Req** | FSD §1 — CP type derivation (`isLeadCp=true` cannot also be member) |
 | **Pre-conditions** | Two Master CPs exist: Master A and Master B |
+| **Type** | NEG |
 | **Test Steps** | 1. Select Master B's row<br>2. Click Map Master CP<br>3. Choose Master A in dropdown<br>4. Confirm |
 | **Expected Result** | Backend rejects with 400 (Master cannot be mapped under another Master); Master B's `isLeadCp` remains true |
 | **Priority** | High |
@@ -588,6 +634,7 @@
 |-------|-------|
 | **Module** | ADM – Channel Partners |
 | **Pre-conditions** | Two rows currently selected; Map Master CP enabled |
+| **Type** | FUNC |
 | **Test Steps** | 1. Uncheck one of the selected rows<br>2. Uncheck the second row<br>3. Observe Map Master CP button |
 | **Expected Result** | After both unchecks, Map Master CP returns to disabled state; selection count drops to 0 |
 | **Priority** | Medium |
@@ -603,6 +650,7 @@
 | **Module** | ADM – Channel Partners / API |
 | **BRD/FRD Req** | FSD §1 Out-of-Scope |
 | **Pre-conditions** | Admin logged in |
+| **Type** | NEG |
 | **Test Steps** | 1. Try to find any UI/API to create, approve, reject, activate, deactivate, or delete a CP from /admin/channel-partners |
 | **Expected Result** | No such UI or API exists. Verified by enumerating admin-cp routes (`routes/admin.routes.js:187-200`): only list/get/mark-master/map/bulk-map. Any BRD claim of CP CRUD from admin is INVALID. |
 | **Priority** | High |
@@ -616,6 +664,7 @@
 | **Module** | ADM – Channel Partners / Notifications |
 | **BRD/FRD Req** | FSD §1 / grep verification |
 | **Pre-conditions** | Admin performs `mark-master`, `map-master`, or `bulk-map-excel` |
+| **Type** | INT |
 | **Test Steps** | 1. Mark a CP as master<br>2. Map members to a master<br>3. Inspect Kaleyra/epinet/email logs and CP phone |
 | **Expected Result** | NO SMS, NO WhatsApp, NO email dispatched. Only DB updates + audit log. |
 | **Priority** | Medium |
@@ -629,6 +678,7 @@
 | **Module** | ADM – Channel Partners / Security |
 | **BRD/FRD Req** | FSD §2 (`restrictTo('admin')`) |
 | **Pre-conditions** | Valid SM Admin JWT |
+| **Type** | BIZ |
 | **Test Steps** | 1. SM Admin calls `GET /api/v1/admin/cp` |
 | **Expected Result** | HTTP 403 Forbidden — only `admin` role is allowed. |
 | **Priority** | High |
