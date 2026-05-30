@@ -11,7 +11,7 @@
 |-------|--------|-------|
 | Track 1 — TC catalogue + BRD/FRD audit | ✅ Done | 1,728 TCs, ~98% Type-tagged, 22 FSD bugs catalogued |
 | Track 2 — Locator maps + POMs | ✅ Done | 4 portal maps (213/85/55/64 elements), 33 POMs scaffolded |
-| Track 3 — Playwright specs | 🔄 In Progress | 16/32 modules done after wave 4 (Customers admin pre-existing + 15 new) |
+| Track 3 — Playwright specs | 🔄 In Progress | 24/32 modules done after wave 6 (Customers admin pre-existing + 23 new) |
 | Track 4 — Spec execution + reporting | ⏳ Pending | All specs syntax-clean, awaiting batch run |
 
 ---
@@ -38,8 +38,23 @@
 - SM Physical Allocation: 18 tests (incl. BUG-KYC-001 ref)
 - **Total:** 92 tests / 8 files
 
-### Wave 4 — 2026-05-30 — In progress
-- Admin Towers, Buyer Allocation Experience, CP KYC Assistance, SM Tower Heatmap
+### Wave 4 — 2026-05-30 — Inventory + KYC
+- Admin Towers: 24 tests
+- Buyer Allocation Experience: 23 tests
+- CP KYC Assistance: 20 tests (BUG-CPK-03 ref)
+- SM Tower Heatmap: 17 tests
+- **Total:** 84 tests / 8 files. SM portal fully covered (4/4).
+
+### Wave 5 — 2026-05-30 — Payments + JBP + Unit Details
+- Admin Payment Transactions: 20 tests
+- Admin JBP: 23 tests (BUG-JBP-001/002/003 refs)
+- CP JBP Submission: 19 tests (BUG-CP-006 ref)
+- Buyer Unit Details: 20 tests
+- **Total:** 84 tests / 8 files
+
+### Wave 6 — 2026-05-30 — Offers + CP + Home Loan + Pay Schedule (in progress)
+- Admin Offers, Admin Channel Partners, Buyer Home Loan, Buyer Payment Schedule
+- POMs all enriched · partial specs landed · finisher agents running
 
 ---
 
