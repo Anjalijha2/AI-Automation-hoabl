@@ -1,94 +1,96 @@
 # Sprint Log
 
-**Project:** XR Portal Admin  
+**Project:** XR Portal (all portals)
 **Model:** Sprint-wise · Portal-wise · Documentation → Test Cases → Automation
 
 ---
 
-## Active Sprints
+## Active Sprint — Sprint 5: Full-Stack Automation
 
-| Sprint | Portal | Phase | Status | Start | Target End |
-|--------|--------|-------|--------|-------|-----------|
-| Sprint 1 | Login | Phase 3 — Automation | In Progress | 2026-02-10 | TBD |
+| Track | Status | Notes |
+|-------|--------|-------|
+| Track 1 — TC catalogue + BRD/FRD audit | ✅ Done | 1,728 TCs, ~98% Type-tagged, 22 FSD bugs catalogued |
+| Track 2 — Locator maps + POMs | ✅ Done | 4 portal maps (213/85/55/64 elements), 33 POMs scaffolded |
+| Track 3 — Playwright specs | 🔄 In Progress | 16/32 modules done after wave 4 (Customers admin pre-existing + 15 new) |
+| Track 4 — Spec execution + reporting | ⏳ Pending | All specs syntax-clean, awaiting batch run |
 
 ---
 
-## Completed Sprints
+## Sprint 5 Wave Log (Track 3 — Playwright Specs)
+
+### Wave 1 — 2026-05-29 — Login per portal (3 portals, admin pre-existing)
+- SM Login: 29 tests (25/35 TCs)
+- CP Login: 25 tests (19/47 TCs)
+- Buyer Login: 27 tests (27/38 TCs)
+- **Total:** 81 tests / 9 files
+
+### Wave 2 — 2026-05-29 — Mixed critical modules
+- Admin Sales Managers: 25 tests
+- SM Callback Requests: 40 tests
+- CP Leads Management: 23 tests
+- Buyer Home Dashboard: 27 tests
+- **Total:** 115 tests / 8 files
+
+### Wave 3 — 2026-05-29 / 2026-05-30 — Core workflows
+- Admin Allocation: 26 tests
+- Buyer KYC: 28 tests (incl. BUG-KYC-001/004/005/006 refs)
+- CP Customer Registration: 20 tests
+- SM Physical Allocation: 18 tests (incl. BUG-KYC-001 ref)
+- **Total:** 92 tests / 8 files
+
+### Wave 4 — 2026-05-30 — In progress
+- Admin Towers, Buyer Allocation Experience, CP KYC Assistance, SM Tower Heatmap
+
+---
+
+## Track-Wide Milestones (Sprint 5)
+
+| Date | Milestone |
+|------|-----------|
+| 2026-05-25 | FSD corrections audit completed across 4 portals (BRD/FRD updated) |
+| 2026-05-26 | Excel reorganized — module-sheet layout with type-bifurcated banners |
+| 2026-05-28 | TC Type tagging at 98% (1,691 / 1,728 TCs) |
+| 2026-05-29 | DB connection wired — MySQL UAT + 10 query modules + smoke spec |
+| 2026-05-29 | Locator maps live-crawl pipeline + 4 maps |
+| 2026-05-29 | POM scaffolder + 30 generated POMs |
+| 2026-05-29 | Auth sessions refreshed + buyer URL map corrected |
+| 2026-05-29 | BUG_TRACKER catalogue — 22 FSD-verified bugs across 9 modules |
+| 2026-05-30 | Specs wave 3 + 4 dispatched in parallel batches |
+
+---
+
+## Completed Historical Sprints
+
+### Sprint 4 — Customers (Admin) — closed earlier
+- Customers POM + 6 spec types (e2e, ui-ux, regression, smoke, api, db) — hand-written
+- Bugs: BUG_010 (open)
 
 ### Sprint 3 — Config / CMS
-| Phase | Status | Date |
-|-------|--------|------|
-| Phase 1: Documentation | ✅ | 2026-04-01 |
-| Phase 2: Manual TCs | ⏳ Pending BA sign-off | — |
-| Phase 3: Automation | ⏳ Pending TCs | — |
-
-Bugs: BUG_009 (closed)
-
----
+- Phase 1 Documentation: ✅ 2026-04-01
+- Bugs: BUG_009 (closed)
 
 ### Sprint 2 — Towers + Allocation
-| Phase | Status | Date |
-|-------|--------|------|
-| Phase 1: Documentation | ✅ | 2026-03-01 |
-| Phase 2: Manual TCs | ⏳ Pending BA sign-off | — |
-| Phase 3: Automation | ⏳ Pending TCs | — |
+- Phase 1 Documentation: ✅ 2026-03-01
+- Bugs: BUG_005, BUG_006, BUG_007, BUG_008 (all closed)
 
-Bugs: BUG_005, BUG_006, BUG_007, BUG_008 (all closed)
-
----
-
-### Sprint 1 — Login
-| Phase | Status | Date |
-|-------|--------|------|
-| Phase 1: Documentation | ✅ | 2026-02-10 |
-| Phase 2: Manual TCs | ✅ BA Approved | 2026-05-16 |
-| Phase 3: Automation | ⏳ In Progress | — |
-
-TCs: 22 (in `01-test-cases/login/TC_LOGIN.md`)  
-Bugs: BUG_001, BUG_002 (both closed)
+### Sprint 1 — Login (Admin)
+- Phase 2 Manual TCs: ✅ 2026-05-16
+- TCs: 22 hand-written
+- Bugs: BUG_001, BUG_002 (both closed)
 
 ---
 
 ## Sync Pipeline Runs
 
 ### Sync Run — 2026-05-21 (Step 3 — QA Agent Manual)
+Locator map v1.3.4 → v1.4.0. Customers TC updated (ADM_CUST_007). 8/9 modules cleared, milestone deferred.
 
-**Trigger:** Step 1 (Tech Lead) v1.3.4 → v1.4.0 locator map · Step 2 (BA) sign-off (8 modules cleared, 1 deferred)
-
-**Locator corrections applied to manual TCs:**
-1. `customers.colHomeLoan` — column header "Home Loan" → "Home Loan Details". Existing TC_CUSTOMERS.md already used "Home Loan Details" at the column-listing step; no functional change needed.
-2. `customers.colConfirmationNumber` — column header "Confirmation Number" → "Confirmation". TC_CUSTOMERS.md ADM_CUST_007 expected result updated (removed duplicate "Confirmation Number" listing; clarified column header is "Confirmation"). All other "Confirmation" references in filter/value test steps already align.
-3. `customers.tableRecordsHeading` — selector strengthening (h3.table-title primary). No manual TC text change required (text "Total Registered Records" remains a behavioural assertion, unchanged).
-
-**Modules covered (BA-cleared 8/9):**
-| Module | TC File Present | TC Aligned with Locator Map v1.4.0 |
-|--------|-----------------|-----------------------------------|
-| admin-cms | ✅ TC_ADMIN_CMS.md / .xlsx | ✅ no drift (no customers-column references) |
-| towers | ✅ TC_TOWERS.md / .xlsx | ✅ no drift |
-| jbp | ✅ TC_JBP.md / .xlsx | ✅ no drift |
-| offers | ✅ TC_OFFERS.md / .xlsx | ✅ no drift |
-| payment-transactions | ✅ TC_PAYMENT_TRANSACTIONS.md (no .xlsx) | ✅ no drift — .xlsx gap noted |
-| sales-managers | ✅ TC_SALES_MANAGERS.md (no .xlsx) | ✅ no drift — .xlsx gap noted |
-| allocation | ✅ TC_ALLOCATION.md / .xlsx | ✅ no drift |
-| channel-partners | ✅ TC_CHANNEL_PARTNERS.md (no .xlsx) | ✅ no drift — .xlsx gap noted |
-| customers (already-mapped) | ✅ TC_CUSTOMERS.md / .xlsx | ✅ updated (ADM_CUST_007) |
-
-**Module deferred:**
-- `milestone` — GAP-001 in ba-signoff.md. No standalone BRD/FRD/FS. No TC folder exists in manual-qa-repository. Deferred until product/BA confirms scope. NOT created this sync (would require new-sprint instruction).
-
-**Gaps logged (informational, not blockers):**
-- 3 modules have markdown TC files but no .xlsx counterpart (payment-transactions, sales-managers, channel-partners). Recommended for next sprint pass to generate .xlsx via `manual-tester` skill so they match the format of other admin modules.
-- `milestone` standalone admin screen has no TC folder and no BRD/FRD — awaiting product clarification (GAP-001).
-
-**Files modified this step:**
-- `manual-qa-repository/01-test-cases/admin-portal/customers/TC_CUSTOMERS.md` (ADM_CUST_007 expected result line)
-- `manual-qa-repository/SPRINT_LOG.md` (this entry)
-
-**Files NOT modified (out of scope per Step 3 boundary):**
-- specs, POMs, playwright.config.js, locator maps, TC .xlsx files (no .xlsx editing tooling invoked — markdown source is canonical)
-- No new TC rows added for uncovered modules — per instructions, new-sprint authoring requires explicit user instruction.
-
-**Pipeline status:** Step 3 complete — clear to proceed to Step 4 (QA Agent Automation).
+### Sync Run — 2026-05-29 (full pipeline manual replay)
+- BRD/FRD: source-verified across 4 portals (Epinet/least-loaded/Azure/Botspice)
+- Test cases: reorganized, type-tagged, Excel module-sheet layout
+- Locators: live-crawl, 4 maps, 30 POMs scaffolded
+- Specs: 3 waves (288 tests, 25 files) committed
+- Bugs: 22 FSD-source-verified entries catalogued
 
 ---
 
