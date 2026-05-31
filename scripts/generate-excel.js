@@ -31,6 +31,63 @@ const path    = require('path');
 const ROOT    = path.join(__dirname, '..');
 const TC_BASE = path.join(ROOT, 'manual-qa-repository', '01-test-cases');
 const OUT_DIR = path.join(ROOT, 'manual-qa-repository', '07-execution');
+const SPECS_ROOT = path.join(ROOT, 'tests');
+
+// ─── Spec scan — TC_IDs referenced via test('TC_... — ...') ──────────────────
+function walkFiles(dir, pred, out = []) {
+  if (!fs.existsSync(dir)) return out;
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, ent.name);
+    if (ent.isDirectory()) walkFiles(full, pred, out);
+    else if (pred(full)) out.push(full);
+  }
+  return out;
+}
+
+function scanAutomatedTcIds() {
+  const specFiles = walkFiles(SPECS_ROOT, f => f.endsWith('.spec.js') && !f.includes(`${path.sep}archived${path.sep}`));
+  const automated = new Set();
+  const rx = /\btest(?:\.\w+)?\s*\(\s*['"`]([A-Z][A-Z0-9_-]*?\d+)\b/g;
+  for (const file of specFiles) {
+    const src = fs.readFileSync(file, 'utf8');
+    let m;
+    while ((m = rx.exec(src)) !== null) automated.add(m[1]);
+  }
+  return automated;
+}
+
+// ─── Read existing K-O cells from prior workbook, indexed by TC_ID ──────────
+// Preserves execution history across regenerations.
+async function readExistingExecCells(xlsxPath) {
+  // Returns: { '<TC_ID>': { K, L, M, N, O } }   (cell values, may be undefined)
+  const map = {};
+  if (!fs.existsSync(xlsxPath)) return map;
+  try {
+    const wb = new ExcelJS.Workbook();
+    await wb.xlsx.readFile(xlsxPath);
+    wb.eachSheet(ws => {
+      if (ws.name && ws.name.startsWith('📋')) return;  // skip Index
+      // Determine header row (row 2 in module sheets per current layout)
+      // Scan column A from row 3 onward for TC_IDs
+      for (let r = 3; r <= ws.rowCount; r++) {
+        const row = ws.getRow(r);
+        const tcId = (row.getCell(COL_TCID).value || '').toString().trim();
+        if (!tcId || tcId.includes('━')) continue;  // banner row
+        // capture old K-O
+        map[tcId] = {
+          K: row.getCell(COL_K_AUTOMATION).value,
+          L: row.getCell(COL_L_LASTSTATUS).value,
+          M: row.getCell(COL_M_HISTORY).value,
+          N: row.getCell(COL_N_ACTUALRUN).value,
+          O: row.getCell(COL_O_SHOT).value,
+        };
+      }
+    });
+  } catch (e) {
+    console.warn(`  [warn] could not read prior exec cells from ${path.basename(xlsxPath)}: ${e.message}`);
+  }
+  return map;
+}
 
 // ─── Styling ────────────────────────────────────────────────────────────────
 
@@ -54,20 +111,34 @@ const THIN_BORDER  = {
   right:  { style: 'thin', color: { argb: 'FFDDDDDD' } },
 };
 
-// ─── 10-column schema ────────────────────────────────────────────────────────
+// ─── 15-column schema (A-J base + K-O execution) ────────────────────────────
 
 const COLUMNS = [
-  { header: 'TC ID',           key: 'tcId',       width: 22 },
-  { header: 'Feature Area',    key: 'feature',    width: 32 },
-  { header: 'Type',            key: 'type',       width: 8  },
-  { header: 'Test Scenario',   key: 'scenario',   width: 40 },
-  { header: 'Pre-conditions',  key: 'precond',    width: 28 },
-  { header: 'Test Steps',      key: 'steps',      width: 46 },
-  { header: 'Expected Result', key: 'expected',   width: 38 },
-  { header: 'Actual Result',   key: 'actual',     width: 22 },
-  { header: 'Status',          key: 'status',     width: 10 },
-  { header: 'Priority',        key: 'priority',   width: 12 },
+  { header: 'TC ID',             key: 'tcId',       width: 22 },  // A
+  { header: 'Feature Area',      key: 'feature',    width: 32 },  // B
+  { header: 'Type',              key: 'type',       width: 8  },  // C
+  { header: 'Test Scenario',     key: 'scenario',   width: 40 },  // D
+  { header: 'Pre-conditions',    key: 'precond',    width: 28 },  // E
+  { header: 'Test Steps',        key: 'steps',      width: 46 },  // F
+  { header: 'Expected Result',   key: 'expected',   width: 38 },  // G
+  { header: 'Actual Result',     key: 'actual',     width: 22 },  // H (legacy manual)
+  { header: 'Status',            key: 'status',     width: 10 },  // I (legacy manual)
+  { header: 'Priority',          key: 'priority',   width: 12 },  // J
+  // Execution columns — auto-filled by scripts/generate-execution-report.js
+  { header: 'Automation Status', key: 'automation', width: 16 },  // K
+  { header: 'Last Run Status',   key: 'lastStatus', width: 14 },  // L
+  { header: 'Execution Details', key: 'history',    width: 38 },  // M
+  { header: 'Actual Result (Run)', key: 'actualRun', width: 32 }, // N
+  { header: 'Screenshot Link',   key: 'shot',       width: 20 },  // O
 ];
+
+// Column index helpers (1-based)
+const COL_TCID = 1;
+const COL_K_AUTOMATION = 11;
+const COL_L_LASTSTATUS = 12;
+const COL_M_HISTORY    = 13;
+const COL_N_ACTUALRUN  = 14;
+const COL_O_SHOT       = 15;
 
 // ─── Type taxonomy ───────────────────────────────────────────────────────────
 
@@ -306,14 +377,14 @@ function parseMd(mdPath) {
 
 // ─── Module sheet builder ────────────────────────────────────────────────────
 
-function buildModuleSheet(wb, sheetName, tcs, portalFull) {
+function buildModuleSheet(wb, sheetName, tcs, portalFull, automatedSet, priorExecCells) {
   const safeName = safeSheetName(sheetName);
   const ws = wb.addWorksheet(safeName, {
     views: [{ state: 'frozen', ySplit: 2 }],
     pageSetup: { orientation: 'landscape', fitToPage: true, fitToWidth: 1 },
   });
 
-  // Row 1 — merged title
+  // Row 1 — merged title (across all 15 columns)
   ws.columns = COLUMNS;
   const titleRow = ws.getRow(1);
   titleRow.getCell(1).value = `${portalFull} — ${sheetName} Test Cases`;
@@ -323,7 +394,7 @@ function buildModuleSheet(wb, sheetName, tcs, portalFull) {
   titleRow.getCell(1).alignment = { vertical: 'middle', horizontal: 'center' };
   titleRow.height = 30;
 
-  // Row 2 — column headers
+  // Row 2 — column headers (15 cols A-O)
   const headerRow = ws.addRow(COLUMNS.map(c => c.header));
   headerRow.eachCell(cell => {
     cell.fill      = HEADER_FILL;
@@ -364,6 +435,9 @@ function buildModuleSheet(wb, sheetName, tcs, portalFull) {
 
     // Data rows
     group.forEach(tc => {
+      const automation = automatedSet.has(tc.tcId) ? 'Automated' : 'Not Automated';
+      const prior      = priorExecCells[tc.tcId] || {};
+
       const dataRow = ws.addRow([
         tc.tcId,
         tc.featureArea,
@@ -372,9 +446,15 @@ function buildModuleSheet(wb, sheetName, tcs, portalFull) {
         tc.precond,
         tc.steps,
         tc.expected,
-        '',   // Actual Result
-        '',   // Status
+        '',   // H — Actual Result (legacy manual)
+        '',   // I — Status (legacy manual)
         tc.priority,
+        // Execution columns — K computed fresh; L/M/N/O preserved from prior workbook
+        automation,                             // K — Automation Status
+        prior.L != null ? prior.L : '',         // L — Last Run Status
+        prior.M != null ? prior.M : '',         // M — Execution Details
+        prior.N != null ? prior.N : '',         // N — Actual Result (Run)
+        prior.O != null ? prior.O : '',         // O — Screenshot Link
       ]);
 
       const prio = (tc.priority || '').toLowerCase();
@@ -390,6 +470,19 @@ function buildModuleSheet(wb, sheetName, tcs, portalFull) {
       dataRow.getCell(1).font = { bold: true };
       dataRow.getCell(3).alignment = { horizontal: 'center', vertical: 'top' };
 
+      // Style K — Automation Status
+      const kCell = dataRow.getCell(COL_K_AUTOMATION);
+      kCell.alignment = { horizontal: 'center', vertical: 'top' };
+      kCell.fill = { type: 'pattern', pattern: 'solid',
+        fgColor: { argb: automation === 'Automated' ? 'FFD9E1F2' : 'FFF2F2F2' } };
+
+      // Style L — Last Run Status
+      const lVal = (prior.L || '').toString().toUpperCase();
+      if (lVal === 'PASS') dataRow.getCell(COL_L_LASTSTATUS).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC6EFCE' } };
+      else if (lVal === 'FAIL') dataRow.getCell(COL_L_LASTSTATUS).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFC7CE' } };
+      else if (lVal === 'SKIP') dataRow.getCell(COL_L_LASTSTATUS).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFEB9C' } };
+      dataRow.getCell(COL_L_LASTSTATUS).alignment = { horizontal: 'center', vertical: 'top' };
+
       const stepLines = (tc.steps || '').split('\n').length;
       dataRow.height = Math.max(40, Math.min(stepLines * 16 + 12, 240));
     });
@@ -398,23 +491,26 @@ function buildModuleSheet(wb, sheetName, tcs, portalFull) {
 
 // ─── Index sheet ─────────────────────────────────────────────────────────────
 
-function buildIndexSheet(wb, modules, portalLabel, portalFull) {
+function buildIndexSheet(wb, modules, portalLabel, portalFull, automatedSet) {
   const ws = wb.addWorksheet('📋 Index', {
     views: [{ state: 'frozen', ySplit: 3 }],
   });
 
+  // 7 columns now (added Automation %)
   ws.columns = [
     { key: 'num',      width: 5  },
     { key: 'module',   width: 28 },
     { key: 'count',    width: 10 },
     { key: 'types',    width: 52 },
     { key: 'priority', width: 14 },
+    { key: 'autoPct',  width: 14 },
     { key: 'desc',     width: 40 },
   ];
+  const NCOLS = 7;
 
   const r1 = ws.getRow(1);
   r1.getCell(1).value = `${portalFull} — MASTER TEST CASE DOCUMENT`;
-  ws.mergeCells(1, 1, 1, 6);
+  ws.mergeCells(1, 1, 1, NCOLS);
   r1.getCell(1).fill      = TITLE_FILL;
   r1.getCell(1).font      = TITLE_FONT;
   r1.getCell(1).alignment = { vertical: 'middle', horizontal: 'center' };
@@ -422,13 +518,13 @@ function buildIndexSheet(wb, modules, portalLabel, portalFull) {
 
   const r2 = ws.getRow(2);
   r2.getCell(1).value = portalLabel;
-  ws.mergeCells(2, 1, 2, 6);
+  ws.mergeCells(2, 1, 2, NCOLS);
   r2.getCell(1).fill      = HEADER_FILL;
   r2.getCell(1).font      = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11 };
   r2.getCell(1).alignment = { vertical: 'middle', horizontal: 'center' };
   r2.height = 20;
 
-  const hdr = ws.addRow(['#', 'Module', 'TC Count', 'Type Breakdown', 'Priority Focus', 'Description']);
+  const hdr = ws.addRow(['#', 'Module', 'TC Count', 'Type Breakdown', 'Priority Focus', 'Automation %', 'Description']);
   hdr.eachCell(cell => {
     cell.fill      = HEADER_FILL;
     cell.font      = HEADER_FONT;
@@ -437,6 +533,7 @@ function buildIndexSheet(wb, modules, portalLabel, portalFull) {
   });
   hdr.height = 22;
 
+  let grandAuto = 0, grandTot = 0;
   modules.forEach((m, idx) => {
     const counts = {};
     m.tcs.forEach(tc => {
@@ -452,7 +549,13 @@ function buildIndexSheet(wb, modules, portalLabel, portalFull) {
     const highs  = m.tcs.filter(t => (t.priority||'').toLowerCase() === 'high').length;
     const prioFocus = crits > highs ? 'Critical' : highs > 0 ? 'High' : 'Medium';
 
-    const row = ws.addRow([idx + 1, m.sheetName, m.tcs.length, breakdown, prioFocus, m.desc || '']);
+    const auto = m.tcs.filter(tc => automatedSet.has(tc.tcId)).length;
+    const tot  = m.tcs.length;
+    grandAuto += auto;
+    grandTot  += tot;
+    const autoPct = tot > 0 ? `${auto}/${tot} (${Math.round(100 * auto / tot)}%)` : '—';
+
+    const row = ws.addRow([idx + 1, m.sheetName, tot, breakdown, prioFocus, autoPct, m.desc || '']);
     row.eachCell({ includeEmpty: true }, cell => {
       cell.alignment = { vertical: 'middle', wrapText: true };
       cell.border    = THIN_BORDER;
@@ -460,17 +563,22 @@ function buildIndexSheet(wb, modules, portalLabel, portalFull) {
     });
     row.getCell(3).alignment = { horizontal: 'center', vertical: 'middle' };
     row.getCell(5).alignment = { horizontal: 'center', vertical: 'middle' };
+    row.getCell(6).alignment = { horizontal: 'center', vertical: 'middle' };
     row.height = 26;
   });
 
   ws.addRow([]);
-  const totRow = ws.addRow(['', 'TOTAL', modules.reduce((s, e) => s + e.tcs.length, 0), '', '', '']);
+  const grandPct = grandTot > 0 ? `${grandAuto}/${grandTot} (${Math.round(100 * grandAuto / grandTot)}%)` : '—';
+  const totRow = ws.addRow(['', 'TOTAL', grandTot, '', '', grandPct, '']);
   totRow.font = { bold: true };
   totRow.getCell(2).fill = HEADER_FILL;
   totRow.getCell(2).font = { bold: true, color: { argb: 'FFFFFFFF' } };
   totRow.getCell(3).fill = HEADER_FILL;
   totRow.getCell(3).font = { bold: true, color: { argb: 'FFFFFFFF' } };
   totRow.getCell(3).alignment = { horizontal: 'center', vertical: 'middle' };
+  totRow.getCell(6).fill = HEADER_FILL;
+  totRow.getCell(6).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  totRow.getCell(6).alignment = { horizontal: 'center', vertical: 'middle' };
 }
 
 // ─── Workbook orchestration ──────────────────────────────────────────────────
@@ -522,18 +630,24 @@ async function buildPortalWorkbook(portalSlug) {
     return null;
   }
 
+  // Read prior execution cells BEFORE overwrite — preserves history
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+  const outPath = path.join(OUT_DIR, cfg.file);
+  const priorExecCells = await readExistingExecCells(outPath);
+
+  // Scan spec corpus for automation status (reused across all sheets)
+  const automatedSet = AUTOMATED_TC_IDS;
+
   const wb = new ExcelJS.Workbook();
   wb.creator = 'XR Portal QA Framework';
   wb.created = new Date();
 
   // Index sheet first
-  buildIndexSheet(wb, modules, cfg.label, cfg.portalFull);
+  buildIndexSheet(wb, modules, cfg.label, cfg.portalFull, automatedSet);
 
   // One sheet per module
-  modules.forEach(m => buildModuleSheet(wb, m.sheetName, m.tcs, cfg.portalFull));
+  modules.forEach(m => buildModuleSheet(wb, m.sheetName, m.tcs, cfg.portalFull, automatedSet, priorExecCells));
 
-  fs.mkdirSync(OUT_DIR, { recursive: true });
-  const outPath = path.join(OUT_DIR, cfg.file);
   await wb.xlsx.writeFile(outPath);
 
   const total = modules.reduce((s, e) => s + e.tcs.length, 0);
@@ -550,6 +664,9 @@ async function buildPortalWorkbook(portalSlug) {
   return outPath;
 }
 
+// Populated once per process by main(); referenced inside buildPortalWorkbook.
+let AUTOMATED_TC_IDS = new Set();
+
 async function main() {
   const arg = process.argv.find(a => a.startsWith('--portal='));
   const only = arg ? arg.split('=')[1] : null;
@@ -561,6 +678,10 @@ async function main() {
     console.error(`Unknown portal "${only}". Valid: admin | buyer | cp | sm`);
     process.exit(1);
   }
+
+  // Scan spec corpus once for automation status across all portals
+  AUTOMATED_TC_IDS = scanAutomatedTcIds();
+  console.log(`Spec scan: ${AUTOMATED_TC_IDS.size} automated TC_ID(s) detected in tests/**/*.spec.js\n`);
 
   console.log(`Generating Excel for: ${targets.join(', ')}\n`);
   for (const p of targets) await buildPortalWorkbook(p);

@@ -467,6 +467,97 @@ function renderHtml(rows, counts) {
 </body></html>`;
 }
 
+// ── 8b. Merge run results INTO the per-portal TC catalogue workbooks ──────
+// Updates K-O cells (Automation Status / Last Run Status / Execution Details /
+// Actual Result (Run) / Screenshot Link) by matching col-A TC_ID. Preserves
+// every other cell, banner row, formula, merge, and styling.
+const CATALOGUE_DIR = path.join(ROOT, 'manual-qa-repository', '07-execution');
+const CATALOGUE_FILES = [
+  'TestCases-AdminPortal.xlsx',
+  'TestCases-BuyerPortal.xlsx',
+  'TestCases-CPPortal.xlsx',
+  'TestCases-SMPortal.xlsx',
+];
+const CAT_COL_TCID        = 1;   // A
+const CAT_COL_AUTOMATION  = 11;  // K
+const CAT_COL_LASTSTATUS  = 12;  // L
+const CAT_COL_HISTORY     = 13;  // M
+const CAT_COL_ACTUALRUN   = 14;  // N
+const CAT_COL_SHOT        = 15;  // O
+
+async function mergeIntoCatalogue(resultsIdx, automatedSet, stamp) {
+  for (const fname of CATALOGUE_FILES) {
+    const fpath = path.join(CATALOGUE_DIR, fname);
+    if (!fs.existsSync(fpath)) {
+      console.log(`[catalogue] skip ${fname} — not found`);
+      continue;
+    }
+    const wb = new ExcelJS.Workbook();
+    try { await wb.xlsx.readFile(fpath); }
+    catch (e) { console.warn(`[catalogue] could not open ${fname}: ${e.message}`); continue; }
+
+    let updated = 0, autoOnly = 0;
+    wb.eachSheet(ws => {
+      if (ws.name && ws.name.startsWith('📋')) return;  // skip Index
+      // Header row is row 2; scan data starting at row 3
+      const lastRow = ws.rowCount;
+      for (let r = 3; r <= lastRow; r++) {
+        const row = ws.getRow(r);
+        const tcId = (row.getCell(CAT_COL_TCID).value || '').toString().trim();
+        if (!tcId || tcId.includes('━')) continue;  // banner
+
+        // Always refresh K (Automation Status) — reflects current spec corpus
+        const automation = automatedSet.has(tcId) ? 'Automated' : 'Not Automated';
+        const kCell = row.getCell(CAT_COL_AUTOMATION);
+        kCell.value = automation;
+        kCell.alignment = { horizontal: 'center', vertical: 'top' };
+        kCell.fill = { type: 'pattern', pattern: 'solid',
+          fgColor: { argb: automation === 'Automated' ? 'FFD9E1F2' : 'FFF2F2F2' } };
+        autoOnly++;
+
+        const res = resultsIdx[tcId];
+        if (!res) continue;
+
+        // L — Last Run Status
+        const lCell = row.getCell(CAT_COL_LASTSTATUS);
+        lCell.value = res.status;
+        lCell.alignment = { horizontal: 'center', vertical: 'top' };
+        if (res.status === 'PASS')      lCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC6EFCE' } };
+        else if (res.status === 'FAIL') lCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFC7CE' } };
+        else if (res.status === 'SKIP') lCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFEB9C' } };
+
+        // M — Execution Details (PREPEND latest entry, preserve prior history)
+        const mCell = row.getCell(CAT_COL_HISTORY);
+        const priorHist = (mCell.value || '').toString();
+        const newEntry  = `${stamp} · ${res.status}`;
+        mCell.value = priorHist ? `${newEntry}\n${priorHist}` : newEntry;
+        mCell.alignment = { vertical: 'top', wrapText: true };
+
+        // N — Actual Result (Run)
+        const nCell = row.getCell(CAT_COL_ACTUALRUN);
+        nCell.value = res.actual || '';
+        nCell.alignment = { vertical: 'top', wrapText: true };
+
+        // O — Screenshot Link (only on FAIL)
+        const oCell = row.getCell(CAT_COL_SHOT);
+        let shotPath = res.screenshotPath;
+        if (!shotPath && res.status === 'FAIL') shotPath = findFallbackScreenshot(tcId);
+        if (shotPath) {
+          const shotRel = path.relative(CATALOGUE_DIR, shotPath).replace(/\\/g, '/');
+          oCell.value = { text: 'screenshot', hyperlink: shotRel };
+          oCell.font = { color: { argb: 'FF0563C1' }, underline: true };
+        } else {
+          oCell.value = '';
+        }
+        updated++;
+      }
+    });
+
+    await wb.xlsx.writeFile(fpath);
+    console.log(`[catalogue] ${fname} — ${updated} TC row(s) merged with results, ${autoOnly} K-cells refreshed`);
+  }
+}
+
 // ── 9. Main ────────────────────────────────────────────────────────────────
 (async function main() {
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
@@ -530,4 +621,9 @@ function renderHtml(rows, counts) {
   console.log(`   HTML  → ${path.relative(ROOT, OUT_HTML)}`);
   console.log(`   XLSX  → ${path.relative(ROOT, OUT_XLSX)}`);
   console.log(`[exec-report] summary:`, counts.top);
+
+  // Also merge results into the four per-portal TC catalogue workbooks
+  console.log(`[catalogue] merging results into TestCases-*Portal.xlsx ...`);
+  await mergeIntoCatalogue(resultsIdx, automatedSet, stamp);
+  console.log(`[catalogue] done.`);
 })();
