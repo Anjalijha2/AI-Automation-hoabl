@@ -25,7 +25,9 @@
     "discover": "node automation-repository/discovery/config-discovery.js",
     "sync": "node sync/run-sync.js",
     "sprint:status": "node automation-repository/utils/sprint-manager.js status",
-    "sprint:update": "node automation-repository/utils/sprint-manager.js update"
+    "sprint:update": "node automation-repository/utils/sprint-manager.js update",
+    "report:exec": "node scripts/generate-execution-report.js",
+    "report:email": "node scripts/generate-execution-report.js && node scripts/send-execution-report.js"
   },
   "keywords": [],
   "author": "",
@@ -36,6 +38,7 @@
     "csv-writer": "^1.6.0",
     "dotenv": "^17.3.1",
     "exceljs": "^4.4.0",
+    "nodemailer": "^6.10.1",
     "playwright": "^1.58.2",
     "xlsx": "^0.18.5"
   },
