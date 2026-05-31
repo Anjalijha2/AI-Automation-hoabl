@@ -17,8 +17,8 @@
 | **Smoke** | 8 | 8 | 0 | 0 | 100% | 44.3s |
 | **Regression** | 13 | 11 | 2 | 0 | 84.6% | 2.8m |
 | **Cross-browser** (chromium+firefox+webkit) | 28 | 24 | 4 | 0 | 85.7% | 4.5m |
-| **DB** | — | — | — | — | BLOCKED — host ETIMEDOUT | — |
-| **Totals (excl. DB)** | **807** | **379** | **102** | **326** | **78.8%** of executed | ~3.2h |
+| **DB** | 8 | 8 | 0 | 0 | 100% | 26.5s |
+| **Totals** | **815** | **387** | **102** | **326** | **79.1%** of executed | ~3.2h |
 
 ---
 
@@ -69,10 +69,12 @@ Once baselines exist, future runs skip first-time-snapshot retries → real sign
 - Chromium: 8/8 · Firefox: 8/10 · Webkit: 8/10
 - All 4 fails are the same `button:has-text("Download")` strict-mode hit propagated across browsers.
 
-### DB — BLOCKED
-- `npm run db:ping` returns `ETIMEDOUT 20.244.46.36:3306`.
-- Earlier in this sprint the same host responded (5/5 pass).
-- Network/firewall issue from this workstation — not a code defect.
+### DB (8/8) — UNBLOCKED 2026-05-31 (retry)
+- `npm run db:ping` succeeded against `20.244.46.36:3306` (portal_node_uat, MySQL).
+- Full DB suite executed: 8 tests / 26.5s / 100% pass.
+  - TC-DB-CONN-001..005 — ping + reference tables (users/SM, inventory, allocation, JBP).
+  - TC_CUST_DB_001..003 — Customers FRD §11 (pagination total, KPI categories, filter subset).
+- Earlier `ETIMEDOUT` was transient network/firewall on the workstation — resolved on re-run.
 
 ---
 
@@ -106,7 +108,7 @@ All require Developer Agent intervention (out of QA scope — documented, traced
 1. **Dev queue:** 22 BUG_TRACKER items go to Developer Agent on next engagement
 2. **QA Agent:** refine 25 locator-strict-mode failures (POM-side disambiguation)
 3. **Tech Lead Agent:** sweep Admin Towers + Buyer dashboard locator-map keys
-4. **DB host:** retry connection from a different network — if persistent, escalate firewall
+4. ~~**DB host:** retry connection from a different network~~ — UNBLOCKED 2026-05-31, 8/8 pass
 5. **Re-run E2E** after locator fixes — expect pass rate jump from 66% to ~85%+
 
 ---

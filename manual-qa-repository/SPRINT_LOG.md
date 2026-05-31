@@ -12,7 +12,7 @@
 | Track 1 — TC catalogue + BRD/FRD audit | ✅ Done | 1,728 TCs, ~98% Type-tagged, 22 FSD bugs catalogued |
 | Track 2 — Locator maps + POMs | ✅ Done | 4 portal maps (213/85/55/64 elements), 33 POMs scaffolded |
 | Track 3 — Playwright specs | ✅ Done | 32/32 modules · 765 tests · 65 spec files · 33 POMs (wave 8 closed 2026-05-30) |
-| Track 4 — Spec execution + reporting | ✅ Done | All 6 test types fired 2026-05-31 · 807 tests / 379 pass / 102 fail · 64 visual baselines committed · DB blocked (host ETIMEDOUT) · `06-test-runs/UAT/sprint-5/RUN_SUMMARY.md` |
+| Track 4 — Spec execution + reporting | ✅ Done | All 6 test types fired 2026-05-31 · 815 tests / 387 pass / 102 fail · 64 visual baselines committed · DB 8/8 unblocked · `06-test-runs/UAT/sprint-5/RUN_SUMMARY.md` |
 
 ---
 
