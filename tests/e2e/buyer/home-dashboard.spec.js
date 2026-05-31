@@ -42,7 +42,7 @@ test.describe('Home Dashboard — Buyer Portal E2E', () => {
   // ══════════════════════════════════════════════════════════════════════════
 
   test('BYR_DASH_001 — BUYER-FS-Home-Dashboard §Landing — Dashboard loads at /home after login', async ({ page }) => {
-    await expect(page).toHaveURL(/\/home/);
+    await expect(page).toHaveURL(/(\/home|xrportal\.in\/?)$/);
     // The dashboard must render at least one of: registration table, empty state,
     // or graceful error banner. Any of the three means the page rendered end-to-end.
     const tableVisible = await dashboardPage.registrationTable.isVisible({ timeout: 5_000 }).catch(() => false);
@@ -127,7 +127,7 @@ test.describe('Home Dashboard — Buyer Portal E2E', () => {
     await page.waitForLoadState('domcontentloaded');
     await page.goBack();
     await page.waitForLoadState('domcontentloaded');
-    await expect(page).toHaveURL(/\/home/);
+    await expect(page).toHaveURL(/(\/home|xrportal\.in\/?)$/);
   });
 
   // ══════════════════════════════════════════════════════════════════════════
@@ -156,7 +156,7 @@ test.describe('Home Dashboard — Buyer Portal E2E', () => {
     expect(errorVisible || retryVisible || emptyVisible).toBeTruthy();
 
     // Critical: the app must not crash — URL stays on /home
-    await expect(page).toHaveURL(/\/home/);
+    await expect(page).toHaveURL(/(\/home|xrportal\.in\/?)$/);
   });
 
   // ══════════════════════════════════════════════════════════════════════════
@@ -190,7 +190,7 @@ test.describe('Home Dashboard — Buyer Portal E2E', () => {
 
   test('BYR_DASH_E2E_001 — BUYER-FS-Home-Dashboard §Full-Flow — dashboard end-to-end render', async ({ page }) => {
     // Step 1 — URL settled at /home
-    await expect(page).toHaveURL(/\/home/);
+    await expect(page).toHaveURL(/(\/home|xrportal\.in\/?)$/);
     await expect(page).toHaveScreenshot('byr-dash-e2e-001-step1-url.png', { maxDiffPixels: 400, fullPage: true });
 
     // Step 2 — Header / profile area

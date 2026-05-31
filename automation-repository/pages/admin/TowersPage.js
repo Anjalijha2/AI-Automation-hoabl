@@ -183,6 +183,16 @@ class TowersPage extends BasePage {
   async navigate() {
     await this.page.goto(this.url);
     await this.page.waitForLoadState('domcontentloaded');
+    // Some sessions land on /admin/customers when direct nav fails to mount towers route.
+    // Fallback: click the sidebar Towers link if URL did not settle at /admin/towers.
+    if (!/\/admin\/towers/.test(this.page.url())) {
+      const sidebarTowers = this.page.locator('a[href="/admin/towers"], a:has-text("Towers")').first();
+      const present = await sidebarTowers.isVisible({ timeout: 5_000 }).catch(() => false);
+      if (present) {
+        await sidebarTowers.click().catch(() => {});
+        await this.page.waitForURL(/\/admin\/towers/, { timeout: 15_000 }).catch(() => {});
+      }
+    }
   }
 
   /**
