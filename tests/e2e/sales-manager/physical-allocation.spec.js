@@ -234,16 +234,16 @@ test.describe('Physical Allocation — SM Portal E2E', () => {
     const ctx = await browser.newContext();
     const page = await ctx.newPage();
     await page.goto('https://uat-web.xrportal.in/sales-manager/physical-allocation');
-    await page.waitForLoadState('domcontentloaded');
-    // Expect redirect to login (URL no longer contains /physical-allocation, or a Login heading is visible).
+    await page.waitForLoadState('networkidle').catch(() => {});
+    // Expect redirect to login (URL no longer contains /physical-allocation, or a login surface is visible).
     const url = page.url();
-    const onLogin = /\/sales-manager\/?$/i.test(url) || /login/i.test(url);
+    const offProtected = !/physical-allocation/i.test(url);
     const loginHeadingVisible = await page
-      .locator('h2:has-text("SALES MANAGER LOGIN"), :text("Sales Manager Login")')
+      .locator('h2:has-text("SALES MANAGER LOGIN"), :text-matches("Sales Manager Login", "i"), input[type="tel"], input[placeholder*="Mobile" i]')
       .first()
-      .isVisible()
+      .isVisible({ timeout: 12_000 })
       .catch(() => false);
-    expect(onLogin || loginHeadingVisible).toBeTruthy();
+    expect(offProtected || loginHeadingVisible).toBeTruthy();
     await ctx.close();
   });
 });

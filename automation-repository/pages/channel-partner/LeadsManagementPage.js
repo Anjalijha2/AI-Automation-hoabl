@@ -40,7 +40,7 @@ class LeadsManagementPage extends BasePage {
     // ── Element locators (sourced from locator-map.json via L['key']) ────────
     // Header / nav
     this.leadsHeading                   = page.locator(L['leadsHeading'] && L['leadsHeading'].selector);
-    this.homeLink                       = page.locator(L['homeLink'] && L['homeLink'].selector);
+    this.homeLink                       = page.locator(L['homeLink'] && L['homeLink'].selector).first();
     this.kYCLink                        = page.locator(L['kYCLink'] && L['kYCLink'].selector);
     this.jBPLink                        = page.locator(L['jBPLink'] && L['jBPLink'].selector);
     this.leadsLink                      = page.locator(L['leadsLink'] && L['leadsLink'].selector);

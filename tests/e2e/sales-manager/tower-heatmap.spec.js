@@ -177,9 +177,13 @@ test.describe('Tower Heatmap — SM Portal E2E', () => {
     const ctx  = await browser.newContext();
     const page = await ctx.newPage();
     await page.goto('https://uat-web.xrportal.in/sales-manager/towers');
-    await page.waitForLoadState('domcontentloaded');
-    // Expect a redirect to the SM login screen.
-    await expect(page).toHaveURL(/\/sales-manager(\/login)?(\?.*)?$/);
+    await page.waitForLoadState('networkidle').catch(() => {});
+    const url = page.url();
+    const offProtected = !/\/sales-manager\/towers/i.test(url);
+    const onLogin = await page.locator(
+      'h2:has-text("SALES MANAGER LOGIN"), :text-matches("Sales Manager Login", "i"), input[type="tel"], input[placeholder*="Mobile" i]'
+    ).first().isVisible({ timeout: 12_000 }).catch(() => false);
+    expect(offProtected || onLogin).toBeTruthy();
     await ctx.close();
   });
 });

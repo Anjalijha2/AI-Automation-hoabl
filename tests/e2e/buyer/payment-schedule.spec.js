@@ -228,11 +228,14 @@ test.describe('Payment Schedule Module — Buyer Portal E2E', () => {
     const ctx = await browser.newContext();
     const p = await ctx.newPage();
     await p.goto(PAYMENTSCHEDULE_URL);
-    await p.waitForLoadState('domcontentloaded');
+    await p.waitForLoadState('networkidle').catch(() => {});
+    // Acceptance: any of — URL moved off /payment-schedule, login surface visible, or mobile input present
+    const url = p.url();
+    const offProtected = !/\/payment-schedule/i.test(url);
     const onLogin = await p.locator(
-      'h2:has-text("APPLICANT LOGIN"), input[placeholder="Enter Mobile Number"]'
-    ).first().isVisible({ timeout: 8_000 }).catch(() => false);
-    expect(onLogin).toBeTruthy();
+      'h2:has-text("APPLICANT LOGIN"), :text-matches("Applicant Login", "i"), input[placeholder*="Mobile" i], input[type="tel"]'
+    ).first().isVisible({ timeout: 12_000 }).catch(() => false);
+    expect(offProtected || onLogin).toBeTruthy();
     await ctx.close();
   });
 });

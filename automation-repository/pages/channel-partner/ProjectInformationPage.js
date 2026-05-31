@@ -57,7 +57,7 @@ class ProjectInformationPage extends BasePage {
     this.copyLinkButton           = page.locator(L['copyLinkButton'] && L['copyLinkButton'].selector ? L['copyLinkButton'].selector : 'button:has-text("Copy link")');
     this.downloadQRCodeButton     = page.locator(L['downloadQRCodeButton'] && L['downloadQRCodeButton'].selector ? L['downloadQRCodeButton'].selector : 'button:has-text("Download QR Code")');
     this.createLeadButton         = page.locator(L['createLeadButton'] && L['createLeadButton'].selector ? L['createLeadButton'].selector : 'button:has-text("Create Lead")');
-    this.homeLink                 = page.locator(L['homeLink'] && L['homeLink'].selector ? L['homeLink'].selector : 'a:has-text("Home")');
+    this.homeLink                 = page.locator(L['homeLink'] && L['homeLink'].selector ? L['homeLink'].selector : 'a:has-text("Home")').first();
     this.kYCLink                  = page.locator(L['kYCLink'] && L['kYCLink'].selector ? L['kYCLink'].selector : 'a:has-text("KYC")');
     this.jBPLink                  = page.locator(L['jBPLink'] && L['jBPLink'].selector ? L['jBPLink'].selector : 'a:has-text("JBP")');
     this.leadsLink                = page.locator(L['leadsLink'] && L['leadsLink'].selector ? L['leadsLink'].selector : 'a:has-text("Leads")');

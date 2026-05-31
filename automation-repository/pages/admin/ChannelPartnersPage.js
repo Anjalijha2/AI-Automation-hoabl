@@ -68,7 +68,7 @@ class ChannelPartnersPage extends BasePage {
     // rowCheckboxes — every row-level checkbox. Use .nth(i) for row i.
     //                 We use the first()/scoped locator pattern in helper methods to
     //                 avoid the header checkbox being counted as a row checkbox.
-    this.selectAllCheckbox     = page.locator(L['selectAll'] && L['selectAll'].selector);
+    this.selectAllCheckbox     = page.locator(L['selectAll'] && L['selectAll'].selector).first();
     this.rowCheckboxes         = page.locator(L['checkboxInput'] && L['checkboxInput'].selector);
 
     // ── Row-level action triggers ─────────────────────────────────────────────

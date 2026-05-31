@@ -76,7 +76,7 @@ class CustomersPage extends BasePage {
     this.colProcessStatus       = page.locator(C.colProcessStatus.selector);
     this.colHomeLoan            = page.locator(C.colHomeLoan.selector);
     this.colAllottedUnit        = page.locator(C.colAllottedUnit.selector);
-    this.colConfirmationNumber  = page.locator(C.colConfirmationNumber.selector);
+    this.colConfirmationNumber  = page.locator(C.colConfirmationNumber.selector).first();
     this.colGrowthPartner       = page.locator(C.colGrowthPartner.selector);
     this.colPhone               = page.locator(C.colPhone.selector);
     this.colActions             = page.locator(C.colActions.selector);
@@ -91,7 +91,7 @@ class CustomersPage extends BasePage {
     this.searchByPhoneInput     = page.locator(C.searchByPhoneInput.selector);
     this.filterButton           = page.locator(C.filterButton.selector);
     this.refreshButton          = page.locator(C.refreshButton.selector);
-    this.downloadButton         = page.locator(C.downloadButton.selector);
+    this.downloadButton         = page.locator(C.downloadButton.selector).first();
     this.cancelBulkUnitsButton  = page.locator(C.cancelBulkUnitsButton.selector);
     this.resetFiltersButton     = page.locator(C.resetFiltersButton.selector);
 

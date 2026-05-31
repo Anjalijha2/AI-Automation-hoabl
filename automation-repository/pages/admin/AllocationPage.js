@@ -93,8 +93,8 @@ class AllocationPage extends BasePage {
     this.modeSelect             = page.locator(L['rcSelect2']              && L['rcSelect2'].selector);
     this.roundConfigSelect      = page.locator(L['rcSelect3']              && L['rcSelect3'].selector);
     this.extraSelect            = page.locator(L['rcSelect4']              && L['rcSelect4'].selector);
-    this.startTimeInput         = page.locator(L['selectDateInput']        && L['selectDateInput'].selector);
-    this.endTimeInput           = page.locator(L['selectDateInput2']       && L['selectDateInput2'].selector);
+    this.startTimeInput         = page.locator(L['selectDateInput']        && L['selectDateInput'].selector).nth(0);
+    this.endTimeInput           = page.locator(L['selectDateInput2']       && L['selectDateInput2'].selector).nth(1);
 
     // ── Campaign list controls ──────────────────────────────────────────────
     // The campaigns table renders below the create form. Search-by-name input

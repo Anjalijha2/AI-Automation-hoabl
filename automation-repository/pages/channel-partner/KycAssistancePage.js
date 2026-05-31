@@ -50,7 +50,7 @@ class KycAssistancePage extends BasePage {
 
     // ── Header / nav (shared with leads, project-info) ───────────────────────
     this.logoutButton = page.locator(L['logoutButton']    && L['logoutButton'].selector    || 'button:has-text("Logout")');
-    this.homeLink     = page.locator(L['homeLink']        && L['homeLink'].selector        || 'a:has-text("Home")');
+    this.homeLink     = page.locator(L['homeLink']        && L['homeLink'].selector        || 'a:has-text("Home")').first();
     this.kYCLink      = page.locator(L['kYCLink']         && L['kYCLink'].selector         || 'a:has-text("KYC")');
     this.jBPLink      = page.locator(L['jBPLink']         && L['jBPLink'].selector         || 'a:has-text("JBP")');
     this.leadsLink    = page.locator(L['leadsLink']       && L['leadsLink'].selector       || 'a:has-text("Leads")');
