@@ -110,7 +110,7 @@ npm run sprint:update         # Update SPRINT_LOG + TASK_TRACKER
 
 **BA Agent starts every pipeline. Developer Agent invoked by user only.**
 
-### 13 Skills
+### 14 Skills
 
 | Skill | Called By |
 |-------|-----------|
@@ -127,6 +127,7 @@ npm run sprint:update         # Update SPRINT_LOG + TASK_TRACKER
 | `generate-report` | QA Agent |
 | `generate-user-manual` | QA Agent |
 | `sync-and-update` | QA Agent |
+| `visual-capture` | Tech Lead Agent |
 
 **Skills never call agents. Agents call skills. Non-negotiable.**
 
@@ -200,31 +201,70 @@ test.skip(process.env.ENV === 'uat', 'Skipped on UAT — live gateway');
 
 ---
 
+## Visual Memory
+
+All UI screenshots and structural documentation live in `visual-memory/<portal>/<module>/`.
+
+| Path | Purpose |
+|------|---------|
+| `visual-memory/INDEX.md` | Root index — all portals, all modules, capture status |
+| `visual-memory/<portal>/<module>/INDEX.md` | Per-module screen documentation (gold standard: `admin/login`) |
+| `visual-memory/<portal>/<module>/screenshot-desktop.png` | Initial loaded state at 1920×900 |
+| `visual-memory/<portal>/<module>/screenshot-ui.png` | UI/UX baseline screenshot |
+
+**Capture status:**
+- `FULL` — complete: screenshots + DOM inspection + Key Structural Notes
+- `STUB` — screenshots exist, structural notes not yet populated
+- `MISSING` — no INDEX.md (BA Agent will block TC generation)
+
+**Owner:** Tech Lead Agent via `visual-capture` skill.
+**Consumers:** BA Agent (gate check), `manual-tester` skill (evidence source), `test-case-reviewer` skill (coverage validation).
+
+**Gate rule:** BA Agent will not call `manual-tester` until `visual-memory/<portal>/<module>/INDEX.md` exists.
+
+---
+
+## Dual-Source TC Rule
+
+Every batch of test cases requires BOTH sources. Neither alone is sufficient.
+
+| Source | Answers | Used For |
+|--------|---------|----------|
+| `visual-memory/<portal>/<module>/INDEX.md` | What does the UI look like? What selectors exist? What is the rendered state? | Steps, Expected Results, Visual Evidence column |
+| BRD/FRD in `.claude/docs/hoabl-knowledge-base/` | What is this feature for? What business logic drives it? What are acceptance criteria? | Scenario context, business rules, requirement IDs |
+
+**TC generated without screenshots** = assumption-based steps (blocked by visual gate).
+**TC generated without BRD/FRD** = steps with no understanding of why the feature exists (blocked by doc gate).
+
+---
+
 ## Constraints
 
 1. **LeadSquared (LSQ)**: excluded entirely — no credentials, no API calls
-2. **Strapi**: excluded from all source scans — test only downstream portal effects
-3. **Locator Map**: owned exclusively by Tech Lead Agent via `locator-map-builder` skill
-4. **BRD/FRD**: sole source of truth — in `.claude/docs/hoabl-knowledge-base/`
-5. **No undocumented features**: if not in BRD/FRD, flag and pause
-6. **Traceability**: every test must carry a BRD/FRD requirement ID
-7. **Test code ownership**: QA Agent owns ALL test specs, POMs, playwright.config.js — Developer Agent never touches
-8. **DB queries**: Sequelize QueryInterface + raw SQL only; live in `db/queries/` exclusively
-9. **Archival**: deprecated specs → `tests/archived/`; deprecated TCs → `manual-qa-repository/01-test-cases/archived/`; never delete
-10. **Developer Agent**: read-only by default; makes source changes only on explicit user instruction
+2. **Strapi**: excluded from all source scans — test only downstream portal effects. Admin sidebar "CMS" link → external Strapi (`manage-uat.xrportal.in`) — excluded entirely, do not test
+3. **Admin Config module**: sidebar "Config", URL `/admin/cms` (slug kept from old "CMS" name, not yet migrated to `/admin/config`). Canonical visual-memory folder: `visual-memory/admin/config/`. `visual-memory/admin/admin-cms/` is DEPRECATED. Spec files `tests/*/admin/admin-cms.spec.js` must be archived.
+4. **Locator Map**: owned exclusively by Tech Lead Agent via `locator-map-builder` skill
+5. **BRD/FRD**: sole source of truth — in `.claude/docs/hoabl-knowledge-base/`
+6. **No undocumented features**: if not in BRD/FRD, flag and pause
+7. **Traceability**: every test must carry a BRD/FRD requirement ID
+8. **Test code ownership**: QA Agent owns ALL test specs, POMs, playwright.config.js — Developer Agent never touches
+9. **DB queries**: Sequelize QueryInterface + raw SQL only; live in `db/queries/` exclusively
+10. **Archival**: deprecated specs → `tests/archived/`; deprecated TCs → `manual-qa-repository/01-test-cases/archived/`; never delete
+11. **Developer Agent**: read-only by default; makes source changes only on explicit user instruction
 
 ---
 
 ## Adding a New Module (Sprint)
 
-1. BA Agent reads BRD/FRD → calls `manual-tester` → produces `TestCases.xlsx`
-2. Tech Lead Agent scans source → calls `locator-map-builder` → updates `locators/<portal>/locator-map.json`
-3. QA Agent calls `test-case-reviewer` → validates TCs
-4. QA Agent scaffolds: `automation-repository/pages/<portal>/<Module>Page.js`
-5. QA Agent scaffolds: `tests/e2e/<portal>/<module>.spec.js` + 5 other test type specs
-6. Run `npm run auth:setup`, then execute all 6 test types
-7. Call `generate-report` + `generate-user-manual`
-8. Log bugs → `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`
+1. Tech Lead Agent scans source → calls `locator-map-builder` → updates `locators/<portal>/locator-map.json`
+2. Tech Lead Agent calls `visual-capture` → navigates live portal at 1920×900 → writes `visual-memory/<portal>/<module>/INDEX.md`
+3. BA Agent checks dual-source gate (visual-memory INDEX.md + BRD/FRD both present) → calls `manual-tester` → produces `TestCases.xlsx` grounded in screenshots and BRD/FRD
+4. QA Agent calls `test-case-reviewer` (with INDEX.md path) → validates TCs, visual coverage ≥ 80%, no LOGIC_GAPs
+5. QA Agent scaffolds: `automation-repository/pages/<portal>/<Module>Page.js`
+6. QA Agent scaffolds: `tests/e2e/<portal>/<module>.spec.js` + 5 other test type specs
+7. Run `npm run auth:setup`, then execute all 6 test types
+8. Call `generate-report` + `generate-user-manual`
+9. Log bugs → `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`
 
 ---
 
