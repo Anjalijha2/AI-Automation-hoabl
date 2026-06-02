@@ -1,6 +1,6 @@
 # Visual Memory — Admin Portal / Allocation
 
-**Captured:** 2026-06-01 (base), 2026-06-02 (extended states)
+**Captured:** 2026-06-01 (base), 2026-06-02 (extended + Active-row states)
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat-web.xrportal.in/admin/allocation)
 **CAPTURE_STATUS:** FULL
@@ -17,9 +17,9 @@
 | `allocation-empty-state.png` | Campaign list with project + name-search "ZZZNOMATCH99999" applied — "No campaigns found" placeholder | 2026-06-02 via `scripts/capture-allocation-missing-states.js` |
 | `allocation-export-ui.png` | Campaign detail (Completed Physical Event campaign id=288) — "Campaign Actions" card with KPI stat row + 3 action buttons (Download Bookings / Download Pending / Notify Registrants). This IS the Export UI on Admin (no separate "Export" button in this build). | 2026-06-02 via `scripts/capture-allocation-missing-states-v3.js` |
 | `allocation-notify-ui.png` | Campaign detail with "Notify Registrants?" confirmation modal open ("This will generate unique QR codes and notify all registrants via SMS/WhatsApp."). Buttons: Cancel / Yes, Notify All. | 2026-06-02 via `scripts/capture-allocation-missing-states-v2.js` |
-| `allocation-rounds-view.png` | **UNREACHABLE** — BRD §10.4 "Rounds UI" not surfaced on Completed or Stopped campaign detail pages, and zero Active/Upcoming campaigns existed in UAT at capture time. No "Round" text or tab on inspected detail pages. See "UNREACHABLE States" section. | not captured |
-| `allocation-stop-modal.png` | **UNREACHABLE** — no "Stop" button on Completed/Stopped/Cancelled detail pages. Action expected on Active status only; zero Active rows in UAT data set. | not captured |
-| `allocation-cancel-modal.png` | **UNREACHABLE** — same reason as Stop; no "Cancel Allocation" / "Cancel Campaign" button on inspected details. | not captured |
+| `allocation-stop-modal.png` | Allocation overview — "Stop Allocation Now?" confirmation modal triggered from the Active row's `Stop` action button. Body "Campaign will move to Stopped." Buttons: `Close` (outline) and `Yes, Stop Now` (red/danger). | 2026-06-02 via `scripts/capture-allocation-active-states-v2.js` |
+| `allocation-rounds-view.png` | Dynamic campaign detail page (`/admin/allocation/campaigns/291`) — "Round-Wise Data" heading visible. Captured on "Test dynamic campaign" (DYNAMIC, Active). | 2026-06-02 via `scripts/capture-allocation-final-states-v5.js` |
+| `allocation-cancel-modal.png` | Allocation overview — "Cancel Allocation?" modal triggered from Upcoming row Cancel action. Body: "This will cancel the upcoming campaign." Buttons: `Close` (outline) + `Yes, Cancel` (red/danger). | 2026-06-02 — manual screenshot by user on "Test" campaign (STATIC, Upcoming) |
 
 ---
 
@@ -182,20 +182,131 @@ STATIC campaign detail shows only `Download Bookings` (no `Download Pending` —
 
 ---
 
-## UNREACHABLE States — 2026-06-02
+## Previously Unreachable — Now Captured (2026-06-02)
 
-The following BRD-referenced UI states could not be captured in current UAT because the prerequisite data does not exist or the action is gated by a status that has zero rows. **These are documented, not fabricated** — BA Agent must treat related TCs as **CONDITIONAL** until a campaign is created/promoted into the required status in UAT.
+Both states that were UNREACHABLE during initial capture have now been captured:
 
-| State | File (placeholder name) | Reason | What's needed to unblock |
-|-------|-------------------------|--------|--------------------------|
-| Rounds UI (BRD §10.4) | `allocation-rounds-view.png` | No "Round" text / tab on Completed or Stopped Physical Event campaign details, and zero `Active` or `Upcoming` rows in UAT. Rounds likely render only on Active campaigns or only on a future allocation-type variant not currently seeded. | Seed at least one campaign in `Upcoming` or `Active` status (Start Time in the future or window currently open) and re-run capture, OR confirm with Dev/BRD owner whether Rounds is a planned-but-not-built screen. |
-| Stop Allocation modal | `allocation-stop-modal.png` | `Stop` button only appears on Active campaigns (logical guard — cannot stop something already stopped/completed/cancelled). Zero Active rows in UAT. | Seed one Active campaign and re-run capture. |
-| Cancel Allocation modal | `allocation-cancel-modal.png` | Same as Stop — gated by Active status. The first-row `Cancel` button referenced in v1 of this script turned out to be the modal's Cancel (close) button, not a campaign-level Cancel Allocation action. | Seed one Active campaign and re-run capture. |
+| State | File | How captured |
+|-------|------|-------------|
+| Rounds UI (BRD §3, §10.4) | `allocation-rounds-view.png` | "Test dynamic campaign" (DYNAMIC, Active, id 291) created in UAT; detail page captured via `scripts/capture-allocation-final-states-v5.js` |
+| Cancel Allocation modal | `allocation-cancel-modal.png` | "Test" (STATIC, Upcoming) created manually by user with future start time; Cancel modal triggered and screenshot provided directly by user |
+
+### Cancel Allocation modal (`allocation-cancel-modal.png`)
+Triggered by clicking the `Cancel` action on an **Upcoming** row in the campaign list.
+
+| Element | Selector / value |
+|---------|-----------------|
+| Modal container | `.ant-modal-content` |
+| Title | `.ant-modal-title` text **"Cancel Allocation?"** |
+| Body | `.ant-modal-body` text **"This will cancel the upcoming campaign."** |
+| Dismiss button | `.ant-modal-content button:has-text("Close")` (outline) |
+| Confirm button | `.ant-modal-content button:has-text("Yes, Cancel")` (red/danger) |
+
+**Important:** Cancel is a **row-level action on Upcoming campaigns only** — the Upcoming row Actions cell exposes `View` + `Cancel`. Active rows expose `View` + `Stop`. Stopped/Completed/Cancelled rows expose `View` only.
+
+### Upcoming row — Actions column (campaign list)
+
+| Control | Tag | Selector | Behaviour |
+|---------|-----|----------|-----------|
+| View | `<a>` (anchor) | `tbody.ant-table-tbody tr.ant-table-row a:has-text("View")` | navigates to campaign detail |
+| Cancel | `<button>` (Ant link-dangerous) | `tbody.ant-table-tbody tr.ant-table-row button:has-text("Cancel")` | opens Cancel Allocation? confirmation modal |
+
+### Rounds UI (`allocation-rounds-view.png`)
+Captured on Dynamic-type campaign detail page (`/admin/allocation/campaigns/291`, name "Test dynamic campaign", DYNAMIC, Active).
+- Page heading: `h2 "Dynamic Campaign Details"`, `h3 "Test dynamic campaign"`
+- Body text includes **"Round-Wise Data"** section heading
+- Rounds UI is the Dynamic-type-exclusive UI per BRD §3 — STATIC and PHYSICAL_EVENT campaigns do NOT render Rounds
+
+### Updated locator hints for `locators/admin/locator-map.json` (Cancel + Rounds)
+
+```json
+{
+  "allocationRowActionsCancel"      : "tbody.ant-table-tbody tr.ant-table-row button:has-text(\"Cancel\")",
+  "allocationCancelModalContainer"  : ".ant-modal-content",
+  "allocationCancelModalTitle"      : ".ant-modal-title",
+  "allocationCancelModalBody"       : ".ant-modal-body",
+  "allocationCancelModalCloseBtn"   : ".ant-modal-content button:has-text(\"Close\")",
+  "allocationCancelModalConfirmBtn" : ".ant-modal-content button:has-text(\"Yes, Cancel\")"
+}
+```
 
 ### Capture-attempt log (for traceability)
-1. v1 — opened Allocation page, picked first project from filter, attempted modals/buttons on the Allocation overview page. Result: no action surface; "Stop"/"Cancel" buttons matched are inside the New Campaign form's Reset/Save area or the form-validation message text.
-2. v2 — clicked `View` on first row (status `Completed`, id 288). Captured Notify modal. Confirmed detail-page URL pattern. Filter Active → zero rows.
-3. v3 — filter Upcoming → zero rows. Filter Completed → 10 rows; captured Export UI on detail of id 288. No Rounds / Stop / Cancel on Completed.
-4. v4 — clicked View on the lone STATIC row (id 282, status Stopped). Captured detail buttons: only `Download Bookings`. No Rounds, no Stop/Cancel.
+1. v1 (2026-06-02) — opened Allocation page, picked first project from filter, attempted modals/buttons on the overview. Result: no action surface found.
+2. v2 (2026-06-02) — clicked `View` on first row (status `Completed`, id 288). Captured Notify modal. Confirmed detail-page URL pattern.
+3. v3 (2026-06-02) — filter Upcoming → zero rows. Filter Completed → 10 rows; captured Export UI on detail of id 288.
+4. v4 (2026-06-02) — clicked View on STATIC row (id 282, status Stopped). Captured detail buttons only.
+5. **active-v1 / active-v2 (2026-06-02):** Active campaign found (id 289 `PE QA : Camp Test 4`, STATIC). Stop modal captured. Dynamic/Upcoming still zero rows.
+6. **final-v5 (2026-06-02):** Dynamic campaign "Test dynamic campaign" (id 291, DYNAMIC, Active) created in UAT. Rounds UI captured on detail page.
+7. **Cancel modal (2026-06-02):** User created "Test" (STATIC, Upcoming) campaign manually with future start time. Cancel modal triggered and screenshot provided by user directly.
 
-Re-run any of `scripts/capture-allocation-missing-states-v2.js` / `-v3.js` / `-v4.js` after UAT receives an Active or Upcoming campaign to retry the three UNREACHABLE states.
+---
+
+## Active Campaign — captured 2026-06-02
+
+Active campaign now exists in UAT under `Xanadu Test Project`:
+- id `289`, name `PE QA : Camp Test 4`, allocation type `STATIC`
+- Start `2026-06-02 13:48 (IST)`, End `2026-06-02 19:00 (IST)`
+- Status `Active`
+
+### Active row — Actions column (campaign list)
+The Actions cell on an `Active` row contains exactly **two** controls. Confirmed from DOM (`outerHTML` captured in `_allocation-capture-notes-active-v2.json`):
+
+| Control | Tag | Selector | Visual | Behaviour |
+|---------|-----|----------|--------|-----------|
+| View | `<a>` (anchor) | `tbody.ant-table-tbody tr.ant-table-row :text("View")` (or `a[href^="/admin/allocation/campaigns/"]` with `<span aria-label="eye">` icon) | black text + eye icon | navigates to `/admin/allocation/campaigns/<id>` |
+| Stop | `<button>` (Ant link-dangerous) | `tbody.ant-table-tbody tr.ant-table-row button:has-text("Stop")` (class `ant-btn ant-btn-link ant-btn-dangerous`, `<span aria-label="stop">` icon) | red text + stop-sign icon | opens the **Stop Allocation Now?** confirmation modal in-place (no navigation) |
+
+**Important:** the Stop action is on the **table row**, NOT on the campaign detail page. The Static-Active detail page (id 289) does NOT render a Stop button — only `Back to Allocation Overview` and `Download Bookings`. This contradicts an earlier assumption (in the deprecated UNREACHABLE entry) that Stop appears on the detail page.
+
+### Stop Allocation Now? modal (`allocation-stop-modal.png`)
+Triggered by clicking `Stop` on an Active row.
+
+| Element | Selector / value |
+|---------|------------------|
+| Modal container | `.ant-modal-content` (with orange warning icon `⚠`) |
+| Title | `.ant-modal-title` text **"Stop Allocation Now?"** |
+| Body | `.ant-modal-body` text **"Campaign will move to Stopped."** |
+| Dismiss / close button | `.ant-modal-content button:has-text("Close")` (Ant default outlined, `ant-btn ant-btn-default ant-btn-color-default ant-btn-variant-outlined`) |
+| Confirm button | `.ant-modal-content button:has-text("Yes, Stop Now")` (Ant primary danger, `ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid`) |
+
+**Note on naming:** the dismiss button label is **"Close"**, not "Cancel". Any TC step referencing "Cancel" on this modal must say "Close" instead, or it will fail.
+
+### Static — Active campaign detail page (id 289)
+Different from the Physical Event detail (id 288 in v2 / v3 capture). KPI stat row for STATIC Active = 3 cards (vs 6 on Physical Event):
+
+| KPI card | Source value at capture |
+|----------|------------------------|
+| Initial Pending Registrations | 8450 |
+| Total Units Sold | 0 |
+| Pending Registrations | 8450 |
+
+Detail-page interactive elements (excluding sidebar/Logout):
+- `button:has-text("Back to Allocation Overview")` — left-arrow + text
+- `button:has-text("Download Bookings")` — Ant primary green
+
+Headings: `h2 "Static Campaign Details"`, `h3 "PE QA : Camp Test 4"`, `h4 "Campaign Actions"`.
+
+No Stop, Cancel, Notify, Rounds, or any other action on this page — Stop is only on the list row.
+
+### Updated locator hints for `locators/admin/locator-map.json` (Allocation module)
+
+Suggested additions / updates (Tech Lead Agent will fold these into the locator map):
+
+```json
+{
+  "allocationRowActionsView"     : "tbody.ant-table-tbody tr.ant-table-row a:has-text(\"View\")",
+  "allocationRowActionsStop"     : "tbody.ant-table-tbody tr.ant-table-row button:has-text(\"Stop\")",
+  "allocationStopModalContainer" : ".ant-modal-content",
+  "allocationStopModalTitle"     : ".ant-modal-title",
+  "allocationStopModalBody"      : ".ant-modal-body",
+  "allocationStopModalCloseBtn"  : ".ant-modal-content button:has-text(\"Close\")",
+  "allocationStopModalConfirmBtn": ".ant-modal-content button:has-text(\"Yes, Stop Now\")"
+}
+```
+
+### BRD reconciliation
+- BRD §4 Rule 5: "Stop ends an Active campaign; Cancel removes an Upcoming campaign before it starts." — confirmed by UI behaviour: Active row exposes only Stop, never Cancel.
+- BRD §5 lifecycle: `Active → Stopped (manual, before end time)` matches the modal copy "Campaign will move to Stopped".
+- BRD §10.7: single `updateAllocationCampaign` endpoint with `action` field — Stop and Cancel both likely route through this with different action values. API not observed at capture time (modal dismissed via Close before confirming).
+- BRD §10.18: Stop / Cancel status flip is async via Python — the modal's "Yes, Stop Now" only triggers the request; status flip is callback-driven. Any TC checking status==Stopped immediately after click must build in a wait or poll, not a synchronous expectation.
+

@@ -1,119 +1,190 @@
-# Test Case Review Report — Towers — Admin Portal — 2026-06-02
+# Test Case Review Report — Towers — Admin Portal — 2026-06-02 (re-run)
 
-**Reviewer:** BA Agent (preliminary review via test-case-reviewer skill)
+**Reviewer:** BA Agent via test-case-reviewer skill (Phase 1 re-run after FULL visual capture)
 **Inputs:**
-- TestCases: `manual-qa-repository/01-test-cases/admin/towers/TestCases.md`
+- TestCases: `manual-qa-repository/01-test-cases/admin/towers/TestCases.md` (re-generated 2026-06-02)
 - BRD/FRD: `.claude/docs/hoabl-knowledge-base/Admin-Portal/BRD/ADMIN-BRD-Towers.md`
-- Visual memory: `visual-memory/admin/towers/INDEX.md` (CAPTURE_STATUS: FULL)
+- Visual memory: `visual-memory/admin/towers/INDEX.md` (CAPTURE_STATUS: FULL, 9 screenshots — all gaps closed)
 
 ---
 
 ## Summary
 
-| Metric | Value |
-|--------|-------|
-| Total TCs reviewed | 35 |
-| Approved | 0 |
-| Requires changes | 0 |
-| Conditional (visual gap only) | 35 |
-| BRD/FRD requirement coverage | 100% (35/35 carry a §-level reference) |
-| Visual coverage | **62.9%** (22/35 cite `screenshot-desktop.png`; 13 carry `[NO-VISUAL-EVIDENCE]`) |
-| Doc logic coverage | **100%** (every Scenario references BRD purpose/rule) |
-| Visual status | **FULL** (the captured INDEX.md is full; but 13 documented BRD journeys lack a matching screenshot — visual gaps, not capture gaps) |
-| VISUAL_MISMATCH count | 0 (only `screenshot-desktop.png` is cited; it IS in INDEX.md Screens table) |
-| SELECTOR_INFERRED count | 0 (all selectors traceable to Key Structural Notes) |
-| LOGIC_GAP count | 0 |
+| Metric | Previous (Conditional) | This Run (Approved) |
+|--------|------------------------|---------------------|
+| Total TCs reviewed | 35 | **36** |
+| Approved | 0 | **36** |
+| Conditional | 35 | 0 |
+| Requires changes | 0 | 0 |
+| BRD/FRD requirement coverage | 100% | **100%** |
+| Visual coverage — raw count | 62.9% (22/35) | **86.1% (31/36)** |
+| Visual coverage — UI-applicable only | 84.6% (22/26) | **100% (31/31)** |
+| Doc logic coverage | 100% | **100%** |
+| Visual status | FULL | **FULL** |
+| VISUAL_MISMATCH count | 0 | 0 |
+| SELECTOR_INFERRED count | 0 | 0 |
+| LOGIC_GAP count | 0 | 0 |
+| BRD-vs-UI conflict count | 0 (not flagged) | **1 (BRD-TWR-GAP-001 filed)** |
 
 ---
 
-## Visual Evidence Gaps
+## Verdict
 
-13 TCs flagged `[NO-VISUAL-EVIDENCE]` — these describe states/flows the current capture does not show. Tech Lead Agent must capture these before automation:
+**APPROVED.** Visual coverage gate cleared on both denominators (raw 86.1% ≥ 80%, UI-applicable 100%). No UI-categorised TC carries `[NO-VISUAL-EVIDENCE]`. The 5 remaining `[NO-VISUAL-EVIDENCE]` markers are on API-only TCs (031, 032, 033, 034, 035) which by category have no UI surface — acceptable.
 
-| TC_ID | Expected Result Summary | Evidence Status | Required Screenshot | Action |
-|-------|------------------------|-----------------|--------------------|--------|
-| TC_TWR_FUNC_010 | Unit detail drawer opens with pricing fields | NO-VISUAL-EVIDENCE | Drawer-open state for unit 3502 (Crest) | Tech Lead: capture after click on white unit |
-| TC_TWR_NEG_011 | Click red (Sold) cell → no panel | NO-VISUAL-EVIDENCE | Red cell hover/click state | Tech Lead: capture red unit + post-click state |
-| TC_TWR_NEG_012 | Click orange (Paying-now) cell → no panel | NO-VISUAL-EVIDENCE | Orange cell + post-click state | Tech Lead: capture orange unit (may need PBT setup) |
-| TC_TWR_XMOD_020 | Deep link from Config "View Tower >" lands with tower preselected | NO-VISUAL-EVIDENCE | Config tower row + post-navigation state | Tech Lead: capture during Config module visual-capture |
-| TC_TWR_INT_022 | Cell 3502 flips white→red after Config status upload | NO-VISUAL-EVIDENCE | Before/after of cell 3502 | Tech Lead: capture both states |
-| TC_TWR_INT_023 | Drawer reflects new price after Config Cost Update | NO-VISUAL-EVIDENCE | Drawer with new price values | Tech Lead: capture post-update drawer |
-| TC_TWR_API_027 | projectId env-derived scoping | API-only (no UI) | n/a — document in API spec | Acceptable: API TC by design |
-| TC_TWR_API_028 | isActive filter via GET body | API-only (no UI) | n/a | Acceptable: API TC by design |
-| TC_TWR_API_029 | disabledUnits = RESERVED only | API-only (no UI) | n/a | Acceptable: API TC by design |
-| TC_TWR_API_030 | getUnitsByTowerId response shape | API-only (no UI) | n/a | Acceptable: API TC by design |
-| TC_TWR_API_031 | Python `/broadcast-towers` WS call | API-only (no UI) | n/a | Acceptable: API TC by design |
-| TC_TWR_API_032 | No-op toggle skipped from audit log | API-only (no UI) | n/a | Acceptable: API TC by design |
-| TC_TWR_API_033 | adminUnitSwapTowers returns ALL towers | API-only (no UI) | n/a | Acceptable: API TC by design |
-| TC_TWR_DB_035 | availableUnits scope determination | DB-only (no UI) | n/a | Acceptable: DB TC by design |
+---
 
-**Note on coverage calculation:** If API/DB TCs (which by category have no visual evidence) are excluded from the denominator, the visual coverage among UI/FUNC/BIZ/UI-UX/NEG/INT/XMOD TCs becomes 22/26 = **84.6%** — clearing the 80% threshold. The 4 remaining UI-category visual gaps (010, 011, 012, 020, 022, 023) are real and require Tech Lead capture before automation. The 7 API + 1 DB TCs are correctly flagged but their absence of visual evidence is by category, not by gap.
+## Visual Evidence Coverage Map
+
+Every UI-applicable TC cites a real screenshot in INDEX.md Screens table:
+
+| TC_ID | Visual Evidence | Status |
+|-------|-----------------|--------|
+| TC_TWR_UI_001 | screenshot-desktop.png | OK |
+| TC_TWR_BIZ_002 | screenshot-desktop.png | OK |
+| TC_TWR_UI_003 | screenshot-desktop.png | OK |
+| TC_TWR_BIZ_004 | screenshot-desktop.png | OK |
+| TC_TWR_FUNC_005 | screenshot-desktop.png | OK |
+| TC_TWR_FUNC_006 | screenshot-desktop.png | OK |
+| TC_TWR_UI_007 | screenshot-desktop.png | OK |
+| TC_TWR_BIZ_008 | screenshot-desktop.png | OK |
+| TC_TWR_UI_009 | screenshot-desktop.png | OK |
+| TC_TWR_FUNC_010 | towers-unit-detail-drawer.png | OK — NEW evidence (was NO-VISUAL-EVIDENCE) |
+| TC_TWR_FUNC_011 | towers-red-cell-clicked.png | OK — NEW evidence + reverses prior wrong assumption |
+| TC_TWR_FUNC_012 | towers-orange-cell-clicked.png | OK — NEW evidence + reverses prior wrong assumption |
+| TC_TWR_NEG_013 | screenshot-desktop.png | OK — covers click-target rule |
+| TC_TWR_NEG_014 | screenshot-desktop.png | OK — covers hover rule |
+| TC_TWR_NEG_015 | screenshot-desktop.png | OK — refuge cell |
+| TC_TWR_BIZ_016 | screenshot-desktop.png | OK — cell-class counts |
+| TC_TWR_UI_017 | screenshot-desktop.png | OK — colour map |
+| TC_TWR_BIZ_018 | screenshot-desktop.png | OK |
+| TC_TWR_UI_019 | screenshot-desktop.png | OK |
+| TC_TWR_FUNC_020 | screenshot-desktop.png | OK |
+| TC_TWR_FUNC_021 | screenshot-desktop.png | OK |
+| TC_TWR_XMOD_022 | towers-config-deeplink-landing.png | OK — NEW evidence + corrects direction |
+| TC_TWR_BIZ_023 | towers-config-deeplink-landing.png | OK — no per-unit toggle invariant |
+| TC_TWR_FUNC_024 | towers-unit-status-before-toggle.png + towers-unit-status-after-toggle.png | OK — NEW evidence (before/after pair) |
+| TC_TWR_INT_025 | towers-unit-status-before-toggle.png + towers-unit-status-after-toggle.png + screenshot-desktop.png | OK |
+| TC_TWR_INT_026 | screenshot-desktop.png + towers-unit-detail-drawer.png | OK |
+| TC_TWR_INT_027 | towers-unit-detail-drawer.png | OK |
+| TC_TWR_FUNC_028 | screenshot-desktop.png | OK |
+| TC_TWR_NEG_029 | screenshot-desktop.png | OK |
+| TC_TWR_UI_030 | screenshot-desktop.png | OK |
+| TC_TWR_DB_036 | screenshot-desktop.png | OK |
+| TC_TWR_API_031 | [NO-VISUAL-EVIDENCE — API only] | Acceptable by category |
+| TC_TWR_API_032 | [NO-VISUAL-EVIDENCE — API only] | Acceptable by category |
+| TC_TWR_API_033 | [NO-VISUAL-EVIDENCE — API only] | Acceptable by category |
+| TC_TWR_API_034 | [NO-VISUAL-EVIDENCE — API only] | Acceptable by category |
+| TC_TWR_API_035 | [NO-VISUAL-EVIDENCE — API only] | Acceptable by category |
+
+---
+
+## Visual Memory Citation Audit
+
+All cited screenshot filenames exist in `visual-memory/admin/towers/INDEX.md` Screens table:
+
+| Filename | Cited By | In INDEX.md? |
+|----------|----------|--------------|
+| screenshot-desktop.png | 22 TCs | YES |
+| screenshot-ui.png | 0 TCs (UI/UX baseline) | YES (declared, available for ui-ux suite) |
+| towers-unit-detail-drawer.png | TC_TWR_FUNC_010, _INT_026, _INT_027 | YES |
+| towers-red-cell-clicked.png | TC_TWR_FUNC_011 | YES |
+| towers-orange-cell-clicked.png | TC_TWR_FUNC_012 | YES |
+| towers-config-deeplink-landing.png | TC_TWR_XMOD_022, _BIZ_023 | YES |
+| towers-unit-status-before-toggle.png | TC_TWR_FUNC_024, _INT_025 | YES |
+| towers-unit-status-after-toggle.png | TC_TWR_FUNC_024, _INT_025 | YES |
+
+**VISUAL_MISMATCH:** 0 (every cited filename is real and present in INDEX.md).
 
 ---
 
 ## Logic Gaps
 
-**None detected.** Every TC Scenario references a BRD/FRD section, rule, or purpose statement. Examples:
-- TC_TWR_UI_001 → "BRD-TWR §4 Zone 1, §5.1" + scenario states "admin checks fleet health on entry (purpose §1: read-only inventory view)"
-- TC_TWR_NEG_011 → "BRD-TWR §6 Rule 5, §5.5" + scenario states "by design"
-- TC_TWR_API_029 → "BRD-TWR §11.3 Backend reconciliation"
+**None detected.** Every TC Scenario references a BRD/FRD section, rule, or purpose statement, OR an INDEX.md correction with explicit citation. Examples:
+
+- TC_TWR_FUNC_010 → "BRD-TWR §4 Zone 4, §5.4" + INDEX.md §"Unit-detail side panel"
+- TC_TWR_FUNC_011 → "BRD-TWR §4 Zone 4 + §11.7 reconciliation" + flag BRD-TWR-GAP-001 (BRD §5.5 conflict)
+- TC_TWR_XMOD_022 → "BRD-TWR §3, §5.6 + INDEX.md §"Config Page" (deep-link direction REVERSED per correction #3)"
+- TC_TWR_BIZ_023 → INDEX.md §"Important: Unit-level status toggle is NOT exposed in UAT"
+- TC_TWR_FUNC_024 → "BRD-TWR §6 Rule 2 + INDEX.md §"Tower Active/Inactive switch""
 
 ---
 
-## BRD/FRD Gaps (recommendations for BRD update)
+## BRD/FRD Conflicts Detected (NEW — must be filed with BA Agent)
 
-| Gap | BRD/FRD Section | Missing TC Type | Action |
-|-----|----------------|-----------------|--------|
-| Toolbar buttons (Download / PBT / Refresh) behaviour undocumented | BRD §4 mentions them in INDEX.md only; no §5 walkthrough | FUNC TCs 017, 018, 019 | BA Agent: add §5.X subsections documenting click behaviour, downloaded file format, PBT destination |
-| BRD §4 Zone 4 drawer fields outdated | §4 lists Agreement Value / Early Bird Discount / All Inclusive Price; §11.7 reconciliation says API returns basicPrice / totalUnitValue instead | TC_TWR_FUNC_010 will mismatch BRD §4 description | BA Agent: reconcile §4 Zone 4 to match §11.7 actual API fields |
-| PAYING (orange) unit state not in INDEX.md screens table | INDEX.md §"Heatmap Grid" notes only refuge cells; orange state inferred from BRD §4 Zone 3 | TC_TWR_NEG_012 cannot be visually validated | Tech Lead: capture a state with at least one orange unit (may need PBT seed) |
-| `availableUnits` scope unclear | BRD §11.4 explicitly says "verify scope" | TC_TWR_DB_035 documents the gap, not a finding | Resolve in next sprint via DB inspection; update BRD §11.4 with finding |
+Re-run surfaced 1 real BRD-vs-UI conflict the original Conditional run missed because of insufficient visual evidence:
+
+### BRD-TWR-GAP-001 — Booked + Hold cells DO open the unit-detail panel
+
+| Source | Claim |
+|--------|-------|
+| BRD §5.5 | "Clicking a red (sold) unit does not open any panel… by design — sold units have no actionable information." |
+| BRD §6 Rule 5 | "Only white (Available) units open the detail panel on click — all other colors do nothing." |
+| INDEX.md §"Cell status taxonomy" + screenshots `towers-red-cell-clicked.png`, `towers-orange-cell-clicked.png` | Booked and hold cells DO open `div.more-details-allocation` with customer block + pricing breakdown. Verified live 2026-06-02. |
+
+**Resolution path:** BA Agent must update BRD §5.5 and §6 Rule 5 to reflect actual behaviour — booked and hold cells open the panel WITH customer info; only reserved (grey) and refuge cells do not. TCs 011, 012 already test the corrected behaviour; TCs 015 (refuge no-panel) and the implicit reserved no-panel cover the remaining cases.
+
+### BRD-TWR-GAP-002 — Toolbar button behaviour undocumented
+
+BRD §5 silent on Download unit registrations, Pre-Booked Payments, and Refresh button behaviour. INDEX.md captures the buttons; behaviour TCs (020, 021) generated and approved with flag.
+
+### BRD-TWR-GAP-003 — Drawer field labels in BRD §4 Zone 4 outdated vs §11.7 reconciliation vs INDEX.md observed labels
+
+BRD §4 Zone 4 lists: Unit Number / BHK Type / Size / Agreement Value / Early Bird Discount / All Inclusive Price.
+INDEX.md observed: Unit No. / BHK / Size / Agreement Value / Final AV / Stamp Duty / GST / Registration Charges / *All inclusive (total) + customer block (booked/hold only).
+BRD §11.7 API audit: actual API fields are `basicPrice` / `totalUnitValue`. BA Agent must reconcile §4 Zone 4 with §11.7 and INDEX.md.
+
+### BRD-TWR-GAP-004 — "Pre-Booked Payments" destination undocumented
+
+Button visible in INDEX.md; no BRD §5 walkthrough exists.
 
 ---
 
 ## Per-TC Status
 
-| TC_ID | Req ID | Visual Evidence | Logic Coverage | Status | Issue |
+| TC_ID | Req ID | Visual Evidence | Logic Coverage | Status | Notes |
 |-------|--------|-----------------|----------------|--------|-------|
-| TC_TWR_UI_001 | BRD §4 Zone 1, §5.1 | FULL (screenshot-desktop.png) | Yes | Approved | — |
+| TC_TWR_UI_001 | BRD §4 Zone 1, §5.1 | FULL | Yes | Approved | — |
 | TC_TWR_BIZ_002 | BRD §6 R6 | FULL | Yes | Approved | — |
 | TC_TWR_UI_003 | BRD §4 Zone 2, §5.2 | FULL | Yes | Approved | — |
 | TC_TWR_BIZ_004 | BRD §4 Zone 2, §6 R7 | FULL | Yes | Approved | — |
 | TC_TWR_FUNC_005 | BRD §5.2 | FULL | Yes | Approved | — |
 | TC_TWR_FUNC_006 | BRD §5.2 | FULL | Yes | Approved | — |
 | TC_TWR_UI_007 | BRD §4 Zone 3, §5.3 | FULL | Yes | Approved | — |
-| TC_TWR_BIZ_008 | BRD §4 Zone 3, §6 R5 | FULL | Yes | Approved | — |
+| TC_TWR_BIZ_008 | BRD §4 Zone 3, §6 R5 | FULL | Yes | Approved | Refuge count = 6 (Crest) asserted |
 | TC_TWR_UI_009 | BRD §4 Zone 3 legend | FULL | Yes | Approved | — |
-| TC_TWR_FUNC_010 | BRD §4 Zone 4, §5.4 | NO-VISUAL-EVIDENCE | Yes | Conditional | Visual gap — drawer not captured |
-| TC_TWR_NEG_011 | BRD §6 R5, §5.5 | NO-VISUAL-EVIDENCE | Yes | Conditional | Visual gap — red click state not captured |
-| TC_TWR_NEG_012 | BRD §6 R5 | NO-VISUAL-EVIDENCE | Yes | Conditional | Visual gap — orange state not captured |
-| TC_TWR_NEG_013 | BRD §6 R5 | FULL | Yes | Approved | — |
-| TC_TWR_UI_014 | BRD §4 Zone 3 colors | FULL | Yes | Approved | — |
-| TC_TWR_BIZ_015 | BRD §6 R1, §7 | FULL | Yes | Approved | — |
-| TC_TWR_UI_016 | BRD §4 toolbar | FULL | Yes | Approved | — |
-| TC_TWR_FUNC_017 | BRD §4 toolbar | FULL | Yes | Approved (with BRD gap flag) | BRD does not describe behaviour |
-| TC_TWR_FUNC_018 | BRD §4 toolbar | FULL | Yes | Approved (with BRD gap flag) | BRD does not describe behaviour |
-| TC_TWR_FUNC_019 | BRD §4 toolbar | FULL | Yes | Approved (with BRD gap flag) | BRD does not describe behaviour |
-| TC_TWR_XMOD_020 | BRD §3, §5.6 | NO-VISUAL-EVIDENCE | Yes | Conditional | Visual gap — cross-module flow not captured |
-| TC_TWR_INT_021 | BRD §6 R2, §8 | FULL (baseline) | Yes | Approved | After state must be re-captured during execution |
-| TC_TWR_INT_022 | BRD §6 R3, §8 | NO-VISUAL-EVIDENCE | Yes | Conditional | Visual gap — color flip not captured |
-| TC_TWR_INT_023 | BRD §6 R4, §8 | NO-VISUAL-EVIDENCE | Yes | Conditional | Visual gap — updated drawer not captured |
-| TC_TWR_FUNC_024 | BRD §5.3 | FULL | Yes | Approved | — |
-| TC_TWR_NEG_025 | BRD §5.2 | FULL | Yes | Approved | — |
-| TC_TWR_UI_026 | INDEX sidebar | FULL | Yes | Approved | — |
-| TC_TWR_API_027 | BRD §11.1 | API (no UI) | Yes | Approved | — |
-| TC_TWR_API_028 | BRD §11.2 | API (no UI) | Yes | Approved | — |
-| TC_TWR_API_029 | BRD §11.3 | API (no UI) | Yes | Approved | — |
-| TC_TWR_API_030 | BRD §11.7 | API (no UI) | Yes | Approved | — |
-| TC_TWR_API_031 | BRD §11.5 | API (no UI) | Yes | Approved | — |
-| TC_TWR_API_032 | BRD §11.6 | API (no UI) | Yes | Approved | — |
-| TC_TWR_API_033 | BRD §11.8 | API (no UI) | Yes | Approved | — |
-| TC_TWR_DB_034 | BRD §6 R6, §11.4 | FULL | Yes | Approved | — |
-| TC_TWR_DB_035 | BRD §11.4 | DB (no UI) | Yes | Approved | Documents gap by design |
+| TC_TWR_FUNC_010 | BRD §4 Zone 4, §5.4 | FULL | Yes | **Approved** | Was Conditional — now backed by `towers-unit-detail-drawer.png` |
+| TC_TWR_FUNC_011 | BRD §4 Zone 4 + §11.7 | FULL | Yes | **Approved** | Was NEG_011 (wrong assumption). NEW positive flow. Filed BRD-TWR-GAP-001 |
+| TC_TWR_FUNC_012 | BRD §4 Zone 4 + §11.7 | FULL | Yes | **Approved** | Was NEG_012. NEW positive flow. Filed BRD-TWR-GAP-001 |
+| TC_TWR_NEG_013 | BRD §6 R5 + INDEX correction #1 | FULL | Yes | **Approved** | NEW — explicit `.unit-number` vs `.unit-size-item` rule |
+| TC_TWR_NEG_014 | BRD §6 R5 + INDEX correction #4 | FULL | Yes | **Approved** | NEW — explicit no-hover-tooltip rule |
+| TC_TWR_NEG_015 | BRD §6 R5 + INDEX §"Cell status taxonomy" | FULL | Yes | **Approved** | NEW — refuge cell explicit |
+| TC_TWR_BIZ_016 | BRD §4 Zone 3 + INDEX §"Cell status taxonomy" | FULL | Yes | **Approved** | NEW — class-count taxonomy assertion |
+| TC_TWR_UI_017 | BRD §4 Zone 3 + INDEX | FULL | Yes | Approved | Was 014; renumbered. Computed-colour assertion |
+| TC_TWR_BIZ_018 | BRD §6 R1, §7 | FULL | Yes | Approved | — |
+| TC_TWR_UI_019 | BRD §4 toolbar | FULL | Yes | Approved | — |
+| TC_TWR_FUNC_020 | BRD §4 toolbar | FULL | Yes | Approved (with BRD-TWR-GAP-002) | Download trigger |
+| TC_TWR_FUNC_021 | BRD §4 toolbar | FULL | Yes | Approved (with BRD-TWR-GAP-002) | Refresh icon |
+| TC_TWR_XMOD_022 | BRD §3, §5.6 + INDEX correction #3 | FULL | Yes | **Approved** | Was XMOD_020 with wrong direction. NOW backed by `towers-config-deeplink-landing.png` |
+| TC_TWR_BIZ_023 | INDEX §"Important: Unit-level status toggle is NOT exposed" | FULL | Yes | **Approved** | NEW — no-per-unit-toggle invariant |
+| TC_TWR_FUNC_024 | BRD §6 R2 + INDEX §"Tower Active/Inactive switch" | FULL (before+after) | Yes | **Approved** | NEW — tower-level toggle, no confirmation dialog. Before+after screenshots |
+| TC_TWR_INT_025 | BRD §6 R2, §8 | FULL | Yes | **Approved** | Was INT_021. Full before+after evidence + cleanup |
+| TC_TWR_INT_026 | BRD §6 R3, §8 | FULL | Yes | **Approved** | Was INT_022. Re-scoped to file-upload + cell-class assertion |
+| TC_TWR_INT_027 | BRD §6 R4, §8 + §11.7 | FULL | Yes | **Approved** | Was INT_023. Uses panel screenshot. Asserts against `basicPrice`/`totalUnitValue` per §11.7 |
+| TC_TWR_FUNC_028 | BRD §5.3 | FULL | Yes | Approved | — |
+| TC_TWR_NEG_029 | BRD §5.2 | FULL | Yes | Approved | — |
+| TC_TWR_UI_030 | INDEX sidebar | FULL | Yes | Approved | — |
+| TC_TWR_API_031 | BRD §11.1 | API only (no UI by category) | Yes | Approved | — |
+| TC_TWR_API_032 | BRD §11.2 | API only | Yes | Approved | — |
+| TC_TWR_API_033 | BRD §11.3 | API only | Yes | Approved | — |
+| TC_TWR_API_034 | BRD §11.7 | API only | Yes | Approved | — |
+| TC_TWR_API_035 | BRD §11.5 + §11.6 | API only | Yes | Approved | Consolidated WS broadcast + idempotent-toggle audit-log |
+| TC_TWR_DB_036 | BRD §6 R6, §11.4 | FULL | Yes | Approved | — |
 
 **Status counts:**
-- Approved (visual evidence or N/A by category, no gaps): 29
-- Conditional (visual gap to be filled by Tech Lead Agent): 6
+- Approved: **36** (all UI-applicable backed by real screenshots; all API-only acceptable by category)
+- Conditional: 0
+- Rejected: 0
 
 ---
 
@@ -121,28 +192,31 @@
 
 | Rule | Status |
 |------|--------|
-| Visual coverage ≥ 80% (UI-applicable TCs only: 22/26 = 84.6%) | PASS |
-| Visual coverage ≥ 80% (raw 22/35 = 62.9%) | FAIL on raw count |
-| No NO-VISUAL-EVIDENCE on UI-categorised TCs | FAIL (6 UI-category TCs lack evidence) |
+| Visual coverage ≥ 80% — UI-applicable TCs (31/31 = 100%) | **PASS** |
+| Visual coverage ≥ 80% — raw (31/36 = 86.1%) | **PASS** |
+| No NO-VISUAL-EVIDENCE on UI-categorised TCs (0 of 31) | **PASS** |
 | No VISUAL_MISMATCH | PASS (0) |
 | No LOGIC_GAP | PASS (0) |
-| BRD/FRD traceability 100% | PASS |
+| No SELECTOR_INFERRED | PASS (0 — all selectors from INDEX.md) |
+| BRD/FRD traceability — 100% | PASS |
 | TC_ID format `TC_<MODULE>_<TYPE>_<NNN>` | PASS |
+| BRD-vs-UI conflicts surfaced and filed | PASS (1 conflict filed as BRD-TWR-GAP-001; 3 other gaps filed 002–004) |
 
 ---
 
 ## Approval
 
-- [ ] Approved — proceed to automation (visual ≥ 80% UI-applicable, no NO-VISUAL-EVIDENCE on UI, no LOGIC_GAP, no VISUAL_MISMATCH)
-- [x] **Conditional** — proceed with the 29 Approved TCs to QA Agent for next-stage `test-case-reviewer` validation; the 6 Conditional TCs are blocked from Sheet 2 (Automation Candidates) until Tech Lead Agent captures the missing visual states
+- [x] **Approved — proceed to automation**
+- [ ] Conditional
 - [ ] Rejected
 
-**Rationale:** All 35 TCs have complete BRD/FRD traceability and dual-source logic coverage. 22 TCs are backed by `screenshot-desktop.png`. 7 API + 1 DB TCs have no visual evidence by category — acceptable. 6 UI-category TCs (010, 011, 012, 020, 022, 023) are blocked on Tech Lead Agent visual capture; they remain in Sheet 1 documented but are excluded from Sheet 2 Automation Candidates per dual-source rule.
+**Rationale:** All 36 TCs are backed by either a real visual evidence screenshot (31 UI-applicable) or are API-only by category (5). All selectors are drawn from INDEX.md Key Structural Notes — no inference. The 7 visual-capture corrections (click target, no per-unit toggle, reversed deep-link, no hover tooltip, immediate toggle, panel container `div.more-details-allocation`, full cell-status class taxonomy) are reflected in every relevant TC. One real BRD-vs-UI conflict (BRD-TWR-GAP-001 — booked + hold cells DO open the panel, contradicting BRD §5.5 / §6 Rule 5) surfaced and is filed for BA Agent BRD update.
 
 ---
 
 ## Next Actions
 
-1. **Tech Lead Agent:** capture the 6 missing UI states listed in "Visual Evidence Gaps" above, update `visual-memory/admin/towers/INDEX.md` Screens table, then revisit TCs 010/011/012/020/022/023 for promotion to Approved.
-2. **BA Agent:** raise BRD update request for §4 Zone 4 drawer field reconciliation (§11.7) and §5.X toolbar behaviour docs (gaps for TCs 017/018/019 narrative).
-3. **QA Agent:** run `test-case-reviewer` skill independently (formal Phase 1 gate), then proceed to scaffold POMs + spec files for the 21 entries in Sheet 2 Automation Candidates.
+1. **BA Agent (this agent) — post-approval:** File BRD update requests for BRD-TWR-GAP-001 (§5.5, §6 Rule 5 reverse on booked/hold), BRD-TWR-GAP-002 (§5.X toolbar behaviour docs), BRD-TWR-GAP-003 (§4 Zone 4 drawer field reconciliation with §11.7 and INDEX.md observed labels), BRD-TWR-GAP-004 (Pre-Booked Payments destination).
+2. **QA Agent:** Re-run `test-case-reviewer` skill independently (formal Phase 1 gate) using the new TestCases.md, then scaffold POMs + 6-test-type spec files for the 31 entries in Sheet 2 Automation Candidates. Use the Selector Reference block in `test-data-spec.md` to author POMs.
+3. **Tech Lead Agent:** Add the locator suggestions from INDEX.md §"Locator-map suggestions" to `locators/admin/locator-map.json` under a `towers` module key and a new `config` module key (or `towers.config` sub-key).
+4. **QA Agent:** When implementing TC_TWR_FUNC_024 + TC_TWR_INT_025, include the cleanup revert-toggle step on Tower 14 - Horizon to preserve UAT baseline.
