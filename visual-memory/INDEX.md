@@ -18,13 +18,13 @@ Used as: baseline references for selectors, layout, and regression comparison.
 | Login | [admin/login/INDEX.md](admin/login/INDEX.md) | FULL |
 | ~~Admin CMS~~ | [admin/admin-cms/INDEX.md](admin/admin-cms/INDEX.md) | DEPRECATED → use Config |
 | Allocation | [admin/allocation/INDEX.md](admin/allocation/INDEX.md) | FULL |
-| Channel Partners | [admin/channel-partners/INDEX.md](admin/channel-partners/INDEX.md) | STUB |
+| Channel Partners | [admin/channel-partners/INDEX.md](admin/channel-partners/INDEX.md) | FULL |
 | Config | [admin/config/INDEX.md](admin/config/INDEX.md) | FULL |
 | Customers | [admin/customers/INDEX.md](admin/customers/INDEX.md) | FULL |
-| JBP Management | [admin/jbp/INDEX.md](admin/jbp/INDEX.md) | STUB |
-| Offers | [admin/offers/INDEX.md](admin/offers/INDEX.md) | STUB |
-| Payment Transactions | [admin/payment-transactions/INDEX.md](admin/payment-transactions/INDEX.md) | STUB |
-| Sales Managers | [admin/sales-managers/INDEX.md](admin/sales-managers/INDEX.md) | STUB |
+| JBP Management | [admin/jbp/INDEX.md](admin/jbp/INDEX.md) | FULL |
+| Offers | [admin/offers/INDEX.md](admin/offers/INDEX.md) | FULL |
+| Payment Transactions | [admin/payment-transactions/INDEX.md](admin/payment-transactions/INDEX.md) | FULL |
+| Sales Managers | [admin/sales-managers/INDEX.md](admin/sales-managers/INDEX.md) | FULL |
 | Towers | [admin/towers/INDEX.md](admin/towers/INDEX.md) | FULL |
 
 ## Buyer Portal (https://uat.xrportal.in/)
