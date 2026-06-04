@@ -1,9 +1,9 @@
-# Visual Memory — Channel Partner Portal / Project Information
+# Visual Memory — CP Portal / Project Information
 
-**Captured:** 2026-05-17
-**Viewport (desktop):** 1920×900 (assumed — verify on full capture)
-**Environment:** UAT (https://uat-web.xrportal.in/)
-**CAPTURE_STATUS:** STUB — full capture needed. Key Structural Notes are PENDING.
+**Captured:** 2026-06-04 (updated from stub)
+**Viewport (desktop):** 1920×900
+**Environment:** UAT (https://uat-web.xrportal.in/project1/*)
+**CAPTURE_STATUS:** STUB — capture redirected to Home dashboard. Actual Project Information page not captured.
 
 ---
 
@@ -11,12 +11,37 @@
 
 | File | Screen | When Captured |
 |------|--------|--------------|
-| `screenshot-desktop.png` | Project Information — desktop view (1920×900) | stub — captured before INDEX.md existed |
+| `screenshot-desktop.png` | CP Home Dashboard (capture redirected — NOT Project Information) | 2026-06-03 |
 
 ---
 
 ## Key Structural Notes
 
-⚠ STRUCTURAL NOTES PENDING — Tech Lead Agent must run visual-capture skill to populate this section.
-TCs generated from this stub carry [STUB-EVIDENCE] status.
-Automation candidates from stub TCs cannot be implemented until full capture replaces this stub.
+### Page / Route
+- **URL pattern:** `https://uat-web.xrportal.in/project1/*`
+- Requires authentication
+- **Not in primary nav sidebar** (Home | KYC | JBP | Leads — no Project link)
+- Access method: unknown — not reachable from standard nav
+
+### Capture Gap
+```
+screenshot-desktop.png = CP Home Dashboard, not Project Information.
+Capture script could not find /project1/* and fell back to Home.
+Tech Lead Agent must determine correct URL and navigation path.
+```
+
+### Expected Content (per BRD §4.10 — Project content is read-only)
+```
+Project details: tower names, unit types, pricing, floor plans
+Content managed by Admin via Strapi CMS — CP view is read-only
+URL pattern: /project1/* (project-specific routes)
+```
+
+### Navigation
+```
+Standard CP sidebar: Home | KYC | JBP | Leads — no Project link present
+Access likely via: project card on Home, embedded link, or direct URL
+```
+
+⚠ STUB — TCs from this module carry [STUB-EVIDENCE].
+Tech Lead Agent must capture actual /project1/* screens before automation.
