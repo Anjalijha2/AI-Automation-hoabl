@@ -3,7 +3,11 @@
 **Captured:** 2026-06-03
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/support-tickets)
-**CAPTURE_STATUS:** FULL
+**CAPTURE_STATUS:** DEPRECATED
+
+> **DEPRECATED 2026-06-04** — Module removed from frontend. Client no longer requires Support Tickets.
+> Screenshots retained for historical reference. TCs archived to `manual-qa-repository/01-test-cases/archived/buyer/support-tickets/`.
+> BA Agent must NOT generate TCs for this module.
 
 ---
 
