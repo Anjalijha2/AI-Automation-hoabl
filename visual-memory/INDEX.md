@@ -31,17 +31,17 @@ Used as: baseline references for selectors, layout, and regression comparison.
 
 | Module | Index | Status |
 |--------|-------|--------|
-| Registration & Login | [buyer/registration-login/INDEX.md](buyer/registration-login/INDEX.md) | STUB |
-| Home Dashboard | [buyer/home-dashboard/INDEX.md](buyer/home-dashboard/INDEX.md) | STUB |
-| Allocation Experience | [buyer/allocation-experience/INDEX.md](buyer/allocation-experience/INDEX.md) | STUB |
+| Registration & Login | [buyer/registration-login/INDEX.md](buyer/registration-login/INDEX.md) | FULL |
+| Home Dashboard | [buyer/home-dashboard/INDEX.md](buyer/home-dashboard/INDEX.md) | FULL |
+| Allocation Experience | [buyer/allocation-experience/INDEX.md](buyer/allocation-experience/INDEX.md) | FULL |
 | Callback Request | [buyer/callback-request/INDEX.md](buyer/callback-request/INDEX.md) | STUB |
-| Home Loan | [buyer/home-loan/INDEX.md](buyer/home-loan/INDEX.md) | STUB |
+| Home Loan | [buyer/home-loan/INDEX.md](buyer/home-loan/INDEX.md) | FULL |
 | KYC | [buyer/kyc/INDEX.md](buyer/kyc/INDEX.md) | STUB |
-| Payment Schedule | [buyer/payment-schedule/INDEX.md](buyer/payment-schedule/INDEX.md) | STUB |
-| Project Information | [buyer/project-information/INDEX.md](buyer/project-information/INDEX.md) | STUB |
-| Support Tickets | [buyer/support-tickets/INDEX.md](buyer/support-tickets/INDEX.md) | STUB |
+| Payment Schedule | [buyer/payment-schedule/INDEX.md](buyer/payment-schedule/INDEX.md) | FULL |
+| Project Information | [buyer/project-information/INDEX.md](buyer/project-information/INDEX.md) | FULL |
+| Support Tickets | [buyer/support-tickets/INDEX.md](buyer/support-tickets/INDEX.md) | FULL |
 | Unit Details | [buyer/unit-details/INDEX.md](buyer/unit-details/INDEX.md) | STUB |
-| Work Progress | [buyer/work-progress/INDEX.md](buyer/work-progress/INDEX.md) | STUB |
+| Work Progress | [buyer/work-progress/INDEX.md](buyer/work-progress/INDEX.md) | FULL |
 
 ## Channel Partner Portal (https://uat-web.xrportal.in/)
 

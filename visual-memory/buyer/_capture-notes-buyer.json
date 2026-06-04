@@ -1,0 +1,487 @@
+{
+  "registration-login": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: registration-login-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "Login page URL: https://uat.xrportal.in/",
+      "CAPTURED: login-page.png",
+      "CAPTURED: register-page.png",
+      "Register headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Register inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Register buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "CAPTURED: registration-login-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "home-dashboard": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/home",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: home-dashboard-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "CAPTURED: home-dashboard-scrolled.png",
+      "CAPTURED: home-dashboard-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "allocation-experience": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/alloted",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: allocation-experience-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "CAPTURED: allocation-scrolled.png",
+      "CAPTURED: allocation-experience-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "callback-request": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/call-feedback",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: callback-request-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "CAPTURED: callback-request-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "home-loan": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/homeloan",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: home-loan-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "CAPTURED: home-loan-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "kyc": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/kyc",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: kyc-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "CAPTURED: kyc-scrolled.png",
+      "CAPTURED: kyc-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "payment-schedule": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/paymentschedule",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: payment-schedule-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "CAPTURED: payment-schedule-scrolled.png",
+      "CAPTURED: payment-schedule-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "project-information": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/project",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: project-information-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "CAPTURED: project-information-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "support-tickets": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/support-tickets",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: support-tickets-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "CAPTURED: support-categories.png (URL: https://uat.xrportal.in/)",
+      "CAPTURED: support-create.png",
+      "Create inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Create buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "CAPTURED: support-tickets-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "unit-details": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/allotted-units",
+      "URL after load: https://uat.xrportal.in/allotted-units",
+      "CAPTURED: unit-details-loaded.png",
+      "Headings: [\"h1: \\\"404\\\"\",\"h2: \\\"This page could not be found.\\\"\"]",
+      "Buttons: []",
+      "Inputs: []",
+      "Tabs: []",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): 404\nThis page could not be found.",
+      "CAPTURED: unit-details-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h1: \"404\"",
+        "h2: \"This page could not be found.\""
+      ],
+      "buttons": [],
+      "inputs": [],
+      "links": [],
+      "tabs": [],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "404\nThis page could not be found."
+    }
+  },
+  "work-progress": {
+    "log": [
+      "Navigating to https://uat.xrportal.in/work-progress",
+      "URL after load: https://uat.xrportal.in/",
+      "CAPTURED: work-progress-loaded.png",
+      "Headings: [\"h2: \\\"APPLICANT LOGIN\\\"\"]",
+      "Buttons: [\"\\\"‹\\\" (carousel-arrow carousel-arrow-prev)\",\"\\\"›\\\" (carousel-arrow carousel-arrow-next)\",\"\\\"Send OTP\\\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)\"]",
+      "Inputs: [\"input[placeholder=\\\"Enter Mobile Number\\\"]\"]",
+      "Tabs: [\"Indian National\",\"Indian National\",\"NRI\",\"NRI\"]",
+      "Cards: []",
+      "Rows: 0",
+      "Empty: \"\"",
+      "Body text (200): ‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 Ho",
+      "CAPTURED: work-progress-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Enter Mobile Number\"]"
+      ],
+      "links": [
+        "\"Terms & Conditions\" → #",
+        "\"Privacy Policy\" → https://growwithhoabl.com/privacy-policy"
+      ],
+      "tabs": [
+        "Indian National",
+        "Indian National",
+        "NRI",
+        "NRI"
+      ],
+      "cards": [],
+      "rows": 0,
+      "emptyText": "",
+      "pageTitle": "HoABL",
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  }
+}
