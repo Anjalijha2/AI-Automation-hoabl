@@ -1,0 +1,43 @@
+{
+  "h2": "SALES MANAGER LOGIN",
+  "inputs": [
+    {
+      "name": "phone",
+      "type": "tel",
+      "placeholder": "Enter Mobile Number",
+      "maxLength": 10
+    },
+    {
+      "name": "role",
+      "type": "radio",
+      "placeholder": "",
+      "maxLength": -1
+    },
+    {
+      "name": "role",
+      "type": "radio",
+      "placeholder": "",
+      "maxLength": -1
+    }
+  ],
+  "radios": [
+    {
+      "value": "sales_manager_admin",
+      "name": "role",
+      "labelText": "Sales Manager Admin"
+    },
+    {
+      "value": "sales_manager",
+      "name": "role",
+      "labelText": "Sales Manager"
+    }
+  ],
+  "buttons": [
+    {
+      "text": "Send OTP",
+      "cls": "ant-btn css-17wfwcs ant-btn-submit btn-book-solid mt-2"
+    }
+  ],
+  "title": "HoABL | Sales Manager",
+  "url": "https://uat-web.xrportal.in/sales-manager"
+}

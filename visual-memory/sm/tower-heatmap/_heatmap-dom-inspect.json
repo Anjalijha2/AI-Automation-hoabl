@@ -1,0 +1,278 @@
+{
+  "url": "https://uat-web.xrportal.in/sales-manager/towers",
+  "headings": [
+    "H5: Tower View",
+    "H6: Select Tower",
+    "H5: Tower 8 - Crest",
+    "H5: Tower 9 - Triumph",
+    "H5: Tower 10 - Crown",
+    "H5: Tower 13 - Prestige",
+    "H5: Tower 15 - Radiance",
+    "H5: Tower 6 - Aspire",
+    "H5: Tower 7 - Blossom",
+    "H5: Tower 16 - Fortune",
+    "H5: Tower 18 - Grand",
+    "H5: Tower 1 - Dawn",
+    "H5: Tower 2 - Aura",
+    "H5: Tower 3 - Glory",
+    "H5: Tower 4 - Pride"
+  ],
+  "towerCandidates": [
+    {
+      "tag": "BUTTON",
+      "text": "Logout",
+      "cls": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Logout",
+      "cls": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin"
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 8 - Crest\n\n84\nUnits Available",
+      "cls": "tower-item selected-tower"
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 9 - Triumph\n\n223\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 10 - Crown\n\n226\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 13 - Prestige\n\n248\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 15 - Radiance\n\n224\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 6 - Aspire\n\n19\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 7 - Blossom\n\n0\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 16 - Fortune\n\n254\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 18 - Grand\n\n256\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 1 - Dawn\n\n248\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 2 - Aura\n\n250\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 3 - Glory\n\n240\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 4 - Pride\n\n236\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 5 - Grace\n\n254\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "LI",
+      "text": "Tower 11 - Prime\n\n236\nUnits Available",
+      "cls": "tower-item "
+    },
+    {
+      "tag": "H6",
+      "text": "Tower: Crest",
+      "cls": "tower-name-title"
+    }
+  ],
+  "cellCandidates": [
+    {
+      "tag": "rect",
+      "cls": "[object SVGAnimatedString]",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-selecton-content",
+      "text": "Select Tower\n\nChoose a tower t"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-wrap",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-section-box",
+      "text": "Floor\n35\n34\n33\n32\n31\n30\n29\n28\n"
+    },
+    {
+      "tag": "DIV",
+      "cls": "fixed-bar-configuration unit-list-config",
+      "text": "Unit - 1\n\n323\n1 BHK Growth\n\nUn"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "Unit - 1\n\n323\n1 BHK Growth"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "Unit - 2\n\n323\n1 BHK Growth"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "Unit - 3\n\n621\n2 BHK Rise"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "Unit - 4\n\n485\n2 BHK Growth"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "Unit - 5\n\n323\n1 BHK Growth"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "Unit - 6\n\n323\n1 BHK Growth"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "Unit - 7\n\n485\n2 BHK Growth"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "Unit - 8\n\n621\n2 BHK Rise"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-select-box",
+      "text": "3501\n3502\n3503\n3504\n3505\n3506\n"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "3501"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-number  booked-unit ",
+      "text": "3501"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "3502"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-number  booked-unit ",
+      "text": "3502"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-size-item",
+      "text": "3503"
+    },
+    {
+      "tag": "DIV",
+      "cls": "unit-number  booked-unit ",
+      "text": "3503"
+    }
+  ],
+  "legendCandidates": [
+    {
+      "text": "1",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "2",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "1",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "1",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "1",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "1",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "3",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "1",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "4",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "4",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "1",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "1",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "2",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "4",
+      "cls": "preference-count-badge"
+    },
+    {
+      "text": "4",
+      "cls": "preference-count-badge"
+    }
+  ],
+  "filters": [],
+  "bodySnippet": "Callback Requests\nTowers\nAllocation\nLogout\nIndia’s Biggest Growth Housing Revolution Begins On 7th April 2026.\nTower View\nSelect Tower\n\nChoose a tower to view available units\n\nTower 8 - Crest\n\n84\nUnits Available\n\nTower 9 - Triumph\n\n223\nUnits Available\n\nTower 10 - Crown\n\n226\nUnits Available\n\nTower 13 - Prestige\n\n248\nUnits Available\n\nTower 15 - Radiance\n\n224\nUnits Available\n\nTower 6 - Aspire\n\n19\nUnits Available\n\nTower 7 - Blossom\n\n0\nUnits Available\n\nTower 16 - Fortune\n\n254\nUnits Available\n\nTower 18 - Grand\n\n256\nUnits Available\n\nTower 1 - Dawn\n\n248\nUnits Available\n\nTower 2 - Aura\n\n250\nUnits Available\n\nTower 3 - Glory\n\n240\nUnits Available\n\nTower 4 - Pride\n\n236\nUnits Available\n\nTower 5 - Grace\n\n254\nUnits Available\n\nTower 11 - Prime\n\n236\nUnits Available\n\nTower: Crest\nFloor\n35\n34\n33\n32\n31\n30\n29\n28\n27\n26\n25\n24\n23\n22\n21\n20\n19\n18\n17\n16\n15\n14\n13\n12\n11\n10\n9\n8\n7\n6\n5\n4\n3\n2\n1\n\nUnit - 1\n\n323\n1 BHK Growth\n\nUnit - 2\n\n323\n1 BHK Growth\n\nUnit - 3\n\n621\n2 BHK Rise\n\nUnit - 4\n\n485\n2 BHK Growth\n\nUnit - 5\n\n323\n1 BHK Growth\n\nUnit - 6\n\n323\n1 BHK Growth\n\nUnit - 7\n\n485\n2 BHK Growth\n\nUnit - 8\n\n621\n2 BHK Rise\n3501\n3502\n3503\n3504\n3505\n3506\n3507\n3508\n3401\n3402\n3403\n3404\n3405\n3406\n3407\n3408\n3301\n3302\n3303\nREFUGE\n3305\n3306\n3307\n3308\n3201\n3202\n3203\n3204\n3205\n3206\n3207\n3208\n3101\n3102\n3103\n3104\n3105\n3106\n3107\n3108\n3001\n3002\n3003\n3004\n3005\n3006\n3007\n3008\n2901\n2902\n2903\n2904\n2905\n2906\n2907\n2908\n2801\n2802\n2803\nREFUGE\n2805\n2806\n2807\n2808\n2701\n2702\n2703\n2704\n2705\n2706\n2707\n2708\n2601\n2602\n2603\n2604\n2605\n2606\n2607\n2608\n25"
+}

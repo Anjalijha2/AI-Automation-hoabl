@@ -1,0 +1,49 @@
+{
+  "h2": "ENTER OTP",
+  "desc": "Enter the OTP sent to your phone number",
+  "otpInputs": [
+    {
+      "ariaLabel": "OTP Input 1",
+      "type": "text",
+      "maxLength": -1
+    },
+    {
+      "ariaLabel": "OTP Input 2",
+      "type": "text",
+      "maxLength": -1
+    },
+    {
+      "ariaLabel": "OTP Input 3",
+      "type": "text",
+      "maxLength": -1
+    },
+    {
+      "ariaLabel": "OTP Input 4",
+      "type": "text",
+      "maxLength": -1
+    },
+    {
+      "ariaLabel": "OTP Input 5",
+      "type": "text",
+      "maxLength": -1
+    },
+    {
+      "ariaLabel": "OTP Input 6",
+      "type": "text",
+      "maxLength": -1
+    }
+  ],
+  "buttons": [
+    {
+      "text": "Re-Send OTP",
+      "cls": "common-link",
+      "disabled": true
+    },
+    {
+      "text": "Submit OTP",
+      "cls": "ant-btn css-17wfwcs ant-btn-submit btn-book-solid mt-2",
+      "disabled": false
+    }
+  ],
+  "hasBackButton": true
+}

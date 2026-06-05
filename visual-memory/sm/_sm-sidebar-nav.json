@@ -1,0 +1,47 @@
+[
+  {
+    "text": "Callback Requests",
+    "href": "",
+    "cls": "ant-menu-item ant-menu-item-selected"
+  },
+  {
+    "text": "Callback Requests",
+    "href": "/sales-manager/callback-requests",
+    "cls": "active"
+  },
+  {
+    "text": "Towers",
+    "href": "",
+    "cls": "ant-menu-item"
+  },
+  {
+    "text": "Towers",
+    "href": "/sales-manager/towers",
+    "cls": ""
+  },
+  {
+    "text": "Allocation",
+    "href": "",
+    "cls": "ant-menu-item"
+  },
+  {
+    "text": "Allocation",
+    "href": "/sales-manager/physical-allocation",
+    "cls": ""
+  },
+  {
+    "text": "•••",
+    "href": "",
+    "cls": "ant-pagination-item-link"
+  },
+  {
+    "text": "Callback",
+    "href": "",
+    "cls": "ant-menu-item ant-menu-item-selected"
+  },
+  {
+    "text": "Callback",
+    "href": "/sales-manager/callback-requests",
+    "cls": "active"
+  }
+]

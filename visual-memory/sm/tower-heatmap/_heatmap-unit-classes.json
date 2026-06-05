@@ -1,0 +1,133 @@
+{
+  "classMap": {
+    "unit-number  available-unit ": 223,
+    "unit-number  disabled-unit ": 29,
+    "unit-number  booked-unit ": 7,
+    "unit-number  refuse-area refuge-unit ": 6,
+    "unit-number  pbt-unit ": 2,
+    "unit-number  not-available-unit ": 13
+  },
+  "sample": [
+    {
+      "cls": "unit-number  available-unit ",
+      "text": "3501"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3502"
+    },
+    {
+      "cls": "unit-number  booked-unit ",
+      "text": "3503"
+    },
+    {
+      "cls": "unit-number  booked-unit ",
+      "text": "3504"
+    },
+    {
+      "cls": "unit-number  available-unit ",
+      "text": "3505"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3506"
+    },
+    {
+      "cls": "unit-number  available-unit ",
+      "text": "3507"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3508"
+    },
+    {
+      "cls": "unit-number  available-unit ",
+      "text": "3401"
+    },
+    {
+      "cls": "unit-number  booked-unit ",
+      "text": "3402"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3403"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3404"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3405"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3406"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3407"
+    },
+    {
+      "cls": "unit-number  available-unit ",
+      "text": "3408"
+    },
+    {
+      "cls": "unit-number  available-unit ",
+      "text": "3301"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3302"
+    },
+    {
+      "cls": "unit-number  booked-unit ",
+      "text": "3303"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3304"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3305"
+    },
+    {
+      "cls": "unit-number  available-unit ",
+      "text": "3306"
+    },
+    {
+      "cls": "unit-number  refuse-area refuge-unit ",
+      "text": "REFUGE"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3308"
+    },
+    {
+      "cls": "unit-number  booked-unit ",
+      "text": "3201"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3202"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3203"
+    },
+    {
+      "cls": "unit-number  disabled-unit ",
+      "text": "3204"
+    },
+    {
+      "cls": "unit-number  available-unit ",
+      "text": "3205"
+    },
+    {
+      "cls": "unit-number  available-unit ",
+      "text": "3206"
+    }
+  ],
+  "totalUnits": 280
+}

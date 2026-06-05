@@ -1,0 +1,178 @@
+{
+  "url": "https://uat-web.xrportal.in/sales-manager/callback-requests",
+  "headings": [
+    "H5: Welcome, Tester",
+    "H5: Total SM",
+    "H5: Total VC Request",
+    "H5: Total VC Pending",
+    "H5: Invite Sent/Re-sent",
+    "H5: Meeting Done",
+    "H5: SM Feedback Done",
+    "H5: Customer Feedback Done",
+    "H5: Avg Rating by Customer"
+  ],
+  "tableHeaders": [
+    "",
+    "Request ID",
+    "Manager",
+    "Customer Name",
+    "Customer Phone",
+    "Registration No",
+    "HV Code",
+    "Pincode",
+    "Requested At",
+    "Status",
+    "VC Outcome",
+    "Meeting",
+    "SM Feedback",
+    "Customer Rating",
+    "Customer Email",
+    "Actions"
+  ],
+  "rowCount": 11,
+  "firstRow": "\t\nRequest ID\n\t\nManager\n\t\nCustomer Name\n\t\nCustomer Phone\n\t\nRegistration No\n\t\nHV Code\n\t\n \n\t\nRequested At\n\t\nStatus\n\t\nVC Outcome\n\t\nMeeting\n\t\nSM Feedback\n\t\nCustomer Rating\n\t\nCustomer Email\n\t\nActions",
+  "statusBadges": [
+    {
+      "text": "PENDING",
+      "cls": "ant-tag ant-tag-yellow css-17wfwcs"
+    },
+    {
+      "text": "PENDING",
+      "cls": "ant-tag ant-tag-yellow css-17wfwcs"
+    },
+    {
+      "text": "MEETING DONE",
+      "cls": "ant-tag ant-tag-green css-17wfwcs"
+    },
+    {
+      "text": "Done",
+      "cls": "ant-tag ant-tag-green css-17wfwcs"
+    },
+    {
+      "text": "MEETING DONE",
+      "cls": "ant-tag ant-tag-green css-17wfwcs"
+    },
+    {
+      "text": "Done",
+      "cls": "ant-tag ant-tag-green css-17wfwcs"
+    },
+    {
+      "text": "MEETING DONE",
+      "cls": "ant-tag ant-tag-green css-17wfwcs"
+    },
+    {
+      "text": "Done",
+      "cls": "ant-tag ant-tag-green css-17wfwcs"
+    },
+    {
+      "text": "PENDING",
+      "cls": "ant-tag ant-tag-yellow css-17wfwcs"
+    },
+    {
+      "text": "MEETING DONE",
+      "cls": "ant-tag ant-tag-green css-17wfwcs"
+    }
+  ],
+  "rowActions": [
+    {
+      "tag": "SPAN",
+      "text": "",
+      "aria": "",
+      "cls": "ant-dropdown-trigger ant-table-filter-trigger",
+      "title": ""
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "aria": "",
+      "cls": "ant-dropdown-trigger ant-table-filter-trigger",
+      "title": ""
+    }
+  ],
+  "filters": [
+    "Select Sales Manager",
+    "Assign (0)",
+    "Create Callback Request",
+    "Refresh",
+    "Export",
+    "10 / page"
+  ],
+  "inputs": [
+    {
+      "placeholder": "Start Date",
+      "type": "text",
+      "name": ""
+    },
+    {
+      "placeholder": "End Date",
+      "type": "text",
+      "name": ""
+    },
+    {
+      "placeholder": "Search by name, phone, email, reg no...",
+      "type": "text",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "search",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "checkbox",
+      "name": ""
+    }
+  ],
+  "emptyState": "NO"
+}
