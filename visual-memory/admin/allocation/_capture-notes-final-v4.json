@@ -1,0 +1,13 @@
+{
+  "log": [
+    "Navigating...",
+    "Clicking filter bar Select Project...",
+    "Filter project select count: 1",
+    "Filter dropdown options: [\"Xanadu Test Project\"]",
+    "Selected Xanadu Test Project in filter bar",
+    "Rows after filter project select: 0",
+    "Upcoming row index: -1",
+    "Dynamic row index: -1"
+  ],
+  "timestamp": "2026-06-02T10:58:10.089Z"
+}

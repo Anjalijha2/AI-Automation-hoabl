@@ -1,0 +1,28 @@
+{
+  "log": [
+    "\n--- Trying OTP: 258369 ---",
+    "Navigating to https://uat.xrportal.in/",
+    "URL: https://uat.xrportal.in/",
+    "Heading: \"APPLICANT LOGIN\"",
+    "Filled mobile: 8888888888",
+    "Clicked Send OTP",
+    "OTP box visible: true",
+    "Filled OTP: 258369",
+    "Clicked verify",
+    "URL after verify: https://uat.xrportal.in/",
+    "FAILED with OTP 258369",
+    "\n--- Trying OTP: 147258 ---",
+    "Navigating to https://uat.xrportal.in/",
+    "URL: https://uat.xrportal.in/",
+    "Heading: \"APPLICANT LOGIN\"",
+    "Filled mobile: 8888888888",
+    "Clicked Send OTP",
+    "OTP box visible: true",
+    "Filled OTP: 147258",
+    "Clicked verify",
+    "URL after verify: https://uat.xrportal.in/home",
+    "SUCCESS with OTP 147258",
+    "Session saved to D:\\AI_Automation\\xanadu - AI automation\\automation-repository\\fixtures\\.auth\\buyer.json"
+  ],
+  "timestamp": "2026-06-03T06:05:08.092Z"
+}

@@ -1,0 +1,29 @@
+{
+  "log": [
+    "Navigating...",
+    "Selecting project...",
+    "Filling campaign name...",
+    "Setting start date via first picker input...",
+    "End input disabled: true",
+    "Form screenshot saved",
+    "Start value: \"2026-06-15 10:00\" | End value: \"2026-06-20 23:59:59\"",
+    "Clicking Save Campaign...",
+    "Save attempted",
+    "Form errors: []",
+    "Filter bar: selecting project...",
+    "Rows: 10",
+    "  Row 0: Test dynamic campaign\tDYNAMIC\t2026-06-02 15:12\t2026-06-10 00:00\tActive\t | View | Stop",
+    "  Row 1: PE QA : Camp Test 3\tSTATIC\t2026-06-02 15:02\t2026-06-10 00:00\tStopped\t | View",
+    "  Row 2: PE QA : Camp Test 4\tSTATIC\t2026-06-02 13:48\t2026-06-02 19:00\tStopped\t | View",
+    "  Row 3: test\tPHYSICAL_EVENT\t2026-05-29 15:29\t2026-05-30 15:52\tCompleted\t | View",
+    "  Row 4: PE QA : Camp Test 3\tPHYSICAL_EVENT\t2026-05-24 16:04\t2026-05-30 00:00\tStopped\t | View",
+    "  Row 5: Test Physical Event Camp [23-05-26]-02\tPHYSICAL_EVENT\t2026-05-23 17:03\t2026-05-31 00:00\tStopped\t | View",
+    "  Row 6: Test Physical Event Camp [23-05-26]-01\tPHYSICAL_EVENT\t2026-05-23 14:13\t2026-05-31 00:00\tStopped\t | View",
+    "  Row 7: Test Physical Event Camp [20-05-26]\tPHYSICAL_EVENT\t2026-05-20 15:01\t2026-05-31 00:00\tStopped\t | View",
+    "  Row 8: Test Physical Event Camp [20-05-26]\tPHYSICAL_EVENT\t2026-05-20 15:03\t2026-05-31 00:00\tCancelled\t | View",
+    "  Row 9: Test Static Flow (offer changes)-18/05/26\tSTATIC\t2026-05-18 11:50\t2026-05-23 00:00\tStopped\t | View",
+    "Upcoming row: -1",
+    "No Upcoming row found — campaign may not have saved correctly"
+  ],
+  "timestamp": "2026-06-02T11:23:47.420Z"
+}

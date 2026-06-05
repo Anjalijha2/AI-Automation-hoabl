@@ -1,0 +1,194 @@
+{
+  "unitDetails": {
+    "dom": {
+      "url": "https://uat.xrportal.in/kyc?unitId=OTc1Mg==",
+      "headings": [
+        "h5: \"KYC submitted successfully!\""
+      ],
+      "buttons": [
+        "\"Logout\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)",
+        "\"1 Applicant\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)",
+        "\"Download your Unit Details\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)",
+        "\"Logout\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [],
+      "radios": [],
+      "selects": [],
+      "uploads": [],
+      "links": [
+        "\"Home\"->/home",
+        "\"Registration\"->/register",
+        "\"Allotment\"->/alloted",
+        "\"Homeloan\"->/homeloan",
+        "\"Project\"->/project",
+        "\"Work Progress\"->/work-progress",
+        "\"Go to Home\"->/home",
+        "\"Home\"->/home",
+        "\"Registration\"->/register",
+        "\"Allotment\"->/alloted",
+        "\"Home Loan\"->/homeloan",
+        "\"Project\"->/project",
+        "\"Work Progress\"->/work-progress"
+      ],
+      "bodyText": "Home\nRegistration\nAllotment\nHomeloan\nProject\nWork Progress\nLogout\nIndia’s Biggest Growth Housing Revolution Begins On 7th April 2026.\nKYC submitted successfully!\n\nCongratulations you have completed the Growth Online Booking Process, Please download your Booking form with all the details.\n\nRegistration Number\tKYC Number\tUnit\tNo. of Applicants\tProcess Status\t\nRegistration Number\n\t\nKYC Number\n\t\nUnit\n\t\nNo. of Applicants\n\t\nProcess Status\n\n\n\nGHNG-1000008364-C\n\n\t\n\nGHNG-1000008364-C-KYC\n\n\t\n1201 - Glory\n1 Bed Growth Home (323 sq.ft.)\n\t\n1 Applicant\n\t\nKYC Completed\nDownload your Unit Details\nGo to Home"
+    },
+    "foundUrl": "https://uat.xrportal.in/kyc?unitId=OTc1Mg=="
+  },
+  "kyc": {
+    "dom": {
+      "url": "https://uat.xrportal.in/kyc?unitId=OTc4MA==",
+      "headings": [
+        "h3: \"Payment successful!\"",
+        "h4: \"Add Applicants\"",
+        "h5: \"1106 - Pride - 1 Bed Growth Home (323 sq.ft.)\""
+      ],
+      "buttons": [
+        "\"Logout\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)",
+        "\"Verify Details\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)",
+        "\"Add Applicant\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)",
+        "\"Logout\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [],
+      "radios": [],
+      "selects": [],
+      "uploads": [],
+      "links": [
+        "\"Home\"->/home",
+        "\"Registration\"->/register",
+        "\"Allotment\"->/alloted",
+        "\"Homeloan\"->/homeloan",
+        "\"Project\"->/project",
+        "\"Work Progress\"->/work-progress",
+        "\"Go to Home\"->/home",
+        "\"Home\"->/home",
+        "\"Registration\"->/register",
+        "\"Allotment\"->/alloted",
+        "\"Home Loan\"->/homeloan",
+        "\"Project\"->/project",
+        "\"Work Progress\"->/work-progress"
+      ],
+      "bodyText": "Home\nRegistration\nAllotment\nHomeloan\nProject\nWork Progress\nLogout\nIndia’s Biggest Growth Housing Revolution Begins On 7th April 2026.\nPayment successful!\n\nYou’re just one step away from your dream home. Confirm your Applicant details & Download your Booking form with all the details.\n\nAdd Applicants\n\nApplicants can only be your blood relatives (parents, spouse, siblings, or children).\n\n1106 - Pride - 1 Bed Growth Home (323 sq.ft.)\nApplicant\tRelationship\tAction\t\nApplicant\n\t\nRelationship\n\t\nAction\n\n\nishaaaaan karnik\n\tSelf\t\nVerify Details|\n\nMax. 4 Applicants allowed\n\nAdd Applicant\n Go to Home\nConfirm"
+    }
+  },
+  "callback": {
+    "dom": {
+      "url": "https://uat.xrportal.in/",
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[type=\"tel\"][placeholder=\"Enter Mobile Number\"][name=\"phone\"]"
+      ],
+      "radios": [],
+      "selects": [],
+      "uploads": [],
+      "links": [
+        "\"Terms & Conditions\"->#",
+        "\"Privacy Policy\"->https://growwithhoabl.com/privacy-policy"
+      ],
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "allocation": {
+    "dom": {
+      "url": "https://uat.xrportal.in/",
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[type=\"tel\"][placeholder=\"Enter Mobile Number\"][name=\"phone\"]"
+      ],
+      "radios": [],
+      "selects": [],
+      "uploads": [],
+      "links": [
+        "\"Terms & Conditions\"->#",
+        "\"Privacy Policy\"->https://growwithhoabl.com/privacy-policy"
+      ],
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "homeLoan": {
+    "dom": {
+      "url": "https://uat.xrportal.in/",
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[type=\"tel\"][placeholder=\"Enter Mobile Number\"][name=\"phone\"]"
+      ],
+      "radios": [],
+      "selects": [],
+      "uploads": [],
+      "links": [
+        "\"Terms & Conditions\"->#",
+        "\"Privacy Policy\"->https://growwithhoabl.com/privacy-policy"
+      ],
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "supportTix": {
+    "dom": {
+      "url": "https://uat.xrportal.in/",
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[type=\"tel\"][placeholder=\"Enter Mobile Number\"][name=\"phone\"]"
+      ],
+      "radios": [],
+      "selects": [],
+      "uploads": [],
+      "links": [
+        "\"Terms & Conditions\"->#",
+        "\"Privacy Policy\"->https://growwithhoabl.com/privacy-policy"
+      ],
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    }
+  },
+  "homeDash": {
+    "dom": {
+      "url": "https://uat.xrportal.in/",
+      "headings": [
+        "h2: \"APPLICANT LOGIN\""
+      ],
+      "buttons": [
+        "\"‹\" (carousel-arrow carousel-arrow-prev)",
+        "\"›\" (carousel-arrow carousel-arrow-next)",
+        "\"Send OTP\" (ant-btn css-9oppau ant-btn-default ant-btn-color-default ant)"
+      ],
+      "inputs": [
+        "input[type=\"tel\"][placeholder=\"Enter Mobile Number\"][name=\"phone\"]"
+      ],
+      "radios": [],
+      "selects": [],
+      "uploads": [],
+      "links": [
+        "\"Terms & Conditions\"->#",
+        "\"Privacy Policy\"->https://growwithhoabl.com/privacy-policy"
+      ],
+      "bodyText": "‹\n›\nAPPLICANT LOGIN\n\nSelect nationality & verify to continue\n\nIndian National\nNRI\nMobile Number*\n+91\n\nBy verifying, you accept the Terms & Conditions and Privacy Policy.\n\nSend OTP\n\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    },
+    "statusBadges": []
+  }
+}

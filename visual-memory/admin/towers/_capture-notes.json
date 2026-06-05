@@ -1,0 +1,308 @@
+{
+  "results": {
+    "VG-1 (Unit detail drawer)": {
+      "file": "towers-unit-detail-drawer.png",
+      "status": "CAPTURED",
+      "note": ""
+    },
+    "VG-2 (Red cell clicked)": {
+      "file": "towers-red-cell-clicked.png",
+      "status": "CAPTURED",
+      "note": ""
+    },
+    "VG-3 (Orange cell clicked)": {
+      "file": "towers-orange-cell-clicked.png",
+      "status": "CAPTURED",
+      "note": ""
+    },
+    "VG-4 (Config deep-link landing)": {
+      "file": "towers-config-deeplink-landing.png",
+      "status": "CAPTURED",
+      "note": "Captured /admin/cms — found 18 \"View Tower\" buttons and 19 Active/Inactive switches. NOTE: original task assumed deep-link FROM towers TO config, but actual flow is the reverse — config IS the entry point."
+    },
+    "VG-5 (Tower status before toggle)": {
+      "file": "towers-unit-status-before-toggle.png",
+      "status": "CAPTURED",
+      "note": ""
+    },
+    "VG-6 (Tower status after toggle)": {
+      "file": "towers-unit-status-after-toggle.png",
+      "status": "CAPTURED",
+      "note": ""
+    }
+  },
+  "domNotes": {
+    "cellTaxonomy": {
+      "unit-size-item.booked": {
+        "count": 90,
+        "color": "rgb(214,24,32)",
+        "status": "BOOKED"
+      },
+      "unit-size-item.available": {
+        "count": 84,
+        "color": "rgb(255,255,255) border",
+        "status": "AVAILABLE"
+      },
+      "unit-size-item.reserved": {
+        "count": 84,
+        "color": "rgba(114,114,114,0.776)",
+        "status": "DISABLED"
+      },
+      "unit-size-item.hold": {
+        "count": 3,
+        "color": "rgb(255,165,0)",
+        "status": "PAYING_HOLD"
+      },
+      "unit-size-item.not_available": {
+        "count": 13,
+        "color": "rgb(255,255,255)",
+        "status": "NOT_AVAILABLE"
+      },
+      "unit-size-item.refuge": {
+        "count": 6,
+        "color": "rgb(230,230,230)",
+        "status": "REFUGE"
+      }
+    },
+    "unitDetailPanel": {
+      "clickedUnit": "3405",
+      "type": "available",
+      "found": true,
+      "text": "Unit No.\n\n3405 - Crest\n\nBHK\n\n1 BHK Growth Home\n\nSize\n\n323 sq.ft.\n\nAgreement Value\n\n₹32,99,000.00\n\nFinal AV\n\n₹32,99,000.00\n\nStamp Duty\n\n₹2,30,930.00\n\nGST\n\n₹32,990.00\n\nRegistration Charges\n\n₹30,000.00\n\n*All inclusive \n\n₹35,92,920.00\n\nMark unit as Reserved",
+      "cls": "more-details-allocation",
+      "tag": "div",
+      "width": 408,
+      "height": 342,
+      "sampleLabels": [
+        "Unit No.",
+        "3405 - Crest",
+        "BHK",
+        "1 BHK Growth Home",
+        "Size",
+        "323 sq.ft.",
+        "Agreement Value",
+        "₹32,99,000.00",
+        "Final AV",
+        "Stamp Duty",
+        "₹2,30,930.00",
+        "GST",
+        "₹32,990.00",
+        "Registration Charges",
+        "₹30,000.00",
+        "*All inclusive",
+        "₹35,92,920.00",
+        "Mark unit as Reserved"
+      ]
+    },
+    "redCellPanel": {
+      "clickedUnit": "3501",
+      "type": "booked",
+      "found": true,
+      "text": "Unit No.\n\n3501 - Crest\n\nBHK\n\n1 BHK Growth Home\n\nSize\n\n323 sq.ft.\n\nFirst Name\n\nSupriya\n\nLast Name\n\nDubey\n\nRegistration Number\n\nGHNG-2000000009-Z\n\nPhone\n\n9167746035\n\nAgreement Value\n\n₹32,99,000.00\n\nFinal AV\n\n₹32,99,000.00\n\nStamp Duty\n\n₹2,30,930.00\n\nGST\n\n₹32,990.00\n\nRegistration Charges\n\n₹30,000.00\n\n*All inclusive \n\n₹35,92,920.00",
+      "cls": "more-details-allocation",
+      "tag": "div",
+      "width": 408,
+      "height": 452,
+      "sampleLabels": [
+        "Unit No.",
+        "3501 - Crest",
+        "BHK",
+        "1 BHK Growth Home",
+        "Size",
+        "323 sq.ft.",
+        "First Name",
+        "Supriya",
+        "Last Name",
+        "Dubey",
+        "Registration Number",
+        "GHNG-2000000009-Z",
+        "Phone",
+        "9167746035",
+        "Agreement Value",
+        "₹32,99,000.00",
+        "Final AV",
+        "Stamp Duty",
+        "₹2,30,930.00",
+        "GST",
+        "₹32,990.00",
+        "Registration Charges",
+        "₹30,000.00",
+        "*All inclusive",
+        "₹35,92,920.00"
+      ]
+    },
+    "orangeCellPanel": {
+      "clickedUnit": "3307",
+      "type": "hold",
+      "found": true,
+      "text": "Unit No.\n\n3307 - Crest\n\nBHK\n\n2 BHK Growth Home\n\nSize\n\n485 sq.ft.\n\nFirst Name\n\nSupriya\n\nLast Name\n\nDubey\n\nRegistration Number\n\nGHNG-2000000009-Y\n\nPhone\n\n9167746035\n\nAgreement Value\n\n₹49,99,000.00\n\nFinal AV\n\n₹49,99,000.00\n\nStamp Duty\n\n₹3,49,930.00\n\nGST\n\n₹2,49,950.00\n\nRegistration Charges\n\n₹30,000.00\n\n*All inclusive \n\n₹56,28,880.00",
+      "cls": "more-details-allocation",
+      "tag": "div",
+      "width": 408,
+      "height": 452,
+      "sampleLabels": [
+        "Unit No.",
+        "3307 - Crest",
+        "BHK",
+        "2 BHK Growth Home",
+        "Size",
+        "485 sq.ft.",
+        "First Name",
+        "Supriya",
+        "Last Name",
+        "Dubey",
+        "Registration Number",
+        "GHNG-2000000009-Y",
+        "Phone",
+        "9167746035",
+        "Agreement Value",
+        "₹49,99,000.00",
+        "Final AV",
+        "Stamp Duty",
+        "₹3,49,930.00",
+        "GST",
+        "₹2,49,950.00",
+        "Registration Charges",
+        "₹30,000.00",
+        "*All inclusive",
+        "₹56,28,880.00"
+      ]
+    },
+    "configLanding": {
+      "url": "https://uat-web.xrportal.in/admin/cms",
+      "viewTowerCount": 18,
+      "switchCount": 19,
+      "updateBtnPresent": true,
+      "sampleBtnPresent": true,
+      "towerRowCountGuess": 0
+    },
+    "toggle": {
+      "allSwitches": [
+        {
+          "index": 0,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 1,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 2,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 3,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 4,
+          "checked": false,
+          "aria": "false",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 5,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 6,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 7,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 8,
+          "checked": false,
+          "aria": "false",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 9,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 10,
+          "checked": false,
+          "aria": "false",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 11,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 12,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 13,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 14,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 15,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 16,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 17,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        },
+        {
+          "index": 18,
+          "checked": true,
+          "aria": "true",
+          "near": "Active Inactive"
+        }
+      ],
+      "targetIdx": 4,
+      "beforeChecked": false,
+      "afterState": {
+        "aria": "true",
+        "checked": true
+      },
+      "revertedState": {
+        "aria": "false",
+        "checked": false
+      }
+    }
+  }
+}

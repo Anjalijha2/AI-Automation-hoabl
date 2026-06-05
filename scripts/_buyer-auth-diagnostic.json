@@ -1,0 +1,33 @@
+{
+  "log": [
+    "=== STEP 1: Navigate to login ===",
+    "URL: https://uat.xrportal.in/",
+    "Pre-login localStorage: []",
+    "Pre-login sessionStorage: [[\"_cltk\",\"1kmqfsz\"]]",
+    "=== STEP 2: Fill mobile ===",
+    "Filled mobile: 8888888888",
+    "=== STEP 3: Click Send OTP ===",
+    "OTP box visible: true",
+    "=== STEP 4: Fill OTP ===",
+    "OTP boxes count: 6",
+    "Filled OTP: 147258",
+    "URL after OTP fill: https://uat.xrportal.in/",
+    "Clicked verify button",
+    "=== STEP 5: Wait for redirect ===",
+    "URL after verify: https://uat.xrportal.in/home",
+    "=== STEP 6: Dump ALL storage after login ===",
+    "After-login URL: https://uat.xrportal.in/home",
+    "After-login localStorage (1 keys):",
+    "  localStorage[\"forceLogout\"] = \"1780467588725\"",
+    "After-login sessionStorage (4 keys):",
+    "  sessionStorage[\"xr_user\"] = {\"name\":\"ishaaaaan karnik\",\"firstName\":\"ishaaaaan\",\"lastName\":\"karnik\",\"role\":\"user\",\"panNumber\":null,\"pincode\":\"7889\",\"address\":\"101\",\"email\":\"ISHaaAAN.KARNIK@GMAIL.COM\",\"phone\":\"8888888888\",\"country...",
+    "  sessionStorage[\"xr_auth_token\"] = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUyODUsImlhdCI6MTc4MDQ2NzU4NywiZXhwIjoxNzgwNTUzOTg3fQ.P09iQbUx7SbwU0DxkivO9U0lzRg3_cuSKf5eDRHxoT4\"",
+    "  sessionStorage[\"xr_latest_registration\"] = \"GHNG-1000008364\"",
+    "  sessionStorage[\"_cltk\"] = 1kmqfsz",
+    "After-login cookies (2):",
+    "  cookie: name=\"_clck\" value=\"zotwms%5E2%5Eg6l%5E0%5E2345\" httpOnly=false secure=false domain=.xrportal.in",
+    "  cookie: name=\"_clsk\" value=\"1aak4u%5E1780467590832%5E2%5E1%5Ev.clarity.ms%2Fcollect\" httpOnly=false secure=false domain=.xrportal.in",
+    "StorageState saved to: D:\\AI_Automation\\xanadu - AI automation\\scripts\\_buyer-auth-state-diagnostic.json"
+  ],
+  "timestamp": "2026-06-03T06:19:54.887Z"
+}

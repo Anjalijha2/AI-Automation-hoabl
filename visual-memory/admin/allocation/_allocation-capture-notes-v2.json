@@ -1,0 +1,98 @@
+{
+  "results": {
+    "1 (Rounds UI)": {
+      "file": "allocation-rounds-view.png",
+      "status": "UNREACHABLE",
+      "note": "No \"Round\" tab/section found on this campaign's detail page (status=unknown). Detail tabs: none."
+    },
+    "2 (Export UI)": {
+      "file": "allocation-export-ui.png",
+      "status": "UNREACHABLE",
+      "note": "No Export button on campaign detail page."
+    },
+    "3 (Notify UI)": {
+      "file": "allocation-notify-ui.png",
+      "status": "CAPTURED",
+      "note": ""
+    },
+    "4 (Stop Allocation modal)": {
+      "file": "allocation-stop-modal.png",
+      "status": "UNREACHABLE",
+      "note": "No \"Active\" campaigns in current UAT data. Status options seen: All Status, Active, Upcoming, Completed, Stopped, Cancelled, Failed."
+    },
+    "5 (Cancel Allocation modal)": {
+      "file": "allocation-cancel-modal.png",
+      "status": "UNREACHABLE",
+      "note": "No \"Active\" campaigns in current UAT data. Status options seen: All Status, Active, Upcoming, Completed, Stopped, Cancelled, Failed."
+    }
+  },
+  "domNotes": {
+    "detailPageUrl": "https://uat-web.xrportal.in/admin/allocation/campaigns/288",
+    "detailHeadings": [
+      "H2: Physical Campaign Details",
+      "H3: test",
+      "H4: Campaign Actions"
+    ],
+    "detailTabs": [],
+    "detailAllButtons": [
+      {
+        "text": "Logout",
+        "aria": "",
+        "disabled": false
+      },
+      {
+        "text": "Logout",
+        "aria": "",
+        "disabled": false
+      },
+      {
+        "text": "Back to Allocation Overview",
+        "aria": "",
+        "disabled": false
+      },
+      {
+        "text": "Download Bookings",
+        "aria": "",
+        "disabled": false
+      },
+      {
+        "text": "Download Pending",
+        "aria": "",
+        "disabled": false
+      },
+      {
+        "text": "Notify Registrants",
+        "aria": "",
+        "disabled": false
+      }
+    ],
+    "detailBodySnippet": "Customers\nConfig\nAllocation\nOffers\nTowers\nJBP Mgmt\nChannel Partners\nSales Managers\nTransactions\nCMS\nLogout\nBack to Allocation Overview\nPhysical Campaign Details\ntest\nCompleted\nPhysical Event\nStart Time: 2026-05-29 15:29 (IST)\nEnd Time: 2026-05-30 15:52 (IST)\nRegistrations Uploaded\n5\nUnique Assigned Units Uploaded\n5\nCommon Pool Uploaded\n15\nBooked From Assigned Units\n0\nBooked From Common Pool Units\n0\nRegistrations Pending To Book\n5\nCampaign Actions\nDownload Bookings\nDownload Pending\nNotify Registrants\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved.",
+    "statusFilterOptions": [
+      "All Status",
+      "Active",
+      "Upcoming",
+      "Completed",
+      "Stopped",
+      "Cancelled",
+      "Failed"
+    ],
+    "approvedRowSearch": {
+      "tried": true,
+      "found": false,
+      "status": "Active"
+    },
+    "roundsUi": {},
+    "exportUi": {},
+    "notifyUi": {
+      "found": true,
+      "type": "ant-modal-content",
+      "title": "Notify Registrants?",
+      "items": [
+        "Cancel",
+        "Yes, Notify All"
+      ]
+    },
+    "stopModal": {},
+    "cancelModal": {}
+  }
+}

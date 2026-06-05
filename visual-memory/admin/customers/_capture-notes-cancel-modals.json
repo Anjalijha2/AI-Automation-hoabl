@@ -1,0 +1,89 @@
+{
+  "results": {
+    "VG-2 (Cancel Registration modal)": {
+      "file": "customers-cancel-registration-modal.png",
+      "status": "CAPTURED",
+      "note": ""
+    },
+    "VG-1 (Cancel Unit modal)": {
+      "file": "customers-cancel-unit-modal.png",
+      "status": "CAPTURED",
+      "note": ""
+    }
+  },
+  "domNotes": {
+    "trashIconSelectorCandidates": {
+      "countOnPage": 0,
+      "sampleHtml": ""
+    },
+    "cancelRegistrationModal": {
+      "found": true,
+      "title": "Confirm Refund",
+      "headerHtml": "<div class=\"ant-modal-header\"><div class=\"ant-modal-title\" id=\":r3p:\"><span style=\"color: rgb(211, 32, 41);\">Confirm Refund</span></div></div>",
+      "bodyText": "You must ensure refund of ₹999 is already handled offline for:\n\nRegistration No\nGHNG-1000008563-AT\nUnit\nNot Assigned\n• This registration-unit will be cancelled and cannot be undone\n• User can register later and pay again for this project in future\nCancel Registration",
+      "bodySnippet": "You must ensure refund of ₹999 is already handled offline for:\n\nRegistration No\nGHNG-1000008563-AT\nUnit\nNot Assigned\n• This registration-unit will be cancelled and cannot be undone\n• User can register later and pay again for this project in future\nCancel Registration",
+      "buttons": [
+        {
+          "text": "",
+          "ariaLabel": "Close",
+          "className": "ant-modal-close",
+          "disabled": false
+        },
+        {
+          "text": "Cancel Registration",
+          "ariaLabel": "",
+          "className": "ant-btn css-17wfwcs ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid",
+          "disabled": false
+        }
+      ],
+      "checkboxes": [],
+      "labelledFields": [],
+      "hasCloseX": true,
+      "footerText": ""
+    },
+    "cancelUnitModal": {
+      "found": true,
+      "title": "Please make sure that following actions are completed ?",
+      "headerHtml": "<div class=\"ant-modal-header\"><div class=\"ant-modal-title\" id=\":r3q:\"><span style=\"font-size: 18px; font-weight: 600; color: rgb(0, 0, 0); margin-bottom: 15px; display: inline-block;\">Please make sure that following actions are completed ?</span></div></div>",
+      "bodyText": "Activity - Token, Form, Booking deleted\nMavis - Booking entry deleted",
+      "bodySnippet": "Activity - Token, Form, Booking deleted\nMavis - Booking entry deleted",
+      "buttons": [
+        {
+          "text": "",
+          "ariaLabel": "Close",
+          "className": "ant-modal-close",
+          "disabled": false
+        },
+        {
+          "text": "Cancel",
+          "ariaLabel": "",
+          "className": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined btn-book-outline",
+          "disabled": false
+        },
+        {
+          "text": "Submit",
+          "ariaLabel": "",
+          "className": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid btn-book-solid",
+          "disabled": true
+        }
+      ],
+      "checkboxes": [
+        {
+          "checked": false,
+          "label": "Activity - Token, Form, Booking deleted",
+          "className": "ant-checkbox-input",
+          "parentLabelClass": "ant-checkbox-wrapper mb-2 css-17wfwcs"
+        },
+        {
+          "checked": false,
+          "label": "Mavis - Booking entry deleted",
+          "className": "ant-checkbox-input",
+          "parentLabelClass": "ant-checkbox-wrapper css-17wfwcs"
+        }
+      ],
+      "labelledFields": [],
+      "hasCloseX": true,
+      "footerText": "CancelSubmit"
+    }
+  }
+}

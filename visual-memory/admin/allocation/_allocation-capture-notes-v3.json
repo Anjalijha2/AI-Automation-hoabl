@@ -1,0 +1,62 @@
+{
+  "results": {
+    "1 (Rounds UI)": {
+      "file": "allocation-rounds-view.png",
+      "status": "UNREACHABLE",
+      "note": "Not present on any of: Upcoming, Completed campaign details. UAT data set may lack the needed status, or the action does not exist in current UI."
+    },
+    "2 (Export UI)": {
+      "file": "allocation-export-ui.png",
+      "status": "CAPTURED",
+      "note": "Export buttons \"Download Bookings\" / \"Download Pending\" visible on Completed campaign (under Campaign Actions section)."
+    },
+    "4 (Stop Allocation modal)": {
+      "file": "allocation-stop-modal.png",
+      "status": "UNREACHABLE",
+      "note": "Not present on any of: Upcoming, Completed campaign details. UAT data set may lack the needed status, or the action does not exist in current UI."
+    },
+    "5 (Cancel Allocation modal)": {
+      "file": "allocation-cancel-modal.png",
+      "status": "UNREACHABLE",
+      "note": "Not present on any of: Upcoming, Completed campaign details. UAT data set may lack the needed status, or the action does not exist in current UI."
+    }
+  },
+  "domNotes": {
+    "attemptedStatuses": [
+      "Upcoming",
+      "Completed"
+    ],
+    "capturedFromCampaign": {
+      "Completed": {
+        "buttons": [
+          "Logout",
+          "Logout",
+          "Back to Allocation Overview",
+          "Download Bookings",
+          "Download Pending",
+          "Notify Registrants"
+        ],
+        "headings": [
+          "H2: Physical Campaign Details",
+          "H3: test",
+          "H4: Campaign Actions"
+        ],
+        "body": "Customers\nConfig\nAllocation\nOffers\nTowers\nJBP Mgmt\nChannel Partners\nSales Managers\nTransactions\nCMS\nLogout\nBack to Allocation Overview\nPhysical Campaign Details\ntest\nCompleted\nPhysical Event\nStart Time: 2026-05-29 15:29 (IST)\nEnd Time: 2026-05-30 15:52 (IST)\nRegistrations Uploaded\n5\nUnique Assigned Units Uploaded\n5\nCommon Pool Uploaded\n15\nBooked From Assigned Units\n0\nBooked From Common Pool Units\n0\nRegistrations Pending To Book\n5\nCampaign Actions\nDownload Bookings\nDownload Pending\nNotify Registrants\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved.",
+        "url": "https://uat-web.xrportal.in/admin/allocation/campaigns/288"
+      }
+    },
+    "upcomingCampaignButtons": [],
+    "upcomingCampaignSnippet": "",
+    "exportArea": {
+      "campaignActionsButtons": [
+        "Download Bookings",
+        "Download Pending",
+        "Notify Registrants"
+      ]
+    },
+    "rounds": {},
+    "stopModal": {},
+    "cancelModal": {},
+    "exportCapturedFrom": "Completed"
+  }
+}

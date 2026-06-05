@@ -1,0 +1,341 @@
+{
+  "channel-partners": {
+    "log": [
+      "Navigating to https://uat-web.xrportal.in/admin/channel-partners",
+      "URL after load: https://uat-web.xrportal.in/admin/channel-partners",
+      "CAPTURED: channel-partners-loaded.png",
+      "Headings: [\"h3: \\\"2709 Channel Partners\\\"\"]",
+      "Columns: [\"Owner Name\",\"Firm Name\",\"HV Code\",\"Master HV Code\",\"Business Region\",\"Pincode\",\"Phone\",\"CP Type\",\"SM Name\",\"SM Email ID\",\"SM Mobile Number\",\"KYC Status\",\"Actions\",\"Owner Name\",\"Firm Name\",\"HV Code\",\"Master HV Code\",\"Business Region\",\"Pincode\",\"Phone\",\"CP Type\",\"SM Name\",\"SM Email ID\",\"SM Mobile Number\",\"KYC Status\",\"Actions\"]",
+      "Buttons: [\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Reset Filters\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text tabl)\",\"\\\"Refresh\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text tabl)\"]",
+      "Inputs: [\"input[placeholder=\\\"Search by Phone\\\"]\"]",
+      "Tabs: []",
+      "Selects: [\"10 / page\"]",
+      "Rows visible: 10",
+      "Empty state: \"\"",
+      "CAPTURED: channel-partners-row-selected.png",
+      "CAPTURED: channel-partners-map-modal.png",
+      "Map modal title: \"Map CPs to Master\" | Buttons: [\"\\\"\\\"\",\"\\\"Cancel\\\"\",\"\\\"Map to Master\\\"\"]",
+      "First row action buttons: [\"\",\"\"]",
+      "CAPTURED: channel-partners-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h3: \"2709 Channel Partners\""
+      ],
+      "columns": [
+        "Owner Name",
+        "Firm Name",
+        "HV Code",
+        "Master HV Code",
+        "Business Region",
+        "Pincode",
+        "Phone",
+        "CP Type",
+        "SM Name",
+        "SM Email ID",
+        "SM Mobile Number",
+        "KYC Status",
+        "Actions",
+        "Owner Name",
+        "Firm Name",
+        "HV Code",
+        "Master HV Code",
+        "Business Region",
+        "Pincode",
+        "Phone",
+        "CP Type",
+        "SM Name",
+        "SM Email ID",
+        "SM Mobile Number",
+        "KYC Status",
+        "Actions"
+      ],
+      "buttons": [
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Reset Filters\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text tabl)",
+        "\"Refresh\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text tabl)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Search by Phone\"]"
+      ],
+      "tabs": [],
+      "selects": [
+        "10 / page"
+      ],
+      "stats": [],
+      "rows": 10,
+      "pageTitle": "HoABL | Admin",
+      "emptyText": ""
+    }
+  },
+  "jbp": {
+    "log": [
+      "Navigating to https://uat-web.xrportal.in/admin/jbp-management",
+      "URL after load: https://uat-web.xrportal.in/admin/jbp-management",
+      "CAPTURED: jbp-loaded.png",
+      "Headings: [\"h5: \\\"JBP Management\\\"\",\"h3: \\\"Cycles\\\"\"]",
+      "Columns: [\"Cycle Name\",\"Start Date\",\"End Date\",\"Status\",\"Action\"]",
+      "Buttons: [\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Create Cycle\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\"]",
+      "Inputs: [\"input[placeholder=\\\"Start Date\\\"]\",\"input[placeholder=\\\"End Date\\\"]\"]",
+      "Tabs: [\"Cycle Management\",\"Submissions\",\"Edit Requests\"]",
+      "Selects: [\"10 / page\"]",
+      "Rows visible: 10",
+      "Empty state: \"\"",
+      "CAPTURED tab: jbp-tab-cycle-management.png",
+      "  Tab \"Cycle Management\" columns: [\"Cycle Name\",\"Start Date\",\"End Date\",\"Status\",\"Action\"]",
+      "  Tab \"Cycle Management\" buttons: [\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Create Cycle\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\"]",
+      "  Tab \"Cycle Management\" rows: 10",
+      "CAPTURED tab: jbp-tab-submissions.png",
+      "  Tab \"Submissions\" columns: [\"Cycle Name\",\"Start Date\",\"End Date\",\"Status\",\"Action\",\"CP Name\",\"HV Code\",\"CP Email\",\"CP Phone\",\"Cycle\",\"Submitted\",\"Version\",\"Action\"]",
+      "  Tab \"Submissions\" buttons: [\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Create Cycle\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Filters\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text filt)\",\"\\\"Refresh\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text refr)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\"]",
+      "  Tab \"Submissions\" rows: 20",
+      "CAPTURED tab: jbp-tab-edit-requests.png",
+      "  Tab \"Edit Requests\" columns: [\"Cycle Name\",\"Start Date\",\"End Date\",\"Status\",\"Action\",\"CP Name\",\"HV Code\",\"CP Email\",\"CP Phone\",\"Cycle\",\"Submitted\",\"Version\",\"Action\",\"CP Name\",\"HV Code\",\"CP Phone\",\"Cycle\",\"Reason\",\"Requested\",\"Status\",\"Action\"]",
+      "  Tab \"Edit Requests\" buttons: [\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Create Cycle\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Filters\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text filt)\",\"\\\"Refresh\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text refr)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\",\"\\\"View\\\" (ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link view-ac)\"]",
+      "  Tab \"Edit Requests\" rows: 30",
+      "First row action buttons: [\"Closed\"]",
+      "CAPTURED: jbp-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h5: \"JBP Management\"",
+        "h3: \"Cycles\""
+      ],
+      "columns": [
+        "Cycle Name",
+        "Start Date",
+        "End Date",
+        "Status",
+        "Action"
+      ],
+      "buttons": [
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Create Cycle\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Start Date\"]",
+        "input[placeholder=\"End Date\"]"
+      ],
+      "tabs": [
+        "Cycle Management",
+        "Submissions",
+        "Edit Requests"
+      ],
+      "selects": [
+        "10 / page"
+      ],
+      "stats": [],
+      "rows": 10,
+      "pageTitle": "HoABL | Admin",
+      "emptyText": ""
+    }
+  },
+  "offers": {
+    "log": [
+      "Navigating to https://uat-web.xrportal.in/admin/offers",
+      "URL after load: https://uat-web.xrportal.in/admin/offers",
+      "CAPTURED: offers-loaded.png",
+      "Headings: [\"h5: \\\"Offers Management\\\"\"]",
+      "Columns: [\"Sr.no\",\"Offer Name\",\"Description\",\"Amount\",\"Percentage\",\"Start Date\",\"End Date\",\"Created By\",\"Action\",\"Sr.no\",\"Offer Name\",\"Description\",\"Amount\",\"Percentage\",\"Start Date\",\"End Date\",\"Created By\",\"Action\"]",
+      "Buttons: [\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Refresh\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Add New Offer\\\" (ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid )\",\"\\\"ON\\nOFF\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"ON\\nOFF\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"ON\\nOFF\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"ON\\nOFF\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"ON\\nOFF\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"ON\\nOFF\\\" (ant-switch css-17wfwcs ant-switch-checked)\"]",
+      "Inputs: []",
+      "Tabs: []",
+      "Selects: []",
+      "Rows visible: 6",
+      "Empty state: \"\"",
+      "First row last-col: \"ON\nOFF\"",
+      "First row action buttons: [\"ON\\nOFF\",\"\",\"\"]",
+      "CAPTURED: offers-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h5: \"Offers Management\""
+      ],
+      "columns": [
+        "Sr.no",
+        "Offer Name",
+        "Description",
+        "Amount",
+        "Percentage",
+        "Start Date",
+        "End Date",
+        "Created By",
+        "Action",
+        "Sr.no",
+        "Offer Name",
+        "Description",
+        "Amount",
+        "Percentage",
+        "Start Date",
+        "End Date",
+        "Created By",
+        "Action"
+      ],
+      "buttons": [
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Refresh\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Add New Offer\" (ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid )",
+        "\"ON\nOFF\" (ant-switch css-17wfwcs ant-switch-checked)",
+        "\"ON\nOFF\" (ant-switch css-17wfwcs ant-switch-checked)",
+        "\"ON\nOFF\" (ant-switch css-17wfwcs ant-switch-checked)",
+        "\"ON\nOFF\" (ant-switch css-17wfwcs ant-switch-checked)",
+        "\"ON\nOFF\" (ant-switch css-17wfwcs ant-switch-checked)",
+        "\"ON\nOFF\" (ant-switch css-17wfwcs ant-switch-checked)"
+      ],
+      "inputs": [],
+      "tabs": [],
+      "selects": [],
+      "stats": [],
+      "rows": 6,
+      "pageTitle": "HoABL | Admin",
+      "emptyText": ""
+    }
+  },
+  "payment-transactions": {
+    "log": [
+      "Navigating to https://uat-web.xrportal.in/admin/payment-transactions",
+      "URL after load: https://uat-web.xrportal.in/admin/payment-transactions",
+      "CAPTURED: payment-transactions-loaded.png",
+      "Headings: [\"h5: \\\"Transactions\\\"\"]",
+      "Columns: [\"Sr. No.\",\"Registration No.\",\"Transaction ID\",\"Source\",\"Status\",\"Unit Reg No.\",\"Customer Name\",\"Phone\",\"Payment Type\",\"Amount Paid\",\"Payment Date\",\"Method\",\"Created By\",\"Actions\",\"Sr. No.\",\"Registration No.\",\"Transaction ID\",\"Source\",\"Status\",\"Unit Reg No.\",\"Customer Name\",\"Phone\",\"Payment Type\",\"Amount Paid\",\"Payment Date\",\"Method\",\"Created By\",\"Actions\"]",
+      "Buttons: [\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Refresh\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Export\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Settings\\\" (ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid)\"]",
+      "Inputs: [\"input[placeholder=\\\"Start Date\\\"]\",\"input[placeholder=\\\"End Date\\\"]\",\"input[placeholder=\\\"Search by Name, Phone, Registration No.\\\"]\"]",
+      "Tabs: [\"Payment Transactions\"]",
+      "Selects: [\"10 / page\"]",
+      "Rows visible: 10",
+      "Empty state: \"\"",
+      "CAPTURED: payment-gateway-settings.png",
+      "Gateway section buttons: [\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"View Tower\\\" ()\",\"\\\"Active\\nInactive\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"View Tower\\\" ()\",\"\\\"Active\\nInactive\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"View Tower\\\" ()\",\"\\\"Active\\nInactive\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"View Tower\\\" ()\",\"\\\"Active\\nInactive\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"View Tower\\\" ()\",\"\\\"Active\\nInactive\\\" (ant-switch css-17wfwcs)\",\"\\\"View Tower\\\" ()\",\"\\\"Active\\nInactive\\\" (ant-switch css-17wfwcs ant-switch-checked)\",\"\\\"View Tower\\\" ()\"]",
+      "Gateway section inputs: []",
+      "First row action buttons: []",
+      "CAPTURED: payment-transactions-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h5: \"Transactions\""
+      ],
+      "columns": [
+        "Sr. No.",
+        "Registration No.",
+        "Transaction ID",
+        "Source",
+        "Status",
+        "Unit Reg No.",
+        "Customer Name",
+        "Phone",
+        "Payment Type",
+        "Amount Paid",
+        "Payment Date",
+        "Method",
+        "Created By",
+        "Actions",
+        "Sr. No.",
+        "Registration No.",
+        "Transaction ID",
+        "Source",
+        "Status",
+        "Unit Reg No.",
+        "Customer Name",
+        "Phone",
+        "Payment Type",
+        "Amount Paid",
+        "Payment Date",
+        "Method",
+        "Created By",
+        "Actions"
+      ],
+      "buttons": [
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Refresh\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Export\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Settings\" (ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Start Date\"]",
+        "input[placeholder=\"End Date\"]",
+        "input[placeholder=\"Search by Name, Phone, Registration No.\"]"
+      ],
+      "tabs": [
+        "Payment Transactions"
+      ],
+      "selects": [
+        "10 / page"
+      ],
+      "stats": [],
+      "rows": 10,
+      "pageTitle": "HoABL | Admin",
+      "emptyText": ""
+    }
+  },
+  "sales-managers": {
+    "log": [
+      "Navigating to https://uat-web.xrportal.in/admin/sales-managers",
+      "URL after load: https://uat-web.xrportal.in/admin/sales-managers",
+      "CAPTURED: sales-managers-loaded.png",
+      "Headings: [\"h5: \\\"Sales Managers\\\"\"]",
+      "Columns: [\"First Name\",\"Last Name\",\"Email\",\"Phone\",\"Role\",\"Assignable\",\"Is Active\",\"Created At\",\"Actions\",\"First Name\",\"Last Name\",\"Email\",\"Phone\",\"Role\",\"Assignable\",\"Is Active\",\"Created At\",\"Actions\"]",
+      "Buttons: [\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Logout\\\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)\",\"\\\"Settings\\\" (ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid )\",\"\\\"Add Sales Manager\\\" (ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid )\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\",\"\\\"Edit\\\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)\"]",
+      "Inputs: [\"input[placeholder=\\\"Search by name, email, or phone\\\"]\"]",
+      "Tabs: []",
+      "Selects: []",
+      "Rows visible: 10",
+      "Empty state: \"\"",
+      "First row action buttons: [\"Edit\"]",
+      "CAPTURED: sales-managers-full.png"
+    ],
+    "dom": {
+      "headings": [
+        "h5: \"Sales Managers\""
+      ],
+      "columns": [
+        "First Name",
+        "Last Name",
+        "Email",
+        "Phone",
+        "Role",
+        "Assignable",
+        "Is Active",
+        "Created At",
+        "Actions",
+        "First Name",
+        "Last Name",
+        "Email",
+        "Phone",
+        "Role",
+        "Assignable",
+        "Is Active",
+        "Created At",
+        "Actions"
+      ],
+      "buttons": [
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Logout\" (ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlin)",
+        "\"Settings\" (ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid )",
+        "\"Add Sales Manager\" (ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid )",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)",
+        "\"Edit\" (ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text view)"
+      ],
+      "inputs": [
+        "input[placeholder=\"Search by name, email, or phone\"]"
+      ],
+      "tabs": [],
+      "selects": [],
+      "stats": [],
+      "rows": 10,
+      "pageTitle": "HoABL | Sales Manager",
+      "emptyText": ""
+    }
+  }
+}

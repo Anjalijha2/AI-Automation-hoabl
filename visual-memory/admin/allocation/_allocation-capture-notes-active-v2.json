@@ -1,0 +1,117 @@
+{
+  "results": {
+    "Rounds UI": {
+      "file": "allocation-rounds-view.png",
+      "status": "UNREACHABLE",
+      "note": "No \"Round\" tab or text on Active STATIC campaign detail. Tabs: []. Headings: [\"H2: Static Campaign Details\",\"H3: PE QA : Camp Test 4\",\"H4: Campaign Actions\"]. Detail buttons: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"]. BRD §10.4 may pertain to a future feature OR to a Physical Event Active campaign (none currently seeded in UAT).",
+      "selectors": {}
+    },
+    "Stop Allocation": {
+      "file": "allocation-stop-modal.png",
+      "status": "CAPTURED",
+      "note": "Triggered from Actions column in Active row; modal title \"Stop Allocation Now?\".",
+      "selectors": {
+        "modalContainer": ".ant-modal-content",
+        "modalTitle": ".ant-modal-title",
+        "modalBody": ".ant-modal-body",
+        "modalFooter": ".ant-modal-footer",
+        "confirmButtonHints": [
+          "button:has-text(\"Close\")",
+          "button:has-text(\"Yes, Stop Now\")"
+        ],
+        "cancelButtonHints": [],
+        "allModalButtons": [
+          {
+            "text": "Close",
+            "cls": "ant-btn css-mncuj7 ant-btn-default ant-btn-color-default ant-btn-variant-outlined",
+            "type": "button"
+          },
+          {
+            "text": "Yes, Stop Now",
+            "cls": "ant-btn css-mncuj7 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid",
+            "type": "button"
+          }
+        ]
+      }
+    },
+    "Cancel Allocation": {
+      "file": "allocation-cancel-modal.png",
+      "status": "UNREACHABLE",
+      "note": "Cancel action not surfaced in row OR did not open a modal. Row buttons: [\"Stop\"]. Row links: [\"View\"].",
+      "selectors": {}
+    }
+  },
+  "evidence": {
+    "rowActionsHtml": "<td class=\"ant-table-cell\"><div style=\"display: flex; gap: 12px; align-items: center;\"><a href=\"/admin/allocation/campaigns/289\" data-discover=\"true\" style=\"color: rgb(0, 0, 0); display: inline-flex; align-items: center; gap: 6px;\"><span role=\"img\" aria-label=\"eye\" class=\"anticon anticon-eye\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"eye\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z\"></path></svg></span><span>View</span></a><button aria-describedby=\":r1g:\" type=\"button\" class=\"ant-btn css-17wfwcs ant-btn-link ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-link\"><span class=\"ant-btn-icon\"><span role=\"img\" aria-label=\"stop\" class=\"anticon anticon-stop\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"stop\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372 0-89 31.3-170.8 83.5-234.8l523.3 523.3C682.8 852.7 601 884 512 884zm288.5-137.2L277.2 223.5C341.2 171.3 423 140 512 140c205.4 0 372 166.6 372 372 0 89-31.3 170.8-83.5 234.8z\"></path></svg></span></span><span>Stop</span></button></div></td>",
+    "rowActionsButtons": [
+      {
+        "text": "Stop",
+        "aria": "",
+        "cls": "ant-btn css-17wfwcs ant-btn-link ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-link",
+        "disabled": false
+      }
+    ],
+    "rowActionsLinks": [
+      {
+        "text": "View",
+        "href": "/admin/allocation/campaigns/289",
+        "cls": ""
+      }
+    ],
+    "rowActionsRaw": "PE QA : Camp Test 4\tSTATIC\t2026-06-02 13:48\t2026-06-02 19:00\tActive\t\nView\nStop",
+    "detailUrl": "https://uat-web.xrportal.in/admin/allocation/campaigns/289",
+    "detailHeadings": [
+      "H2: Static Campaign Details",
+      "H3: PE QA : Camp Test 4",
+      "H4: Campaign Actions"
+    ],
+    "detailTabs": [],
+    "detailButtons": [
+      "Logout",
+      "Logout",
+      "Back to Allocation Overview",
+      "Download Bookings"
+    ],
+    "detailFullText": "Customers\nConfig\nAllocation\nOffers\nTowers\nJBP Mgmt\nChannel Partners\nSales Managers\nTransactions\nCMS\nLogout\nBack to Allocation Overview\nStatic Campaign Details\nPE QA : Camp Test 4\nActive\nStatic\nStart Time: 2026-06-02 13:48 (IST)\nEnd Time: 2026-06-02 19:00 (IST)\nInitial Pending Registrations\n8450\nTotal Units Sold\n0\nPending Registrations\n8450\nCampaign Actions\nDownload Bookings\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved.",
+    "stopModal": {
+      "title": "Stop Allocation Now?",
+      "body": "Stop Allocation Now?\nCampaign will move to Stopped.\nClose\nYes, Stop Now",
+      "btns": [
+        {
+          "text": "Close",
+          "cls": "ant-btn css-mncuj7 ant-btn-default ant-btn-color-default ant-btn-variant-outlined",
+          "type": "button"
+        },
+        {
+          "text": "Yes, Stop Now",
+          "cls": "ant-btn css-mncuj7 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid",
+          "type": "button"
+        }
+      ]
+    },
+    "cancelModal": null,
+    "log": [
+      "Navigating to Allocation overview...",
+      "  project = \"Xanadu Test Project\"",
+      "  status filter = \"Active\"",
+      "  Active rows visible: 1",
+      "  Row Actions buttons: [\"Stop\"]",
+      "  Row Actions links  : [\"View\"]",
+      "\n--- STOP MODAL ---",
+      "  Stop: CAPTURED. title=\"Stop Allocation Now?\" body=\"Stop Allocation Now?\nCampaign will move to Stopped.\nClose\nYes, Stop Now\"",
+      "  Rows after dismissing Stop modal: 1",
+      "\n--- CANCEL MODAL ---",
+      "  Cancel: trigger not clicked.",
+      "\n--- ROUNDS UI ---",
+      "  detail URL: https://uat-web.xrportal.in/admin/allocation/campaigns/289",
+      "  headings: [\"H2: Static Campaign Details\",\"H3: PE QA : Camp Test 4\",\"H4: Campaign Actions\"]",
+      "  tabs: []",
+      "  buttons: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"]",
+      "  Rounds: UNREACHABLE — no \"Round\" anywhere on STATIC Active detail.",
+      "\n========== SUMMARY ==========",
+      "UNREACHABLE  Rounds UI -> allocation-rounds-view.png  (No \"Round\" tab or text on Active STATIC campaign detail. Tabs: []. Headings: [\"H2: Static Campaign Details\",\"H3: PE QA : Camp Test 4\",\"H4: Campaign Actions\"]. Detail buttons: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"]. BRD §10.4 may pertain to a future feature OR to a Physical Event Active campaign (none currently seeded in UAT).)",
+      "CAPTURED     Stop Allocation -> allocation-stop-modal.png  (Triggered from Actions column in Active row; modal title \"Stop Allocation Now?\".)",
+      "UNREACHABLE  Cancel Allocation -> allocation-cancel-modal.png  (Cancel action not surfaced in row OR did not open a modal. Row buttons: [\"Stop\"]. Row links: [\"View\"].)"
+    ]
+  }
+}

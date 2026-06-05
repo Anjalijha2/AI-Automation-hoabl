@@ -1,0 +1,115 @@
+{
+  "cookies": [
+    {
+      "name": "CLID",
+      "value": "d87e602371c346218f4a849eda6e9bc8.20260603.20270603",
+      "domain": "www.clarity.ms",
+      "path": "/",
+      "expires": 1812003573.327517,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_clck",
+      "value": "zotwms%5E2%5Eg6l%5E0%5E2345",
+      "domain": ".xrportal.in",
+      "path": "/",
+      "expires": 1812003574,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "MUID",
+      "value": "0FE9BCBB6A706B982468ABD66BEB6A81",
+      "domain": ".bing.com",
+      "path": "/",
+      "expires": 1814163575.650905,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "MR",
+      "value": "0",
+      "domain": ".c.bing.com",
+      "path": "/",
+      "expires": 1781072375.651058,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "SRM_B",
+      "value": "0FE9BCBB6A706B982468ABD66BEB6A81",
+      "domain": ".c.bing.com",
+      "path": "/",
+      "expires": 1814163575.651109,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "SM",
+      "value": "C",
+      "domain": ".c.clarity.ms",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "MUID",
+      "value": "0FE9BCBB6A706B982468ABD66BEB6A81",
+      "domain": ".clarity.ms",
+      "path": "/",
+      "expires": 1814163575.904228,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "MR",
+      "value": "0",
+      "domain": ".c.clarity.ms",
+      "path": "/",
+      "expires": 1781072375.904329,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ANONCHK",
+      "value": "0",
+      "domain": ".c.clarity.ms",
+      "path": "/",
+      "expires": 1780468175.904368,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_clsk",
+      "value": "1aak4u%5E1780467590832%5E2%5E1%5Ev.clarity.ms%2Fcollect",
+      "domain": ".xrportal.in",
+      "path": "/",
+      "expires": 1780553990,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://uat.xrportal.in",
+      "localStorage": [
+        {
+          "name": "forceLogout",
+          "value": "\"1780467588725\""
+        }
+      ]
+    }
+  ]
+}

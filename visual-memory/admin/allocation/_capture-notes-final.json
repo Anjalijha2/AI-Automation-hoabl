@@ -1,0 +1,14 @@
+{
+  "log": [
+    "Navigating to allocation page...",
+    "Selecting project...",
+    "Looking for Upcoming campaign Cancel button...",
+    "Cancel buttons found on Upcoming rows: 0",
+    "Alt cancel link count: 0",
+    "UNREACHABLE: No Cancel trigger found on Upcoming rows",
+    "Looking for Dynamic campaign View link...",
+    "Dynamic rows found: 0",
+    "UNREACHABLE: No Dynamic campaign rows found"
+  ],
+  "timestamp": "2026-06-02T10:41:33.949Z"
+}

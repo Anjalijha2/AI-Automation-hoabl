@@ -1,0 +1,28 @@
+{
+  "result": {
+    "campaign": "PE QA : Camp Test 3",
+    "file": "allocation-cancel-modal.png",
+    "status": "UNREACHABLE",
+    "note": "Target campaign \"PE QA : Camp Test 3\" not found on Upcoming list under first project. Visible Upcoming row count = 0.",
+    "selectors": {}
+  },
+  "evidence": {
+    "upcomingRowCount": 0,
+    "matchedRowText": "",
+    "rowActionsHtml": "",
+    "rowActionsButtons": [],
+    "rowActionsLinks": [],
+    "modal": null,
+    "log": [
+      "Navigating to Allocation overview...",
+      "  project picked = \"Xanadu Test Project\" (option 0 of 1)",
+      "  status filter = \"Upcoming\"",
+      "  Upcoming rows visible: 0",
+      "  Target campaign \"PE QA : Camp Test 3\" not found on current page.",
+      "  Falling back to search-by-name to surface the target row.",
+      "  searched by name = \"PE QA : Camp Test 3\"",
+      "  Upcoming rows visible: 0",
+      "  Target campaign \"PE QA : Camp Test 3\" not found on current page."
+    ]
+  }
+}

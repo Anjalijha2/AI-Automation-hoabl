@@ -1,0 +1,255 @@
+{
+  "results": {
+    "1 (Rounds UI)": {
+      "file": "allocation-rounds-view.png",
+      "status": "UNREACHABLE",
+      "note": "Not present on any inspected campaign detail. Action may require Active/Upcoming status not present in UAT."
+    },
+    "4 (Stop Allocation modal)": {
+      "file": "allocation-stop-modal.png",
+      "status": "UNREACHABLE",
+      "note": "Not present on any inspected campaign detail. Action may require Active/Upcoming status not present in UAT."
+    },
+    "5 (Cancel Allocation modal)": {
+      "file": "allocation-cancel-modal.png",
+      "status": "UNREACHABLE",
+      "note": "Not present on any inspected campaign detail. Action may require Active/Upcoming status not present in UAT."
+    }
+  },
+  "domNotes": {
+    "triedPaths": [
+      "STATIC campaign"
+    ],
+    "staticDetail": {
+      "url": "https://uat-web.xrportal.in/admin/allocation/campaigns/282",
+      "buttons": [
+        {
+          "text": "Logout",
+          "aria": "",
+          "disabled": false
+        },
+        {
+          "text": "Logout",
+          "aria": "",
+          "disabled": false
+        },
+        {
+          "text": "Back to Allocation Overview",
+          "aria": "",
+          "disabled": false
+        },
+        {
+          "text": "Download Bookings",
+          "aria": "",
+          "disabled": false
+        }
+      ],
+      "links": [
+        {
+          "text": "Customers",
+          "href": "/admin/customers"
+        },
+        {
+          "text": "Config",
+          "href": "/admin/cms"
+        },
+        {
+          "text": "Allocation",
+          "href": "/admin/allocation"
+        },
+        {
+          "text": "Offers",
+          "href": "/admin/offers"
+        },
+        {
+          "text": "Towers",
+          "href": "/admin/towers"
+        },
+        {
+          "text": "JBP Mgmt",
+          "href": "/admin/jbp-management"
+        },
+        {
+          "text": "Channel Partners",
+          "href": "/admin/channel-partners"
+        },
+        {
+          "text": "Sales Managers",
+          "href": "/admin/sales-managers"
+        },
+        {
+          "text": "Transactions",
+          "href": "/admin/payment-transactions"
+        },
+        {
+          "text": "CMS",
+          "href": "https://manage-uat.xrportal.in/admin/auth/login"
+        },
+        {
+          "text": "Customers",
+          "href": "/admin/customers"
+        },
+        {
+          "text": "Config",
+          "href": "/admin/cms"
+        },
+        {
+          "text": "Allocation",
+          "href": "/admin/allocation"
+        },
+        {
+          "text": "Offers",
+          "href": "/admin/offers"
+        },
+        {
+          "text": "Towers",
+          "href": "/admin/towers"
+        },
+        {
+          "text": "JBP Mgmt",
+          "href": "/admin/jbp-management"
+        },
+        {
+          "text": "Partners",
+          "href": "/admin/channel-partners"
+        },
+        {
+          "text": "Managers",
+          "href": "/admin/sales-managers"
+        },
+        {
+          "text": "Transactions",
+          "href": "/admin/payment-transactions"
+        },
+        {
+          "text": "CMS",
+          "href": "https://manage-uat.xrportal.in/admin/auth/login"
+        }
+      ],
+      "tabs": [],
+      "headings": [
+        "H2: Static Campaign Details",
+        "H3: Test Static Flow (offer changes)-18/05/26",
+        "H4: Campaign Actions"
+      ],
+      "body": "Customers\nConfig\nAllocation\nOffers\nTowers\nJBP Mgmt\nChannel Partners\nSales Managers\nTransactions\nCMS\nLogout\nBack to Allocation Overview\nStatic Campaign Details\nTest Static Flow (offer changes)-18/05/26\nStopped\nStatic\nStart Time: 2026-05-18 11:50 (IST)\nEnd Time: 2026-05-23 00:00 (IST)\nDescription: Testing Static changes offer's & VC request\nInitial Pending Registrations\n8484\nTotal Units Sold\n1\nPending Registrations\n8483\nCampaign Actions\nDownload Bookings\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    },
+    "stoppedDetail": {},
+    "allButtonsByCampaign": {
+      "STATIC-Stopped": {
+        "url": "https://uat-web.xrportal.in/admin/allocation/campaigns/282",
+        "buttons": [
+          {
+            "text": "Logout",
+            "aria": "",
+            "disabled": false
+          },
+          {
+            "text": "Logout",
+            "aria": "",
+            "disabled": false
+          },
+          {
+            "text": "Back to Allocation Overview",
+            "aria": "",
+            "disabled": false
+          },
+          {
+            "text": "Download Bookings",
+            "aria": "",
+            "disabled": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Customers",
+            "href": "/admin/customers"
+          },
+          {
+            "text": "Config",
+            "href": "/admin/cms"
+          },
+          {
+            "text": "Allocation",
+            "href": "/admin/allocation"
+          },
+          {
+            "text": "Offers",
+            "href": "/admin/offers"
+          },
+          {
+            "text": "Towers",
+            "href": "/admin/towers"
+          },
+          {
+            "text": "JBP Mgmt",
+            "href": "/admin/jbp-management"
+          },
+          {
+            "text": "Channel Partners",
+            "href": "/admin/channel-partners"
+          },
+          {
+            "text": "Sales Managers",
+            "href": "/admin/sales-managers"
+          },
+          {
+            "text": "Transactions",
+            "href": "/admin/payment-transactions"
+          },
+          {
+            "text": "CMS",
+            "href": "https://manage-uat.xrportal.in/admin/auth/login"
+          },
+          {
+            "text": "Customers",
+            "href": "/admin/customers"
+          },
+          {
+            "text": "Config",
+            "href": "/admin/cms"
+          },
+          {
+            "text": "Allocation",
+            "href": "/admin/allocation"
+          },
+          {
+            "text": "Offers",
+            "href": "/admin/offers"
+          },
+          {
+            "text": "Towers",
+            "href": "/admin/towers"
+          },
+          {
+            "text": "JBP Mgmt",
+            "href": "/admin/jbp-management"
+          },
+          {
+            "text": "Partners",
+            "href": "/admin/channel-partners"
+          },
+          {
+            "text": "Managers",
+            "href": "/admin/sales-managers"
+          },
+          {
+            "text": "Transactions",
+            "href": "/admin/payment-transactions"
+          },
+          {
+            "text": "CMS",
+            "href": "https://manage-uat.xrportal.in/admin/auth/login"
+          }
+        ],
+        "tabs": [],
+        "headings": [
+          "H2: Static Campaign Details",
+          "H3: Test Static Flow (offer changes)-18/05/26",
+          "H4: Campaign Actions"
+        ],
+        "body": "Customers\nConfig\nAllocation\nOffers\nTowers\nJBP Mgmt\nChannel Partners\nSales Managers\nTransactions\nCMS\nLogout\nBack to Allocation Overview\nStatic Campaign Details\nTest Static Flow (offer changes)-18/05/26\nStopped\nStatic\nStart Time: 2026-05-18 11:50 (IST)\nEnd Time: 2026-05-23 00:00 (IST)\nDescription: Testing Static changes offer's & VC request\nInitial Pending Registrations\n8484\nTotal Units Sold\n1\nPending Registrations\n8483\nCampaign Actions\nDownload Bookings\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+      }
+    }
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "results": {
+    "1 (Rounds UI)": {
+      "file": "allocation-rounds-view.png",
+      "status": "UNREACHABLE",
+      "note": "No Rounds tab/section found on campaign detail. Detail tabs: "
+    },
+    "2 (Export UI)": {
+      "file": "allocation-export-ui.png",
+      "status": "UNREACHABLE",
+      "note": "No Export button on current view."
+    },
+    "3 (Notify UI)": {
+      "file": "allocation-notify-ui.png",
+      "status": "UNREACHABLE",
+      "note": "No Notify button on current view."
+    },
+    "4 (Stop Allocation modal)": {
+      "file": "allocation-stop-modal.png",
+      "status": "UNREACHABLE",
+      "note": "No Stop button on current view."
+    },
+    "5 (Cancel Allocation modal)": {
+      "file": "allocation-cancel-modal.png",
+      "status": "UNREACHABLE",
+      "note": "No Cancel button on current view."
+    },
+    "6 (Form validation errors)": {
+      "file": "allocation-form-validation-errors.png",
+      "status": "CAPTURED",
+      "note": ""
+    },
+    "7 (Empty table state)": {
+      "file": "allocation-empty-state.png",
+      "status": "CAPTURED",
+      "note": "Search for no-match. Rows=0."
+    }
+  },
+  "domNotes": {
+    "pageText": "Customers\nConfig\nAllocation\nOffers\nTowers\nJBP Mgmt\nChannel Partners\nSales Managers\nTransactions\nCMS\nLogout\nAllocation\nNew Allocation Campaign\nProject *\nSelect Project\nCampaign Name *\nAllocation Type *\nStatic\nStart Time (IST) *\nEnd Time (IST) *\nDescription / Notes\n0 / 255\nResetSave Campaign\nSelect Project\nAll Status\nAll Types\nRefresh\nCampaign Name\tAllocation Type\tStart Time\tEnd Time\tStatus\tActions\nPlease select a project to view campaigns\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved.",
+    "sidebarActive": "Allocation",
+    "projectSelectorState": {},
+    "campaignTableHeaders": [
+      "Campaign Name",
+      "Allocation Type",
+      "Start Time",
+      "End Time",
+      "Status",
+      "Actions"
+    ],
+    "campaignTableRowCount": 10,
+    "campaignRowStatuses": [
+      [
+        "test",
+        "PHYSICAL_EVENT",
+        "2026-05-29 15:29",
+        "2026-05-30 15:52",
+        "Completed",
+        "View"
+      ],
+      [
+        "PE QA : Camp Test 3",
+        "PHYSICAL_EVENT",
+        "2026-05-24 16:04",
+        "2026-05-30 00:00",
+        "Stopped",
+        "View"
+      ],
+      [
+        "Test Physical Event Camp [23-05-26]-02",
+        "PHYSICAL_EVENT",
+        "2026-05-23 17:03",
+        "2026-05-31 00:00",
+        "Stopped",
+        "View"
+      ],
+      [
+        "Test Physical Event Camp [23-05-26]-01",
+        "PHYSICAL_EVENT",
+        "2026-05-23 14:13",
+        "2026-05-31 00:00",
+        "Stopped",
+        "View"
+      ],
+      [
+        "Test Physical Event Camp [20-05-26]",
+        "PHYSICAL_EVENT",
+        "2026-05-20 15:01",
+        "2026-05-31 00:00",
+        "Stopped",
+        "View"
+      ],
+      [
+        "Test Physical Event Camp [20-05-26]",
+        "PHYSICAL_EVENT",
+        "2026-05-20 15:03",
+        "2026-05-31 00:00",
+        "Cancelled",
+        "View"
+      ],
+      [
+        "Test Static Flow (offer changes)-18/05/26",
+        "STATIC",
+        "2026-05-18 11:50",
+        "2026-05-23 00:00",
+        "Stopped",
+        "View"
+      ],
+      [
+        "Test Physical Event Camp [15-05-26]",
+        "PHYSICAL_EVENT",
+        "2026-05-15 12:22",
+        "2026-05-24 00:00",
+        "Stopped",
+        "View"
+      ],
+      [
+        "Test Physical Event Camp [14-05-26]",
+        "PHYSICAL_EVENT",
+        "2026-05-14 19:45",
+        "2026-05-31 00:00",
+        "Stopped",
+        "View"
+      ],
+      [
+        "Test Physical Event Camp [13-05-26]",
+        "PHYSICAL_EVENT",
+        "2026-05-13 12:40",
+        "2026-05-25 00:00",
+        "Stopped",
+        "View"
+      ]
+    ],
+    "campaignActions": [],
+    "roundsUi": {
+      "url": "https://uat-web.xrportal.in/admin/allocation",
+      "tabs": [],
+      "headings": ["H5: Allocation", "H5: New Allocation Campaign"],
+      "bodySnippet": "Customers\nConfig\nAllocation\nOffers\nTowers\nJBP Mgmt\nChannel Partners\nSales Managers\nTransactions\nCMS\nLogout\nAllocation\nNew Allocation Campaign\nProject *\nSelect Project\nCampaign Name *\nAllocation Type *\nStatic\nStart Time (IST) *\nEnd Time (IST) *\nDescription / Notes\n0 / 255\nResetSave Campaign\nXanadu Test Project\nAll Status\nAll Types\nRefresh\nCampaign Name\tAllocation Type\tStart Time\tEnd Time\tStatus\tActions\ntest\tPHYSICAL_EVENT\t2026-05-29 15:29\t2026-05-30 15:52\tCompleted\t\nView\n\nPE QA : Camp Test 3\tPHYSICAL_EVENT\t2026-05-24 16:04\t2026-05-30 00:00\tStopped\t\nView\n\nTest Physical Event Camp [23-05-26]-02\tPHYSICAL_EVENT\t2026-05-23 17:03\t2026-05-31 00:00\tStopped\t\nView\n\nTest Physical Event Camp [23-05-26]-01\tPHYSICAL_EVENT\t2026-05-23 14:13\t2026-05-31 00:00\tStopped\t\nView\n\nTest Physical Event Camp [20-05-26]\tPHYSICAL_EVENT\t2026-05-20 15:01\t2026-05-31 00:00\tStopped\t\nView\n\nTest Physical Event Camp [20-05-26]\tPHYSICAL_EVENT\t2026-05-20 15:03\t2026-05-31 00:00\tCancelled\t\nView\n\nTest Static Flow (offer changes)-18/05/26\tSTATIC\t2026-05-18 11:50\t2026-05-23 00:00\tStopped\t\nView\n\nTest Physical Event Camp [15-05-26]\tPHYSICAL_EVENT\t2026-05-15 12:22\t2026-05-24 00:00\tStopped\t\nView\n\nTest Physical Event Camp [14-05-26]\tPHYSICAL_EVENT\t2026-05-14 19:45\t2026-05-31 00:00\tStopped\t\nView\n\nTest Physical Event Camp [13-05-26]\tPHYSICAL_EVENT\t2026-05-13 12:40\t2026-05-25 00:00\tStopped\t\nView\nTotal 273 campaigns\n1\n2\n3\n4\n5\n•••\n28\n10 / page\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+    },
+    "exportUi": {},
+    "notifyUi": {},
+    "stopModal": {},
+    "cancelModal": {},
+    "formValidation": {
+      "errorCount": 4,
+      "errorMessages": [
+        "Project *\nSelect Project\nProject is required",
+        "Project is required",
+        "Campaign Name *\nCampaign name is required",
+        "Campaign name is required",
+        "Start Time (IST) *\nStart time is required",
+        "Start time is required",
+        "End Time (IST) *\nEnd time is required",
+        "End time is required"
+      ]
+    },
+    "emptyState": {
+      "found": true,
+      "rowCount": 0,
+      "text": "No campaigns found",
+      "variant": "search-no-match"
+    }
+  }
+}

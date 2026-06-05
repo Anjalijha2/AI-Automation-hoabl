@@ -1,0 +1,83 @@
+{
+  "results": {
+    "Rounds UI": {
+      "file": "allocation-rounds-view.png",
+      "status": "UNREACHABLE",
+      "note": "No \"Round\" tab or section on Active campaign detail. Tabs observed: []. Headings: [\"H2: Static Campaign Details\",\"H3: PE QA : Camp Test 4\",\"H4: Campaign Actions\"]. Buttons: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"].",
+      "selectors": {}
+    },
+    "Stop Allocation": {
+      "file": "allocation-stop-modal.png",
+      "status": "UNREACHABLE",
+      "note": "No Stop button or no modal opened on Active campaign detail. Buttons observed: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"].",
+      "selectors": {}
+    },
+    "Cancel Allocation": {
+      "file": "allocation-cancel-modal.png",
+      "status": "UNREACHABLE",
+      "note": "No Cancel Allocation/Campaign button or no modal opened. Buttons observed: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"].",
+      "selectors": {}
+    }
+  },
+  "domNotes": {
+    "activeRowFound": true,
+    "activeRowText": "PE QA : Camp Test 4\tSTATIC\t2026-06-02 13:48\t2026-06-02 19:00\tActive\t\nView\nStop",
+    "detailUrl": "https://uat-web.xrportal.in/admin/allocation/campaigns/289",
+    "detailHeadings": [
+      "H2: Static Campaign Details",
+      "H3: PE QA : Camp Test 4",
+      "H4: Campaign Actions"
+    ],
+    "detailTabs": [],
+    "detailButtons": [
+      "Logout",
+      "Logout",
+      "Back to Allocation Overview",
+      "Download Bookings"
+    ],
+    "detailLinks": [
+      "Customers (/admin/customers)",
+      "Config (/admin/cms)",
+      "Allocation (/admin/allocation)",
+      "Offers (/admin/offers)",
+      "Towers (/admin/towers)",
+      "JBP Mgmt (/admin/jbp-management)",
+      "Channel Partners (/admin/channel-partners)",
+      "Sales Managers (/admin/sales-managers)",
+      "Transactions (/admin/payment-transactions)",
+      "CMS (https://manage-uat.xrportal.in/admin/auth/login)",
+      "Customers (/admin/customers)",
+      "Config (/admin/cms)",
+      "Allocation (/admin/allocation)",
+      "Offers (/admin/offers)",
+      "Towers (/admin/towers)",
+      "JBP Mgmt (/admin/jbp-management)",
+      "Partners (/admin/channel-partners)",
+      "Managers (/admin/sales-managers)",
+      "Transactions (/admin/payment-transactions)",
+      "CMS (https://manage-uat.xrportal.in/admin/auth/login)"
+    ],
+    "detailBodyExcerpt": "Customers\nConfig\nAllocation\nOffers\nTowers\nJBP Mgmt\nChannel Partners\nSales Managers\nTransactions\nCMS\nLogout\nBack to Allocation Overview\nStatic Campaign Details\nPE QA : Camp Test 4\nActive\nStatic\nStart Time: 2026-06-02 13:48 (IST)\nEnd Time: 2026-06-02 19:00 (IST)\nInitial Pending Registrations\n8450\nTotal Units Sold\n0\nPending Registrations\n8450\nCampaign Actions\nDownload Bookings\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved.",
+    "log": [
+      "Navigating to Allocation overview...",
+      "  pickFirstProject: selected \"Xanadu Test Project\"",
+      "  pickStatus: filter set to \"Active\"",
+      "  After Active filter: 1 rows visible",
+      "  clickViewOnFirstRow: 1 rows visible",
+      "\nOn Active campaign detail. Row was: PE QA : Camp Test 4\tSTATIC\t2026-06-02 13:48\t2026-06-02 19:00\tActive\t | View | Stop",
+      "  detail URL: https://uat-web.xrportal.in/admin/allocation/campaigns/289",
+      "  headings: [\"H2: Static Campaign Details\",\"H3: PE QA : Camp Test 4\",\"H4: Campaign Actions\"]",
+      "  tabs: []",
+      "  buttons: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"]",
+      "  Rounds: UNREACHABLE.",
+      "  Stop: no Stop button on detail page",
+      "  Stop: UNREACHABLE.",
+      "  Cancel: no Cancel Allocation/Campaign button on detail page",
+      "  Cancel: UNREACHABLE.",
+      "\n========== SUMMARY ==========",
+      "UNREACHABLE  Rounds UI -> allocation-rounds-view.png  (No \"Round\" tab or section on Active campaign detail. Tabs observed: []. Headings: [\"H2: Static Campaign Details\",\"H3: PE QA : Camp Test 4\",\"H4: Campaign Actions\"]. Buttons: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"].)",
+      "UNREACHABLE  Stop Allocation -> allocation-stop-modal.png  (No Stop button or no modal opened on Active campaign detail. Buttons observed: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"].)",
+      "UNREACHABLE  Cancel Allocation -> allocation-cancel-modal.png  (No Cancel Allocation/Campaign button or no modal opened. Buttons observed: [\"Logout\",\"Logout\",\"Back to Allocation Overview\",\"Download Bookings\"].)"
+    ]
+  }
+}

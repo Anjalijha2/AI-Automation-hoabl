@@ -1,0 +1,55 @@
+{
+  "results": {
+    "Rounds UI": {
+      "file": "allocation-rounds-view.png",
+      "status": "UNREACHABLE",
+      "note": "No DYNAMIC campaign exists in UAT (sweep across projects). Type filter options observed: []. BRD §3 says Rounds UI is the Dynamic allocation-type screen; zero Dynamic campaigns seeded.",
+      "selectors": {}
+    },
+    "Cancel Allocation": {
+      "file": "allocation-cancel-modal.png",
+      "status": "UNREACHABLE",
+      "note": "Zero Upcoming campaigns across all sweeped projects in UAT. Cancel action per BRD §4 Rule 5 applies only to Upcoming status. Sweep result: [{\"project\":\"Xanadu Test Project\",\"rowCount\":0}].",
+      "selectors": {}
+    }
+  },
+  "evidence": {
+    "upcomingRows": [
+      {
+        "project": "Xanadu Test Project",
+        "rowCount": 0
+      }
+    ],
+    "cancelRowActionsHtml": "",
+    "cancelRowButtons": [],
+    "cancelRowLinks": [],
+    "cancelRowText": "",
+    "cancelModal": null,
+    "dynamicSearch": {
+      "rowsByStatus": {
+        "Xanadu Test Project": 0
+      },
+      "dynamicFound": false,
+      "dynamicDetail": null,
+      "typeFilterOptions": []
+    },
+    "log": [
+      "Navigating to Allocation overview...",
+      "  project = \"Xanadu Test Project\"",
+      "\n--- CANCEL on UPCOMING ---",
+      "  status filter -> \"Upcoming\"",
+      "  Upcoming rows: 0",
+      "  No Upcoming in current project. Sweeping other projects...",
+      "  sweep[1]: out of project options (have 1)",
+      "\n--- ROUNDS on DYNAMIC campaign ---",
+      "  dynamicSweep[0]: project = \"Xanadu Test Project\"",
+      "  type filter -> \"Dynamic\"",
+      "  dynamicSweep[0]: Dynamic rows in \"Xanadu Test Project\" = 0",
+      "  dynamicSweep[1]: out of projects",
+      "  project = \"Xanadu Test Project\"",
+      "\n========== SUMMARY ==========",
+      "UNREACHABLE  Rounds UI -> allocation-rounds-view.png  (No DYNAMIC campaign exists in UAT (sweep across projects). Type filter options observed: []. BRD §3 says Rounds UI is the Dynamic allocation-type screen; zero Dynamic campaigns see…)",
+      "UNREACHABLE  Cancel Allocation -> allocation-cancel-modal.png  (Zero Upcoming campaigns across all sweeped projects in UAT. Cancel action per BRD §4 Rule 5 applies only to Upcoming status. Sweep result: [{\"project\":\"Xanadu Test Project\",\"rowCou…)"
+    ]
+  }
+}

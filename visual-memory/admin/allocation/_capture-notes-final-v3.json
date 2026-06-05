@@ -1,0 +1,15 @@
+{
+  "log": [
+    "Navigating...",
+    "Screenshot taken: _debug-v3-before-select.png",
+    "Total ant-select-selector elements: 5",
+    "Dropdown opened",
+    "Dropdown options: [\"Xanadu Test Project\"]",
+    "Xanadu option count: 1",
+    "Screenshot taken: _debug-v3-after-select.png",
+    "Rows after project select: 0",
+    "Upcoming row index: -1",
+    "Dynamic row index: -1"
+  ],
+  "timestamp": "2026-06-02T10:54:26.945Z"
+}
