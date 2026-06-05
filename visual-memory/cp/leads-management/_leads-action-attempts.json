@@ -1,0 +1,50 @@
+[
+  {
+    "idx": 0,
+    "info": {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "",
+      "title": "",
+      "cls": "reset-btn"
+    },
+    "outcome": "toast",
+    "detail": ""
+  },
+  {
+    "idx": 1,
+    "info": {
+      "tag": "svg",
+      "text": "",
+      "aria": "",
+      "title": "",
+      "cls": "[object SVGAnimatedString]"
+    },
+    "outcome": "toast",
+    "detail": ""
+  },
+  {
+    "idx": 2,
+    "info": {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "",
+      "title": "",
+      "cls": "reset-btn"
+    },
+    "outcome": "toast",
+    "detail": ""
+  },
+  {
+    "idx": 3,
+    "info": {
+      "tag": "svg",
+      "text": "",
+      "aria": "",
+      "title": "",
+      "cls": "[object SVGAnimatedString]"
+    },
+    "outcome": "toast",
+    "detail": ""
+  }
+]

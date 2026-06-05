@@ -1,0 +1,412 @@
+{
+  "inputs": [
+    {
+      "tag": "DIV",
+      "type": "",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "search",
+      "name": "",
+      "placeholder": "",
+      "id": "rc_select_0",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "placeholder": "Select Brokerage",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":rt:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":rt:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":rt:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":rt:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":rt:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":ru:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":ru:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":rv:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":rv:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r10:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r10:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r11:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r11:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r12:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r12:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r13:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r13:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r14:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "name": ":r14:",
+      "placeholder": "",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "placeholder": "Enter Count",
+      "id": "",
+      "ariaLabel": "",
+      "labelText": ""
+    }
+  ],
+  "headings": [
+    "H2: JBP Form - Automation JBP"
+  ],
+  "buttons": [
+    "Logout",
+    "Logout",
+    "Logout",
+    "Back to Dashboard",
+    "Submit"
+  ],
+  "modalPresent": false,
+  "url": "https://uat-web.xrportal.in/jbp"
+}

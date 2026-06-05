@@ -1,0 +1,60 @@
+{
+  "rowText": "1\tTestinglead CPmember\t7999999999\tRegistered\t27-02-2026 04:36:10 PM\tTest CP\tHV00026050\t7888888888\t",
+  "cellCount": 9,
+  "lastCellHtml": "<td class=\"ant-table-cell ant-table-cell-fix-right ant-table-cell-fix-right-first\" style=\"position: sticky; right: 0px; text-align: center;\"><div class=\"d-flex justify-content-center align-items-center\"><div class=\"action-btn\"><span><button class=\"reset-btn\"><svg stroke=\"currentColor\" fill=\"currentColor\" stroke-width=\"0\" viewBox=\"0 0 512 512\" class=\"copy-icon\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><title>Resend Notification</title><path d=\"M384 336a63.78 63.78 0 0 0-46.12 19.7l-148-83.27a63.85 63.85 0 0 0 0-32.86l148-83.27a63.8 63.8 0 1 0-15.73-27.87l-148 83.27a64 64 0 1 0 0 88.6l148 83.27A64 64 0 1 0 384 336z\"></path></svg></button> </span><span><button class=\"reset-btn\"><svg stroke=\"currentColor\" fill=\"currentColor\" stroke-width=\"0\" viewBox=\"0 0 24 24\" class=\"copy-icon\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><title>Copy Link</title><path fill=\"none\" d=\"M0 0h24v24H0V0z\"></path><path d=\"M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z\"></path></svg></button> </span></div></div></td>",
+  "clickableCount": 4,
+  "items": [
+    {
+      "idx": 0,
+      "tag": "BUTTON",
+      "text": "Resend Notification",
+      "cls": "reset-btn",
+      "aria": "",
+      "title": "",
+      "role": "",
+      "src": "",
+      "alt": "",
+      "dataIcon": "",
+      "inLastCell": true
+    },
+    {
+      "idx": 1,
+      "tag": "svg",
+      "text": "Resend Notification",
+      "cls": "[object SVGAnimatedString]",
+      "aria": "",
+      "title": "",
+      "role": "",
+      "src": "",
+      "alt": "",
+      "dataIcon": "",
+      "inLastCell": true
+    },
+    {
+      "idx": 2,
+      "tag": "BUTTON",
+      "text": "Copy Link",
+      "cls": "reset-btn",
+      "aria": "",
+      "title": "",
+      "role": "",
+      "src": "",
+      "alt": "",
+      "dataIcon": "",
+      "inLastCell": true
+    },
+    {
+      "idx": 3,
+      "tag": "svg",
+      "text": "Copy Link",
+      "cls": "[object SVGAnimatedString]",
+      "aria": "",
+      "title": "",
+      "role": "",
+      "src": "",
+      "alt": "",
+      "dataIcon": "",
+      "inLastCell": true
+    }
+  ]
+}

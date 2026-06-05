@@ -1,0 +1,57 @@
+{
+  "url": "https://uat-web.xrportal.in/dashboard",
+  "headings": [
+    "H2: Welcome, GP test name",
+    "H6: 1",
+    "H6: 2",
+    "H6: 0",
+    "H6: 1",
+    "H3: Customers"
+  ],
+  "radios": [
+    {
+      "value": "Indian National",
+      "name": ":r2:",
+      "labelText": "Indian National"
+    },
+    {
+      "value": "NRI",
+      "name": ":r2:",
+      "labelText": "NRI"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "phone",
+      "placeholder": "Enter Mobile Number",
+      "id": "",
+      "ariaLabel": ""
+    },
+    {
+      "name": "",
+      "placeholder": "",
+      "id": "rc_select_0",
+      "ariaLabel": ""
+    },
+    {
+      "name": "",
+      "placeholder": "Search Customer",
+      "id": "",
+      "ariaLabel": ""
+    },
+    {
+      "name": "",
+      "placeholder": "",
+      "id": "rc_select_1",
+      "ariaLabel": "Page Size"
+    }
+  ],
+  "buttons": [
+    "Logout",
+    "Logout",
+    "Copy link",
+    "Download QR Code",
+    "Create Lead"
+  ],
+  "links": []
+}

@@ -1,0 +1,41 @@
+{
+  "url": "https://uat-web.xrportal.in/leads",
+  "headings": [
+    "H3: Leads"
+  ],
+  "tableHeaders": [
+    "S.No",
+    "Applicant Name",
+    "Applicant Phone",
+    "Status",
+    "Date of Sent",
+    "CP Name",
+    "CP HV Code",
+    "CP Mobile",
+    "Action"
+  ],
+  "firstRowText": "S.No\n\t\nApplicant Name\n\t\nApplicant Phone\n\t\nStatus\n\t\nDate of Sent\n\t\nCP Name\n\t\nCP HV Code\n\t\nCP Mobile\n\t\nAction",
+  "actionButtonsInRow": [],
+  "inputs": [
+    {
+      "placeholder": "",
+      "type": "search",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "search",
+      "name": ""
+    },
+    {
+      "placeholder": "Search Customer",
+      "type": "text",
+      "name": ""
+    },
+    {
+      "placeholder": "",
+      "type": "search",
+      "name": ""
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "tabs": [
+    {
+      "text": "Current Cycle Entry",
+      "active": true
+    },
+    {
+      "text": "Current Cycle Entry",
+      "active": true
+    },
+    {
+      "text": "JBP History",
+      "active": false
+    },
+    {
+      "text": "JBP History",
+      "active": false
+    },
+    {
+      "text": "Edit Requests",
+      "active": false
+    },
+    {
+      "text": "Edit Requests",
+      "active": false
+    }
+  ],
+  "headings": [
+    "H2: JBP Dashboard",
+    "H4: Current Cycle - Automation JBP"
+  ],
+  "isOpen": false,
+  "isClosed": false,
+  "buttons": [
+    "Logout",
+    "Logout",
+    "Logout",
+    "Add New JBP Entry"
+  ],
+  "inputs": [],
+  "textSnippet": "Home\nKYC\nJBP\nLeads\nLogout\nIndia’s Biggest Growth Housing Revolution Begins On 7th April 2026.\nJBP Dashboard\nCurrent Cycle - Automation JBP\nJune 2026ACTIVE\nCloses on: 30th June 2026\nYour Status: Not Submitted\nCurrent Cycle Entry\nJBP History\nEdit Requests\nNo submission for current cycle\nAdd New JBP Entry\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+}

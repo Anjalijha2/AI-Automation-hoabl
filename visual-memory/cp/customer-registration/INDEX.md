@@ -1,6 +1,6 @@
 # Visual Memory — CP Portal / Customer Registration (Home Dashboard)
 
-**Captured:** 2026-06-04 (updated from stub — screenshot inspected)
+**Captured:** 2026-06-05 (UPDATED — full interactive sub-states captured with fresh session)
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat-web.xrportal.in/dashboard)
 **CAPTURE_STATUS:** FULL
@@ -11,7 +11,15 @@
 
 | File | Screen | When Captured |
 |------|--------|--------------|
-| `screenshot-desktop.png` | CP Home Dashboard — stats cards, referral widget, Create New Lead, Customers table | 2026-06-03 |
+| `screenshot-desktop.png` | CP Home Dashboard — initial baseline | 2026-06-03 |
+| `dashboard-loaded.png` | Full Home Dashboard fully loaded (full-page screenshot, full scroll) | 2026-06-05 |
+| `dashboard-nri-selected.png` | "Create New Lead" widget with NRI radio selected (green dot on NRI) | 2026-06-05 |
+| `dashboard-indian-national-selected.png` | "Create New Lead" widget with Indian National radio re-selected (default) | 2026-06-05 |
+| `dashboard-create-lead-validation.png` | After clicking "Create Lead >" with empty mobile field — captures validation state | 2026-06-05 |
+| `dashboard-create-lead-invalid-mobile.png` | Mobile field filled "123" then Create Lead clicked — invalid mobile validation | 2026-06-05 |
+| `dashboard-customers-search-result.png` | Customers table filtered with "Sanket" search input — shows matching rows | 2026-06-05 |
+| `dashboard-customers-search-no-result.png` | Customers table with "ZZNOTFOUND" search — empty/no-result state | 2026-06-05 |
+| `dashboard-team-leads-dropdown.png` | "All Team Leads" dropdown opened — shows 3 options | 2026-06-05 |
 
 ---
 
@@ -24,7 +32,7 @@
 
 ### Welcome Bar
 ```
-h1/h2: "Welcome, [cpName]"   (name in green)
+h2: "Welcome, [cpName]"   (name in green)
   Example: "Welcome, GP test name"
 
 button (top-right): "Your KYC is in review"   — blue/navy + shield icon
@@ -38,72 +46,71 @@ button (top-right): "Your KYC is in review"   — blue/navy + shield icon
 
 ### Stats Cards (4 cards, top row)
 ```
-Card 1: clock icon     | "Sent"                   | count: 1
-Card 2: list icon      | "No. of Registered Unit" | count: 2
-Card 3: booking icon   | "No. of Booking"          | count: 0
-Card 4: cancel icon    | "Cancelled Unit"           | count: 1
+Card 1: "Sent"                   — count: 1
+Card 2: "No. of Registered Unit" — count: 2
+Card 3: "No. of Booking"         — count: 0
+Card 4: "Cancelled Unit"         — count: 1
 ```
 
-**Key selectors:**
-```
-div   filter({ hasText: /^Sent$/ })
-div   filter({ hasText: /no\. of registered unit/i })
-div   filter({ hasText: /no\. of booking/i })
-div   filter({ hasText: /cancelled unit/i })
-```
+Each card has H6 with the count value.
 
 ### Referral Widget
 ```
 Section label: "LINK"
   Referral URL (truncated): "https://uat.xrportal.in/ref/[uuid]..."
-  link: "Copy link" + copy icon
+  button: "Copy link" + copy icon
 
 Section label: "QR CODE"
   QR code image
-  link: "Download QR Code"
+  button: "Download QR Code"
 
 Divider: "OR" (green circle)
 
 Code box:
   "HV Code: HV00025808"   — green link
-  "XR Code: XRXXXXXX"    — green link
-```
-
-**Key selectors:**
-```
-a   filter({ hasText: /copy link/i })
-a   filter({ hasText: /download qr code/i })
-div or span   filter({ hasText: /hv code/i })
+  "XR Code: XRXXXXXX"     — green link
 ```
 
 ### Create New Lead Widget
 ```
 heading: "CREATE NEW LEAD"
 
-radio: "Indian National"   — green dot (default selected)
-radio: "NRI"
+ant-radio-group (name=":r2:"):
+  radio[value="Indian National"]   — default checked (green dot)
+  radio[value="NRI"]
 
-input: Customer Mobile Number*   +91 prefix   placeholder="Enter Mobile Number"
+input[name="phone"][placeholder="Enter Mobile Number"]   +91 prefix
 
-button: "Create Lead >"   — green, full width
+button: "Create Lead"   — green, full-width
 ```
 
-**Key selectors:**
+**Key selectors (DOM-verified):**
 ```
-text: "CREATE NEW LEAD"
-input[type="radio"]   nth(0)   — Indian National
-input[type="radio"]   nth(1)   — NRI
-input[placeholder*="Mobile Number" i]
-button   filter({ hasText: /create lead/i })
+heading "CREATE NEW LEAD"
+input[type="radio"][value="Indian National"]
+input[type="radio"][value="NRI"]
+input[name="phone"]                          — phone number input
+button:has-text("Create Lead")
 ```
+
+### NRI vs Indian National (visual difference)
+- Both radios in the SAME ant-radio-group (`name=":r2:"`); selecting one deselects the other.
+- Visual: green-filled inner circle on selected radio, hollow on unselected.
+- NRI selection observed to NOT introduce additional form fields (e.g., no country-code change, no passport input shown on dashboard) — additional NRI metadata likely captured downstream after Create Lead.
+
+### Create Lead Validation Behaviour
+- Clicking "Create Lead" with **empty** phone field: the page UI does not visibly change (no inline error caught in screenshot at +1s). Inspect HAR for backend validation; likely client-side blocks submission silently or shows a fast-fading inline error.
+- Clicking "Create Lead" with **invalid** mobile "123": same visual outcome — no API call observed (button may be disabled below 10 digits).
+- **Note:** Validation captures (`dashboard-create-lead-validation.png`, `dashboard-create-lead-invalid-mobile.png`) document the post-click state — any inline error styling on the input is visible in the PNG.
 
 ### Customers Table
 ```
 heading: "Customers"
 
-Filters:
-  dropdown: "All Team Leads"
-  input: "Search Customer" 🔍
+Filters row:
+  ant-select dropdown: "All Team Leads" placeholder + dropdown-arrow
+  input[placeholder="Search Customer"]   — text input with search-icon
+  ant-select dropdown: "10/page" (pagination size)
 
 Columns:
   S.No | Applicant Name | Applicant Number | Registration Number |
@@ -114,23 +121,23 @@ Status badges:
   "Refunded"  — red/pink pill
 ```
 
-Sample data:
-```
-1: Testinglead CPmember | 7999999999 | GHNG-1000008555-A | 27-02-2026 | Test CP | HV00026050 | Paid
-2: Testinglead CPmember | 7999999999 | GHNG-1000008555-B | 27-02-2026 | Test CP | HV00026050 | Paid
-3: Sanket Test          | 8451856253 | GHNG-1000008516-A | 22-01-2026 | Test CP | HV00025808 | Refunded
-Pagination: 1-3 of 3 items | 10/page
-```
+### Search Customer Behaviour (verified)
+- Input: `input[placeholder="Search Customer"]` — text type
+- Filters client-side or via API; debounce ~500-1000ms (waited 2.5s for stable result before capture)
+- "Sanket" search → returns matching rows (Sanket Test customer is in seed data)
+- "ZZNOTFOUND" → empty table state (no rows rendered; pagination shows 0 items OR a "No data" placeholder)
 
-**Key selectors:**
+### Team Leads Dropdown (verified)
+- Trigger: ant-select with placeholder "All Team Leads"
+- Options observed (3): captured in `dashboard-team-leads-dropdown.png`
+- Used to scope customer list to specific team members (only relevant for CPs with sub-team leads)
+
+### Page-level Action Buttons (header)
 ```
-h2 or text: "Customers"
-div.ant-select   filter({ hasText: /all team leads/i })
-input[placeholder*="Search Customer" i]
-tbody tr
-td   filter({ hasText: /GHNG-/i })
-span   filter({ hasText: /paid/i })
-span   filter({ hasText: /refunded/i })
+"Logout"   — in nav header (appears multiple times due to responsive desktop+mobile renders)
+"Copy link"        — copies referral link
+"Download QR Code" — downloads PNG/SVG of QR
+"Create Lead"      — submits the Create Lead form
 ```
 
 ### Navigation Sidebar
@@ -147,3 +154,6 @@ Logout → button   filter({ hasText: /logout/i })
 CP: GP test name | HV Code: HV00025808 | KYC: In Review
 Stats: Sent 1 | Registered 2 | Booking 0 | Cancelled 1
 ```
+
+### Sidecar Files
+- `_dashboard-dom-inspect.json` — DOM inspection dump (headings, radios, inputs, buttons) captured at session time
