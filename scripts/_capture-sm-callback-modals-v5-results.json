@@ -1,0 +1,173 @@
+{
+  "_auth": {
+    "status": "OK",
+    "note": "https://uat-web.xrportal.in/sales-manager/callback-requests"
+  },
+  "callback-row-more-menu": {
+    "status": "CAPTURED",
+    "note": "Menu items: [\"Capture VC Outcome\"]",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row-more-menu.png",
+    "bytes": 196112,
+    "overlay": {
+      "drawers": [],
+      "modals": [],
+      "dropdowns": [
+        {
+          "items": [
+            "Capture VC Outcome"
+          ]
+        }
+      ]
+    }
+  },
+  "callback-capture-vc-outcome-pending": {
+    "status": "CAPTURED",
+    "note": "Drawer=\"undefined\"; Modal=\"Capture VC Outcome\"; Radios=[]; Selects=[\"Please select an outcome\"]; Buttons=[\"Cancel\",\"Submit\"]; Sections=[]",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-capture-vc-outcome-pending.png",
+    "bytes": 171119,
+    "overlay": {
+      "drawers": [],
+      "modals": [
+        {
+          "title": "Capture VC Outcome",
+          "buttons": [
+            {
+              "text": "Cancel",
+              "disabled": false
+            },
+            {
+              "text": "Submit",
+              "disabled": false
+            }
+          ],
+          "radios": [],
+          "checkboxes": [],
+          "selects": [
+            "Please select an outcome"
+          ],
+          "inputs": [
+            {
+              "id": "rc_select_2",
+              "placeholder": "",
+              "type": "search",
+              "disabled": false
+            }
+          ],
+          "labels": [
+            "Select Outcome:"
+          ],
+          "textPreview": "Capture VC Outcome\nRegistration No: GHNG-1000008364\nCustomer Name: ishaaaaan karnik\nSelect Outcome:\nPlease select an outcome\nCancel\nSubmit"
+        }
+      ],
+      "dropdowns": []
+    },
+    "clickMeta": {
+      "ok": true
+    }
+  },
+  "_aliasedAs": {
+    "status": "OK",
+    "note": "Copied as callback-feedback-drawer.png and callback-schedule-modal.png"
+  },
+  "callback-capture-vc-outcome-validation": {
+    "status": "CAPTURED",
+    "note": "Errors: \"Capture VC Outcome\\nRegistration No: GHNG-1000008364\\nCustomer Name: ishaaaaan karnik\\nSelect Outcome:\\nPlease select an outcome\\nCancel\\nSubmit\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-capture-vc-outcome-validation.png",
+    "bytes": 174378,
+    "overlay": {
+      "drawers": [],
+      "modals": [
+        {
+          "title": "Capture VC Outcome",
+          "buttons": [
+            {
+              "text": "Cancel",
+              "disabled": false
+            },
+            {
+              "text": "Submit",
+              "disabled": false
+            }
+          ],
+          "radios": [],
+          "checkboxes": [],
+          "selects": [
+            "Please select an outcome"
+          ],
+          "inputs": [
+            {
+              "id": "rc_select_2",
+              "placeholder": "",
+              "type": "search",
+              "disabled": false
+            }
+          ],
+          "labels": [
+            "Select Outcome:"
+          ],
+          "textPreview": "Capture VC Outcome\nRegistration No: GHNG-1000008364\nCustomer Name: ishaaaaan karnik\nSelect Outcome:\nPlease select an outcome\nCancel\nSubmit"
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row-more-menu-meetingdone": {
+    "status": "CAPTURED",
+    "note": "Items: [\"Capture VC Outcome\"]",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row-more-menu-meetingdone.png",
+    "bytes": 190358,
+    "overlay": {
+      "drawers": [],
+      "modals": [],
+      "dropdowns": [
+        {
+          "items": [
+            "Capture VC Outcome"
+          ]
+        }
+      ]
+    }
+  },
+  "callback-capture-vc-outcome-meetingdone": {
+    "status": "CAPTURED",
+    "note": "Drawer=\"undefined\"; Modal=\"Capture VC Outcome\"; Selects=[\"Please select an outcome\"]; Buttons=[\"Cancel\",\"Submit\"]; TextPreview: Capture VC Outcome\nRegistration No: GHNG-2000000009\nCustomer Name: Supriya Dubey\nSelect Outcome:\nPlease select an outcome\nCancel\nSubmit",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-capture-vc-outcome-meetingdone.png",
+    "bytes": 169034,
+    "overlay": {
+      "drawers": [],
+      "modals": [
+        {
+          "title": "Capture VC Outcome",
+          "buttons": [
+            {
+              "text": "Cancel",
+              "disabled": false
+            },
+            {
+              "text": "Submit",
+              "disabled": false
+            }
+          ],
+          "radios": [],
+          "checkboxes": [],
+          "selects": [
+            "Please select an outcome"
+          ],
+          "inputs": [
+            {
+              "id": "rc_select_2",
+              "placeholder": "",
+              "type": "search",
+              "disabled": false
+            }
+          ],
+          "labels": [
+            "Select Outcome:"
+          ],
+          "textPreview": "Capture VC Outcome\nRegistration No: GHNG-2000000009\nCustomer Name: Supriya Dubey\nSelect Outcome:\nPlease select an outcome\nCancel\nSubmit"
+        }
+      ],
+      "dropdowns": []
+    }
+  }
+}

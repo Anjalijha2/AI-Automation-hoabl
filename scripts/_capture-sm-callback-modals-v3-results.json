@@ -1,0 +1,848 @@
+{
+  "_auth": {
+    "status": "OK",
+    "note": "https://uat-web.xrportal.in/sales-manager/callback-requests"
+  },
+  "_rowStatuses": {
+    "status": "OK",
+    "note": "10 rows",
+    "rows": [
+      {
+        "idx": 0,
+        "status": "PENDING",
+        "reqId": "REQ-00075",
+        "actionItems": 4
+      },
+      {
+        "idx": 1,
+        "status": "PENDING",
+        "reqId": "REQ-00074",
+        "actionItems": 4
+      },
+      {
+        "idx": 2,
+        "status": "MEETING DONE",
+        "reqId": "REQ-00073",
+        "actionItems": 4
+      },
+      {
+        "idx": 3,
+        "status": "MEETING DONE",
+        "reqId": "REQ-00072",
+        "actionItems": 4
+      },
+      {
+        "idx": 4,
+        "status": "MEETING DONE",
+        "reqId": "REQ-00071",
+        "actionItems": 4
+      },
+      {
+        "idx": 5,
+        "status": "PENDING",
+        "reqId": "REQ-00070",
+        "actionItems": 4
+      },
+      {
+        "idx": 6,
+        "status": "MEETING DONE",
+        "reqId": "REQ-00069",
+        "actionItems": 4
+      },
+      {
+        "idx": 7,
+        "status": "MEETING DONE",
+        "reqId": "REQ-00068",
+        "actionItems": 4
+      },
+      {
+        "idx": 8,
+        "status": "MEETING DONE",
+        "reqId": "REQ-00067",
+        "actionItems": 4
+      },
+      {
+        "idx": 9,
+        "status": "MEETING DONE",
+        "reqId": "REQ-00066",
+        "actionItems": 4
+      }
+    ]
+  },
+  "callback-create-drawer": {
+    "status": "CAPTURED",
+    "note": "Initial state. Fields disabled count=4",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-create-drawer.png",
+    "bytes": 142944,
+    "dom": {
+      "title": "Create Callback Request",
+      "labels": [
+        "To (Buyer Email)",
+        "To (Buyer Email)",
+        "To (Sales Manager Email)",
+        "To (Sales Manager Email)",
+        "CC",
+        "CC",
+        "Select Date & Time",
+        "Select Date & Time"
+      ],
+      "inputs": [
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "Search by Name, Mobile Number, GHNG Number, Email",
+          "type": "search",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "buyerEmail",
+          "placeholder": "Buyer email",
+          "type": "text",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "managerEmail",
+          "placeholder": "Sales manager email",
+          "type": "text",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "ccEmails",
+          "placeholder": "",
+          "type": "search",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "requestedAt",
+          "placeholder": "Select date & time",
+          "type": "text",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": ""
+        }
+      ],
+      "buttons": [
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-drawer-close"
+        },
+        {
+          "text": "Search",
+          "disabled": false,
+          "classes": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-primary ant-btn-variant-solid ant-btn-lg ant-input"
+        },
+        {
+          "text": "Cancel",
+          "disabled": false,
+          "classes": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined"
+        },
+        {
+          "text": "Create",
+          "disabled": true,
+          "classes": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid"
+        }
+      ],
+      "tabs": [],
+      "radios": [],
+      "selects": [
+        "Add CC emails"
+      ],
+      "sections": [],
+      "errors": [],
+      "allText": "Create Callback Request\nSearch\n\tRegistration Number\tName\tPrevious Callbacks\tEmail\tPhone\t\n \n\t\nRegistration Number\n\t\nName\n\t\nPrevious Callbacks\n\t\nEmail\n\t\nPhone\n\n\nSearch to view matching customers\nTo (Buyer Email)\nTo (Sales Manager Email)\nCC\nAdd CC emails\nSelect Date & Time\nCancel\nCreate"
+    }
+  },
+  "_createSearchSuggestions": {
+    "status": "OK",
+    "note": "0 suggestions",
+    "suggestions": []
+  },
+  "callback-create-drawer-searched": {
+    "status": "CAPTURED",
+    "note": "After buyer search \"Anjali\"; disabled inputs=4 / total=16",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-create-drawer-searched.png",
+    "bytes": 208475,
+    "dom": {
+      "title": "Create Callback Request",
+      "labels": [
+        "To (Buyer Email)",
+        "To (Buyer Email)",
+        "To (Sales Manager Email)",
+        "To (Sales Manager Email)",
+        "CC",
+        "CC",
+        "Select Date & Time",
+        "Select Date & Time"
+      ],
+      "inputs": [
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "Search by Name, Mobile Number, GHNG Number, Email",
+          "type": "search",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "Anjali"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "rc_select_3",
+          "placeholder": "",
+          "type": "search",
+          "ariaLabel": "Page Size",
+          "readOnly": false,
+          "disabled": false,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "buyerEmail",
+          "placeholder": "Buyer email",
+          "type": "text",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "managerEmail",
+          "placeholder": "Sales manager email",
+          "type": "text",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "ccEmails",
+          "placeholder": "",
+          "type": "search",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "requestedAt",
+          "placeholder": "Select date & time",
+          "type": "text",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": ""
+        }
+      ],
+      "buttons": [
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-drawer-close"
+        },
+        {
+          "text": "Search",
+          "disabled": false,
+          "classes": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-primary ant-btn-variant-solid ant-btn-lg ant-input"
+        },
+        {
+          "text": "",
+          "disabled": true,
+          "classes": "ant-pagination-item-link"
+        },
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-pagination-item-link"
+        },
+        {
+          "text": "Cancel",
+          "disabled": false,
+          "classes": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined"
+        },
+        {
+          "text": "Create",
+          "disabled": true,
+          "classes": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid"
+        }
+      ],
+      "tabs": [],
+      "radios": [],
+      "selects": [
+        "10 / page",
+        "Add CC emails"
+      ],
+      "sections": [],
+      "errors": [],
+      "allText": "Create Callback Request\nSearch\n\tRegistration Number\tName\tPrevious Callbacks\tEmail\tPhone\t\n \n\t\nRegistration Number\n\t\nName\n\t\nPrevious Callbacks\n\t\nEmail\n\t\nPhone\n\n\n\t\nGHNG-2000000039\n\tAnjali Apostrophe\t-\ttest@gmail.com\t+911111545456\n\n\t\nGHNG-2000000036\n\tAnjali Spacetest\t-\ttest@gmail.com\t+911111456777\n\n\t\nGHNG-2000000033\n\tAnjali QATestLEAD\t1\tanjali@sudhasolutions.in\t+912111111207\n\n\t\nGHNG-2000000022\n\tMilestoneTest CustomerLead\t-\tanjali+test01@sudhasolutions.in\t+919999999997\n\n\t\nGHNG-2000000020\n\tTest QAlead3\t1\tanjali@sudhasolutions.in\t+919999999002\n\n\t\nGHNG-2000000019\n\tAnjali test\t-\tanjali@sudhasolutions.in\t+919999999001\n\n\t\nGHNG-2000000016\n\tCP Lead\t-\tanjali+1@sudhasolutions.in\t+919503067304\n\n\t\nGHNG-2000000014\n\tAnjali WhatsAppTemp\t5\tanjali+wp@sudhasolutions.in\t+917666470638\n\n\t\nGHNG-2000000013\n\tCustomer TestingLead\t1\tanjali+c11@sudhasolutions.in\t+911188888811\n\n\t\nGHNG-2000000012\n\tAnjali fam\t-\tanjali+c@sudhasolutions.in\t+911888888880\n1-10 of 55 items\n1\n2\n3\n4\n5\n6\n10 / page\nTo (Buyer Email)\nTo (Sales Manager Email)\nCC\nAdd CC emails\nSelect Date & Time\nCancel\nCreate"
+    }
+  },
+  "callback-create-drawer-validation": {
+    "status": "CAPTURED",
+    "note": "Create btn disabled=true; Errors=[]",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-create-drawer-validation.png",
+    "bytes": 209547,
+    "dom": {
+      "title": "Create Callback Request",
+      "labels": [
+        "To (Buyer Email)",
+        "To (Buyer Email)",
+        "To (Sales Manager Email)",
+        "To (Sales Manager Email)",
+        "CC",
+        "CC",
+        "Select Date & Time",
+        "Select Date & Time"
+      ],
+      "inputs": [
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "Search by Name, Mobile Number, GHNG Number, Email",
+          "type": "search",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "Anjali"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "",
+          "placeholder": "",
+          "type": "radio",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": "on"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "rc_select_3",
+          "placeholder": "",
+          "type": "search",
+          "ariaLabel": "Page Size",
+          "readOnly": false,
+          "disabled": false,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "buyerEmail",
+          "placeholder": "Buyer email",
+          "type": "text",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": "anjali+c@sudhasolutions.in"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "managerEmail",
+          "placeholder": "Sales manager email",
+          "type": "text",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": true,
+          "value": "test2@test.com"
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "ccEmails",
+          "placeholder": "",
+          "type": "search",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": ""
+        },
+        {
+          "tag": "input",
+          "name": "",
+          "id": "requestedAt",
+          "placeholder": "Select date & time",
+          "type": "text",
+          "ariaLabel": "",
+          "readOnly": false,
+          "disabled": false,
+          "value": ""
+        }
+      ],
+      "buttons": [
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-drawer-close"
+        },
+        {
+          "text": "Search",
+          "disabled": false,
+          "classes": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-primary ant-btn-variant-solid ant-btn-lg ant-input"
+        },
+        {
+          "text": "",
+          "disabled": true,
+          "classes": "ant-pagination-item-link"
+        },
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-pagination-item-link"
+        },
+        {
+          "text": "Cancel",
+          "disabled": false,
+          "classes": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined"
+        },
+        {
+          "text": "Create",
+          "disabled": true,
+          "classes": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid"
+        }
+      ],
+      "tabs": [],
+      "radios": [],
+      "selects": [
+        "10 / page",
+        "Add CC emails"
+      ],
+      "sections": [],
+      "errors": [],
+      "allText": "Create Callback Request\nSearch\n\tRegistration Number\tName\tPrevious Callbacks\tEmail\tPhone\t\n \n\t\nRegistration Number\n\t\nName\n\t\nPrevious Callbacks\n\t\nEmail\n\t\nPhone\n\n\n\t\nGHNG-2000000039\n\tAnjali Apostrophe\t-\ttest@gmail.com\t+911111545456\n\n\t\nGHNG-2000000036\n\tAnjali Spacetest\t-\ttest@gmail.com\t+911111456777\n\n\t\nGHNG-2000000033\n\tAnjali QATestLEAD\t1\tanjali@sudhasolutions.in\t+912111111207\n\n\t\nGHNG-2000000022\n\tMilestoneTest CustomerLead\t-\tanjali+test01@sudhasolutions.in\t+919999999997\n\n\t\nGHNG-2000000020\n\tTest QAlead3\t1\tanjali@sudhasolutions.in\t+919999999002\n\n\t\nGHNG-2000000019\n\tAnjali test\t-\tanjali@sudhasolutions.in\t+919999999001\n\n\t\nGHNG-2000000016\n\tCP Lead\t-\tanjali+1@sudhasolutions.in\t+919503067304\n\n\t\nGHNG-2000000014\n\tAnjali WhatsAppTemp\t5\tanjali+wp@sudhasolutions.in\t+917666470638\n\n\t\nGHNG-2000000013\n\tCustomer TestingLead\t1\tanjali+c11@sudhasolutions.in\t+911188888811\n\n\t\nGHNG-2000000012\n\tAnjali fam\t-\tanjali+c@sudhasolutions.in\t+911888888880\n1-10 of 55 items\n1\n2\n3\n4\n5\n6\n10 / page\nTo (Buyer Email)\nTo (Sales Manager Email)\nCC\nAdd CC emails\nSelect Date & Time\nCancel\nCreate"
+    }
+  },
+  "_pendingRowClick": {
+    "status": "OK",
+    "note": "row=0; {\"ok\":true,\"what\":\"SPAN\",\"classes\":\"anticon anticon-eye\",\"html\":\"<div style=\\\"display: flex; justify-content: center; align-items: center; gap: 8px;\\\"><span role=\\\"img\\\" aria-label=\\\"eye\\\" aria-describedby=\\\":r25:\\\" tabindex=\\\"-1\\\" class=\\\"anticon anticon-eye\\\" style=\\\"color: rgb(80, 185, 95); font-size: 18px; cursor: pointer;\\\"><svg viewBox=\\\"64 64 896 896\\\" focusable=\\\"false\\\" d\"}"
+  },
+  "callback-details-drawer-pending": {
+    "status": "CAPTURED",
+    "note": "Title=\"Callback Request Details\"; Buttons=[]; Tabs=[\"Callback Request\",\"Callback Request\",\"Feedback\",\"Feedback\",\"Callback History\",\"Callback History\"]",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-details-drawer-pending.png",
+    "bytes": 187611,
+    "dom": {
+      "title": "Callback Request Details",
+      "labels": [],
+      "inputs": [],
+      "buttons": [
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-drawer-close"
+        },
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-tabs-nav-more"
+        }
+      ],
+      "tabs": [
+        {
+          "text": "Callback Request",
+          "active": true
+        },
+        {
+          "text": "Callback Request",
+          "active": true
+        },
+        {
+          "text": "Feedback",
+          "active": false
+        },
+        {
+          "text": "Feedback",
+          "active": false
+        },
+        {
+          "text": "Callback History",
+          "active": false
+        },
+        {
+          "text": "Callback History",
+          "active": false
+        }
+      ],
+      "radios": [],
+      "selects": [],
+      "sections": [
+        "Customer Information",
+        "Registration Preferences",
+        "Description",
+        "Customer Units"
+      ],
+      "errors": [],
+      "allText": "Callback Request Details\nCallback Request\nFeedback\nCallback History\nCustomer Information\nCustomer Name\nishaaaaan karnik\nEmail Address\nISHaaAAN.KARNIK@GMAIL.COM\nMobile Number\n8888888888\nRegistration Number\nGHNG-1000008364\nRequested At\n04 Jun 2026, 05:00 PM\nStatus\nREQUESTED\nRegistration Preferences\nHome Loan Required\nNo\nBudget Amount\nNot provided\nPreferred Floor Min\nNot provided\nPreferred Floor Max\nNot provided\nPurpose of Purchase\nNot provided\nDescription\ntest comment\nCustomer Units\nUnit Number\tApartment Type\tCarpet Area\tStatus\nGHNG-1000008364-A\t2 Bed Rise Home\t621 sq.ft\tREGISTERED\nGHNG-1000008364-C\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-1000008364-D\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-1000008364-E\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-1000008364-F\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-1000008364-G\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-1000008364-H\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-1000008364-I\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-1000008364-J\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-1000008364-K\t2 Bed Rise Home\t621 sq.ft\tREGISTERED"
+    }
+  },
+  "callback-schedule-modal": {
+    "status": "NOT_IN_PENDING",
+    "note": "No Schedule/Send Invite button. Btns=[]"
+  },
+  "_meetingDoneRowClick": {
+    "status": "OK",
+    "note": "row=2; {\"ok\":true,\"what\":\"SPAN\",\"classes\":\"anticon anticon-eye\",\"html\":\"<div style=\\\"display: flex; justify-content: center; align-items: center; gap: 8px;\\\"><span role=\\\"img\\\" aria-label=\\\"eye\\\" aria-describedby=\\\":r2l:\\\" tabindex=\\\"-1\\\" class=\\\"anticon anticon-eye\\\" style=\\\"color: rgb(80, 185, 95); font-size: 18px; cursor: pointer;\\\"><svg viewBox=\\\"64 64 896 896\\\" focusable=\\\"false\\\" d\"}"
+  },
+  "callback-details-drawer-meetingdone": {
+    "status": "CAPTURED",
+    "note": "Title=\"Callback Request Details\"; Buttons=[]; Radios=[]; Selects=[]; Sections=[\"Customer Information\",\"Registration Preferences\",\"Description\",\"Customer Units\"]",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-details-drawer-meetingdone.png",
+    "bytes": 193623,
+    "dom": {
+      "title": "Callback Request Details",
+      "labels": [],
+      "inputs": [],
+      "buttons": [
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-drawer-close"
+        },
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-tabs-nav-more"
+        }
+      ],
+      "tabs": [
+        {
+          "text": "Callback Request",
+          "active": true
+        },
+        {
+          "text": "Callback Request",
+          "active": true
+        },
+        {
+          "text": "Feedback",
+          "active": false
+        },
+        {
+          "text": "Feedback",
+          "active": false
+        },
+        {
+          "text": "Callback History",
+          "active": false
+        },
+        {
+          "text": "Callback History",
+          "active": false
+        }
+      ],
+      "radios": [],
+      "selects": [],
+      "sections": [
+        "Customer Information",
+        "Registration Preferences",
+        "Description",
+        "Customer Units"
+      ],
+      "errors": [],
+      "allText": "Callback Request Details\nCallback Request\nFeedback\nCallback History\nCustomer Information\nCustomer Name\nSupriya Dubey\nEmail Address\npriyasd96@gmail.com\nMobile Number\n9167746035\nRegistration Number\nGHNG-2000000009\nRequested At\n23 May 2026, 12:45 PM\nStatus\nCONFIRMED\nRegistration Preferences\nHome Loan Required\nYes\nBudget Amount\n36 L+ to 40 L+\nPreferred Floor Min\n7\nPreferred Floor Max\n10\nPurpose of Purchase\nSelf-use\nDescription\nNo description provided\nCustomer Units\nUnit Number\tApartment Type\tCarpet Area\tStatus\nGHNG-2000000009-A\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-B\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-C\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-D\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-E\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-F\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-G\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-H\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-I\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-J\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-K\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-L\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-M\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-N\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-O\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-P\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-Q\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-R\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-S\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-T\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-U\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-V\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-W\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-X\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-Y\t2 Bed Rise Home\t621 sq.ft\tREGISTERED\nGHNG-2000000009-Z\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-AA\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-AB\t1 Bed Growth Home\t323 sq.ft\tREGISTERED\nGHNG-2000000009-AC\t2 Bed Growth Home\t485 sq.ft\tREGISTERED\nGHNG-2000000009-AD\t2 Bed Rise Home\t621 sq.ft\tREGISTERED"
+    }
+  },
+  "callback-feedback-drawer": {
+    "status": "CAPTURED_INLINE",
+    "note": "Feedback inline in details drawer (radios=0, selects mentioning feedback)",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-feedback-drawer.png",
+    "bytes": 193623,
+    "dom": {
+      "title": "Callback Request Details",
+      "labels": [],
+      "inputs": [],
+      "buttons": [
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-drawer-close"
+        },
+        {
+          "text": "",
+          "disabled": false,
+          "classes": "ant-tabs-nav-more"
+        }
+      ],
+      "tabs": [
+        {
+          "text": "Callback Request",
+          "active": true
+        },
+        {
+          "text": "Callback Request",
+          "active": true
+        },
+        {
+          "text": "Feedback",
+          "active": false
+        },
+        {
+          "text": "Feedback",
+          "active": false
+        },
+        {
+          "text": "Callback History",
+          "active": false
+        },
+        {
+          "text": "Callback History",
+          "active": false
+        }
+      ],
+      "radios": [],
+      "selects": [],
+      "sections": [
+        "Customer Information",
+        "Registration Preferences",
+        "Description",
+        "Customer Units"
+      ],
+      "errors": [],
+      "allText": "Callback Request Details\nCallback Request\nFeedback\nCallback History\nCustomer Information\nCustomer Name\nSupriya Dubey\nEmail Address\npriyasd96@gmail.com\nMobile Number\n9167746035\nRegistration Number\nGHNG-2000000009\nRequested At\n23 May 2026, 12:45 PM\nStatus\nCONFIRMED\nRegistration Preferences\nHome Loan Required\nYes\nBudget Amount\n36 L+ to 40 L+\nPreferred Floor Min\n7\nPreferred Floor Max\n10\nPurpose of Purchase\nSelf-use\nDescription\nNo description provided\nCustomer Units\nUnit Number\tApartment Type\tCarpet Area\tStatus\nGHNG-2000000009-A\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-B\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-C\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-D\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-E\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-F\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-G\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-H\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-I\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-J\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-K\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-L\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-M\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-N\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-O\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-P\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-Q\t1 Bed Growth Home\t323 sq.ft\tBOOKED\nGHNG-2000000009-R\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-S\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-T\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-U\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-V\t2 Bed Growth Home\t485 sq.ft\tBOOKED\nGHNG-2000000009-W\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-X\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-Y\t2 Bed Rise Home\t621 sq.ft\tREGISTERED\nGHNG-2000000009-Z\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-AA\t2 Bed Rise Home\t621 sq.ft\tBOOKED\nGHNG-2000000009-AB\t1 Bed Growth Home\t323 sq.ft\tREGISTERED\nGHNG-2000000009-AC\t2 Bed Growth Home\t485 sq.ft\tREGISTERED\nGHNG-2000000009-AD\t2 Bed Rise Home\t621 sq.ft\tREGISTERED"
+    }
+  }
+}

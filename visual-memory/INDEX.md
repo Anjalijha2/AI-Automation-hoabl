@@ -60,6 +60,8 @@ Used as: baseline references for selectors, layout, and regression comparison.
 
 **2026-06-05:** SM-portal OTP is `258369` (same as Admin). Full capture done — all 4 modules upgraded to FULL. SM login URL is `/sales-manager` itself (not `/sales-manager/login`). Default authenticated landing is `/sales-manager/callback-requests`. Sidebar exposes 3 nav items: Callback Requests, Towers, Allocation.
 
+**2026-06-05 (modal/drawer expansion):** Callback Requests upgraded with full interactive-overlay coverage — Create Callback drawer (3 states: initial / searched / buyer-selected / validation), Callback Request Details drawer (3 tabs: Callback Request / Feedback / Callback History), more-menu dropdown, Capture VC Outcome modal + outcome dropdown (10 vcOutcome codes captured), Status column filter, and empty state. Architectural finding: the originally-asked "Schedule Meeting", "Confirm Meeting" and "Feedback" flows are all subsumed by a single "Capture VC Outcome" modal driven from the row's more menu — there is no separate Schedule/Confirm modal in current UI.
+
 | Module              | Index                                                              | Status |
 | ------------------- | ------------------------------------------------------------------ | ------ |
 | Login               | [sm/login/INDEX.md](sm/login/INDEX.md)                             | FULL   |

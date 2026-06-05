@@ -1,0 +1,24 @@
+{
+  "_auth": {
+    "status": "OK",
+    "note": "https://uat-web.xrportal.in/sales-manager/callback-requests"
+  },
+  "callback-vc-outcome-dropdown": {
+    "status": "CAPTURED",
+    "note": "Outcomes (10): [\"VC Done with Preference\",\"VC Done, No Preference\",\"Future Scheduled\",\"Future Rescheduled\",\"Missed Scheduled NC\",\"Not Interested, Lost\",\"Never Connected\",\"TL Lost\",\"VC 2-Done\",\"CP to Drive Preference\"]",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-vc-outcome-dropdown.png",
+    "bytes": 179740,
+    "options": [
+      "VC Done with Preference",
+      "VC Done, No Preference",
+      "Future Scheduled",
+      "Future Rescheduled",
+      "Missed Scheduled NC",
+      "Not Interested, Lost",
+      "Never Connected",
+      "TL Lost",
+      "VC 2-Done",
+      "CP to Drive Preference"
+    ]
+  }
+}

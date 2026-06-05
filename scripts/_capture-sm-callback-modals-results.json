@@ -1,0 +1,447 @@
+{
+  "_auth": {
+    "status": "OK",
+    "note": "Landed at https://uat-web.xrportal.in/sales-manager/callback-requests"
+  },
+  "callback-create-drawer": {
+    "status": "CAPTURED",
+    "note": "Drawer captured",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-create-drawer.png",
+    "bytes": 147748,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Create Callback Request",
+          "labels": [
+            "To (Buyer Email)",
+            "To (Buyer Email)",
+            "To (Sales Manager Email)",
+            "To (Sales Manager Email)",
+            "CC",
+            "CC",
+            "Select Date & Time",
+            "Select Date & Time"
+          ],
+          "inputs": [
+            {
+              "tag": "input",
+              "name": "",
+              "placeholder": "Search by Name, Mobile Number, GHNG Number, Email",
+              "type": "search",
+              "label": ""
+            },
+            {
+              "tag": "input",
+              "name": "",
+              "placeholder": "Buyer email",
+              "type": "text",
+              "label": ""
+            },
+            {
+              "tag": "input",
+              "name": "",
+              "placeholder": "Sales manager email",
+              "type": "text",
+              "label": ""
+            },
+            {
+              "tag": "input",
+              "name": "",
+              "placeholder": "",
+              "type": "search",
+              "label": ""
+            },
+            {
+              "tag": "input",
+              "name": "",
+              "placeholder": "Select date & time",
+              "type": "text",
+              "label": ""
+            }
+          ],
+          "radios": [],
+          "selects": [
+            "Add CC emails"
+          ],
+          "buttons": [
+            "Search",
+            "Cancel",
+            "Create"
+          ]
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-create-drawer-validation": {
+    "status": "ERROR",
+    "note": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.ant-drawer-open button:has-text(\"Submit\"), .ant-drawer-open button:has-text(\"Save\"), .ant-drawer-open button:has-text(\"Create\"), .ant-drawer button:has-text(\"Submit\"), .ant-drawer button:has-text(\"Save\"), .ant-drawer button:has-text(\"Create\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled type=\"button\" class=\"ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    45 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+  },
+  "callback-status-filter": {
+    "status": "CAPTURED",
+    "note": "Status filter dropdown",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-status-filter.png",
+    "bytes": 200261,
+    "dom": {
+      "modals": [],
+      "drawers": [],
+      "dropdowns": [
+        {
+          "items": [
+            "Pending",
+            "Resent Invite",
+            "Sent Invite",
+            "Meeting Done"
+          ]
+        },
+        {
+          "items": [
+            "Pending",
+            "Resent Invite",
+            "Sent Invite",
+            "Meeting Done"
+          ]
+        }
+      ]
+    }
+  },
+  "callback-row0-action0": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row0-action0-modal.png",
+    "bytes": 193050,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row0-action1": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row0-action1-modal.png",
+    "bytes": 191061,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row1-action0": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row1-action0-modal.png",
+    "bytes": 188626,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row1-action1": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row1-action1-modal.png",
+    "bytes": 193902,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row2-action0": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row2-action0-modal.png",
+    "bytes": 188123,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row2-action1": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row2-action1-modal.png",
+    "bytes": 188123,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row3-action0": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row3-action0-modal.png",
+    "bytes": 193883,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row3-action1": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row3-action1-modal.png",
+    "bytes": 188539,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row4-action0": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row4-action0-modal.png",
+    "bytes": 192419,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row4-action1": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row4-action1-modal.png",
+    "bytes": 195293,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row5-action0": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row5-action0-modal.png",
+    "bytes": 190109,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row5-action1": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row5-action1-modal.png",
+    "bytes": 190109,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row6-action0": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row6-action0-modal.png",
+    "bytes": 194952,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row6-action1": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row6-action1-modal.png",
+    "bytes": 189774,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row7-action0": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row7-action0-modal.png",
+    "bytes": 188860,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-row7-action1": {
+    "status": "CAPTURED_OTHER",
+    "note": "Modal opened (not Schedule). Title=\"Callback Request Details\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-row7-action1-modal.png",
+    "bytes": 191461,
+    "dom": {
+      "modals": [],
+      "drawers": [
+        {
+          "title": "Callback Request Details",
+          "labels": [],
+          "inputs": [],
+          "radios": [],
+          "selects": [],
+          "buttons": []
+        }
+      ],
+      "dropdowns": []
+    }
+  },
+  "callback-schedule-modal": {
+    "status": "NOT_FOUND",
+    "note": "No Schedule Meeting button found in direct buttons or row actions"
+  },
+  "callback-confirm-modal": {
+    "status": "NOT_FOUND",
+    "note": "No Confirm Meeting button found"
+  },
+  "callback-feedback-drawer": {
+    "status": "NOT_FOUND",
+    "note": "No Feedback button found"
+  },
+  "callback-empty-state": {
+    "status": "CAPTURED",
+    "note": "Empty state detected",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-empty-state.png",
+    "bytes": 85149
+  }
+}

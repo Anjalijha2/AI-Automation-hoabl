@@ -1,0 +1,153 @@
+{
+  "_auth": {
+    "status": "OK",
+    "note": "https://uat-web.xrportal.in/sales-manager/callback-requests"
+  },
+  "_rowStatuses": {
+    "status": "OK",
+    "note": "11 rows",
+    "rows": [
+      {
+        "idx": 0,
+        "status": "",
+        "cellSample": []
+      },
+      {
+        "idx": 1,
+        "status": "PENDING",
+        "cellSample": [
+          "",
+          "REQ-00075",
+          "Load Test SM #4",
+          "ishaaaaan karnik",
+          "8888888888",
+          "GHNG-1000008364"
+        ]
+      },
+      {
+        "idx": 2,
+        "status": "PENDING",
+        "cellSample": [
+          "",
+          "REQ-00074",
+          "Jainil SalesManager",
+          "IshanTesting StaticFlow",
+          "9820622438",
+          "GHNG-1000008368"
+        ]
+      },
+      {
+        "idx": 3,
+        "status": "MEETING DONE",
+        "cellSample": [
+          "",
+          "REQ-00073",
+          "anjali manager",
+          "Supriya Dubey",
+          "9167746035",
+          "GHNG-2000000009"
+        ]
+      },
+      {
+        "idx": 4,
+        "status": "MEETING DONE",
+        "cellSample": [
+          "",
+          "REQ-00072",
+          "Load Test SM #4",
+          "ishaaaaan karnik",
+          "8888888888",
+          "GHNG-1000008364"
+        ]
+      },
+      {
+        "idx": 5,
+        "status": "MEETING DONE",
+        "cellSample": [
+          "",
+          "REQ-00071",
+          "anjali manager",
+          "Anjali RegressionOfUAT",
+          "7499097796",
+          "GHNG-1000008563"
+        ]
+      },
+      {
+        "idx": 6,
+        "status": "PENDING",
+        "cellSample": [
+          "",
+          "REQ-00070",
+          "anjali manager",
+          "Anjali RegressionOfUAT",
+          "7499097796",
+          "GHNG-1000008563"
+        ]
+      },
+      {
+        "idx": 7,
+        "status": "MEETING DONE",
+        "cellSample": [
+          "",
+          "REQ-00069",
+          "Load Test SM #3",
+          "Anjali RegressionOfUAT",
+          "7499097796",
+          "GHNG-1000008563"
+        ]
+      },
+      {
+        "idx": 8,
+        "status": "MEETING DONE",
+        "cellSample": [
+          "",
+          "REQ-00068",
+          "Load Test SM #2",
+          "Supriya Dubey",
+          "9167746035",
+          "GHNG-2000000009"
+        ]
+      },
+      {
+        "idx": 9,
+        "status": "MEETING DONE",
+        "cellSample": [
+          "",
+          "REQ-00067",
+          "Supriya manager",
+          "Supriya Dubey",
+          "9167746035",
+          "GHNG-2000000009"
+        ]
+      },
+      {
+        "idx": 10,
+        "status": "MEETING DONE",
+        "cellSample": [
+          "",
+          "REQ-00066",
+          "vignesh test",
+          "SFDC Test May",
+          "9561044783",
+          "GHNG-2000000043"
+        ]
+      }
+    ]
+  },
+  "callback-create-drawer-validation": {
+    "status": "ERROR",
+    "note": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.ant-drawer input[placeholder=\"Buyer email\"]').first()\u001b[22m\n\u001b[2m    - locator resolved to <input disabled value=\"\" type=\"text\" id=\"buyerEmail\" placeholder=\"Buyer email\" class=\"ant-input ant-input-disabled ant-input-lg css-17wfwcs ant-input-outlined\"/>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    49 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n"
+  },
+  "callback-details-drawer-pending": {
+    "status": "NOT_FOUND",
+    "note": "No action button in row"
+  },
+  "callback-feedback-drawer": {
+    "status": "NOT_FOUND",
+    "note": "No action button in MEETING DONE row"
+  },
+  "callback-details-drawer-sentinvite": {
+    "status": "NOT_FOUND",
+    "note": "No SENT/RESENT INVITE row in current page"
+  }
+}
