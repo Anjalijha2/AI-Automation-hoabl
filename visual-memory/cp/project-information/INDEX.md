@@ -3,7 +3,7 @@
 **Captured:** 2026-06-04 (updated from stub)
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat-web.xrportal.in/project1/*)
-**CAPTURE_STATUS:** STUB — capture redirected to Home dashboard. Actual Project Information page not captured.
+**CAPTURE_STATUS:** DEPRECATED — Module does not exist in CP portal frontend. No sidebar link, no accessible route. Client confirmed page not implemented (same as Buyer / Support Tickets). Do not generate TCs.
 
 ---
 
@@ -43,5 +43,4 @@ Standard CP sidebar: Home | KYC | JBP | Leads — no Project link present
 Access likely via: project card on Home, embedded link, or direct URL
 ```
 
-⚠ STUB — TCs from this module carry [STUB-EVIDENCE].
-Tech Lead Agent must capture actual /project1/* screens before automation.
+⚠ DEPRECATED — No TCs should be generated for this module. Page not present in CP portal frontend.
