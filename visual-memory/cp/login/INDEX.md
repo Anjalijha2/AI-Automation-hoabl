@@ -1,6 +1,6 @@
 # Visual Memory — CP Portal / Login
 
-**Captured:** 2026-06-05 (UPDATED — login-success-dashboard captured via fresh OTP `147258`)
+**Captured:** 2026-06-05 (UPDATED — login-otp-resend-enabled captured after live 59s countdown wait)
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat-web.xrportal.in/)
 **CAPTURE_STATUS:** FULL
@@ -15,6 +15,7 @@
 | `login-initial.png` | Same login page — fresh load, mobile input empty | 2026-06-05 |
 | `login-otp-entry.png` | OTP entry screen — appears after entering 8888888888 and clicking Send OTP. 6 OTP input boxes, 60s countdown timer, Re-Send OTP (disabled), Submit OTP button | 2026-06-05 |
 | `login-otp-invalid.png` | OTP entry screen with 6 zeros filled — captured after failed Submit OTP (returned 401). Toast notification dismisses too fast for capture | 2026-06-05 |
+| `login-otp-resend-enabled.png` | OTP entry screen after the 55–60s countdown has expired — "Re-Send OTP" button is no longer disabled (rendered in active green link style, `disabled=false`). Captured by waiting ~59s after Send OTP click | 2026-06-05 |
 | `login-success-dashboard.png` | Authenticated landing page at `/dashboard` — immediately after successful OTP submission. Shows full Home Dashboard with stats cards, referral widget, Create New Lead, Customers table | 2026-06-05 |
 
 ---
@@ -74,8 +75,34 @@ heading   getByRole('heading', { name: /^enter otp$/i, level: 2 })
 group     getByRole('group')   — wraps 6 OTP inputs
 otpInput  getByRole('textbox', { name: /otp input [1-6]/i })
 button    getByRole('button',  { name: /submit otp/i })
-button    getByRole('button',  { name: /re-send otp/i })   — disabled state
+button    getByRole('button',  { name: /re-send otp/i })   — disabled while countdown active
 ```
+
+### Re-Send OTP — Enabled State (post-countdown, CAPTURED 2026-06-05)
+```
+Initial countdown observed: 58s (label varies 55–60s across loads)
+Countdown decrements 1s per tick; when it reaches 0 the timer label disappears
+Re-Send OTP button transitions from disabled → enabled at ~59s after Send OTP click
+DOM (captured live):
+  <button type="button" class="common-link"
+          style="color: rgb(80, 185, 95); font-weight: 600;">
+    Re-Send OTP
+  </button>
+  disabled = false   (no `disabled` attribute, no aria-disabled)
+```
+
+**Key selectors (enabled state):**
+```
+button   getByRole('button', { name: /re-send otp/i })
+         await expect(button).toBeEnabled()
+css      button.common-link   — class shared with other inline link-style buttons
+style    inline color rgb(80, 185, 95) (green) — used to signal active state
+```
+
+**TC notes:**
+- TC for Re-Send OTP enabled state must wait ≥60s after Send OTP click before asserting `toBeEnabled()`.
+- The visible "55s" / "58s" countdown timer is replaced by no text (no `Ns` label) once expired — selector `:text(/\d+s/)` should resolve to 0 matches at enabled state.
+- Polling pattern in capture script: poll button `isDisabled()` at 2s intervals; became enabled at the 59s mark consistently.
 
 ### Invalid OTP Behaviour
 ```
@@ -114,4 +141,30 @@ Mobile: 8888888888
 OTP:    147258   (CP portal — confirmed in CLAUDE.md table)
 Note:   Previous attempts used 258369 which is for Admin/SM portals — CP OTP is portal-specific.
         With OTP 147258, fresh storageState was generated and login-success-dashboard captured successfully.
+```
+
+### Incomplete Profile State — NOT CAPTURED (gap documented 2026-06-05)
+```
+Screen target: login-incomplete-profile.png
+Status:        SKIPPED — requires a CP test account whose registration is incomplete
+
+Probe results (unauthenticated GET):
+  /register-cp         → 200, finalUrl /login   (redirect)
+  /register            → 200, finalUrl /login   (redirect)
+  /cp-registration     → 200, finalUrl /login   (redirect)
+  /profile-completion  → 200, finalUrl /login   (redirect)
+  All register-* paths redirect to /login when unauthenticated — confirming the
+  incomplete-profile screen is post-auth gated.
+
+Blocker: The single shared UAT CP test mobile 8888888888 already has a completed
+  CP profile (logs into /dashboard directly). A second test mobile whose CP
+  registration has been started but not submitted is needed to reach the
+  RegisterCp / profile-completion screen.
+
+Action required: Provision a second UAT CP test account in an incomplete state, OR
+  obtain DB access to reset is_jbp_submitted / profile-complete flags on a sandbox
+  account, then re-run capture.
+
+Diagnostic artefact: _login-incomplete-profile-diagnostic.png (login screen rendered
+  after redirect — proves the redirect-to-login behaviour).
 ```

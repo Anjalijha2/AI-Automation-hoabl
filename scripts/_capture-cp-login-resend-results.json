@@ -1,0 +1,51 @@
+{
+  "login/login-otp-resend-enabled": {
+    "status": "CAPTURED",
+    "note": "392419 bytes",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\login\\login-otp-resend-enabled.png",
+    "bytes": 392419,
+    "resendEnabledDom": {
+      "text": "Re-Send OTP",
+      "disabled": false,
+      "ariaDisabled": null,
+      "className": "common-link",
+      "id": "",
+      "type": "button",
+      "dataset": {},
+      "outerSnippet": "<button type=\"button\" class=\"common-link\" style=\"color: rgb(80, 185, 95); font-weight: 600;\">Re-Send OTP</button>"
+    }
+  },
+  "login/login-incomplete-profile": {
+    "status": "SKIPPED",
+    "note": "Requires a CP test account with incomplete profile; only one shared test mobile (8888888888) is provisioned and already has completed registration. Captured diagnostic only.",
+    "diagnosticFile": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\login\\_login-incomplete-profile-diagnostic.png",
+    "diagnosticBytes": 389306,
+    "probes": [
+      {
+        "target": "https://uat-web.xrportal.in/register-cp",
+        "status": 200,
+        "finalUrl": "https://uat-web.xrportal.in/login",
+        "hasForm": true
+      },
+      {
+        "target": "https://uat-web.xrportal.in/register",
+        "status": 200,
+        "finalUrl": "https://uat-web.xrportal.in/login",
+        "hasForm": true
+      },
+      {
+        "target": "https://uat-web.xrportal.in/cp-registration",
+        "status": 200,
+        "finalUrl": "https://uat-web.xrportal.in/login",
+        "hasForm": true
+      },
+      {
+        "target": "https://uat-web.xrportal.in/profile-completion",
+        "status": 200,
+        "finalUrl": "https://uat-web.xrportal.in/login",
+        "hasForm": true
+      }
+    ],
+    "lastFinalUrl": "https://uat-web.xrportal.in/login"
+  }
+}

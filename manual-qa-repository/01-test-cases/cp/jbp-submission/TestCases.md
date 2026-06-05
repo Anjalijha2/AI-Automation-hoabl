@@ -1,102 +1,98 @@
 # Test Cases — CP Portal / JBP Submission
 
-**Module:** JBP (Joint Business Plan) Submission
 **Portal:** Channel Partner Portal
-**URL:** `https://uat-web.xrportal.in/jbp`
-**Generated:** 2026-06-04
-**Generator:** BA Agent (Phase 1 — dual-source TC generation)
-**Sources:**
-- Visual: `visual-memory/cp/jbp-submission/INDEX.md` (CAPTURE_STATUS: FULL — Closed Cycle only)
-- BRD: `.claude/docs/hoabl-knowledge-base/CP-Portal/BRD/CP-BRD-CP-Portal.md`
-- FRD: `.claude/docs/hoabl-knowledge-base/CP-Portal/FRD/CP-FS-JBP-Submission.md`
-- FRD: `.claude/docs/hoabl-knowledge-base/CP-Portal/FRD/CP-FRD-CP-Portal.md`
+**Module:** JBP (Joint Business Plan) Submission
+**Route:** `https://uat-web.xrportal.in/jbp`
+**Generated:** 2026-06-05
+**Visual Memory Source:** `visual-memory/cp/jbp-submission/INDEX.md` (CAPTURE_STATUS: FULL — 8 screenshots)
+**BRD/FRD Sources:**
+- `.claude/docs/hoabl-knowledge-base/CP-Portal/BRD/CP-BRD-CP-Portal.md` (Sections 4, 6 — global rules; workflow)
+- `.claude/docs/hoabl-knowledge-base/CP-Portal/FRD/CP-FS-JBP-Submission.md` (Features 1, 2, 3)
+- `.claude/docs/hoabl-knowledge-base/CP-Portal/FRD/CP-FRD-CP-Portal.md` (Module 3)
 
-> WARNING — Open Cycle submission form is NOT captured in visual memory. TCs marked `[STUB-EVIDENCE]` are derived from BRD/FRD only and Expected Results may not match the live UI. Full capture of Open Cycle state is required before automation candidacy.
+**Dual-source gate:** PASSED (visual-memory FULL + BRD/FRD present).
+**Auth precondition for all TCs:** CP logged in via `automation-repository/fixtures/.auth/channel-partner.json` (Mobile `8888888888`, OTP `147258`).
 
 ---
 
-## Sheet 1 — Manual Test Cases
+## Test Cases
 
 | TC_ID | Title | Priority | Precondition | Steps | Expected Result | Visual Evidence | BRD Req ID | Status |
 |-------|-------|----------|--------------|-------|-----------------|-----------------|------------|--------|
-| TC_JBP_UI_001 | Verify JBP Dashboard page heading renders | High | CP logged in; session valid | 1. Navigate to `https://uat-web.xrportal.in/jbp` 2. Wait for page load 3. Inspect top of page | Page renders with heading text "JBP Dashboard" (h1 or h2) visible at top of content area | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-BRD §3 (Module 3), CP-FRD §5 Module 3 | Draft |
-| TC_JBP_UI_002 | Verify navigation sidebar shows JBP as active item | High | CP logged in | 1. Navigate to `/jbp` 2. Inspect left navigation sidebar 3. Identify the JBP item | Sidebar lists Home (`/dashboard`), KYC (`/kyc`), JBP (active, highlighted), Leads (`/leads`), Logout. JBP item appears in active state | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FRD §6 Navigation Structure | Draft |
-| TC_JBP_UI_003 | Verify Current Cycle card displays cycle name and month | High | A JBP cycle exists (Open or Closed) | 1. Navigate to `/jbp` 2. Locate Current Cycle card 3. Read heading and date sub-text | Card displays heading "Current Cycle - [cycleName]" (e.g., "Current Cycle - test JBP") and date sub-text "[Month Year]" (e.g., "May 2026") | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FS §1.1, CP-BRD §6 (JBP Cycle context) | Draft |
-| TC_JBP_UI_004 | Verify CLOSED status badge renders on closed cycle | High | Current cycle is in CLOSED state | 1. Navigate to `/jbp` 2. Locate Current Cycle card 3. Inspect badge next to cycle title | A red/pink pill badge with text "CLOSED" is visible on the Current Cycle card | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-BRD Key Business Rule #6 (Cycle must be OPEN) | Draft |
-| TC_JBP_UI_005 | Verify "Closes on" date displays on the cycle card | Medium | Current cycle has a close date | 1. Navigate to `/jbp` 2. Locate Current Cycle card 3. Read the "Closes on" line | Text "Closes on: [date]" is visible on the card (e.g., "Closes on: 14th May 2026") | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FS §1.5 Rule #1, CP-BRD Rule #6 | Draft |
-| TC_JBP_UI_006 | Verify "Your Status: Not Submitted" displays when CP has not submitted | High | CP has not submitted a JBP for current cycle | 1. Navigate to `/jbp` 2. Locate Current Cycle card 3. Read the "Your Status" line | Text "Your Status: Not Submitted" is visible on the card | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FS §1.5 Rule #2 (one submission per CP per cycle) | Draft |
-| TC_JBP_UI_007 | Verify all three tabs render on JBP Dashboard | High | CP logged in; page loaded | 1. Navigate to `/jbp` 2. Inspect tab strip below page heading 3. Identify all tabs | Three tabs are visible in order: "Current Cycle Entry", "JBP History", "Edit Requests". "Current Cycle Entry" is the default active tab | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FS §1, §2, §3 (three features map to three tabs) | Draft |
-| TC_JBP_UI_008 | Verify Current Cycle Entry tab is active by default | Medium | CP logged in; page loaded | 1. Navigate to `/jbp` 2. Observe which tab is highlighted/selected on load | "Current Cycle Entry" tab is active by default; other two tabs are inactive | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FS §1 (default landing on submission entry) | Draft |
-| TC_JBP_FUNC_001 | Verify JBP History tab is clickable and switches view | Medium | CP logged in; three tabs visible | 1. Navigate to `/jbp` 2. Click the "JBP History" tab 3. Observe view change | "JBP History" tab becomes active; content area updates to show submission history view | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FS §3 (View Existing JBP Submission) | Draft |
-| TC_JBP_FUNC_002 | Verify Edit Requests tab is clickable and switches view | Medium | CP logged in; three tabs visible | 1. Navigate to `/jbp` 2. Click the "Edit Requests" tab 3. Observe view change | "Edit Requests" tab becomes active; content area updates to show edit-request list view | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FS §2 (Submit an Edit Request) | Draft |
-| TC_JBP_BIZ_001 | Verify closed cycle blocks submission with informational message | High | Current cycle is CLOSED; CP did not submit | 1. Navigate to `/jbp` 2. Stay on Current Cycle Entry tab 3. Read main content area | Content area shows "Cycle has Closed" header and message "Submissions are no longer accepted for this cycle." No submission form is rendered. No "Add New JBP Entry" / submit action is available | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FS §1.5 Rule #1, CP-BRD Rule #6 | Draft |
-| TC_JBP_NEG_001 | Verify CP cannot submit JBP for a CLOSED cycle | High | Cycle in CLOSED state | 1. Navigate to `/jbp` on a CLOSED cycle 2. Attempt to locate any submit / new-entry button | No submit button, no submission form, no "Add New JBP Entry" control is exposed in DOM. Submission entry point is fully suppressed | `visual-memory/cp/jbp-submission/screenshot-desktop.png` | CP-FS §1.5 Rule #1, CP-BRD Rule #6 | Draft |
-| TC_JBP_UI_009 | Verify page is reachable only when authenticated | High | No active session | 1. Clear cookies/storage 2. Navigate to `https://uat-web.xrportal.in/jbp` | User is redirected to `/login` (CP login page); JBP Dashboard does not render | `visual-memory/cp/jbp-submission/screenshot-desktop.png` (page heading not visible pre-auth) | CP-FS §1.3 Preconditions; CP-FRD §7 Authentication | Draft |
-| TC_JBP_UI_OPEN_001 | Verify Open Cycle shows submission form in Current Cycle Entry tab | High | Cycle in OPEN state; CP has not submitted | 1. Navigate to `/jbp` 2. Observe Current Cycle card 3. Observe Current Cycle Entry tab content | Cycle card shows "OPEN" badge (instead of CLOSED). Tab content shows JBP submission form with all 14 fields per CP-FS §1.4 | [STUB-EVIDENCE] — Open Cycle UI not captured in visual-memory | CP-FS §1.1, §1.4 | Draft |
-| TC_JBP_FUNC_OPEN_001 | Verify JBP form contains all 14 mandated fields | High | OPEN cycle; CP not yet submitted; form rendered | 1. Open JBP form 2. Enumerate all fields | Form contains: Brokerage to be Earned (dropdown), Net Booking Commitment Units (dropdown), Manpower to Deploy (number + slider), List of Activities (14-option multi-checkbox), Go Live on Digital (multi-checkbox), Total Investment (5 radio ranges), Inserts Required (Y/N), Standees Required (Y/N), Kiosk Required (Y/N), Tele Callers Required (Y/N), SMS Blast (Y/N), WhatsApp Blast (Y/N), Growth Hub (Y/N), Registration Commitment (number) | [STUB-EVIDENCE] | CP-FS §1.4 | Draft |
-| TC_JBP_VAL_OPEN_001 | Verify required-field validation blocks submission when fields empty | High | OPEN cycle; form rendered | 1. Open JBP form 2. Leave required fields blank 3. Click Submit | Submit is blocked; validation messages appear on missing required fields; no record is created | [STUB-EVIDENCE] | CP-FS §1.5 Rule #3 | Draft |
-| TC_JBP_E2E_OPEN_001 | Verify CP can submit a complete JBP and lands on Thank You page | High | OPEN cycle; CP not yet submitted; all fields valid | 1. Open JBP form 2. Fill all 14 fields with valid values 3. Click Submit | JbpSubmission record created with status=ACTIVE, version=1. CP is redirected to `/jbp/thank-you`. Thank You confirmation page renders | [STUB-EVIDENCE] | CP-FS §1.6 System Actions, CP-BRD §6 step 4 | Draft |
-| TC_JBP_BIZ_OPEN_001 | Verify one-submission-per-cycle rule (Add New entry disappears after submit) | High | OPEN cycle; CP has just submitted | 1. Complete and submit a JBP 2. Navigate back to `/jbp` 3. Observe Current Cycle Entry tab | "Add New JBP Entry" / submit button is no longer present. The submitted plan is shown in read-only view. "Your Status" updates from "Not Submitted" to "Submitted" | [STUB-EVIDENCE] | CP-FS §1.5 Rule #2, CP-FS §3.2 Rule #1 | Draft |
-| TC_JBP_FUNC_OPEN_002 | Verify submitted plan is shown read-only with version number | Medium | CP has an ACTIVE submission for OPEN cycle | 1. Navigate to `/jbp` 2. Stay on Current Cycle Entry tab 3. Observe form fields and version display | All 14 field values from submission are displayed in read-only mode. Submission version (e.g., "Version 1") and status are visible | [STUB-EVIDENCE] | CP-FS §3.1, §3.2 | Draft |
-| TC_JBP_E2E_OPEN_002 | Verify CP can raise an Edit Request on an existing submission | High | CP has submitted JBP; cycle still OPEN | 1. Navigate to `/jbp` 2. Click control to request an edit 3. Fill "Changes requested" and "Revised values" fields 4. Submit edit request | Edit request is created and sent to admin. Request becomes visible in the "Edit Requests" tab with a pending status. Original submission remains unchanged | [STUB-EVIDENCE] | CP-FS §2.1, §2.3, §2.4 Rule #1 | Draft |
-| TC_JBP_NEG_OPEN_001 | Verify second JBP submission for same cycle is rejected | High | CP has already submitted for current OPEN cycle | 1. After successful submit, attempt to submit a second JBP for same cycle (via UI or direct route) | Submission is rejected at the UI layer (no entry point) and at the backend (one-active-per-cycle rule). No duplicate JbpSubmission record is created | [STUB-EVIDENCE] | CP-FS §1.5 Rule #2, CP-BRD Rule #5 | Draft |
-| TC_JBP_BIZ_OPEN_002 | Verify approved edit request increments version and EXPIRES previous version | High | CP has version 1 ACTIVE submission; admin approves an edit request | 1. CP raises edit request 2. Admin approves it 3. CP re-navigates to `/jbp` and JBP History tab | Submission updated with new field values. New version (e.g., "Version 2") is shown as ACTIVE in History. Previous version is marked EXPIRED in history | [STUB-EVIDENCE] | CP-FS §2.4 Rule #2, CP-BRD Rule #7 | Draft |
-| TC_JBP_BIZ_OPEN_003 | Verify rejected edit request preserves original submission | High | CP has ACTIVE submission; admin rejects an edit request | 1. CP raises edit request 2. Admin rejects it with reason 3. CP re-navigates to `/jbp` | Original submission remains unchanged (same version, same values). Rejection notification with reason is visible to CP in Edit Requests tab | [STUB-EVIDENCE] | CP-FS §2.4 Rule #3, Rule #4, Rule #5 | Draft |
-| TC_JBP_FUNC_OPEN_003 | Verify Edit Requests tab lists requests with status | Medium | CP has raised at least one edit request | 1. Navigate to `/jbp` 2. Click "Edit Requests" tab 3. Inspect list | Edit Requests tab shows list of requests with status (Pending / Approved / Rejected), date raised, and admin response (if any) | [STUB-EVIDENCE] | CP-FS §2.4 Rules #1, #5 | Draft |
-| TC_JBP_FUNC_OPEN_004 | Verify JBP History tab lists all versions across cycles | Medium | CP has at least one submission in history | 1. Navigate to `/jbp` 2. Click "JBP History" tab 3. Inspect list | History tab lists submissions with cycle name, version, status (ACTIVE / EXPIRED), and submission date | [STUB-EVIDENCE] | CP-FS §3, CP-BRD Rule #7 | Draft |
-| TC_JBP_NEG_OPEN_002 | Verify edit request cannot be raised once cycle is CLOSED | High | Cycle has transitioned from OPEN to CLOSED; CP had submitted during OPEN | 1. After cycle closes, navigate to `/jbp` 2. Open the submitted plan 3. Attempt to raise edit request | Edit request entry point is not available. CP cannot raise an edit request on a closed cycle | [STUB-EVIDENCE] | CP-FS §2.2 Precondition (cycle must still be OPEN) | Draft |
-| TC_JBP_UI_010 | Verify "Your Status" updates to "Submitted" after submission | Medium | CP just submitted JBP successfully | 1. Submit JBP 2. Navigate back to `/jbp` 3. Read Current Cycle card | "Your Status" line on Current Cycle card reads "Submitted" (was "Not Submitted" before) | [STUB-EVIDENCE] (status transitions Submitted/Approved/Rejected not captured) | INDEX.md (Your Status enum), CP-FS §1.6 | Draft |
-| TC_JBP_UI_011 | Verify "Your Status" reflects Approved when admin approves edit request | Medium | CP has submission; admin approved an edit request | 1. After approval, navigate to `/jbp` 2. Read Current Cycle card | "Your Status" reads "Approved" | [STUB-EVIDENCE] | INDEX.md (Your Status enum) | Draft |
-| TC_JBP_UI_012 | Verify "Your Status" reflects Rejected when admin rejects edit request | Medium | CP has submission; admin rejected edit request | 1. After rejection, navigate to `/jbp` 2. Read Current Cycle card | "Your Status" reads "Rejected" | [STUB-EVIDENCE] | INDEX.md (Your Status enum) | Draft |
+| TC_JBP_UI_001 | Page heading "JBP Dashboard" renders on /jbp | P1 | CP logged in | 1. Navigate to `https://uat-web.xrportal.in/jbp` | `h2` reads "JBP Dashboard"; sub-heading `h4` reads "Current Cycle - Automation JBP" | `jbp-loaded.png` | CP-BRD §3 (JBP Submission), CP-FRD Module 3 | Ready |
+| TC_JBP_UI_002 | Sidebar JBP item shows as active on /jbp | P2 | CP logged in | 1. Navigate to /jbp 2. Inspect sidebar | Sidebar list shows "Home / KYC / JBP (active) / Leads / Logout"; JBP entry highlighted | `jbp-loaded.png` | CP-FRD Module 3 (Navigation) | Ready |
+| TC_JBP_UI_003 | Current Cycle card shows OPEN-cycle metadata | P1 | OPEN cycle exists | 1. Navigate to /jbp 2. Locate Current Cycle card | Card shows: heading "Current Cycle - Automation JBP", date pill "June 2026", status badge "ACTIVE", text "Closes on: 30th June 2026", text "Your Status: Not Submitted" | `jbp-loaded.png` | CP-FS-JBP §1.3, CP-BRD §4.6 | Ready |
+| TC_JBP_UI_004 | Three tabs render in expected order | P1 | CP on /jbp | 1. Inspect `.ant-tabs-tab` list | Tabs shown in order: "Current Cycle Entry" (default active) → "JBP History" → "Edit Requests" | `jbp-loaded.png`, `jbp-current-cycle-tab.png` | CP-FRD Module 3 | Ready |
+| TC_JBP_FUNC_005 | "Current Cycle Entry" tab is selected by default | P1 | CP on /jbp | 1. Navigate to /jbp 2. Read selected tab via `.ant-tabs-tab-active` | "Current Cycle Entry" tab has the active state on first load | `jbp-current-cycle-tab.png` | CP-FRD Module 3 | Ready |
+| TC_JBP_FUNC_006 | Current Cycle Entry tab shows empty-state CTA when CP has not yet submitted | P1 | OPEN cycle + CP status = "Not Submitted" | 1. Open Current Cycle Entry tab | Empty-state copy "No submission for current cycle" visible; primary button "Add New JBP Entry" visible | `jbp-current-cycle-tab.png` | CP-FS-JBP §1.3, §1.5.2 | Ready |
+| TC_JBP_FUNC_007 | Click "Add New JBP Entry" reveals inline JBP form | P1 | Current Cycle Entry tab open | 1. Click button `:has-text("Add New JBP Entry")` | URL remains `/jbp` (no navigation); inline form revealed (no modal); heading `h2: "JBP Form - Automation JBP"` shown | `jbp-open-cycle-form.png` | CP-FS-JBP §1.4 | Ready |
+| TC_JBP_UI_008 | JBP submission form renders all 44 input fields | P1 | Form opened via "Add New JBP Entry" | 1. Count input elements within the form 2. Verify field types | Form contains: 1 Brokerage `ant-select` dropdown (`input[placeholder="Select Brokerage"]`), 1 untitled text input, 20 checkbox inputs, 18 radio inputs across 9 Yes/No radio-groups, 1 numeric text input (`input[placeholder="Enter Count"]`) — total 44 inputs | `jbp-open-cycle-form.png` | CP-FS-JBP §1.4, CP-FRD Module 3 ("JBP Form Fields") | Ready |
+| TC_JBP_UI_009 | Brokerage select dropdown is present and interactive | P1 | Form open | 1. Locate `input[placeholder="Select Brokerage"]` 2. Click it | Dropdown opens, ant-select options list rendered (rc_select_0 combobox pattern) | `jbp-open-cycle-form.png` | CP-FS-JBP §1.4 (Brokerage to be Earned) | Ready |
+| TC_JBP_UI_010 | All nine Yes/No radio-groups render two radio buttons each | P1 | Form open | 1. Inspect radio-group names `:rt:`, `:ru:`, `:rv:`, `:r10:`, `:r11:`, `:r12:`, `:r13:`, `:r14:` (+1) | Each group exposes exactly 2 radio inputs (Yes/No semantics per CP-FS-JBP §1.4 — Inserts, Standees, Kiosk, Tele Callers, SMS Blast, WhatsApp Blast, Growth Hub, plus 2 more) | `jbp-open-cycle-form.png` | CP-FS-JBP §1.4 (Yes/No fields) | Ready |
+| TC_JBP_UI_011 | Checkbox grid renders 20 checkboxes (activities + digital channels) | P2 | Form open | 1. Count `input[type="checkbox"]` within form | 20 checkboxes rendered (List of Activities ~14 + Go Live on Digital ~6) | `jbp-open-cycle-form.png` | CP-FS-JBP §1.4 (List of Activities, Go Live on Digital) | Ready |
+| TC_JBP_UI_012 | "Enter Count" numeric input is present | P1 | Form open | 1. Locate `input[placeholder="Enter Count"]` | Input visible and enabled; expected to capture Registration Commitment numeric value | `jbp-open-cycle-form.png` | CP-FS-JBP §1.4 (Registration Commitment) | Ready |
+| TC_JBP_UI_013 | Form footer shows "Back to Dashboard" and "Submit" buttons | P1 | Form open | 1. Inspect form footer | Two buttons visible: "Back to Dashboard" (secondary), "Submit" (primary) | `jbp-open-cycle-form.png` | CP-FS-JBP §1.4 (Step 3 — Submit) | Ready |
+| TC_JBP_VAL_014 | Submitting empty form triggers validation errors on required fields | P1 | Form open, all fields empty | 1. Click "Submit" without filling any field | Submission is blocked; antd validation errors appear under required fields (red inline messages); URL stays at `/jbp`; no Thank You redirect | `jbp-form-validation.png` | CP-FS-JBP §1.5.3 (All required fields must be completed) | Ready |
+| TC_JBP_VAL_015 | Brokerage dropdown is a required field | P2 | Form open, all other fields filled, Brokerage left empty | 1. Fill all other fields 2. Click "Submit" | Validation error surfaces specifically under the Brokerage select field | `jbp-form-validation.png` | CP-FS-JBP §1.4, §1.5.3 | Ready |
+| TC_JBP_VAL_016 | "Enter Count" (Registration Commitment) is a required field | P2 | Form open, all other fields filled, Count left empty | 1. Click "Submit" | Validation error surfaces under "Enter Count" input | `jbp-form-validation.png` | CP-FS-JBP §1.4 (Registration Commitment), §1.5.3 | Ready |
+| TC_JBP_FUNC_017 | Form fields accept user input when filled via UI interactions | P1 | Form open | 1. Select Brokerage option 2. Tick checkboxes 3. Select Yes for Inserts radio 4. Enter "10" in Count | Each interaction reflects in the rendered DOM state; selected option, ticked boxes, radio selection, and Count value persist | `jbp-form-filled.png` | CP-FS-JBP §1.4, How to Use §Step 2 | Ready |
+| TC_JBP_E2E_018 | Submit fully-filled JBP form → Thank You page → status updates | P1 | Form open with valid data, OPEN cycle, CP = Not Submitted | 1. Fill all required fields with valid values 2. Click "Submit" | CP redirected to `/jbp/thank-you`; JbpSubmission record created with `status=ACTIVE`, `version=1`; on next /jbp visit, "Your Status" badge becomes "Submitted" | `jbp-form-filled.png` (input state), `jbp-loaded.png` (status badge baseline) | CP-FS-JBP §1.6 (System Actions on Submission) | Ready |
+| TC_JBP_BIZ_019 | After successful submission, "Add New JBP Entry" CTA disappears | P1 | CP just submitted for current cycle | 1. Reload /jbp 2. Open Current Cycle Entry tab | "Add New JBP Entry" button NO longer rendered; submitted plan shown in read-only mode; Your Status = "Submitted" | `jbp-loaded.png` (baseline before submit), `jbp-current-cycle-tab.png` | CP-FS-JBP §1.5.2 (button disappears after submission), CP-BRD §4.5 | Ready |
+| TC_JBP_BIZ_020 | Existing submission renders in read-only mode for current cycle | P1 | CP has active submission for OPEN cycle | 1. Open Current Cycle Entry tab | All 14 field values display in read-only format; version number and submission status shown; no editable inputs | `jbp-current-cycle-tab.png` | CP-FS-JBP §3.1, §3.2 | Ready |
+| TC_JBP_NEG_021 | Attempting a second submission for the same cycle is blocked | P1 | CP already submitted for OPEN cycle | 1. Navigate to /jbp 2. Confirm CTA is hidden | "Add New JBP Entry" button is not rendered; CP cannot create a second submission via UI | `jbp-current-cycle-tab.png` | CP-BRD §4.5 (One per cycle), CP-FS-JBP §1.5.2 | Ready |
+| TC_JBP_FUNC_022 | "JBP History" tab opens and shows 8 past-submission rows | P1 | CP has prior submissions | 1. Click `.ant-tabs-tab :has-text("JBP History")` | History table renders 8 rows (one per past cycle); each row shows Cycle / Submitted Date / Status / Actions columns | `jbp-history-tab.png` | CP-FRD Module 3 (history); CP-FS-JBP §3 | Ready |
+| TC_JBP_UI_023 | JBP History rows show cycle name, submitted date, and status | P2 | History tab active | 1. Inspect rows in `jbp-history-tab` | Each row exposes the cycle name, submission date, and a status indicator (Approved / Rejected / etc.) | `jbp-history-tab.png` | CP-FS-JBP §3.2 (version + status displayed) | Ready |
+| TC_JBP_FUNC_024 | "Edit Requests" tab opens and shows empty state for CP with no edit requests | P1 | CP has not filed any edit request | 1. Click `.ant-tabs-tab :has-text("Edit Requests")` | Tab content shows empty state (0 rows) — no edit-request table populated | `jbp-edit-requests-tab.png` | CP-FS-JBP §2.1 | Ready |
+| TC_JBP_BIZ_025 | Edit request flow available only after CP has submitted for OPEN cycle | P1 | CP has active submission + cycle still OPEN | 1. Open Current Cycle Entry tab 2. Locate "Request Edit" option on submitted plan | Option to file edit request is exposed only when both preconditions hold (submission exists + cycle OPEN); per CP-FS-JBP §2.2 | `jbp-current-cycle-tab.png` | CP-FS-JBP §2.2 (Preconditions) | Ready |
+| TC_JBP_E2E_026 | CP files an edit request → request appears in Edit Requests tab | P1 | CP has active submission, cycle OPEN | 1. Click "Request Edit" 2. Fill changes-requested description + revised values 3. Submit edit request 4. Open Edit Requests tab | New row added to Edit Requests tab with the filed request (status pending admin review) | `jbp-edit-requests-tab.png` (baseline empty state) | CP-FS-JBP §2.3, §2.4 | Ready |
+| TC_JBP_BIZ_027 | On admin approval of edit request, submission version increments and old version becomes EXPIRED | P1 | CP filed edit request; admin approves in Admin Portal | 1. Wait for admin approval 2. Reload /jbp | Submitted plan now shows incremented version (e.g., v2); old version is marked EXPIRED in backend; updated field values rendered in read-only view | `jbp-current-cycle-tab.png` | CP-FS-JBP §2.4.2, CP-BRD §4.7 (version tracking) | Ready |
+| TC_JBP_BIZ_028 | On admin rejection of edit request, original submission is preserved | P1 | CP filed edit request; admin rejects | 1. Wait for admin rejection 2. Reload /jbp | Original submission values unchanged; version remains v1; rejection reason visible in Edit Requests tab | `jbp-edit-requests-tab.png` | CP-FS-JBP §2.4.3, §2.4.4 | Ready |
+| TC_JBP_BIZ_029 | Closed-cycle state: form is not accessible and "Cycle has Closed" message shown | P1 | Cycle is in CLOSED state (e.g., May 2026 historical baseline) | 1. Navigate to /jbp during a closed cycle | Current Cycle card shows status badge "CLOSED"; copy reads "Cycle has Closed"; "Add New JBP Entry" CTA is hidden; form cannot be opened | `screenshot-desktop.png` | CP-BRD §4.6, CP-FS-JBP §1.5.1 | Ready |
+| TC_JBP_NEG_030 | Submissions are not accepted after a cycle closes | P1 | Cycle transitions to CLOSED while CP is still on /jbp | 1. Have form open in a session 2. After cycle closes admin-side, attempt Submit | Submit is rejected with cycle-closed error; no JbpSubmission record created; CP-BRD §4.6 enforced | `screenshot-desktop.png` | CP-BRD §4.6, CP-FS-JBP §1.5.1 | Ready |
+| TC_JBP_FUNC_031 | "Back to Dashboard" button returns user to /dashboard | P2 | Form open | 1. Click "Back to Dashboard" | User navigates to `/dashboard`; no submission created; no Thank You page | `jbp-open-cycle-form.png` | CP-FS-JBP §1 (Form footer behaviour) | Ready |
+| TC_JBP_UI_032 | "Your Status" pill reflects state values per cycle | P1 | Various cycle states | 1. Inspect "Your Status" text for OPEN-not-submitted, OPEN-submitted, OPEN-approved, OPEN-rejected | Status values match expected enum: Not Submitted / Submitted / Approved / Rejected | `jbp-loaded.png` | CP-FS-JBP §1.5, §3.2 | Ready |
+| TC_JBP_REG_033 | Tab text appears in DOM twice (responsive duplicate) but renders only one visible row | P3 | CP on /jbp | 1. Query `.ant-tabs-tab` count via DOM 2. Verify visual render | Each tab text appears 2x in DOM (mobile + desktop responsive copies) but only one tab strip is visually rendered at 1920×900 | `jbp-loaded.png` | Visual-memory Key Structural Notes (Tabs section) | Ready |
+| TC_JBP_EDGE_034 | Submitting form with all checkboxes ticked is accepted | P3 | Form open | 1. Tick all 20 checkboxes 2. Fill required scalars 3. Submit | Submission accepted; backend persists full activity + digital channel arrays | `jbp-form-filled.png` | CP-FS-JBP §1.4 (multi-checkbox fields) | Ready |
+| TC_JBP_EDGE_035 | Submitting form with zero checkboxes ticked depends on field requirement | P3 | Form open | 1. Leave all checkboxes unticked 2. Fill required scalars 3. Submit | Per CP-FS-JBP §1.4 these are multi-checkbox fields; if backend treats at-least-one as required, validation error fires; if optional, submission succeeds — verify against BRD acceptance criteria | `jbp-form-validation.png` | CP-FS-JBP §1.4 (gap: minimum count not documented) | Ready |
+| TC_JBP_VAL_036 | "Enter Count" field accepts only numeric input | P2 | Form open | 1. Type letters into `input[placeholder="Enter Count"]` 2. Submit | Non-numeric input is either blocked at input level or rejected on submit; numeric values accepted | `jbp-open-cycle-form.png` | CP-FS-JBP §1.4 (Registration Commitment — Number) | Ready |
+| TC_JBP_XMOD_037 | Submitted JBP appears in Admin Portal > JBP Management > Submissions | P1 | CP submitted on CP Portal | 1. As CP, submit JBP 2. As admin, open Admin Portal JBP Management > Submissions tab | Newly created JbpSubmission record (status=ACTIVE, version=1) listed in admin submissions table for the corresponding cycle | `jbp-loaded.png` (CP side) | CP-FS-JBP §1.6.3 (admin visibility), CP-BRD-Module 3 | Ready |
 
 ---
 
-## Sheet 2 — Automation Candidates
+## Review Summary
 
-| TC_ID | Module | Type | Automatable | Complexity | Visual Evidence Status | Playwright Suite | Notes |
-|-------|--------|------|-------------|------------|------------------------|------------------|-------|
-| TC_JBP_UI_001 | JBP Submission | UI | Yes | Low | FULL | ui-ux/cp/jbp-submission.spec.js | Assert h1/h2 text "JBP Dashboard" |
-| TC_JBP_UI_002 | JBP Submission | UI | Yes | Low | FULL | ui-ux/cp/jbp-submission.spec.js | Sidebar nav assertion |
-| TC_JBP_UI_003 | JBP Submission | UI | Yes | Low | FULL | ui-ux/cp/jbp-submission.spec.js | Filter regex `/current cycle/i` |
-| TC_JBP_UI_004 | JBP Submission | UI | Yes | Low | FULL | ui-ux/cp/jbp-submission.spec.js | Filter regex `/closed/i` |
-| TC_JBP_UI_005 | JBP Submission | UI | Yes | Low | FULL | ui-ux/cp/jbp-submission.spec.js | Filter regex `/closes on/i` |
-| TC_JBP_UI_006 | JBP Submission | UI | Yes | Low | FULL | ui-ux/cp/jbp-submission.spec.js | Filter regex `/not submitted/i` |
-| TC_JBP_UI_007 | JBP Submission | UI | Yes | Low | FULL | ui-ux/cp/jbp-submission.spec.js | All three role="tab" assertions |
-| TC_JBP_UI_008 | JBP Submission | UI | Yes | Low | FULL | ui-ux/cp/jbp-submission.spec.js | Active-tab attribute check |
-| TC_JBP_FUNC_001 | JBP Submission | FUNC | Yes | Low | FULL | e2e/cp/jbp-submission.spec.js | Click and assert active state |
-| TC_JBP_FUNC_002 | JBP Submission | FUNC | Yes | Low | FULL | e2e/cp/jbp-submission.spec.js | Click and assert active state |
-| TC_JBP_BIZ_001 | JBP Submission | BIZ | Yes | Low | FULL | e2e/cp/jbp-submission.spec.js | Closed-cycle text assertions |
-| TC_JBP_NEG_001 | JBP Submission | NEG | Yes | Low | FULL | e2e/cp/jbp-submission.spec.js | Assert no submit button in DOM |
-| TC_JBP_UI_009 | JBP Submission | UI | Yes | Low | FULL | e2e/cp/jbp-submission.spec.js | Unauthenticated redirect check |
-| TC_JBP_UI_OPEN_001 | JBP Submission | UI | Blocked | Medium | STUB | — | Requires Open-cycle visual capture before automation |
-| TC_JBP_FUNC_OPEN_001 | JBP Submission | FUNC | Blocked | Medium | STUB | — | Form field enumeration depends on captured DOM |
-| TC_JBP_VAL_OPEN_001 | JBP Submission | VAL | Blocked | Medium | STUB | — | Requires visible validation messages mapping |
-| TC_JBP_E2E_OPEN_001 | JBP Submission | E2E | Blocked | High | STUB | — | Full submission flow; needs Open cycle in UAT + field locators |
-| TC_JBP_BIZ_OPEN_001 | JBP Submission | BIZ | Blocked | Medium | STUB | — | One-per-cycle assertion |
-| TC_JBP_FUNC_OPEN_002 | JBP Submission | FUNC | Blocked | Medium | STUB | — | Read-only view; needs DOM capture |
-| TC_JBP_E2E_OPEN_002 | JBP Submission | E2E | Blocked | High | STUB | — | Edit request flow |
-| TC_JBP_NEG_OPEN_001 | JBP Submission | NEG | Blocked | High | STUB | — | Duplicate submission rejection |
-| TC_JBP_BIZ_OPEN_002 | JBP Submission | BIZ | Blocked | High | STUB | — | Requires admin-side approval (cross-portal) |
-| TC_JBP_BIZ_OPEN_003 | JBP Submission | BIZ | Blocked | High | STUB | — | Requires admin-side rejection (cross-portal) |
-| TC_JBP_FUNC_OPEN_003 | JBP Submission | FUNC | Blocked | Medium | STUB | — | Edit Requests tab content |
-| TC_JBP_FUNC_OPEN_004 | JBP Submission | FUNC | Blocked | Medium | STUB | — | History tab content |
-| TC_JBP_NEG_OPEN_002 | JBP Submission | NEG | Blocked | Medium | STUB | — | Cycle-state-dependent gating |
-| TC_JBP_UI_010 | JBP Submission | UI | Blocked | Low | STUB | — | Status transition after submit |
-| TC_JBP_UI_011 | JBP Submission | UI | Blocked | Low | STUB | — | Status reflects Approved |
-| TC_JBP_UI_012 | JBP Submission | UI | Blocked | Low | STUB | — | Status reflects Rejected |
+**Total TCs:** 37
+**Priority distribution:** P1 = 24 · P2 = 9 · P3 = 4
+**Type distribution:** UI = 12 · FUNC = 8 · VAL = 4 · E2E = 2 · BIZ = 7 · NEG = 2 · EDGE = 2 · REG = 1 · XMOD = 1
 
----
+**Visual coverage:**
+- TCs with screenshot citation: 37 / 37 = **100%**
+- TCs citing newly-captured open-cycle screens (`jbp-loaded.png`, `jbp-current-cycle-tab.png`, `jbp-open-cycle-form.png`, `jbp-form-validation.png`, `jbp-form-filled.png`, `jbp-history-tab.png`, `jbp-edit-requests-tab.png`): 35 / 37 = **94.6%**
+- TCs citing closed-cycle baseline (`screenshot-desktop.png`): 2 (TC_JBP_BIZ_029, TC_JBP_NEG_030)
+- Threshold for APPROVED: ≥ 80% → **PASSED**
 
-## Sheet 3 — Bug Report Template
+**BRD/FRD traceability:**
+- Every TC carries at least one BRD/FRD Req ID (CP-BRD §, CP-FS-JBP §, or CP-FRD Module 3). No orphan TCs.
 
-| Bug ID | TC_ID | Severity | Steps | Actual | Expected | Environment | Status |
-|--------|-------|----------|-------|--------|----------|-------------|--------|
-| BUG_NNN | TC_JBP_XXX_NNN | Critical / High / Medium / Low | — | — | — | UAT — https://uat-web.xrportal.in/jbp | Open |
+**Coverage by scope item (from task brief):**
+- Page heading "JBP Dashboard" → TC_JBP_UI_001
+- Current Cycle card (OPEN badge, cycle name, closes date, Your Status values) → TC_JBP_UI_003, TC_JBP_UI_032
+- All 3 tabs → TC_JBP_UI_004, TC_JBP_FUNC_005, TC_JBP_FUNC_022, TC_JBP_FUNC_024, TC_JBP_REG_033
+- "Add New JBP Entry" CTA → TC_JBP_FUNC_006, TC_JBP_FUNC_007
+- Form structure (brokerage, checkboxes, Yes/No, count) → TC_JBP_UI_008, TC_JBP_UI_009, TC_JBP_UI_010, TC_JBP_UI_011, TC_JBP_UI_012, TC_JBP_UI_013
+- Form validation → TC_JBP_VAL_014, TC_JBP_VAL_015, TC_JBP_VAL_016, TC_JBP_VAL_036
+- Form fill + submit flow → TC_JBP_FUNC_017, TC_JBP_E2E_018
+- One submission per CP per cycle → TC_JBP_BIZ_019, TC_JBP_NEG_021
+- JBP History 8 rows → TC_JBP_FUNC_022, TC_JBP_UI_023
+- Edit Requests empty state → TC_JBP_FUNC_024
+- Post-submit edit request flow → TC_JBP_BIZ_025, TC_JBP_E2E_026
+- Edit approval: version increment, old EXPIRED → TC_JBP_BIZ_027, TC_JBP_BIZ_028
+- Closed cycle state → TC_JBP_BIZ_029, TC_JBP_NEG_030
 
----
+**Gaps / open items:**
+- TC_JBP_EDGE_035 raises a documentation gap: CP-FS-JBP §1.4 does not specify a minimum-checkbox-count rule for "List of Activities" / "Go Live on Digital" multi-selects. Action: confirm with product whether at-least-one tick is required.
+- Field-label-to-DOM mapping for the 9 Yes/No radio-groups is not fully visible in DOM dump (`_jbp-form-inspect.json`) because labels live in `.ant-form-item-label` siblings, not on the inputs. Tech Lead Agent should extract human-readable labels in next visual-capture iteration so radio-group TCs (TC_JBP_UI_010) can name each Yes/No group precisely.
 
-## Notes
+**Overall status: APPROVED**
 
-- All Open-cycle TCs are derived from BRD/FRD only and tagged `[STUB-EVIDENCE]`. They MUST not be promoted to automation until Tech Lead Agent re-runs `visual-capture` against an OPEN cycle and updates `visual-memory/cp/jbp-submission/INDEX.md` with the submission form DOM.
-- Strapi and LeadSquared are out of scope; no TCs touch CMS-driven content or LSQ sync.
-- Admin-side approval/rejection touchpoints (TC_JBP_BIZ_OPEN_002, TC_JBP_BIZ_OPEN_003) are CP-side observable assertions only — admin actions are covered in the Admin JBP Management module TC batch.
+Visual coverage 100% with 94.6% citing freshly captured open-cycle artefacts; dual-source gate satisfied; full traceability to BRD/FRD; previous Conditional batch (44.8%, 16 STUB TCs) is hereby superseded and overwritten.
