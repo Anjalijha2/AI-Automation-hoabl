@@ -1,0 +1,146 @@
+{
+  "login/login-success-dashboard": {
+    "status": "CAPTURED",
+    "note": "Landing at https://uat-web.xrportal.in/dashboard",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\login\\login-success-dashboard.png",
+    "bytes": 125718
+  },
+  "customer-registration/dashboard-loaded": {
+    "status": "CAPTURED",
+    "note": "Full page",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\customer-registration\\dashboard-loaded.png",
+    "bytes": 130780
+  },
+  "customer-registration/dashboard-nri-selected": {
+    "status": "CAPTURED",
+    "note": "NRI radio active",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\customer-registration\\dashboard-nri-selected.png",
+    "bytes": 128533
+  },
+  "customer-registration/dashboard-indian-national-selected": {
+    "status": "CAPTURED",
+    "note": "Indian National radio active",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\customer-registration\\dashboard-indian-national-selected.png",
+    "bytes": 125735
+  },
+  "customer-registration/dashboard-create-lead-validation": {
+    "status": "CAPTURED",
+    "note": "Validation on empty",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\customer-registration\\dashboard-create-lead-validation.png",
+    "bytes": 124472
+  },
+  "customer-registration/dashboard-create-lead-invalid-mobile": {
+    "status": "CAPTURED",
+    "note": "Invalid mobile validation",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\customer-registration\\dashboard-create-lead-invalid-mobile.png",
+    "bytes": 123744
+  },
+  "customer-registration/dashboard-customers-search-result": {
+    "status": "CAPTURED",
+    "note": "Filtered customers",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\customer-registration\\dashboard-customers-search-result.png",
+    "bytes": 115137
+  },
+  "customer-registration/dashboard-customers-search-no-result": {
+    "status": "CAPTURED",
+    "note": "No-result state",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\customer-registration\\dashboard-customers-search-no-result.png",
+    "bytes": 103756
+  },
+  "customer-registration/dashboard-team-leads-dropdown": {
+    "status": "CAPTURED",
+    "note": "Open dropdown with 3 option(s)",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\customer-registration\\dashboard-team-leads-dropdown.png",
+    "bytes": 128626,
+    "options": [
+      "All Team Leads",
+      "My Leads",
+      "Test CP (HV00026050) - 7888888888"
+    ]
+  },
+  "leads-management/leads-loaded": {
+    "status": "CAPTURED",
+    "note": "Full page",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\leads-management\\leads-loaded.png",
+    "bytes": 66612
+  },
+  "leads-management/leads-status-dropdown-open": {
+    "status": "CAPTURED",
+    "note": "3 status options",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\leads-management\\leads-status-dropdown-open.png",
+    "bytes": 72128,
+    "options": [
+      "Sent",
+      "Registered",
+      "Refunded"
+    ]
+  },
+  "leads-management/leads-team-leads-dropdown-open": {
+    "status": "CAPTURED",
+    "note": "3 team-lead options",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\leads-management\\leads-team-leads-dropdown-open.png",
+    "bytes": 75028,
+    "options": [
+      "All Team Leads",
+      "My Leads",
+      "Test CP (HV00026050) - 7888888888"
+    ]
+  },
+  "leads-management/leads-search-result": {
+    "status": "CAPTURED",
+    "note": "Filtered by Sanket",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\leads-management\\leads-search-result.png",
+    "bytes": 52601
+  },
+  "leads-management/leads-search-no-match": {
+    "status": "CAPTURED",
+    "note": "Empty state",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\leads-management\\leads-search-no-match.png",
+    "bytes": 41972
+  },
+  "leads-management/leads-share-action": {
+    "status": "NOT_FOUND",
+    "note": "No share icon located in first row"
+  },
+  "leads-management/leads-copy-action": {
+    "status": "NOT_FOUND",
+    "note": "No copy icon located in first row"
+  },
+  "jbp-submission/jbp-loaded": {
+    "status": "CAPTURED",
+    "note": "Full page",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\jbp-submission\\jbp-loaded.png",
+    "bytes": 56435
+  },
+  "jbp-submission/jbp-current-cycle-tab": {
+    "status": "CAPTURED",
+    "note": "Cycle state: UNKNOWN",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\jbp-submission\\jbp-current-cycle-tab.png",
+    "bytes": 56591
+  },
+  "jbp-submission/jbp-open-cycle-form": {
+    "status": "NOT_APPLICABLE",
+    "note": "No inputs visible — cycle likely closed (state: UNKNOWN)"
+  },
+  "jbp-submission/jbp-history-tab": {
+    "status": "CAPTURED",
+    "note": "8 row(s)",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\jbp-submission\\jbp-history-tab.png",
+    "bytes": 100296
+  },
+  "jbp-submission/jbp-edit-requests-tab": {
+    "status": "CAPTURED",
+    "note": "0 row(s)",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\jbp-submission\\jbp-edit-requests-tab.png",
+    "bytes": 56233
+  },
+  "jbp-submission/jbp-form-validation": {
+    "status": "NOT_APPLICABLE",
+    "note": "Cycle is UNKNOWN"
+  },
+  "jbp-submission/jbp-form-filled": {
+    "status": "NOT_APPLICABLE",
+    "note": "Cycle is UNKNOWN"
+  },
+  "_jbp_cycle_state": "UNKNOWN"
+}

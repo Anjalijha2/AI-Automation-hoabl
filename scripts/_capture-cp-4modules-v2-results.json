@@ -1,0 +1,32 @@
+{
+  "leads-management/leads-share-action": {
+    "status": "CAPTURED_FALLBACK",
+    "note": "Could not isolate share action — see attempts JSON; saved current state",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\leads-management\\leads-share-action.png",
+    "bytes": 66729
+  },
+  "leads-management/leads-copy-action": {
+    "status": "CAPTURED_FALLBACK",
+    "note": "Could not isolate copy action — see attempts JSON; saved current state",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\leads-management\\leads-copy-action.png",
+    "bytes": 66680
+  },
+  "jbp-submission/jbp-open-cycle-form": {
+    "status": "CAPTURED",
+    "note": "44 field(s); modal=false",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\jbp-submission\\jbp-open-cycle-form.png",
+    "bytes": 126494
+  },
+  "jbp-submission/jbp-form-validation": {
+    "status": "CAPTURED",
+    "note": "Empty submit attempt",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\jbp-submission\\jbp-form-validation.png",
+    "bytes": 131756
+  },
+  "jbp-submission/jbp-form-filled": {
+    "status": "CAPTURED",
+    "note": "2 input(s) populated (DO NOT SUBMIT)",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\jbp-submission\\jbp-form-filled.png",
+    "bytes": 126043
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "login/login-initial": {
+    "status": "CAPTURED",
+    "note": "Heading: \"SALES MANAGER LOGIN\"; URL: https://uat-web.xrportal.in/sales-manager",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-initial.png",
+    "bytes": 388605
+  },
+  "login/login-otp-entry": {
+    "status": "CAPTURED",
+    "note": "Heading: \"ENTER OTP\"; 6 OTP inputs visible",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-otp-entry.png",
+    "bytes": 392239
+  },
+  "login/login-otp-invalid": {
+    "status": "CAPTURED",
+    "note": "Errors: []",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-otp-invalid.png",
+    "bytes": 388534,
+    "errors": []
+  },
+  "login/login-otp-resend-enabled": {
+    "status": "CAPTURED",
+    "note": "Re-Send OTP enabled",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-otp-resend-enabled.png",
+    "bytes": 387683
+  },
+  "login/login-success-dashboard": {
+    "status": "CAPTURED",
+    "note": "Live login → https://uat-web.xrportal.in/sales-manager/callback-requests",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-success-dashboard.png",
+    "bytes": 206563
+  }
+}

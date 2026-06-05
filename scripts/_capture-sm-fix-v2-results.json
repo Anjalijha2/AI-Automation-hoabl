@@ -1,0 +1,60 @@
+{
+  "login/login-initial": {
+    "status": "CAPTURED",
+    "note": "Loaded https://uat-web.xrportal.in/login",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-initial.png",
+    "bytes": 389306
+  },
+  "login/login-otp-entry": {
+    "status": "CAPTURED",
+    "note": "OTP screen visible",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-otp-entry.png",
+    "bytes": 397352
+  },
+  "login/login-otp-invalid": {
+    "status": "CAPTURED",
+    "note": "Errors: []",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-otp-invalid.png",
+    "bytes": 397823,
+    "errors": []
+  },
+  "login/login-otp-resend-enabled": {
+    "status": "CAPTURED",
+    "note": "Re-Send OTP button enabled",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-otp-resend-enabled.png",
+    "bytes": 392419
+  },
+  "login/login-success-dashboard": {
+    "status": "AUTH_FAILED",
+    "note": "Final URL: https://uat-web.xrportal.in/login",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-success-dashboard.png",
+    "bytes": 389306,
+    "finalUrl": "https://uat-web.xrportal.in/login"
+  },
+  "tower-heatmap/heatmap-tower-selected": {
+    "status": "CAPTURED",
+    "note": "Tower 9 - Triumph clicked",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\tower-heatmap\\heatmap-tower-selected.png",
+    "bytes": 138815
+  },
+  "tower-heatmap/heatmap-unit-hover": {
+    "status": "CAPTURED",
+    "note": "Tooltip: \"\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\tower-heatmap\\heatmap-unit-hover.png",
+    "bytes": 126318,
+    "tooltipText": ""
+  },
+  "tower-heatmap/heatmap-unit-click": {
+    "status": "CAPTURED",
+    "note": "Detail: \"Floor\n35\n34\n33\n32\n31\n30\n29\n28\n27\n26\n25\n24\n23\n22\n21\n20\n19\n18\n17\n16\n15\n14\n13\n12\n11\n10\n9\n8\n7\n6\n5\n4\n3\n2\n1\n\nUnit - 1\n\n323\n1 BHK Growth\n\nUnit - 2\n\n323\n1 BHK\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\tower-heatmap\\heatmap-unit-click.png",
+    "bytes": 140913,
+    "detail": "Floor\n35\n34\n33\n32\n31\n30\n29\n28\n27\n26\n25\n24\n23\n22\n21\n20\n19\n18\n17\n16\n15\n14\n13\n12\n11\n10\n9\n8\n7\n6\n5\n4\n3\n2\n1\n\nUnit - 1\n\n323\n1 BHK Growth\n\nUnit - 2\n\n323\n1 BHK Growth\n\nUnit - 3\n\n621\n2 BHK Rise\n\nUnit - 4\n\n485\n2 BHK Growth\n\nUnit - 5\n\n323\n1 BHK Growth\n\nUnit - 6\n\n323\n1 BHK Growth\n\nUnit - 7\n\n485\n2 BHK Growth\n\nUnit - 8\n\n621\n2 BHK Rise\n3501\n3502\n3503\n3504\n3505\n3506\n3507\n3508\n3401\n3402\n3403\n3404\n3405\n3406\n3407\n3408\n3301\n3302\n3303\n3304\n3305\n3306\nREFUGE\n3308\n3201\n3202\n3203\n3204\n3205\n3206\n3207\n3208\n3101\n3102\n3103\n3104\n3105\n3106\n3107\n3108\n3001\n3002\n3003\n3004\n3005\n3006\n3007\n3008\n2901\n2902\n2903\n2904\n2905\n2906\n2907\n2"
+  },
+  "tower-heatmap/heatmap-filter": {
+    "status": "CAPTURED_FALLBACK",
+    "note": "No interactive filter dropdown — page may not expose explicit filter controls",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\tower-heatmap\\heatmap-filter.png",
+    "bytes": 143141
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "login/login-initial": {
+    "status": "CAPTURED",
+    "note": "Loaded https://uat-web.xrportal.in/login",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-initial.png",
+    "bytes": 389306
+  },
+  "login/login-otp-entry": {
+    "status": "CAPTURED",
+    "note": "OTP screen at https://uat-web.xrportal.in/login",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-otp-entry.png",
+    "bytes": 397456
+  },
+  "login/login-otp-invalid": {
+    "status": "CAPTURED",
+    "note": "Errors: [\"OTP is required\",\"OTP is required\",\"OTP is required\"]",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-otp-invalid.png",
+    "bytes": 397780,
+    "errors": [
+      "OTP is required",
+      "OTP is required",
+      "OTP is required"
+    ]
+  },
+  "login/login-otp-resend-enabled": {
+    "status": "CAPTURED",
+    "note": "Re-Send button enabled",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-otp-resend-enabled.png",
+    "bytes": 393508
+  },
+  "login/login-success-dashboard": {
+    "status": "CAPTURED",
+    "note": "Landing at https://uat-web.xrportal.in/login",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\login\\login-success-dashboard.png",
+    "bytes": 389306
+  },
+  "_sidebar": {
+    "status": "CAPTURED",
+    "note": "Found 9 nav items",
+    "items": [
+      {
+        "text": "Callback Requests",
+        "href": "",
+        "cls": "ant-menu-item ant-menu-item-selected"
+      },
+      {
+        "text": "Callback Requests",
+        "href": "/sales-manager/callback-requests",
+        "cls": "active"
+      },
+      {
+        "text": "Towers",
+        "href": "",
+        "cls": "ant-menu-item"
+      },
+      {
+        "text": "Towers",
+        "href": "/sales-manager/towers",
+        "cls": ""
+      },
+      {
+        "text": "Allocation",
+        "href": "",
+        "cls": "ant-menu-item"
+      },
+      {
+        "text": "Allocation",
+        "href": "/sales-manager/physical-allocation",
+        "cls": ""
+      },
+      {
+        "text": "•••",
+        "href": "",
+        "cls": "ant-pagination-item-link"
+      },
+      {
+        "text": "Callback",
+        "href": "",
+        "cls": "ant-menu-item ant-menu-item-selected"
+      },
+      {
+        "text": "Callback",
+        "href": "/sales-manager/callback-requests",
+        "cls": "active"
+      }
+    ]
+  },
+  "callback-requests/callback-loaded": {
+    "status": "CAPTURED",
+    "note": "URL https://uat-web.xrportal.in/sales-manager/callback-requests",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-loaded.png",
+    "bytes": 207006
+  },
+  "callback-requests/callback-table-data": {
+    "status": "CAPTURED",
+    "note": "11 row(s); columns: [\"\",\"Request ID\",\"Manager\",\"Customer Name\",\"Customer Phone\",\"Registration No\",\"HV Code\",\"Pincode\",\"Requested At\",\"Status\",\"VC Outcome\",\"Meeting\",\"SM Feedback\",\"Customer Rating\",\"Customer Email\",\"Actions\"]",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-table-data.png",
+    "bytes": 139345,
+    "columns": [
+      "",
+      "Request ID",
+      "Manager",
+      "Customer Name",
+      "Customer Phone",
+      "Registration No",
+      "HV Code",
+      "Pincode",
+      "Requested At",
+      "Status",
+      "VC Outcome",
+      "Meeting",
+      "SM Feedback",
+      "Customer Rating",
+      "Customer Email",
+      "Actions"
+    ]
+  },
+  "callback-requests/callback-empty": {
+    "status": "SKIPPED",
+    "note": "Table has data"
+  },
+  "callback-requests/callback-filter-open": {
+    "status": "CAPTURED",
+    "note": "Filter 1 opened with 10 option(s)",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-filter-open.png",
+    "bytes": 181647,
+    "options": [
+      "Suyash SM admin",
+      "anjali manager",
+      "Supriya manager",
+      "Vijay kumar",
+      "Tester Anjali",
+      "Jainil Shah",
+      "Vignesh SM Admin",
+      "Suyash SalesManager",
+      "Supriya Manager",
+      "Anjali SmAdmin"
+    ]
+  },
+  "callback-requests/callback-action": {
+    "status": "CAPTURED",
+    "note": "Action clicked; modal: \"\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\callback-requests\\callback-action.png",
+    "bytes": 172025,
+    "modalText": ""
+  },
+  "physical-allocation/allocation-loaded": {
+    "status": "CAPTURED",
+    "note": "URL https://uat-web.xrportal.in/sales-manager/physical-allocation",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-loaded.png",
+    "bytes": 50295
+  },
+  "physical-allocation/allocation-empty": {
+    "status": "CAPTURED",
+    "note": "Empty state",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-empty.png",
+    "bytes": 44601
+  },
+  "physical-allocation/allocation-table": {
+    "status": "SKIPPED",
+    "note": "No rows"
+  },
+  "physical-allocation/allocation-filters": {
+    "status": "NOT_FOUND",
+    "note": "No filter dropdown opened"
+  },
+  "physical-allocation/allocation-action": {
+    "status": "SKIPPED",
+    "note": "No table rows and no search input"
+  },
+  "tower-heatmap/heatmap-loaded": {
+    "status": "CAPTURED",
+    "note": "URL https://uat-web.xrportal.in/sales-manager/towers",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\tower-heatmap\\heatmap-loaded.png",
+    "bytes": 144801
+  },
+  "tower-heatmap/heatmap-tower-selected": {
+    "status": "CAPTURED_FALLBACK",
+    "note": "No tower button — captured default state",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\tower-heatmap\\heatmap-tower-selected.png",
+    "bytes": 145375
+  },
+  "tower-heatmap/heatmap-unit-hover": {
+    "status": "CAPTURED",
+    "note": "Tooltip: \"\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\tower-heatmap\\heatmap-unit-hover.png",
+    "bytes": 134227,
+    "tooltipText": ""
+  },
+  "tower-heatmap/heatmap-unit-click": {
+    "status": "CAPTURED",
+    "note": "Detail: \"\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\tower-heatmap\\heatmap-unit-click.png",
+    "bytes": 134331,
+    "detail": ""
+  },
+  "tower-heatmap/heatmap-filter": {
+    "status": "NOT_FOUND",
+    "note": "No filter dropdown opened"
+  }
+}

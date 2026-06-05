@@ -58,9 +58,11 @@ Used as: baseline references for selectors, layout, and regression comparison.
 
 ## Sales Manager Portal (https://uat-web.xrportal.in/sales-manager)
 
+**2026-06-05:** SM-portal OTP is `258369` (same as Admin). Full capture done — all 4 modules upgraded to FULL. SM login URL is `/sales-manager` itself (not `/sales-manager/login`). Default authenticated landing is `/sales-manager/callback-requests`. Sidebar exposes 3 nav items: Callback Requests, Towers, Allocation.
+
 | Module              | Index                                                              | Status |
 | ------------------- | ------------------------------------------------------------------ | ------ |
-| Login               | [sm/login/INDEX.md](sm/login/INDEX.md)                             | STUB   |
-| Callback Requests   | [sm/callback-requests/INDEX.md](sm/callback-requests/INDEX.md)     | STUB   |
-| Physical Allocation | [sm/physical-allocation/INDEX.md](sm/physical-allocation/INDEX.md) | STUB   |
-| Tower Heatmap       | [sm/tower-heatmap/INDEX.md](sm/tower-heatmap/INDEX.md)             | STUB   |
+| Login               | [sm/login/INDEX.md](sm/login/INDEX.md)                             | FULL   |
+| Callback Requests   | [sm/callback-requests/INDEX.md](sm/callback-requests/INDEX.md)     | FULL   |
+| Physical Allocation | [sm/physical-allocation/INDEX.md](sm/physical-allocation/INDEX.md) | FULL   |
+| Tower Heatmap       | [sm/tower-heatmap/INDEX.md](sm/tower-heatmap/INDEX.md)             | FULL   |

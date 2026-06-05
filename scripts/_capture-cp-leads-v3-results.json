@@ -1,0 +1,19 @@
+{
+  "leads-share-action": {
+    "status": "CAPTURED",
+    "note": "Resend Notification clicked. toast=[] modal=\"\" newTab=none",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\leads-management\\leads-share-action.png",
+    "bytes": 67083,
+    "toasts": [],
+    "modal": "",
+    "newTab": null
+  },
+  "leads-copy-action": {
+    "status": "CAPTURED",
+    "note": "Copy Link clicked. toast=[] clipboard=\"https://uat.xrportal.in/ref/02e2e02ca41382306396dbb87cde0bfd5e5c6d6e8b5dc6c89f93f8c4456e0929\"",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\leads-management\\leads-copy-action.png",
+    "bytes": 67759,
+    "toasts": [],
+    "clipboard": "https://uat.xrportal.in/ref/02e2e02ca41382306396dbb87cde0bfd5e5c6d6e8b5dc6c89f93f8c4456e0929"
+  }
+}
