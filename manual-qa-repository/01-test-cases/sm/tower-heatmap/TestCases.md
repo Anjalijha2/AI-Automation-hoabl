@@ -9,7 +9,7 @@
 - `.claude/docs/hoabl-knowledge-base/SM-Portal/FRD/SM-FS-Tower-Heatmap.md` (Feature 1, §1.1–1.7)
 - `.claude/docs/hoabl-knowledge-base/SM-Portal/FRD/SM-FRD-SM-Portal.md` (§5 Module 2)
 **Generated:** 2026-06-05
-**Status:** APPROVED (dual-source gate cleared)
+**Status:** APPROVED — reviewer verdict 2026-06-06 (visual 93.3%, doc-logic 100%, 4 CONDITIONAL TCs flagged for data/env fixtures, no LOGIC_GAP, no VISUAL_MISMATCH). See `review-report.md`.
 
 ---
 
