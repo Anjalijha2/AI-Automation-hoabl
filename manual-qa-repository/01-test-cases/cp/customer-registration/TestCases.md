@@ -12,6 +12,8 @@
 
 **Dual-Source Gate:** PASSED (visual FULL + BRD/FRD present)
 
+**Status:** APPROVED
+
 ---
 
 ## Test Cases

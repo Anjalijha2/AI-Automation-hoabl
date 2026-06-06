@@ -26,6 +26,8 @@ Per FSD-CORRECTION 2026-05-25 (FRD Section 1.2):
 
 TC scenarios below reflect the live UI (CP self-KYC). Legacy customer-KYC flow described in older BRD/FRD sections is treated as deprecated / not applicable to the live `/kyc` route.
 
+**Status:** Conditional — DOC_DRIFT (BRD says 4 documents, live UI shows 3: PAN/GST/MAHA RERA); stale STUB-EVIDENCE/NO-VISUAL-EVIDENCE citations on 16 TCs need refresh against new 2026-06-06 screenshots; LOGIC_GAPs on NEG_014-019 (disabled-Submit gating vs asserted inline errors)
+
 ---
 
 ## Test Cases

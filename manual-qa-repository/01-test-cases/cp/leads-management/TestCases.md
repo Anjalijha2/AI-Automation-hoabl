@@ -8,6 +8,8 @@
 **BRD/FRD Source:** `.claude/docs/hoabl-knowledge-base/CP-Portal/FRD/CP-FS-Leads-Management.md`
 **Supersedes:** Previous batch (Conditional / 50% coverage / incorrect action icon names — "share" and "copy"). All action-icon TCs have been rewritten using DOM-verified names: **"Resend Notification"** and **"Copy Link"**.
 
+**Status:** APPROVED
+
 ---
 
 ## Test Cases

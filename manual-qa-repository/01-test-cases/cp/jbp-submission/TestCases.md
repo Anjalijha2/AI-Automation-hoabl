@@ -13,6 +13,8 @@
 **Dual-source gate:** PASSED (visual-memory FULL + BRD/FRD present).
 **Auth precondition for all TCs:** CP logged in via `automation-repository/fixtures/.auth/channel-partner.json` (Mobile `8888888888`, OTP `147258`).
 
+**Status:** APPROVED
+
 ---
 
 ## Test Cases

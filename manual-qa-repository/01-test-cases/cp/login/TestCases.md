@@ -12,6 +12,8 @@
 
 **Test Credentials (UAT):** Mobile `8888888888` / OTP `147258` (CP-specific — confirmed)
 
+**Status:** Conditional — TC_CP_LOGIN_BIZ_029 carries [NO-VISUAL-EVIDENCE] for incomplete-profile state; 34/35 TCs APPROVED, visual coverage 97.1%
+
 ---
 
 ## Test Cases
