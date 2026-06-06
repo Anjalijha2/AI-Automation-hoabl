@@ -1,7 +1,7 @@
 # Feature-Spec: Unit Details
 
 **Portal:** Buyer Portal
-**URL:** `https://uat.xrportal.in/allotted-units`
+**URL:** `https://uat.xrportal.in/kyc?unitId=<base64>` <!-- DOC_DRIFT-001 corrected 2026-06-06: /allotted-units obsolete — actual route is /kyc?unitId=<base64> per visual-memory/buyer/unit-details/INDEX.md -->
 **Created:** 2026-05-12
 **Status:** Complete
 

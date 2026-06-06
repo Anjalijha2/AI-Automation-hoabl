@@ -505,7 +505,7 @@ Can be printed or saved as PDF from browser print preview.
 
 **Purpose:** Buyers view comprehensive details about their allocated unit.
 
-**Screen:** `/allotted-units` and allocation-details components
+**Screen:** `/kyc?unitId=<base64>` and allocation-details components <!-- DOC_DRIFT-001 corrected 2026-06-06: /allotted-units obsolete — actual route is /kyc?unitId=<base64> per visual-memory/buyer/unit-details/INDEX.md -->
 
 **Sections (allocationDetails):**
 
@@ -641,7 +641,7 @@ Buyer Portal
 ├── / (login)
 ├── /home              → Dashboard
 ├── /alloted           → Allocation experience (pre/during/post)
-├── /allotted-units    → Allocated unit details
+├── /kyc?unitId=<base64> → Allocated unit details <!-- DOC_DRIFT-001 corrected 2026-06-06: /allotted-units obsolete — actual route is /kyc?unitId=<base64> per visual-memory/buyer/unit-details/INDEX.md -->
 ├── /kyc               → KYC form
 ├── /homeloan          → Home loan flow
 ├── /paymentschedule   → Payment schedule tracking

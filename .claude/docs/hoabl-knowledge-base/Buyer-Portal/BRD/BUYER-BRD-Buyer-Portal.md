@@ -35,7 +35,7 @@ Buyers cannot self-register. A Channel Partner or Admin must register them first
 | 4 | KYC | `/kyc` |
 | 5 | Home Loan | `/homeloan` |
 | 6 | Payment Schedule | `/paymentschedule` |
-| 7 | Unit Details | `/allotted-units` |
+| 7 | Unit Details | `/kyc?unitId=<base64>` | <!-- DOC_DRIFT-001 corrected 2026-06-06: /allotted-units obsolete — actual route is /kyc?unitId=<base64> per visual-memory/buyer/unit-details/INDEX.md -->
 | 8 | Project Information | `/project` |
 | 9 | Support Tickets | `/support-tickets` |
 | 10 | Callback Request | `/call-feedback` |
