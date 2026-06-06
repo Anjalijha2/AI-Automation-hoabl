@@ -1,6 +1,6 @@
 # Visual Memory — Buyer Portal / Payment Schedule
 
-**Captured:** 2026-06-03
+**Captured:** 2026-06-03; re-verified 2026-06-06 — page heading `h2: "Payment Schedule"` + `h5: "REGISTRATION NO."` + `h5: "UNIT NO."` dropdowns confirmed live; table is empty until selectors are populated
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/paymentschedule)
 **CAPTURE_STATUS:** FULL

@@ -1,6 +1,6 @@
 # Visual Memory — Buyer Portal / Home Dashboard
 
-**Captured:** 2026-06-04 (updated with manual screenshots)
+**Captured:** 2026-06-04 (updated with manual screenshots); re-verified 2026-06-06 — header still shows "Welcome, ishaaaaan karnik" + "Call Requested" button (post-callback state)
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/home)
 **CAPTURE_STATUS:** FULL

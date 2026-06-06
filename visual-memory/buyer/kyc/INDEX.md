@@ -1,6 +1,6 @@
 # Visual Memory — Buyer Portal / KYC
 
-**Captured:** 2026-06-04 (updated — full KYC flow captured via manual screenshots)
+**Captured:** 2026-06-04 (updated — full KYC flow captured via manual screenshots); re-verified 2026-06-06 — direct `/kyc` (no `unitId` param) returns EMPTY_GATE (no headings, no form, no applicants table); flow only visible when navigated from Complete KYC button with `?unitId=<base64>`
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/kyc?unitId=<base64>)
 **CAPTURE_STATUS:** FULL

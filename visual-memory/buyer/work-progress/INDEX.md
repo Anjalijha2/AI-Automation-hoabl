@@ -1,6 +1,6 @@
 # Visual Memory — Buyer Portal / Work Progress
 
-**Captured:** 2026-06-03
+**Captured:** 2026-06-03; re-verified 2026-06-06 — `h2: "HoABL Naigaon"` + `h2: "Work Progress"` + tower tabs present; Building 4/5 content visible
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/work-progress)
 **CAPTURE_STATUS:** FULL

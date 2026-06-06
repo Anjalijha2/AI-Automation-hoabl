@@ -1,6 +1,6 @@
 # Visual Memory — Buyer Portal / Registration & Login
 
-**Captured:** 2026-06-03
+**Captured:** 2026-06-03; re-verified 2026-06-06 via `scripts/capture-buyer-portal-all.js` (heading still `h2: "APPLICANT LOGIN"`, Send OTP button live)
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/)
 **CAPTURE_STATUS:** FULL

@@ -1,0 +1,1751 @@
+{
+  "timestamp": "2026-06-06T15:22:54.468Z",
+  "capturedBy": "tech-lead-agent / capture-buyer-portal-all.js",
+  "portal": "buyer",
+  "baseUrl": "https://uat.xrportal.in/",
+  "viewport": {
+    "width": 1920,
+    "height": 900
+  },
+  "authFile": "automation-repository/fixtures/.auth/buyer.json",
+  "modules": [
+    {
+      "module": "registration-login",
+      "url": "https://uat.xrportal.in/",
+      "finalUrl": "https://uat.xrportal.in/",
+      "screenshotPath": "visual-memory/buyer/registration-login/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/",
+        "title": "HoABL",
+        "headings": [
+          {
+            "tag": "h2",
+            "text": "APPLICANT LOGIN"
+          }
+        ],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "aria-label": "Previous slide"
+            },
+            "text": "‹"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "aria-label": "Next slide"
+            },
+            "text": "›"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "submit"
+            },
+            "text": "Send OTP"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "#"
+            },
+            "text": "Terms & Conditions"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "https://growwithhoabl.com/privacy-policy"
+            },
+            "text": "Privacy Policy"
+          }
+        ],
+        "inputs": [
+          {
+            "tag": "input",
+            "attrs": {
+              "placeholder": "Enter Mobile Number",
+              "name": "phone",
+              "type": "tel"
+            },
+            "text": ""
+          }
+        ],
+        "modals": [],
+        "bodyTextSnippet": "‹ › APPLICANT LOGIN Select nationality & verify to continue Indian National NRI Mobile Number* +91 By verifying, you accept the Terms & Conditions and Privacy Policy. Send OTP Copyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+      },
+      "interactiveStates": [],
+      "notes": [],
+      "error": null
+    },
+    {
+      "module": "home-dashboard",
+      "url": "https://uat.xrportal.in/home",
+      "finalUrl": "https://uat.xrportal.in/home",
+      "screenshotPath": "visual-memory/buyer/home-dashboard/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/home",
+        "title": "HoABL",
+        "headings": [
+          {
+            "tag": "h2",
+            "text": "Welcome, ishaaaaan karnik"
+          },
+          {
+            "tag": "h6",
+            "text": "Details"
+          },
+          {
+            "tag": "h6",
+            "text": "High Demand - Book to confirm your Unit!"
+          }
+        ],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Call Requested\n04 Jun 2026, 05:00 PM"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Add Units"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Download your Unit Details"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Download your Unit Details"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Download your Unit Details"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Complete KYC"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Complete KYC"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Complete KYC"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Download your Unit Details"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Complete KYC"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Proceed to Confirm"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Homeloan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Home Loan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          }
+        ],
+        "inputs": [],
+        "modals": [],
+        "bodyTextSnippet": "Home Registration Allotment Homeloan Project Work Progress Logout India’s Biggest Growth Housing Revolution Begins On 7th April 2026. Welcome, ishaaaaan karnik Call Requested 04 Jun 2026, 05:00 PM India’s Biggest Growth Housing Revolution Begins On 7th April 2026. Details Add Units 🔥 High Demand - Book to confirm your Unit! Registration Number Home Loan Alloted Unit Status Process Status Payment Schedule Registration Number Home Loan Alloted Unit Status Process Status Payment Schedule GHNG-1000008364-A No - Waitlisted - GHNG-1000008364-B No - Refunded - GHNG-1000008364-C No 1201-Glory 1 Bed G"
+      },
+      "interactiveStates": [],
+      "notes": [],
+      "error": null
+    },
+    {
+      "module": "allocation-experience",
+      "url": "https://uat.xrportal.in/alloted",
+      "finalUrl": "https://uat.xrportal.in/alloted",
+      "screenshotPath": "visual-memory/buyer/allocation-experience/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/alloted",
+        "title": "HoABL",
+        "headings": [
+          {
+            "tag": "h2",
+            "text": "Allotment"
+          },
+          {
+            "tag": "h4",
+            "text": "Congratulations ishaaaaan!"
+          },
+          {
+            "tag": "h5",
+            "text": "You're Eligible to Select Your Growth Home!"
+          },
+          {
+            "tag": "h2",
+            "text": "1 BHK Growth Home"
+          },
+          {
+            "tag": "h2",
+            "text": "2 BHK Growth Home"
+          },
+          {
+            "tag": "h2",
+            "text": "1 BHK Growth Home"
+          },
+          {
+            "tag": "h2",
+            "text": "1 BHK Growth Home"
+          },
+          {
+            "tag": "h2",
+            "text": "2 BHK Growth Home"
+          },
+          {
+            "tag": "h2",
+            "text": "2 BHK Growth Home"
+          },
+          {
+            "tag": "h2",
+            "text": "1 BHK Growth Home"
+          },
+          {
+            "tag": "h2",
+            "text": "2 BHK Growth Home"
+          },
+          {
+            "tag": "h2",
+            "text": "GHNG-1000008364-A"
+          },
+          {
+            "tag": "h2",
+            "text": "GHNG-1000008364-K"
+          },
+          {
+            "tag": "h5",
+            "text": "Paid"
+          },
+          {
+            "tag": "h5",
+            "text": "Allotment Process Completed"
+          }
+        ],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          },
+          {
+            "tag": "button",
+            "attrs": {},
+            "text": "Download your Unit Details"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Floor & Unit Plan"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Cost Sheet"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Payment Schedule"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay Now"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Homeloan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "#"
+            },
+            "text": "1201 - Glory"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Home Loan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          }
+        ],
+        "inputs": [],
+        "modals": [],
+        "bodyTextSnippet": "Home Registration Allotment Homeloan Project Work Progress Logout India’s Biggest Growth Housing Revolution Begins On 7th April 2026. Allotment Congratulations ishaaaaan! You're Eligible to Select Your Growth Home! Booked 1 BHK Growth Home 323 sq.ft. Booked 2 BHK Growth Home 485 sq.ft. Booked 1 BHK Growth Home 323 sq.ft. Booked 1 BHK Growth Home 323 sq.ft. Booked 2 BHK Growth Home 485 sq.ft. Booked 2 BHK Growth Home 485 sq.ft. Booked 1 BHK Growth Home 323 sq.ft. Booked 2 BHK Growth Home 485 sq.ft. Waitlisted GHNG-1000008364-A Waitlisted GHNG-1000008364-K Paid Allotment Process Completed 1201 -"
+      },
+      "interactiveStates": [],
+      "notes": [
+        "WINNER_STATE — eligible-to-select banner present"
+      ],
+      "error": null
+    },
+    {
+      "module": "callback-request",
+      "url": "https://uat.xrportal.in/home",
+      "finalUrl": "https://uat.xrportal.in/home",
+      "screenshotPath": "visual-memory/buyer/callback-request/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/home",
+        "title": "HoABL",
+        "headings": [
+          {
+            "tag": "h2",
+            "text": "Welcome, ishaaaaan karnik"
+          },
+          {
+            "tag": "h6",
+            "text": "Details"
+          },
+          {
+            "tag": "h6",
+            "text": "High Demand - Book to confirm your Unit!"
+          }
+        ],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Call Requested\n04 Jun 2026, 05:00 PM"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Add Units"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Download your Unit Details"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Download your Unit Details"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Download your Unit Details"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Complete KYC"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Complete KYC"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Complete KYC"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Download your Unit Details"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Complete KYC"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Pay"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Proceed to Confirm"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Homeloan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Home Loan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          }
+        ],
+        "inputs": [],
+        "modals": [],
+        "bodyTextSnippet": "Home Registration Allotment Homeloan Project Work Progress Logout India’s Biggest Growth Housing Revolution Begins On 7th April 2026. Welcome, ishaaaaan karnik Call Requested 04 Jun 2026, 05:00 PM India’s Biggest Growth Housing Revolution Begins On 7th April 2026. Details Add Units 🔥 High Demand - Book to confirm your Unit! Registration Number Home Loan Alloted Unit Status Process Status Payment Schedule Registration Number Home Loan Alloted Unit Status Process Status Payment Schedule GHNG-1000008364-A No - Waitlisted - GHNG-1000008364-B No - Refunded - GHNG-1000008364-C No 1201-Glory 1 Bed G"
+      },
+      "interactiveStates": [
+        {
+          "state": "schedule-a-call-modal",
+          "screenshot": "visual-memory/buyer/callback-request/callback-modal-verify-2026-06-06.png",
+          "modals": [
+            {
+              "role": "dialog",
+              "cls": "ant-modal css-9oppau",
+              "text": "Reschedule Call\nPreferred Date & Time\nComment (optional)\n12 / 200\nCancel\nReschedule"
+            }
+          ]
+        }
+      ],
+      "notes": [],
+      "error": null
+    },
+    {
+      "module": "home-loan",
+      "url": "https://uat.xrportal.in/homeloan",
+      "finalUrl": "https://uat.xrportal.in/homeloan",
+      "screenshotPath": "visual-memory/buyer/home-loan/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/homeloan",
+        "title": "HoABL",
+        "headings": [
+          {
+            "tag": "h5",
+            "text": "Homeloan"
+          },
+          {
+            "tag": "h6",
+            "text": "I want to apply for a new loan"
+          },
+          {
+            "tag": "h6",
+            "text": "I have a pre-approved loan"
+          }
+        ],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Homeloan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Home Loan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          }
+        ],
+        "inputs": [],
+        "modals": [],
+        "bodyTextSnippet": "Home Registration Allotment Homeloan Project Work Progress Logout India’s Biggest Growth Housing Revolution Begins On 7th April 2026. Homeloan Choose the option that best describes your loan requirement: I want to apply for a new loan Complete the full application process with eligibility check I have a pre-approved loan Upload your sanction letter from the bank and proceed quickly"
+      },
+      "interactiveStates": [],
+      "notes": [],
+      "error": null
+    },
+    {
+      "module": "kyc",
+      "url": "https://uat.xrportal.in/kyc",
+      "finalUrl": "https://uat.xrportal.in/kyc",
+      "screenshotPath": "visual-memory/buyer/kyc/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/kyc",
+        "title": "HoABL",
+        "headings": [],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Homeloan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Home Loan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          }
+        ],
+        "inputs": [],
+        "modals": [],
+        "bodyTextSnippet": "Home Registration Allotment Homeloan Project Work Progress Logout India’s Biggest Growth Housing Revolution Begins On 7th April 2026."
+      },
+      "interactiveStates": [],
+      "notes": [
+        "EMPTY_GATE — direct /kyc with no unitId param shows blank content"
+      ],
+      "error": null
+    },
+    {
+      "module": "payment-schedule",
+      "url": "https://uat.xrportal.in/paymentschedule",
+      "finalUrl": "https://uat.xrportal.in/paymentschedule",
+      "screenshotPath": "visual-memory/buyer/payment-schedule/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/paymentschedule",
+        "title": "HoABL",
+        "headings": [
+          {
+            "tag": "h2",
+            "text": "Payment Schedule"
+          },
+          {
+            "tag": "h5",
+            "text": "REGISTRATION NO."
+          },
+          {
+            "tag": "h5",
+            "text": "UNIT NO."
+          }
+        ],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Homeloan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Home Loan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          }
+        ],
+        "inputs": [],
+        "modals": [],
+        "bodyTextSnippet": "Home Registration Allotment Homeloan Project Work Progress Logout Payment Schedule REGISTRATION NO. UNIT NO. MILESTONE % DUE GST TOTAL AMOUNT TOTAL OUTSTANDING PAYMENT STATUS PAY TRANSACTION DETAILS MILESTONE % Due GST Total Amount Total Outstanding Payment Status Pay No data"
+      },
+      "interactiveStates": [],
+      "notes": [
+        "TABLE_VISIBLE — payment schedule headers present"
+      ],
+      "error": null
+    },
+    {
+      "module": "project-information",
+      "url": "https://uat.xrportal.in/project",
+      "finalUrl": "https://uat.xrportal.in/project",
+      "screenshotPath": "visual-memory/buyer/project-information/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/project",
+        "title": "HoABL",
+        "headings": [
+          {
+            "tag": "h2",
+            "text": "HoABL Naigaon"
+          },
+          {
+            "tag": "h2",
+            "text": "See the Vision Come Alive"
+          },
+          {
+            "tag": "h3",
+            "text": "LOCATION"
+          },
+          {
+            "tag": "h5",
+            "text": "Epicentre of Growth"
+          },
+          {
+            "tag": "h3",
+            "text": "PROJECT WALKTHROUGH"
+          },
+          {
+            "tag": "h5",
+            "text": "Your Future Growth Home – Development Walkthrough"
+          },
+          {
+            "tag": "h3",
+            "text": "SCIENCE BEHIND EVERY DETAIL"
+          },
+          {
+            "tag": "h5",
+            "text": "Integrated Project Planning for 1 BHK"
+          },
+          {
+            "tag": "h3",
+            "text": "SCIENCE BEHIND EVERY DETAIL"
+          },
+          {
+            "tag": "h5",
+            "text": "Integrated Project Planning for 2 BHK"
+          },
+          {
+            "tag": "h3",
+            "text": "CONNECTIVITY AND ACCESSIBILITY"
+          },
+          {
+            "tag": "h5",
+            "text": "Connectivity and accessibility"
+          },
+          {
+            "tag": "h3",
+            "text": "USER GUIDE VIDEO"
+          },
+          {
+            "tag": "h5",
+            "text": "How to Apply for a Home Loan – Step by Step (English)"
+          },
+          {
+            "tag": "h2",
+            "text": "Gallery"
+          }
+        ],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Homeloan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Home Loan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          }
+        ],
+        "inputs": [],
+        "modals": [],
+        "bodyTextSnippet": "Home Registration Allotment Homeloan Project Work Progress Logout India’s Biggest Growth Housing Revolution Begins On 7th April 2026. HoABL Naigaon RERA ID: P99000080106 See the Vision Come Alive Explore Project Videos & Walkthrough 06.45 LOCATION Epicentre of Growth 03.39 PROJECT WALKTHROUGH Your Future Growth Home – Development Walkthrough 03.26 SCIENCE BEHIND EVERY DETAIL Integrated Project Planning for 1 BHK 04.28 SCIENCE BEHIND EVERY DETAIL Integrated Project Planning for 2 BHK 04.31 CONNECTIVITY AND ACCESSIBILITY Connectivity and accessibility 03.07 USER GUIDE VIDEO How to Apply for a Ho"
+      },
+      "interactiveStates": [],
+      "notes": [],
+      "error": null
+    },
+    {
+      "module": "support-tickets",
+      "url": "https://uat.xrportal.in/support-tickets",
+      "finalUrl": "https://uat.xrportal.in/support-tickets",
+      "screenshotPath": "visual-memory/buyer/support-tickets/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/support-tickets",
+        "title": "HoABL",
+        "headings": [
+          {
+            "tag": "h4",
+            "text": "Support Tickets"
+          },
+          {
+            "tag": "h6",
+            "text": "Support Tickets"
+          }
+        ],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Clear"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Homeloan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/support-tickets/categories"
+            },
+            "text": "Create Ticket"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Home Loan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          }
+        ],
+        "inputs": [
+          {
+            "tag": "input",
+            "attrs": {
+              "id": "rc_select_0",
+              "type": "search",
+              "role": "combobox"
+            },
+            "text": ""
+          },
+          {
+            "tag": "input",
+            "attrs": {
+              "placeholder": "Search tickets...",
+              "type": "text"
+            },
+            "text": ""
+          }
+        ],
+        "modals": [],
+        "bodyTextSnippet": "Home Registration Allotment Homeloan Project Work Progress Logout India’s Biggest Growth Housing Revolution Begins On 7th April 2026. Support Tickets Create Ticket Select Category Clear Ticket ID Category Project Registration Number Created At Status Action Ticket ID Category Project Registration Number Created At Status Action No data"
+      },
+      "interactiveStates": [],
+      "notes": [],
+      "error": null
+    },
+    {
+      "module": "work-progress",
+      "url": "https://uat.xrportal.in/work-progress",
+      "finalUrl": "https://uat.xrportal.in/work-progress",
+      "screenshotPath": "visual-memory/buyer/work-progress/screenshot-desktop.png",
+      "inspection": {
+        "url": "https://uat.xrportal.in/work-progress",
+        "title": "HoABL",
+        "headings": [
+          {
+            "tag": "h2",
+            "text": "HoABL Naigaon"
+          },
+          {
+            "tag": "h2",
+            "text": "See the Vision Come Alive"
+          },
+          {
+            "tag": "h2",
+            "text": "Work Progress"
+          },
+          {
+            "tag": "h6",
+            "text": "Building 4 - view test & Building 5 - view test Building 4 - view test & Building 5 - view testBuilding 4 - view test & "
+          }
+        ],
+        "buttons": [
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          },
+          {
+            "tag": "button",
+            "attrs": {
+              "type": "button"
+            },
+            "text": "Logout"
+          }
+        ],
+        "links": [
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Homeloan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/home"
+            },
+            "text": "Home"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/register"
+            },
+            "text": "Registration"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/alloted"
+            },
+            "text": "Allotment"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/homeloan"
+            },
+            "text": "Home Loan"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/project"
+            },
+            "text": "Project"
+          },
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/work-progress"
+            },
+            "text": "Work Progress"
+          }
+        ],
+        "inputs": [],
+        "modals": [],
+        "bodyTextSnippet": "Home Registration Allotment Homeloan Project Work Progress Logout India’s Biggest Growth Housing Revolution Begins On 7th April 2026. HoABL Naigaon RERA ID: P99000080106 See the Vision Come Alive Work Progress Crest Prestige Triumph Crown Horizon Radiance Aspire Preview Building 4 - view test & Building 5 - view test Building 4 - view test & Building 5 - view testBuilding 4 - view test & Building 5 - view testBuilding 4 - view test & Building 5 - view testBuilding 4 - view test & Building 5 - view test"
+      },
+      "interactiveStates": [],
+      "notes": [],
+      "error": null
+    }
+  ],
+  "log": [
+    "\n[registration-login] navigating https://uat.xrportal.in/",
+    "  ↳ landed at https://uat.xrportal.in/",
+    "  ↳ saved visual-memory/buyer/registration-login/screenshot-desktop.png",
+    "Performing fresh OTP login (buyer JWT lives in sessionStorage)",
+    "  ↳ filled mobile 8888888888",
+    "  ↳ clicked Send OTP",
+    "  ↳ filled OTP 147258",
+    "  ↳ clicked Verify",
+    "  ↳ post-verify URL: https://uat.xrportal.in/home",
+    "  ↳ saved cookies/localStorage to D:\\AI_Automation\\xanadu - AI automation\\automation-repository\\fixtures\\.auth\\buyer.json (sessionStorage NOT serialised)",
+    "\n[home-dashboard] navigating https://uat.xrportal.in/home",
+    "  ↳ landed at https://uat.xrportal.in/home",
+    "  ↳ saved visual-memory/buyer/home-dashboard/screenshot-desktop.png",
+    "\n[allocation-experience] navigating https://uat.xrportal.in/alloted",
+    "  ↳ landed at https://uat.xrportal.in/alloted",
+    "  ↳ saved visual-memory/buyer/allocation-experience/screenshot-desktop.png",
+    "\n[callback-request] navigating https://uat.xrportal.in/home",
+    "  ↳ landed at https://uat.xrportal.in/home",
+    "  ↳ saved visual-memory/buyer/callback-request/screenshot-desktop.png",
+    "  ↳ captured callback modal",
+    "\n[home-loan] navigating https://uat.xrportal.in/homeloan",
+    "  ↳ landed at https://uat.xrportal.in/homeloan",
+    "  ↳ saved visual-memory/buyer/home-loan/screenshot-desktop.png",
+    "\n[kyc] navigating https://uat.xrportal.in/kyc",
+    "  ↳ landed at https://uat.xrportal.in/kyc",
+    "  ↳ saved visual-memory/buyer/kyc/screenshot-desktop.png",
+    "\n[payment-schedule] navigating https://uat.xrportal.in/paymentschedule",
+    "  ↳ landed at https://uat.xrportal.in/paymentschedule",
+    "  ↳ saved visual-memory/buyer/payment-schedule/screenshot-desktop.png",
+    "\n[project-information] navigating https://uat.xrportal.in/project",
+    "  ↳ landed at https://uat.xrportal.in/project",
+    "  ↳ saved visual-memory/buyer/project-information/screenshot-desktop.png",
+    "\n[support-tickets] navigating https://uat.xrportal.in/support-tickets",
+    "  ↳ landed at https://uat.xrportal.in/support-tickets",
+    "  ↳ saved visual-memory/buyer/support-tickets/screenshot-desktop.png",
+    "\n[work-progress] navigating https://uat.xrportal.in/work-progress",
+    "  ↳ landed at https://uat.xrportal.in/work-progress",
+    "  ↳ saved visual-memory/buyer/work-progress/screenshot-desktop.png"
+  ]
+}

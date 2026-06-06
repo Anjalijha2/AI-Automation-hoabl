@@ -1,6 +1,6 @@
 # Visual Memory — Buyer Portal / Allocation Experience
 
-**Captured:** 2026-06-04 (updated with manual screenshots — unit selection + booked states)
+**Captured:** 2026-06-04 (updated with manual screenshots — unit selection + booked states); re-verified 2026-06-06 — WINNER_STATE active: `h2: "Allotment"`, `h4: "Congratulations ishaaaaan!"`, `h5: "You're Eligible to Select Your Growth Home!"`, `h2: "1 BHK Growth Home"`
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/alloted)
 **CAPTURE_STATUS:** FULL

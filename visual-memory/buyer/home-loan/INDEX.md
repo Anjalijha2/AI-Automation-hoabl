@@ -1,6 +1,6 @@
 # Visual Memory — Buyer Portal / Home Loan
 
-**Captured:** 2026-06-04 (updated — full loan flow captured via manual screenshots)
+**Captured:** 2026-06-04 (updated — full loan flow captured via manual screenshots); re-verified 2026-06-06 — landing still shows two cards: `h6: "I want to apply for a new loan"`, `h6: "I have a pre-approved loan"`
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/homeloan)
 **CAPTURE_STATUS:** FULL

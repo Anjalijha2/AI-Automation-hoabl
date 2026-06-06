@@ -1,6 +1,6 @@
 # Visual Memory — Buyer Portal / Project Information
 
-**Captured:** 2026-06-03
+**Captured:** 2026-06-03; re-verified 2026-06-06 — `h2: "HoABL Naigaon"` + `h2: "See the Vision Come Alive"` + `h3: "LOCATION"` + `h5: "Epicentre of Growth"` all still rendered
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/project)
 **CAPTURE_STATUS:** FULL

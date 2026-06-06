@@ -1,6 +1,6 @@
 # Visual Memory — Buyer Portal / Callback Request
 
-**Captured:** 2026-06-04 (manual screenshots — modal on Home Dashboard)
+**Captured:** 2026-06-04 (manual screenshots — modal on Home Dashboard); re-verified 2026-06-06 via `scripts/capture-buyer-portal-all.js`
 **Viewport (desktop):** 1920×900
 **Environment:** UAT (https://uat.xrportal.in/home — modal overlay)
 **CAPTURE_STATUS:** FULL
@@ -13,6 +13,8 @@
 |------|--------|--------------|
 | `callback-schedule-modal.png` | "Schedule a Call" modal — empty form, initial open | 2026-06-04 |
 | `callback-reschedule-modal.png` | "Reschedule Call" modal — after first call was scheduled | 2026-06-04 |
+| `screenshot-desktop.png` | Home dashboard (modal trigger context) — desktop baseline | 2026-06-06 |
+| `callback-modal-verify-2026-06-06.png` | "Reschedule Call" modal — verification re-capture (header shows "Call Requested" state) | 2026-06-06 |
 
 ---
 

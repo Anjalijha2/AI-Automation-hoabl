@@ -8,6 +8,7 @@ Used as: baseline references for selectors, layout, and regression comparison.
 - `FULL` — complete capture with DOM inspection and Key Structural Notes
 - `STUB` — screenshots exist, structural notes pending (run visual-capture to upgrade)
 - `MISSING` — no screenshots or INDEX.md (BA Agent will block TC generation)
+- `DEPRECATED` — module removed from frontend; screenshots retained for history, BA Agent must not generate TCs
 
 ---
 
@@ -29,19 +30,21 @@ Used as: baseline references for selectors, layout, and regression comparison.
 
 ## Buyer Portal (https://uat.xrportal.in/)
 
-| Module                | Index                                                                        | Status |
-| --------------------- | ---------------------------------------------------------------------------- | ------ |
-| Registration & Login  | [buyer/registration-login/INDEX.md](buyer/registration-login/INDEX.md)       | STUB   |
-| Home Dashboard        | [buyer/home-dashboard/INDEX.md](buyer/home-dashboard/INDEX.md)               | STUB   |
-| Allocation Experience | [buyer/allocation-experience/INDEX.md](buyer/allocation-experience/INDEX.md) | STUB   |
-| Callback Request      | [buyer/callback-request/INDEX.md](buyer/callback-request/INDEX.md)           | STUB   |
-| Home Loan             | [buyer/home-loan/INDEX.md](buyer/home-loan/INDEX.md)                         | STUB   |
-| KYC                   | [buyer/kyc/INDEX.md](buyer/kyc/INDEX.md)                                     | STUB   |
-| Payment Schedule      | [buyer/payment-schedule/INDEX.md](buyer/payment-schedule/INDEX.md)           | STUB   |
-| Project Information   | [buyer/project-information/INDEX.md](buyer/project-information/INDEX.md)     | STUB   |
-| Support Tickets       | [buyer/support-tickets/INDEX.md](buyer/support-tickets/INDEX.md)             | STUB   |
-| Unit Details          | [buyer/unit-details/INDEX.md](buyer/unit-details/INDEX.md)                   | STUB   |
-| Work Progress         | [buyer/work-progress/INDEX.md](buyer/work-progress/INDEX.md)                 | STUB   |
+**2026-06-06:** Buyer-portal status sync — all 10 active modules verified FULL (DOM inspection + structural notes already present from 2026-06-03/04 captures + 2026-06-06 re-verification via `scripts/capture-buyer-portal-all.js`). Support Tickets marked DEPRECATED (removed from frontend, screenshots retained). Buyer-portal OTP is `147258`. Authenticated landing is `/home`; sidebar exposes 6 nav items: Home, Registration, Allotment, Homeloan, Project, Work Progress (+ Logout). Data-gated modules (allocation-experience, kyc, payment-schedule) captured against test account 8888888888 / ishaaaaan karnik which has 11 registrations across Waitlisted / Refunded / Booked-KYC-Completed / Booked-KYC-Pending / Available states — every visible gate state is documented in the per-module INDEX.md.
+
+| Module                | Index                                                                        | Status     |
+| --------------------- | ---------------------------------------------------------------------------- | ---------- |
+| Registration & Login  | [buyer/registration-login/INDEX.md](buyer/registration-login/INDEX.md)       | FULL       |
+| Home Dashboard        | [buyer/home-dashboard/INDEX.md](buyer/home-dashboard/INDEX.md)               | FULL       |
+| Allocation Experience | [buyer/allocation-experience/INDEX.md](buyer/allocation-experience/INDEX.md) | FULL       |
+| Callback Request      | [buyer/callback-request/INDEX.md](buyer/callback-request/INDEX.md)           | FULL       |
+| Home Loan             | [buyer/home-loan/INDEX.md](buyer/home-loan/INDEX.md)                         | FULL       |
+| KYC                   | [buyer/kyc/INDEX.md](buyer/kyc/INDEX.md)                                     | FULL       |
+| Payment Schedule      | [buyer/payment-schedule/INDEX.md](buyer/payment-schedule/INDEX.md)           | FULL       |
+| Project Information   | [buyer/project-information/INDEX.md](buyer/project-information/INDEX.md)     | FULL       |
+| Support Tickets       | [buyer/support-tickets/INDEX.md](buyer/support-tickets/INDEX.md)             | DEPRECATED |
+| Unit Details          | [buyer/unit-details/INDEX.md](buyer/unit-details/INDEX.md)                   | FULL       |
+| Work Progress         | [buyer/work-progress/INDEX.md](buyer/work-progress/INDEX.md)                 | FULL       |
 
 ## Channel Partner Portal (https://uat-web.xrportal.in/)
 

@@ -8,6 +8,8 @@
 > **DEPRECATED 2026-06-04** — Module removed from frontend. Client no longer requires Support Tickets.
 > Screenshots retained for historical reference. TCs archived to `manual-qa-repository/01-test-cases/archived/buyer/support-tickets/`.
 > BA Agent must NOT generate TCs for this module.
+>
+> **2026-06-06 RE-VERIFICATION NOTE:** Live capture at `/support-tickets` still renders the page (`h4: "Support Tickets"`, search input, Clear button, empty table). The route has NOT been removed from the frontend; deprecation is a business/scope decision only. If client requirements change, re-instate by removing this DEPRECATED block and the archived-TC reference.
 
 ---
 
