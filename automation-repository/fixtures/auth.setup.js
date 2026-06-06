@@ -102,6 +102,48 @@ setup('authenticate as channel partner', async ({ page }) => {
   await page.context().storageState({ path: AUTH('channel-partner') });
 });
 
+// ── Channel Partner — INCOMPLETE KYC (fresh CP 9999999991) ──────────────────
+// Saves a session for a CP whose KYC has NOT been submitted. Used by the
+// KYC fill-flow TCs in tests/e2e/cp/kyc-assistance.spec.js (NEG_014–019,
+// FUNC_031–034) which need an editable form. Logs in via OTP and stops BEFORE
+// the RegisterCp modal is submitted — the Undertaking modal may auto-render,
+// we leave it as-is and persist the post-OTP cookie/session state.
+//
+// IMPORTANT: this fixture BURNS the moment any test actually submits the
+// RegisterCp / KYC form. Refresh by deleting
+// `fixtures/.auth/channel-partner-incomplete.json` and re-running auth:setup,
+// or rotate to a different fresh mobile number.
+setup('authenticate as channel partner (incomplete KYC)', async ({ page }) => {
+  await page.goto('https://uat-web.xrportal.in/');
+  await page.waitForLoadState('domcontentloaded');
+
+  const mobileInput = page.locator(
+    'input[type="tel"], input[placeholder*="Mobile" i], input[name*="mobile" i], input[id*="mobile" i]'
+  ).first();
+  await mobileInput.waitFor({ state: 'visible', timeout: 15_000 });
+  await mobileInput.fill('9999999991');
+
+  await page.getByRole('button', { name: /send otp/i }).first().click();
+
+  const firstBox = page.locator('input[autocomplete="one-time-code"], input[type="text"][maxlength="1"], input[aria-label*="otp" i]').first();
+  await firstBox.waitFor({ state: 'visible', timeout: 15_000 });
+  const boxes = page.locator('input[autocomplete="one-time-code"], input[type="text"][maxlength="1"], input[aria-label*="otp" i]');
+  for (const [i, d] of '147258'.split('').entries()) await boxes.nth(i).fill(d);
+
+  await page.getByRole('button', { name: /verify|login|submit/i }).first().click();
+
+  // After OTP verify, the portal lands at `/` (root) with the Undertaking
+  // modal stacked over the RegisterCp KYC modal. We do NOT dismiss or submit
+  // either — we just wait for any one of them to render, then snapshot state.
+  // The session cookie/localStorage is set as soon as OTP verification succeeds.
+  await page.waitForLoadState('networkidle');
+  // Best-effort wait — the modal may or may not be present depending on the
+  // backend state of 9999999991. Either way the auth state is saved.
+  await page.waitForTimeout(2_000); // tolerate slight modal render delay
+
+  await page.context().storageState({ path: AUTH('channel-partner-incomplete') });
+});
+
 // ── Buyer ────────────────────────────────────────────────────────────────────
 setup('authenticate as buyer', async ({ page }) => {
   await genericOtpLogin(page, {
