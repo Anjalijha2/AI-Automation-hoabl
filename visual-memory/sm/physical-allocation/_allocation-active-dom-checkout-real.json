@@ -1,0 +1,233 @@
+{
+  "url": "https://uat-web.xrportal.in/sales-manager/physical-allocation/checkout",
+  "title": "HoABL | Sales Manager",
+  "tree": {
+    "tag": "body",
+    "children": [
+      {
+        "tag": "div",
+        "id": "toasts",
+        "children": [
+          {
+            "tag": "section",
+            "class": "Toastify"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "id": "root",
+        "children": [
+          {
+            "tag": "div",
+            "class": "layout",
+            "children": [
+              {
+                "tag": "div",
+                "class": "ant-layout ant-layout-has-sider css-17wfwcs",
+                "children": [
+                  {
+                    "tag": "aside",
+                    "class": "ant-layout-sider ant-layout-sider-dark sidebar css-17wfwcs",
+                    "children": [
+                      {
+                        "tag": "div",
+                        "class": "ant-layout-sider-children",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "class": "logo-sidebar",
+                            "children": [
+                              {
+                                "tag": "img"
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "class": "sidebar-flex",
+                            "children": [
+                              {
+                                "tag": "ul",
+                                "class": "ant-menu ant-menu-root ant-menu-inline ant-menu-light menu-box css-17wfwcs",
+                                "children": [
+                                  {
+                                    "tag": "li",
+                                    "class": "ant-menu-item"
+                                  },
+                                  {
+                                    "tag": "li",
+                                    "class": "ant-menu-item"
+                                  },
+                                  {
+                                    "tag": "li",
+                                    "class": "ant-menu-item"
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div"
+                              },
+                              {
+                                "tag": "div",
+                                "class": "logout-footer",
+                                "children": [
+                                  {
+                                    "tag": "button",
+                                    "class": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-button"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "div",
+                    "class": "ant-layout css-17wfwcs",
+                    "children": [
+                      {
+                        "tag": "header",
+                        "class": "ant-layout-header header top-navbar css-17wfwcs",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "class": "marquee-wrap",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "marquee-text",
+                                "text": "India’s Biggest Growth Housing Revolution Begins On 7th April 2026."
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "class": "ant-layout page-layout css-17wfwcs",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "class": "mobile-top-custom",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "d-flex justify-content-between align-items-center",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "logo-wrapper"
+                                  },
+                                  {
+                                    "tag": "div"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "main",
+                            "class": "ant-layout-content page-content css-17wfwcs",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "physical-event-container",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "allocation-topbar"
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "class": "ant-row three-section-layout css-17wfwcs"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "class": "bottom-nav-mobile-fixed",
+                            "children": [
+                              {
+                                "tag": "ul",
+                                "class": "ant-menu ant-menu-root ant-menu-inline ant-menu-light menu-box css-17wfwcs",
+                                "children": [
+                                  {
+                                    "tag": "li",
+                                    "class": "ant-menu-item"
+                                  },
+                                  {
+                                    "tag": "li",
+                                    "class": "ant-menu-item"
+                                  },
+                                  {
+                                    "tag": "li",
+                                    "class": "ant-menu-item"
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "footer",
+                        "class": "ant-layout-footer css-17wfwcs",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "class": "footer-wrap-bottom",
+                            "text": "Copyright © 2026 House of Abhinandan Lodha. All Rights Reserved."
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "script"
+      },
+      {
+        "tag": "script"
+      },
+      {
+        "tag": "script"
+      },
+      {
+        "tag": "div",
+        "class": "razorpay-container",
+        "children": [
+          {
+            "tag": "style"
+          },
+          {
+            "tag": "div",
+            "class": "razorpay-backdrop",
+            "children": [
+              {
+                "tag": "span",
+                "text": "Test Mode"
+              }
+            ]
+          },
+          {
+            "tag": "iframe",
+            "class": "razorpay-checkout-frame"
+          }
+        ]
+      }
+    ]
+  }
+}

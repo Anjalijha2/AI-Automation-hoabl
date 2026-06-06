@@ -1,0 +1,145 @@
+{
+  "steps": [
+    {
+      "key": "search-result-rows",
+      "status": "OK",
+      "note": "rows in result table: 1"
+    },
+    {
+      "key": "1-search-result",
+      "status": "CAPTURED",
+      "note": "Search by phone 7666470638 → 1 row(s) (Anjali WhatsAppTemp)",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-search-result.png",
+      "name": "allocation-search-result.png",
+      "bytes": 45886
+    },
+    {
+      "key": "select-button-presence",
+      "status": "OK",
+      "note": "select-action-btn count: 1"
+    },
+    {
+      "key": "2-customer-selected",
+      "status": "CAPTURED",
+      "note": "Result row visible with Select button highlighted (pre-click state)",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-customer-selected.png",
+      "name": "allocation-customer-selected.png",
+      "bytes": 45593
+    },
+    {
+      "key": "nav-to-checkout",
+      "status": "OK",
+      "note": "url: https://uat-web.xrportal.in/sales-manager/physical-allocation/checkout"
+    },
+    {
+      "key": "3-checkout",
+      "status": "CAPTURED",
+      "note": "UnitAllocationPage rendered with tower heatmap + units",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-checkout.png",
+      "name": "allocation-checkout.png",
+      "bytes": 103653
+    },
+    {
+      "key": "3b-checkout-fullpage",
+      "status": "CAPTURED",
+      "note": "Full-page checkout dump (scrollable content)",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-checkout-fullpage.png",
+      "name": "allocation-checkout-fullpage.png",
+      "bytes": 109179
+    },
+    {
+      "key": "3c-dom-dump",
+      "status": "WROTE",
+      "note": "DOM tree of checkout page",
+      "file": "_allocation-active-dom-checkout-real.json"
+    },
+    {
+      "key": "4-unit-selected",
+      "status": "CAPTURED_NO_CELL",
+      "note": "No unit-cell selector matched — captured viewport for visual reference",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-checkout-unit-selected.png",
+      "name": "allocation-checkout-unit-selected.png",
+      "bytes": 102757
+    },
+    {
+      "key": "5-kyc-direct",
+      "status": "CAPTURED",
+      "note": "KYC direct-nav viewport (URL: https://uat-web.xrportal.in/sales-manager/physical-allocation/kyc)",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-kyc.png",
+      "name": "allocation-kyc.png",
+      "bytes": 7089
+    },
+    {
+      "key": "6-kyc-real",
+      "status": "NOT_REACHABLE",
+      "note": "No \"Proceed to KYC\" button found on checkout — KYC may require unit + payment first"
+    }
+  ],
+  "notes": [
+    {
+      "probe": ".unit-cell.available",
+      "count": 0
+    },
+    {
+      "probe": ".unit-card.AVAILABLE",
+      "count": 0
+    },
+    {
+      "probe": "[data-status=\"AVAILABLE\"]",
+      "count": 0
+    },
+    {
+      "probe": ".unit:not(.HOLD):not(.WINNER):not(.disabled)",
+      "count": 0
+    },
+    {
+      "probe": ".tower-unit-cell.available",
+      "count": 0
+    },
+    {
+      "probe": "div.ant-card.unit:not(.disabled)",
+      "count": 0
+    },
+    {
+      "tower_probe": ".tower-tab",
+      "count": 0
+    },
+    {
+      "tower_probe": ".tower-card",
+      "count": 0
+    },
+    {
+      "tower_probe": ".ant-tabs-tab",
+      "count": 0
+    },
+    {
+      "tower_probe": ".tower-chip",
+      "count": 0
+    },
+    {
+      "allowed": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/kyc/registration-units/applicants",
+      "method": "POST",
+      "why": "KYC applicants read uses POST"
+    },
+    {
+      "kyc_btn_probe": "button:has-text(\"Proceed to KYC\")",
+      "count": 0
+    },
+    {
+      "kyc_btn_probe": "button:has-text(\"KYC\")",
+      "count": 0
+    },
+    {
+      "kyc_btn_probe": "a:has-text(\"KYC\")",
+      "count": 0
+    },
+    {
+      "kyc_btn_probe": "button:has-text(\"Complete KYC\")",
+      "count": 0
+    },
+    {
+      "kyc_btn_probe": "button:has-text(\"Start KYC\")",
+      "count": 0
+    }
+  ]
+}

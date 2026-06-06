@@ -1,0 +1,59 @@
+{
+  "results": {
+    "1-allocation-loaded-active": {
+      "status": "CAPTURED",
+      "note": "Active campaign visible. Headings: [\"H5: Physical Unit Allocation\"]",
+      "file": "allocation-loaded-active.png",
+      "bytes": 41226
+    },
+    "2-allocation-search-form": {
+      "status": "CAPTURED",
+      "note": "Search card with Search-input + Scan-QR button",
+      "file": "allocation-search-form.png",
+      "bytes": 5320
+    },
+    "3-allocation-search-result": {
+      "status": "CAPTURED",
+      "note": "Query \"8888888888\" returned 1 row(s)",
+      "file": "allocation-search-result.png",
+      "bytes": 40232,
+      "query": "8888888888",
+      "rowCount": 1
+    },
+    "4-allocation-search-no-result": {
+      "status": "CAPTURED",
+      "note": "Query \"ZZNOTFOUND\" -> rows=0 | empty: \"No data\"",
+      "file": "allocation-search-no-result.png",
+      "bytes": 40702
+    },
+    "5-allocation-customer-selected": {
+      "status": "NOT_FOUND",
+      "note": "Select button not present on result row"
+    },
+    "6-allocation-checkout": {
+      "status": "CAPTURED_REDIRECT",
+      "note": "Direct nav to /checkout redirected to https://uat-web.xrportal.in/sales-manager/physical-allocation (UnitAllocationPage requires location.state.customer per source). Captured the landing state.",
+      "file": "allocation-checkout.png",
+      "bytes": 41309,
+      "urlNow": "https://uat-web.xrportal.in/sales-manager/physical-allocation"
+    },
+    "7-allocation-checkout-unit-selected": {
+      "status": "UNREACHABLE",
+      "note": "Cannot reach /checkout without a real customerContext (selected via search → Select). KYC and unit-selection require live state."
+    },
+    "8-allocation-kyc": {
+      "status": "CAPTURED",
+      "note": "KYC page captured. Headings: []",
+      "file": "allocation-kyc.png",
+      "bytes": 7089,
+      "urlNow": "https://uat-web.xrportal.in/sales-manager/physical-allocation/kyc"
+    },
+    "9-allocation-confirmation": {
+      "status": "UNREACHABLE",
+      "note": "Confirmation/success requires completing real KYC submission and payment. Per task instructions, do NOT execute irreversible actions. Not captured."
+    }
+  },
+  "campaignActive": true,
+  "customerSelected": false,
+  "safeQuery": "8888888888"
+}

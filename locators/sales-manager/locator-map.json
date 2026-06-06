@@ -1,13 +1,14 @@
 {
   "_meta": {
     "portal": "sales-manager",
-    "version": "1.3.0",
-    "lastUpdated": "2026-05-29",
+    "version": "1.4.0",
+    "lastUpdated": "2026-06-06",
     "maintainer": "Tech Lead Agent",
     "changelog": [
       "1.1.0 — live-crawl pass on 2026-05-29 for login, callback-requests, tower-heatmap, physical-allocation",
       "1.2.0 — live-crawl pass on 2026-05-29 for tower-heatmap",
-      "1.3.0 — live-crawl pass on 2026-05-29 for physical-allocation"
+      "1.3.0 — live-crawl pass on 2026-05-29 for physical-allocation",
+      "1.4.0 — physical-allocation checkout sub-route real-flow capture (2026-06-06): added 27 selectors covering search-result row, Select button, unit-cards (available/selected/disabled), Unit Details pricing breakdown, Unit Allocation Cart, payment radios, T&C checkbox, Proceed-to-Pay, Common Pool, KYC link"
     ]
   },
   "login": {
@@ -735,12 +736,321 @@
     "searchByPhoneOrRegistrationNumberInput": {
       "selector": "input[placeholder=\"Search by Phone or Registration Number...\"]",
       "type": "css",
-      "fallback": "",
+      "fallback": "input.search-input",
       "aria_role": "input",
       "deprecated": false,
       "added": "2026-05-29",
       "changelog": [
-        "2026-05-29 — added via live crawl"
+        "2026-05-29 — added via live crawl",
+        "2026-06-06 — fallback set to input.search-input (component class, more stable than placeholder)"
+      ]
+    },
+    "searchInput": {
+      "selector": "input.search-input",
+      "type": "css",
+      "fallback": "input[placeholder*=\"Phone or Registration\"]",
+      "aria_role": "input",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added via real-flow capture (preferred selector — component class)"
+      ]
+    },
+    "searchResultRow": {
+      "selector": ".search-card .ant-table-tbody tr.ant-table-row",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "row",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added via real-flow capture for Anjali WhatsAppTemp / GHNG-2000000014-A"
+      ]
+    },
+    "searchResultSelectButton": {
+      "selector": "button.select-action-btn",
+      "type": "css",
+      "fallback": "button:has-text(\"Select\")",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added via real-flow capture; navigates to /physical-allocation/checkout"
+      ]
+    },
+    "searchEmptyDescription": {
+      "selector": ".ant-empty-description",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "text",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; shows 'No data' when search returns empty"
+      ]
+    },
+    "checkoutBackButton": {
+      "selector": "a:has-text(\"Back to Physical Allocation\")",
+      "type": "text",
+      "fallback": ".allocation-topbar a",
+      "aria_role": "link",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added via real-flow capture"
+      ]
+    },
+    "checkoutUploadDocsButton": {
+      "selector": "button:has-text(\"Upload Documents\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added via real-flow capture"
+      ]
+    },
+    "checkoutPreAllocatedCard": {
+      "selector": ".ant-card.section-card.pre-allocated-card",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "region",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added via real-flow capture"
+      ]
+    },
+    "checkoutUnitCard": {
+      "selector": ".unit-grid .unit-card",
+      "type": "css",
+      "fallback": ".unit-card",
+      "aria_role": "card",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added via real-flow capture; click selects locally (no API mutation)"
+      ]
+    },
+    "checkoutUnitCardAvailable": {
+      "selector": ".unit-card.unit-card--available:not(.disabled):not(.dimmed)",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "card",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; isolates only clickable available cards"
+      ]
+    },
+    "checkoutUnitCardSelected": {
+      "selector": ".unit-card.selected",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "card",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; matches currently selected unit card (green border)"
+      ]
+    },
+    "checkoutCommonPoolButton": {
+      "selector": "button.common-pull-btn",
+      "type": "css",
+      "fallback": "button:has-text(\"Common Pool\")",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; opens Common Pool drawer (only visible if registration.status !== WINNER)"
+      ]
+    },
+    "checkoutCommonPoolButtonCompact": {
+      "selector": "button.common-pull-btn--compact",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; compact variant in Pre Allocated Units card header"
+      ]
+    },
+    "checkoutKycLink": {
+      "selector": "a.kyc-link-btn",
+      "type": "css",
+      "fallback": "a:has-text(\"KYC\")",
+      "aria_role": "link",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; conditional — present only when registration.status === WINNER"
+      ]
+    },
+    "checkoutUnitDetailsCard": {
+      "selector": ".ant-card.section-card.details-card",
+      "type": "css",
+      "fallback": ".details-card",
+      "aria_role": "region",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added via real-flow capture"
+      ]
+    },
+    "checkoutUnitNumberHeading": {
+      "selector": ".compact-unit-header .compact-unit-number",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "text",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; shows the selected flat number (e.g. '1404')"
+      ]
+    },
+    "checkoutUnitTowerName": {
+      "selector": ".compact-unit-header .compact-unit-tower",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "text",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; shows the tower name (e.g. 'Crest')"
+      ]
+    },
+    "checkoutPriceRowLabel": {
+      "selector": ".compact-price-row .price-row-label",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "text",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; pricing breakdown labels (Agreement Value, Stamp Duty, etc.)"
+      ]
+    },
+    "checkoutPriceRowValue": {
+      "selector": ".compact-price-row .price-row-value",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "text",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; pricing breakdown values"
+      ]
+    },
+    "checkoutParkingCheckbox": {
+      "selector": ".parking-option-checkbox input.ant-checkbox-input",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "checkbox",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; toggles Car Parking ₹5,00,000 line item"
+      ]
+    },
+    "checkoutCartCard": {
+      "selector": ".ant-card.section-card.unit-allocation-card",
+      "type": "css",
+      "fallback": ".unit-allocation-card",
+      "aria_role": "region",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; Unit Allocation Cart panel"
+      ]
+    },
+    "checkoutPayableAmount": {
+      "selector": ".payable-amount-value",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "text",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; Combined Payable Amount value (e.g. ₹5,18,647)"
+      ]
+    },
+    "checkoutGstCheckbox": {
+      "selector": ".allocation-gst-checkbox input.ant-checkbox-input",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "checkbox",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; 'Collect payment without GST'"
+      ]
+    },
+    "checkoutOnlinePaymentRadio": {
+      "selector": "input[type=\"radio\"][value=\"online\"]",
+      "type": "css",
+      "fallback": "label:has-text(\"Online Payment\") input",
+      "aria_role": "radio",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added"
+      ]
+    },
+    "checkoutOfflinePaymentRadio": {
+      "selector": "input[type=\"radio\"][value=\"offline\"]",
+      "type": "css",
+      "fallback": "label:has-text(\"Offline Payment\") input",
+      "aria_role": "radio",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added"
+      ]
+    },
+    "checkoutTermsCheckbox": {
+      "selector": "label:has-text(\"I agree to Terms\") input",
+      "type": "css",
+      "fallback": "",
+      "aria_role": "checkbox",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added"
+      ]
+    },
+    "checkoutProceedToPayButton": {
+      "selector": "button:has-text(\"Proceed to Pay\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; disabled until T&C checked + at least one unit in cart"
+      ]
+    },
+    "checkoutPaymentScheduleButton": {
+      "selector": "button:has-text(\"Payment Schedule\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; opens Payment Schedule drawer"
+      ]
+    },
+    "checkoutCostSheetButton": {
+      "selector": "button:has-text(\"Cost Sheet\")",
+      "type": "text",
+      "fallback": "",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-06",
+      "changelog": [
+        "2026-06-06 — added; opens Cost Sheet drawer"
       ]
     }
   }

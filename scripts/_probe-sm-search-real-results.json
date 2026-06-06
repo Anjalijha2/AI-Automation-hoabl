@@ -1,0 +1,59 @@
+[
+  {
+    "q": "GHNG-2000000014-A",
+    "status": 200,
+    "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[{\"userId\":25531,\"name\":\"Anjali WhatsAppTemp\",\"phone\":\"7666470638\",\"email\":\"anjali+wp@sudhasolutions.in\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000014-A\",\"status\":\"PREALLOCATED\",\"apartmentType\":\"1 Bed Growth Home\",\"isKycSubmitted\":false}],\"registrationCount\":1}],\"errors\":null}"
+  },
+  {
+    "q": "GHNG-2000000024-A",
+    "status": 200,
+    "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[{\"userId\":25678,\"name\":\"aman guptaa\",\"phone\":\"7020527871\",\"email\":\"aman21@gmail.com\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000024-A\",\"status\":\"PREALLOCATED\",\"apartmentType\":\"2 Bed Growth Home\",\"isKycSubmitted\":false}],\"registrationCount\":1}],\"errors\":null}"
+  },
+  {
+    "q": "GHNG-2000000009-Y",
+    "status": 200,
+    "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[{\"userId\":25650,\"name\":\"Supriya Dubey\",\"phone\":\"9167746035\",\"email\":\"priyasd96@gmail.com\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000009-Y\",\"status\":\"HOLD\",\"apartmentType\":\"2 Bed Rise Home\",\"isKycSubmitted\":false}],\"registrationCount\":1}],\"errors\":null}"
+  },
+  {
+    "q": "GHNG-2000000014",
+    "status": 200,
+    "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[{\"userId\":25531,\"name\":\"Anjali WhatsAppTemp\",\"phone\":\"7666470638\",\"email\":\"anjali+wp@sudhasolutions.in\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000014-A\",\"status\":\"PREALLOCATED\",\"apartmentType\":\"1 Bed Growth Home\",\"isKycSubmitted\":false}],\"registrationCount\":1}],\"errors\":null}"
+  },
+  {
+    "q": "2000000014",
+    "status": 200,
+    "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[{\"userId\":25531,\"name\":\"Anjali WhatsAppTemp\",\"phone\":\"7666470638\",\"email\":\"anjali+wp@sudhasolutions.in\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000014-A\",\"status\":\"PREALLOCATED\",\"apartmentType\":\"1 Bed Growth Home\",\"isKycSubmitted\":false}],\"registrationCount\":1}],\"errors\":null}"
+  },
+  {
+    "q": "2000000024",
+    "status": 200,
+    "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[{\"userId\":25678,\"name\":\"aman guptaa\",\"phone\":\"7020527871\",\"email\":\"aman21@gmail.com\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000024-A\",\"status\":\"PREALLOCATED\",\"apartmentType\":\"2 Bed Growth Home\",\"isKycSubmitted\":false}],\"registrationCount\":1}],\"errors\":null}"
+  },
+  {
+    "q": "2000000009",
+    "status": 200,
+    "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[{\"userId\":25650,\"name\":\"Supriya Dubey\",\"phone\":\"9167746035\",\"email\":\"priyasd96@gmail.com\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000009-Y\",\"status\":\"HOLD\",\"apartmentType\":\"2 Bed Rise Home\",\"isKycSubmitted\":false}],\"registrationCount\":1}],\"errors\":null}"
+  },
+  {
+    "q": "GHNG-",
+    "status": 200,
+    "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[{\"userId\":25531,\"name\":\"Anjali WhatsAppTemp\",\"phone\":\"7666470638\",\"email\":\"anjali+wp@sudhasolutions.in\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000014-A\",\"status\":\"PREALLOCATED\",\"apartmentType\":\"1 Bed Growth Home\",\"isKycSubmitted\":false}],\"registrationCount\":1},{\"userId\":25678,\"name\":\"aman guptaa\",\"phone\":\"7020527871\",\"email\":\"aman21@gmail.com\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000024-A\",\"status\":\"PREALLOCATED\",\"apartmentType\":\"2 Bed Growth Home\",\"isKycSubmitted\":false}],\"registrationCount\":1},{\"userId\":25650,\"name\":\"Supriya Dubey\",\"phone\":\"9167746035\",\"email\":\"priyasd96@gmail.com\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000009-Y\",\"status\":\"HOLD\",\"apartmentType\":\"2 Bed Rise Home\",\"isKycSubmitted\":false}],\"registrationCount\":1}],\"errors\":null}"
+  },
+  {
+    "q": "00000014",
+    "status": 200,
+    "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[{\"userId\":25531,\"name\":\"Anjali WhatsAppTemp\",\"phone\":\"7666470638\",\"email\":\"anjali+wp@sudhasolutions.in\",\"registrations\":[{\"registrationNumber\":\"GHNG-2000000014-A\",\"status\":\"PREALLOCATED\",\"apartmentType\":\"1 Bed Growth Home\",\"isKycSubmitted\":false}],\"registrationCount\":1}],\"errors\":null}"
+  },
+  {
+    "kind": "customer-context",
+    "rid": "GHNG-2000000014-A",
+    "status": 400,
+    "bodyPreview": "{\"success\":false,\"message\":\"registrationNumber is required\",\"data\":null,\"errors\":null}"
+  },
+  {
+    "kind": "customer-context",
+    "rid": "GHNG-2000000009-Y",
+    "status": 400,
+    "bodyPreview": "{\"success\":false,\"message\":\"registrationNumber is required\",\"data\":null,\"errors\":null}"
+  }
+]

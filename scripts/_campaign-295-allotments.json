@@ -1,0 +1,76 @@
+{
+  "Allotments": [
+    {
+      "CampaignId": 295,
+      "InitialAllotmentId": 343638,
+      "RegistrationId": "GHNG-2000000014-A",
+      "UnitId": "testUnit-547664514737",
+      "TowerId": "testtower-1757934355725",
+      "TowerName": "Crest",
+      "TypologyName": "2 Bed Growth Home",
+      "DynamicRoundId": null,
+      "Status": "PREALLOCATED",
+      "IsActive": "Yes"
+    },
+    {
+      "CampaignId": 295,
+      "InitialAllotmentId": 343639,
+      "RegistrationId": "GHNG-2000000014-A",
+      "UnitId": "testUnit-547664514740",
+      "TowerId": "testtower-1757934355725",
+      "TowerName": "Crest",
+      "TypologyName": "2 Bed Growth Home",
+      "DynamicRoundId": null,
+      "Status": "PREALLOCATED",
+      "IsActive": "Yes"
+    },
+    {
+      "CampaignId": 295,
+      "InitialAllotmentId": 343640,
+      "RegistrationId": "GHNG-2000000014-A",
+      "UnitId": "testUnit-547664514327",
+      "TowerId": "testtower-1757934321125",
+      "TowerName": "Aspire",
+      "TypologyName": "1 Bed Growth Home",
+      "DynamicRoundId": null,
+      "Status": "PREALLOCATED",
+      "IsActive": "Yes"
+    },
+    {
+      "CampaignId": 295,
+      "InitialAllotmentId": 343641,
+      "RegistrationId": "GHNG-2000000024-A",
+      "UnitId": "testUnit-547664515492",
+      "TowerId": "testtower-1757934191076",
+      "TowerName": "Aura",
+      "TypologyName": "1 Bed Growth Home",
+      "DynamicRoundId": null,
+      "Status": "PREALLOCATED",
+      "IsActive": "Yes"
+    },
+    {
+      "CampaignId": 295,
+      "InitialAllotmentId": 343642,
+      "RegistrationId": "GHNG-2000000009-Y",
+      "UnitId": "testUnit-547664514727",
+      "TowerId": "testtower-1757934355725",
+      "TowerName": "Crest",
+      "TypologyName": "1 Bed Growth Home",
+      "DynamicRoundId": null,
+      "Status": "PREALLOCATED",
+      "IsActive": "Yes"
+    },
+    {
+      "CampaignId": 295,
+      "InitialAllotmentId": 343643,
+      "RegistrationId": "GHNG-2000000009-Y",
+      "UnitId": "testUnit-547664514327",
+      "TowerId": "testtower-1757934321125",
+      "TowerName": "Aspire",
+      "TypologyName": "1 Bed Growth Home",
+      "DynamicRoundId": null,
+      "Status": "PREALLOCATED",
+      "IsActive": "Yes"
+    }
+  ]
+}

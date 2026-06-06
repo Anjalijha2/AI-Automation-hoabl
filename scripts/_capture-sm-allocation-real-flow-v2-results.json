@@ -1,0 +1,94 @@
+{
+  "steps": [
+    {
+      "key": "search-rows",
+      "status": "OK",
+      "note": "result rows: 1"
+    },
+    {
+      "key": "1-customer-selected",
+      "status": "CAPTURED",
+      "note": "Anjali WhatsAppTemp row visible with Select button (pre-click)",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-customer-selected.png",
+      "name": "allocation-customer-selected.png",
+      "bytes": 45911
+    },
+    {
+      "key": "nav-checkout",
+      "status": "OK",
+      "note": "url: https://uat-web.xrportal.in/sales-manager/physical-allocation/checkout"
+    },
+    {
+      "key": "2-checkout",
+      "status": "CAPTURED",
+      "note": "Checkout with customer context populated",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-checkout.png",
+      "name": "allocation-checkout.png",
+      "bytes": 108992
+    },
+    {
+      "key": "2b-checkout-fullpage",
+      "status": "CAPTURED",
+      "note": "Full-page (incl. customer preferences table)",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-checkout-fullpage.png",
+      "name": "allocation-checkout-fullpage.png",
+      "bytes": 115559
+    },
+    {
+      "key": "unit-card-count",
+      "status": "OK",
+      "note": "pre-allocated unit cards present: 3"
+    },
+    {
+      "key": "unit-card-clicked",
+      "status": "OK",
+      "note": "clicked first available card. .selected count = 1"
+    },
+    {
+      "key": "3-unit-selected",
+      "status": "CAPTURED",
+      "note": "Unit-card clicked → Unit Details panel populated",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-checkout-unit-selected.png",
+      "name": "allocation-checkout-unit-selected.png",
+      "bytes": 164028
+    },
+    {
+      "key": "3b-unit-selected-fullpage",
+      "status": "CAPTURED",
+      "note": "Full-page with CostSheet + PaymentSchedule",
+      "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-checkout-unit-selected-fullpage.png",
+      "name": "allocation-checkout-unit-selected-fullpage.png",
+      "bytes": 179130
+    },
+    {
+      "key": "dom-dump-v2",
+      "status": "WROTE",
+      "note": "Deeper DOM dump of populated checkout",
+      "file": "_allocation-active-dom-checkout-real-v2.json"
+    },
+    {
+      "key": "kyc-gating",
+      "status": "DOCUMENTED",
+      "note": "KYC link is only rendered when registration.status === \"WINNER\" (booked). For PREALLOCATED, header shows \"Common Pool\" instead. Populated KYC capture requires complete booking + payment cycle — out of scope."
+    }
+  ],
+  "notes": [
+    {
+      "unit_cards_summary": [
+        {
+          "class": "unit-card   unit-card--available  ",
+          "text": "Available Crest Floor - 14: Flat - 1404 2 Bed Growth Home 485 sq.ft"
+        },
+        {
+          "class": "unit-card   unit-card--available  ",
+          "text": "Available Crest Floor - 14: Flat - 1407 2 Bed Growth Home 485 sq.ft"
+        },
+        {
+          "class": "unit-card   unit-card--available  ",
+          "text": "Available Aspire Floor - 28: Flat - 2805 1 Bed Growth Home 323 sq.ft"
+        }
+      ]
+    }
+  ],
+  "blocked": []
+}

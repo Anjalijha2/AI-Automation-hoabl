@@ -1,0 +1,61 @@
+{
+  "steps": [
+    {
+      "label": "admin_campaign_detail",
+      "method": "get",
+      "url": "https://uat-api.xrportal.in/api/v1/admin/allocation/campaigns/295",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Allocation campaign detail retrieved successfully\",\"data\":{\"id\":295,\"name\":\"Test New Physical Campaign\",\"projectId\":\"project-1708669316677\",\"allocationType\":\"PHYSICAL_EVENT\",\"startTime\":\"2026-06-06T04:15:00.000Z\",\"endTime\":\"2026-06-14T18:30:00.000Z\",\"description\":null,\"status\":\"RUNNING\",\"totalRegistrationsUploaded\":6,\"totalAssignedUniqueUnitsUploaded\":5,\"totalCommonPoolUnits\":1015,\"totalCommonPoolAvailable\":1015,\"totalCommonPoolBooked\":0,\"totalBookedFromAssigned\":0,\"currentPendingToBook\":3,\"initialPendingRegistrations\":3,\"totalBookings\":0},\"errors\":null}"
+    },
+    {
+      "label": "admin_campaign_rounds",
+      "method": "get",
+      "url": "https://uat-api.xrportal.in/api/v1/admin/allocation/campaigns/295/rounds",
+      "status": 400,
+      "bodyPreview": "{\"success\":false,\"message\":\"Rounds are only available for DYNAMIC allocation campaigns\",\"data\":null,\"errors\":null}"
+    },
+    {
+      "label": "admin_campaigns_list",
+      "method": "get",
+      "url": "https://uat-api.xrportal.in/api/v1/admin/allocation/campaigns?page=1&limit=20",
+      "status": 400,
+      "bodyPreview": "{\"success\":false,\"message\":\"Project ID is required\",\"data\":null,\"errors\":null}"
+    },
+    {
+      "label": "admin_customers_list",
+      "method": "get",
+      "url": "https://uat-api.xrportal.in/api/v1/admin/customers?page=1&limit=10",
+      "status": 404,
+      "bodyPreview": "{\"success\":false,\"message\":\"Not found\",\"data\":null,\"errors\":null}"
+    },
+    {
+      "label": "admin_campaign_allotments_export",
+      "method": "get",
+      "url": "https://uat-api.xrportal.in/api/v1/admin/allocation/campaigns/295/allotments/export",
+      "status": 200,
+      "bodyPreview": "PK\u0003\u0004\n\u0000\u0000\u0000\b\u0000g)�\\���\tY\u0001\u0000\u0000�\u0004\u0000\u0000\u0013\u0000\u0000\u0000[Content_Types].xml��Mn�0\u0010��=E�-J\f]TUE¢��\u0016��\u0000�xB,\u001c���w\u0012(�* �`\u0013+�7�{��\u0019O��I�\u0018H;��Q6\u0014\t��)m\u0017������\"�\bV�q\u0016s�C\u0012��n<�y���-墎�?IIe�\rP�<Z�T.4\u0010�6,��r\t\u000b����,��hc\u001a[\u000fQ��X����eˏ�A\u0002\u001a\u0012��^زr\u0001�\u001b]B�\\[���\u001e\b\u0019wv\u001a���\u0001\u000b�<Ih+�\u0001��w�L�\n�\u0019��\u0006\r���ȍ\u000b�/��e�\u0013)]U�\u0012�+W\r�d�\u0003��\u001a16&�֬\u0001m\u0007��NL�[F7\u000er���\u0011�}��z}�Φ\u0007Hqg�n=�δ�\\C@�\u0011\u0003\u001f��\u0007��}�]_I��i�\rS�m����<�\u0011\r��]����;�l�!�ˣ=\u0012���b;+��\u0004[v?��\u001bPK\u0003\u0004\n\u0000\u0000\u0000\u0000\u0000g)�\\\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0006\u0000\u0000\u0000_rels/PK\u0003\u0004\n\u0000\u0000\u0000\b\u0000g)�\\�I��\u0000\u0000\u0000K\u0002\u0000\u0000\u000b\u0000\u0000\u0000_rels/.rels���N�0\f@�|E���nH\b��� ��&4>�$n\u001b���ă�@\f�i\u0007�q��g���<��R�\u001c\f,�\u001a\u0014\u0005�·����iq\u000f*\u000b\u0006�#\u00072p�\f��f�L#J�ɽ�Y\u0015H�\u0006z���u�=M�+�\u0014�O�iB)���v������t�ɀ愩��@ں%��1�5ln[o��a� gZ��(dL\u001d��y�W�*P��]V׻�=��HС���h\u0011S�N��Z�u\u001c�]\t�όKB���\u001c���#wY\tc�2�'7�|\u0000PK\u0003\u0004\n\u0000\u0000\u0000\u0000\u0000g)�\\\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0003\u0000\u0000\u0000xl/PK\u0003\u0004\n\u0000\u0000\u0000\u0000\u0000g)�\\\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\t\u0000\u0000\u0000xl/_rels/PK\u0003\u0004\n\u0000\u0000\u0000\b\u0000g)�\\�$�V�\u0000\u0000\u0000�\u0002\u0000\u0000\u001a\u0000\u0000\u0000xl/_rels/workbook.xml.rels���j�0\u0010D��\n��ZvZJ)�s)�\\[�\u0003���LlIh7m��U\u001bH\u001c\b�\u0007�Ĭؙ�H���8�OL�\u0007��*J\u0010�M���\u0014|4��g\u0010��[=\u0004�\n&$��w�7\u001c4�\u001dr}$�M<)p��EJ2\u000eGME���M\u001bҨ9��ɨ�^w(We�$��\u0003�\u000bO��\n��V �)��C��\u0006_�9���J�$���/\u001a�:d\u0005G]d\u001f���WK�s��s��<\u000e�[\f\u000f�V�tB��)?���\u0016��0_!��!�\u0019�4�E�ǩ\u0019y���\u001fPK\u0003\u0004\n\u0000\u0000\u0000\u0000\u0000g)�\\\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u000e\u0000\u0000\u0000xl/worksheets/PK\u0003\u0004\n\u0000\u0000\u0000\b\u0000g)�\\X\u0001ѓ<\u0003\u0000\u0000�\f\u0000\u0000\u0018\u0000\u0000\u0000xl/worksheets/sheet1.xml��[o�0\u0014���)\"����@���ҋ6i�:��\r\u000eXM��6������f�x�����s8�\u001d�2����p6�\u000bʪ\u0014y�>rH��\u0005��)��2���\u001c!q��\u0005�H�>�@��/�-�obE�t A%R���\u001e���V�Ģ�jR��3^b\tC�tE�\t^���p�~?vKL+�f\u0018�Kr�<�\u0019��l]�J�I8)���Ŋ�b���.IWb���o2V֐�\u0016T~���)��Ӳb\u001c�\u0016��w/��>�\u001atҗ4�L�\\� ݮ��\u0007���L�т�\n\u001a�\u000e'y���s���Hy��\u001f�Y�\u001c�\u000b��m\u001f\t]�$�(B\u000e[˂V�\u001bِ\u0002�\u0014���\t+Ԝ*t���\u0012�\u0001�\u0014EQ�\u0013\u0019+��tJ�4\u001d\u0016��S\u0014 gK\u0017r�\"�GN�\u0016���\to\u0017�\u0006����\u0018\u0010X\u0003�]@t\f��\u0001�.����&�]��6�\u0012�G�m\u001d�\u0016%j�lLo�d\u0011j�M��U\u0013\u001dB�\u001e�\u0006�49�}\u001c\b\u0002f7����4��s�w\u001d��t\u001d��v\u001d��u\u001d��w\u001d��x�:b���u$�����;������Bk\u000e����\u001b��\u0006Ƣ��� \f���d���h�T\u0013���4�h�\\\u0013�>=h�Ѣ'M4\u0016���Ȃ��\u0005g�\u0005Gd\u0003\u0003Y`C���Ƙ\u00056d�\rY`C\u0016ؐ\u0005\u0017 \u000b�B\u0016�A\u0016\u001e��\u0006�IhC�����i�щ���\u001bi\u001f4�ؼO�\rYx\u0001��*d�\u0019d�\u0011�y!F��w�&�נ&�7�&��_dC\u0016ِE\u0017 ��B\u0016�A\u0016\u001f�\u0019T&�i�Ƶ=�D�`ƶ�\u0019�\u000eflC\u0016ې�\u0017 K�B��A�\u001c�\u0019�O\u0012\u001b��v0\u0013��Ll\u00073�!Kl�\u0012\u001b2��uS�%����V�)H�@A0o߆�d��\u0006;��Ix��G+x�\u0012ތ���\u0019������E�v\u0018��\u0000��NQ͸�J\b���\f�bZS�X�A8�\u0013h\tj�=H�}\"\b�$�#\u000e\u001a�S��\u000e/�vxxҪ���\u001f��\u001fPK\u0003\u0004\n\u0000\u0000\u0000\b\u0000g)�\\̔�Av\u0001\u0000\u0000�\u0003\u0000\u0000\u0014\u0000\u0000\u0000xl/sharedStrings.xml��AO�0\u0014���\n����M\u001a�J�B���`�-\u0007�V�6�\u0014��~\u0001��q�\u0002u��-3ck��"
+    },
+    {
+      "label": "sm_active_campaign",
+      "method": "get",
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/campaign/active",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Active campaign retrieved\",\"data\":{\"id\":295,\"name\":\"Test New Physical Campaign\",\"status\":\"RUNNING\",\"startTime\":\"2026-06-06T04:15:00.000Z\",\"endTime\":\"2026-06-14T18:30:00.000Z\",\"description\":null},\"errors\":null}"
+    },
+    {
+      "label": "sm_pool_towers",
+      "method": "get",
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/pool-towers?campaignId=295",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Pool towers retrieved\",\"data\":[{\"id\":41,\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"isActive\":true},{\"id\":43,\"towerId\":\"testtower-1757934321125\",\"towerName\":\"Aspire\",\"isActive\":true},{\"id\":45,\"towerId\":\"testtower-1757934355725\",\"towerName\":\"Crest\",\"isActive\":true},{\"id\":46,\"towerId\":\"testtower-1757934372776\",\"towerName\":\"Triumph\",\"isActive\":true},{\"id\":47,\"towerId\":\"testtower-1757934389408\",\"towerName\":\"Crown\",\"isActive\":true},{\"id\":52,\"towerId\":\"testtower-1757935119294\",\"towerName\":\"Radiance\",\"isActive\":true}],\"errors\":null}"
+    },
+    {
+      "label": "sm_pool_units",
+      "method": "get",
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/pool-units?campaignId=295",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Pool units retrieved\",\"data\":[{\"id\":35415,\"unitId\":\"testUnit-547664516181\",\"unitNo\":\"3101\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35416,\"unitId\":\"testUnit-547664516182\",\"unitNo\":\"3102\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35417,\"unitId\":\"testUnit-547664516056\",\"unitNo\":\"1501\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35418,\"unitId\":\"testUnit-547664515959\",\"unitNo\":\"205\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35419,\"unitId\":\"testUnit-547664515960\",\"unitNo\":\"206\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35420,\"unitId\":\"testUnit-547664515963\",\"unitNo\":\"302\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35421,\"unitId\":\"testUnit-547664515966\",\"unitNo\":\"305\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35422,\"unitId\":\"testUnit-547664515967\",\"unitNo\":\"306\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35423,\"unitId\":\"testUnit-547664515970\",\"unitNo\":\"401\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35424,\"unitId\":\"testUnit-547664515971\",\"unitNo\":\"402\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35425,\"unitId\":\"testUnit-547664515974\",\"unitNo\":\"405\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35426,\"unitId\":\"testUnit-547664515975\",\"unitNo\":\"406\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35427,\"unitId\":\"testUnit-547664516143\",\"unitNo\":\"2602\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":35428,\"unitId\":\"testUnit-547664516146\",\"unitNo\":\"2605\",\"towerId\":\"testtower-1757934253141\",\"towerName\":\"Pride\",\"status\":\"AVAILABLE\"},{\"id\":"
+    }
+  ],
+  "errors": []
+}

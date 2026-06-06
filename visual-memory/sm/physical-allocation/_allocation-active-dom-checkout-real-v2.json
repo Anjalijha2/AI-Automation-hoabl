@@ -1,0 +1,1518 @@
+{
+  "url": "https://uat-web.xrportal.in/sales-manager/physical-allocation/checkout",
+  "title": "HoABL | Sales Manager",
+  "tree": {
+    "tag": "div",
+    "class": "physical-event-container",
+    "children": [
+      {
+        "tag": "div",
+        "class": "allocation-topbar",
+        "children": [
+          {
+            "tag": "button",
+            "class": "ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link allocation-back-btn",
+            "children": [
+              {
+                "tag": "span",
+                "class": "ant-btn-icon",
+                "children": [
+                  {
+                    "tag": "span",
+                    "class": "anticon anticon-arrow-left",
+                    "children": [
+                      {
+                        "tag": "svg",
+                        "children": [
+                          {
+                            "tag": "path"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "span",
+                "text": "Back to Physical Allocation"
+              }
+            ]
+          },
+          {
+            "tag": "button",
+            "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid",
+            "children": [
+              {
+                "tag": "span",
+                "class": "ant-btn-icon",
+                "children": [
+                  {
+                    "tag": "span",
+                    "class": "anticon anticon-upload",
+                    "children": [
+                      {
+                        "tag": "svg",
+                        "children": [
+                          {
+                            "tag": "path"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "span",
+                "text": "Upload Documents"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "class": "ant-row three-section-layout css-17wfwcs",
+        "children": [
+          {
+            "tag": "div",
+            "class": "ant-col ant-col-xs-24 ant-col-md-24 ant-col-lg-8 css-17wfwcs",
+            "children": [
+              {
+                "tag": "div",
+                "class": "ant-card ant-card-bordered section-card css-17wfwcs",
+                "children": [
+                  {
+                    "tag": "div",
+                    "class": "ant-card-head",
+                    "children": [
+                      {
+                        "tag": "div",
+                        "class": "ant-card-head-wrapper",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "class": "ant-card-head-title",
+                            "text": "Customer Information"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "div",
+                    "class": "ant-card-body",
+                    "children": [
+                      {
+                        "tag": "div",
+                        "class": "customer-details",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "class": "customer-detail-row",
+                            "children": [
+                              {
+                                "tag": "span",
+                                "class": "anticon anticon-user customer-icon",
+                                "children": [
+                                  {
+                                    "tag": "svg",
+                                    "children": [
+                                      {
+                                        "tag": "path"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "span",
+                                "class": "customer-name",
+                                "text": "Anjali WhatsAppTemp"
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "class": "customer-detail-row",
+                            "children": [
+                              {
+                                "tag": "span",
+                                "class": "anticon anticon-phone customer-icon",
+                                "children": [
+                                  {
+                                    "tag": "svg",
+                                    "children": [
+                                      {
+                                        "tag": "path"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "span",
+                                "class": "customer-phone",
+                                "text": "7666470638"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "class": "registrations-list registrations-slot",
+                        "children": [
+                          {
+                            "tag": "h4",
+                            "class": "section-title",
+                            "text": "Customer Registrations"
+                          },
+                          {
+                            "tag": "div",
+                            "class": "registrations-container",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "registration-item selected",
+                                "children": [
+                                  {
+                                    "tag": "span",
+                                    "class": "registration-number",
+                                    "text": "GHNG-2000000014-A"
+                                  },
+                                  {
+                                    "tag": "span",
+                                    "class": "ant-tag ant-tag-green status-badge css-17wfwcs",
+                                    "text": "Not Started"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "class": "registrations-list preferences-wrap",
+                        "children": [
+                          {
+                            "tag": "h4",
+                            "class": "section-title",
+                            "text": "Customer Preferences"
+                          },
+                          {
+                            "tag": "div",
+                            "class": "ant-table-wrapper preferences-table css-17wfwcs",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "ant-spin-nested-loading css-17wfwcs",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "ant-spin-container",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "ant-table ant-table-small ant-table-bordered css-17wfwcs ant-table-fixed-header",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "class": "ant-table-container",
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "class": "ant-table-header ant-table-sticky-holder",
+                                                "children": [
+                                                  {
+                                                    "tag": "table",
+                                                    "children": [
+                                                      {
+                                                        "tag": "colgroup",
+                                                        "children": [
+                                                          {
+                                                            "tag": "col"
+                                                          },
+                                                          {
+                                                            "tag": "col"
+                                                          },
+                                                          {
+                                                            "tag": "col"
+                                                          },
+                                                          {
+                                                            "tag": "col"
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "thead",
+                                                        "class": "ant-table-thead",
+                                                        "children": [
+                                                          {
+                                                            "tag": "tr",
+                                                            "children": [
+                                                              {
+                                                                "tag": "th",
+                                                                "class": "ant-table-cell",
+                                                                "text": "Registration"
+                                                              },
+                                                              {
+                                                                "tag": "th",
+                                                                "class": "ant-table-cell",
+                                                                "text": "Tower"
+                                                              },
+                                                              {
+                                                                "tag": "th",
+                                                                "class": "ant-table-cell",
+                                                                "text": "Unit No"
+                                                              },
+                                                              {
+                                                                "tag": "th",
+                                                                "class": "ant-table-cell",
+                                                                "text": "Status"
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "class": "ant-table-body",
+                                                "children": [
+                                                  {
+                                                    "tag": "table",
+                                                    "children": [
+                                                      {
+                                                        "tag": "tbody",
+                                                        "class": "ant-table-tbody",
+                                                        "children": [
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-measure-row",
+                                                            "children": [
+                                                              {
+                                                                "tag": "th",
+                                                                "class": "ant-table-measure-cell"
+                                                              },
+                                                              {
+                                                                "tag": "th",
+                                                                "class": "ant-table-measure-cell"
+                                                              },
+                                                              {
+                                                                "tag": "th",
+                                                                "class": "ant-table-measure-cell"
+                                                              },
+                                                              {
+                                                                "tag": "th",
+                                                                "class": "ant-table-measure-cell"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-row ant-table-row-level-0",
+                                                            "children": [
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-row ant-table-row-level-0",
+                                                            "children": [
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-row ant-table-row-level-0",
+                                                            "children": [
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-row ant-table-row-level-0",
+                                                            "children": [
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-row ant-table-row-level-0",
+                                                            "children": [
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-row ant-table-row-level-0",
+                                                            "children": [
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-row ant-table-row-level-0",
+                                                            "children": [
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-row ant-table-row-level-0",
+                                                            "children": [
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "tr",
+                                                            "class": "ant-table-row ant-table-row-level-0",
+                                                            "children": [
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              },
+                                                              {
+                                                                "tag": "td",
+                                                                "class": "ant-table-cell"
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "div",
+            "class": "ant-col ant-col-xs-24 ant-col-md-24 ant-col-lg-8 css-17wfwcs",
+            "children": [
+              {
+                "tag": "div",
+                "class": "ant-spin-nested-loading css-17wfwcs",
+                "children": [
+                  {
+                    "tag": "div",
+                    "class": "ant-spin-container",
+                    "children": [
+                      {
+                        "tag": "div",
+                        "class": "ant-card ant-card-bordered section-card pre-allocated-card css-17wfwcs",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "class": "ant-card-head",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "ant-card-head-wrapper",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "ant-card-head-title",
+                                    "text": "Pre Allocated Units"
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "class": "ant-card-extra",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "pool-action pool-action--header",
+                                        "children": [
+                                          {
+                                            "tag": "button",
+                                            "class": "common-pull-btn common-pull-btn--compact",
+                                            "text": "Common Pool"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "class": "ant-card-body",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "unit-grid-container",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "unit-grid",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "unit-card selected  unit-card--available  ",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-badges",
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "class": "unit-source-badge selected-badge",
+                                                "text": "Selected"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "tower-name",
+                                            "text": "Crest"
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-number",
+                                            "text": "Floor - 14: Flat - 1404"
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-type",
+                                            "text": "2 Bed Growth Home"
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-area",
+                                            "text": "485 sq.ft"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "unit-card   unit-card--available  dimmed",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-badges",
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "class": "unit-source-badge available-badge",
+                                                "text": "Available"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "tower-name",
+                                            "text": "Crest"
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-number",
+                                            "text": "Floor - 14: Flat - 1407"
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-type",
+                                            "text": "2 Bed Growth Home"
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-area",
+                                            "text": "485 sq.ft"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "unit-card   unit-card--available  dimmed",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-badges",
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "class": "unit-source-badge available-badge",
+                                                "text": "Available"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "tower-name",
+                                            "text": "Aspire"
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-number",
+                                            "text": "Floor - 28: Flat - 2805"
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-type",
+                                            "text": "1 Bed Growth Home"
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "class": "unit-area",
+                                            "text": "323 sq.ft"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "class": "common-pull-section pool-action pool-action--footer",
+                                "children": [
+                                  {
+                                    "tag": "button",
+                                    "class": "common-pull-btn",
+                                    "text": "Common Pool"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "div",
+            "class": "ant-col ant-col-xs-24 ant-col-md-24 ant-col-lg-8 css-17wfwcs",
+            "children": [
+              {
+                "tag": "div",
+                "class": "ant-spin-nested-loading css-17wfwcs",
+                "children": [
+                  {
+                    "tag": "div",
+                    "class": "ant-spin-container",
+                    "children": [
+                      {
+                        "tag": "div",
+                        "class": "ant-card ant-card-bordered section-card details-card css-17wfwcs",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "class": "ant-card-head",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "ant-card-head-wrapper",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "ant-card-head-title",
+                                    "text": "Unit Details"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "class": "ant-card-body",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "compact-unit-header",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "compact-unit-info",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-unit-number",
+                                        "text": "1404"
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-unit-tower",
+                                        "text": "Crest"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "class": "compact-unit-specs",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-spec",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "compact-label",
+                                            "text": "BHK"
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "compact-value",
+                                            "text": "2 BHK Growth Home"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-spec",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "compact-label",
+                                            "text": "Area"
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "compact-value",
+                                            "text": "485 sq.ft"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "class": "compact-pricing",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "compact-price-row",
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "class": "price-row-label",
+                                        "text": "Agreement Value"
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "class": "price-row-value",
+                                        "text": "₹49,99,000"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "class": "compact-price-row",
+                                    "children": [
+                                      {
+                                        "tag": "label",
+                                        "class": "ant-checkbox-wrapper parking-option-checkbox css-17wfwcs",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "ant-checkbox ant-wave-target css-17wfwcs",
+                                            "children": [
+                                              {
+                                                "tag": "input",
+                                                "class": "ant-checkbox-input"
+                                              },
+                                              {
+                                                "tag": "span",
+                                                "class": "ant-checkbox-inner"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "ant-checkbox-label",
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "class": "price-row-label",
+                                                "text": "Car Parking"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "class": "price-row-value",
+                                        "text": "₹5,00,000"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "class": "compact-price-row ",
+                                    "children": [
+                                      {
+                                        "tag": "label",
+                                        "class": "ant-checkbox-wrapper parking-option-checkbox css-17wfwcs",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "ant-checkbox ant-wave-target css-17wfwcs",
+                                            "children": [
+                                              {
+                                                "tag": "input",
+                                                "class": "ant-checkbox-input"
+                                              },
+                                              {
+                                                "tag": "span",
+                                                "class": "ant-checkbox-inner"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "ant-checkbox-label",
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "class": "price-row-label",
+                                                "children": [
+                                                  {
+                                                    "tag": "span",
+                                                    "text": "Home Loan Discount"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "class": "price-row-value text-danger",
+                                        "text": "-₹10,000"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-price-row total",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-label",
+                                            "text": "Final Agreement Value"
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-value",
+                                            "text": "₹49,99,000"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-price-row",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-label",
+                                            "text": "Stamp Duty (7%)"
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-value",
+                                            "text": "₹3,49,930"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-price-row",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-label",
+                                            "text": "GST (5%)"
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-value",
+                                            "text": "₹2,49,950"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-price-row",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-label",
+                                            "text": "Registration Charges"
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-value",
+                                            "text": "₹30,000"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-price-row total",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-label",
+                                            "text": "*All inclusive"
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "price-row-value",
+                                            "text": "₹56,28,880"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "compact-discount-row",
+                                        "children": [
+                                          {
+                                            "tag": "svg",
+                                            "children": [
+                                              {
+                                                "tag": "g",
+                                                "children": [
+                                                  {
+                                                    "tag": "path"
+                                                  },
+                                                  {
+                                                    "tag": "path"
+                                                  },
+                                                  {
+                                                    "tag": "path"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "defs",
+                                                "children": [
+                                                  {
+                                                    "tag": "clippath",
+                                                    "id": "clip0_4409_30699",
+                                                    "children": [
+                                                      {
+                                                        "tag": "rect"
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "discount-text",
+                                            "text": "Total Discount: ₹0"
+                                          },
+                                          {
+                                            "tag": "svg",
+                                            "children": [
+                                              {
+                                                "tag": "g",
+                                                "children": [
+                                                  {
+                                                    "tag": "path"
+                                                  },
+                                                  {
+                                                    "tag": "path"
+                                                  },
+                                                  {
+                                                    "tag": "path"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "defs",
+                                                "children": [
+                                                  {
+                                                    "tag": "clippath",
+                                                    "id": "clip0_4409_30699",
+                                                    "children": [
+                                                      {
+                                                        "tag": "rect"
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "class": "info-card-row",
+                                "children": [
+                                  {
+                                    "tag": "button",
+                                    "class": "info-card",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "info-card-icon",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "anticon anticon-calendar",
+                                            "children": [
+                                              {
+                                                "tag": "svg",
+                                                "children": [
+                                                  {
+                                                    "tag": "path"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "info-card-body",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "class": "info-card-title",
+                                            "text": "Payment Schedule"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "svg",
+                                        "children": [
+                                          {
+                                            "tag": "path"
+                                          },
+                                          {
+                                            "tag": "path"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "button",
+                                    "class": "info-card",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "info-card-icon",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "anticon anticon-file-text",
+                                            "children": [
+                                              {
+                                                "tag": "svg",
+                                                "children": [
+                                                  {
+                                                    "tag": "path"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "class": "info-card-body",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "class": "info-card-title",
+                                            "text": "Cost Sheet"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "svg",
+                                        "children": [
+                                          {
+                                            "tag": "path"
+                                          },
+                                          {
+                                            "tag": "path"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "class": "ant-spin-nested-loading css-17wfwcs",
+                "children": [
+                  {
+                    "tag": "div",
+                    "class": "ant-spin-container",
+                    "children": [
+                      {
+                        "tag": "div",
+                        "class": "ant-card ant-card-bordered section-card unit-allocation-card mt-3 css-17wfwcs",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "class": "ant-card-head",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "ant-card-head-wrapper",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "ant-card-head-title",
+                                    "text": "Unit Allocation Cart"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "class": "ant-card-body",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "class": "unit-allocation-table-wrapper",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "ant-table-wrapper allocation-table css-17wfwcs",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "ant-spin-nested-loading css-17wfwcs",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "class": "ant-spin-container",
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "class": "ant-table ant-table-small ant-table-bordered css-17wfwcs ant-table-fixed-header",
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "class": "ant-table-container",
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "class": "ant-table-header ant-table-sticky-holder",
+                                                        "children": [
+                                                          {
+                                                            "tag": "table",
+                                                            "children": [
+                                                              {
+                                                                "tag": "colgroup"
+                                                              },
+                                                              {
+                                                                "tag": "thead",
+                                                                "class": "ant-table-thead"
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "class": "ant-table-body",
+                                                        "children": [
+                                                          {
+                                                            "tag": "table",
+                                                            "children": [
+                                                              {
+                                                                "tag": "colgroup"
+                                                              },
+                                                              {
+                                                                "tag": "tbody",
+                                                                "class": "ant-table-tbody"
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "class": "payable-amount-section",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "payable-amount-label",
+                                    "text": "Combined Payable Amount"
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "class": "payable-amount-value",
+                                    "text": "₹5,18,647"
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "class": "allocation-gst-option ",
+                                "children": [
+                                  {
+                                    "tag": "label",
+                                    "class": "ant-checkbox-wrapper allocation-gst-checkbox css-17wfwcs",
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "class": "ant-checkbox ant-wave-target css-17wfwcs",
+                                        "children": [
+                                          {
+                                            "tag": "input",
+                                            "class": "ant-checkbox-input"
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "ant-checkbox-inner"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "class": "ant-checkbox-label",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "allocation-gst-label",
+                                            "text": "Collect payment without GST"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "class": "terms-proceed-section",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "class": "payment-method-section",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "class": "ant-radio-group ant-radio-group-outline css-17wfwcs",
+                                        "children": [
+                                          {
+                                            "tag": "label",
+                                            "class": "ant-radio-wrapper ant-radio-wrapper-checked css-17wfwcs",
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "class": "ant-radio ant-wave-target ant-radio-checked",
+                                                "children": [
+                                                  {
+                                                    "tag": "input",
+                                                    "class": "ant-radio-input"
+                                                  },
+                                                  {
+                                                    "tag": "span",
+                                                    "class": "ant-radio-inner"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "span",
+                                                "class": "ant-radio-label",
+                                                "text": "Online Payment"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "label",
+                                            "class": "ant-radio-wrapper css-17wfwcs",
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "class": "ant-radio ant-wave-target",
+                                                "children": [
+                                                  {
+                                                    "tag": "input",
+                                                    "class": "ant-radio-input"
+                                                  },
+                                                  {
+                                                    "tag": "span",
+                                                    "class": "ant-radio-inner"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "span",
+                                                "class": "ant-radio-label",
+                                                "text": "Offline Payment"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "label",
+                                    "class": "ant-checkbox-wrapper css-17wfwcs",
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "class": "ant-checkbox ant-wave-target css-17wfwcs",
+                                        "children": [
+                                          {
+                                            "tag": "input",
+                                            "class": "ant-checkbox-input"
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "class": "ant-checkbox-inner"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "class": "ant-checkbox-label",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "fs-6",
+                                            "text": "I agree to Terms & Conditions"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "button",
+                                    "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-block proceed-btn",
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "class": "ant-btn-icon",
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "class": "anticon anticon-lock",
+                                            "children": [
+                                              {
+                                                "tag": "svg",
+                                                "children": [
+                                                  {
+                                                    "tag": "path"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "text": "Proceed to Pay"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
