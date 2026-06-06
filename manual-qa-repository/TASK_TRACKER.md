@@ -75,6 +75,13 @@
 | Track 3 Wave 1 — Login specs for SM/CP/Buyer (81 tests, 9 files) | Login modules | 2026-05-29 |
 | Track 3 Wave 2 — 3 modules: Admin SM, SM Callback, Buyer Dashboard (92 tests, 6 files) | Various | 2026-05-29 |
 | BUG_TRACKER catalogue — 22 FSD-verified bugs across 9 modules | All | 2026-05-29 |
+| Scaffold POM cp/KycAssistancePage.js — added 8 fillers, 3 region selectors, 3 doc uploaders, Submit-disabled helper | CP / kyc-assistance | 2026-06-07 |
+| Populate tests/e2e/cp/kyc-assistance.spec.js — 30 APPROVED TCs + 3 fixme (E2E_025/027/028) | CP / kyc-assistance | 2026-06-07 |
+| Populate tests/ui-ux/cp/kyc-assistance.spec.js — 4 UI TCs + 2 UI cousins (region dropdown / footer) | CP / kyc-assistance | 2026-06-07 |
+| Scaffold tests/regression/cp/kyc-assistance.spec.js — 4 critical-path TCs (form load, Submit gate, region, upload) | CP / kyc-assistance | 2026-06-07 |
+| Scaffold tests/cross-browser/cp/kyc-assistance.spec.js — 2 minimal TCs (form load + Submit gate) | CP / kyc-assistance | 2026-06-07 |
+| Scaffold tests/api/kyc-assistance.api.spec.js — placeholder (no API TCs in current batch) | CP / kyc-assistance | 2026-06-07 |
+| Scaffold tests/db/kyc-assistance.db.spec.js — placeholder (no DB TCs in current batch) | CP / kyc-assistance | 2026-06-07 |
 
 ---
 
