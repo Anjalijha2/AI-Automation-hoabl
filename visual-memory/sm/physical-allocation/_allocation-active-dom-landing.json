@@ -1,0 +1,42 @@
+{
+  "url": "https://uat-web.xrportal.in/sales-manager/physical-allocation",
+  "headings": [
+    "H5: Physical Unit Allocation"
+  ],
+  "bodySnippet": "Callback Requests\nTowers\nAllocation\nLogout\nIndia’s Biggest Growth Housing Revolution Begins On 7th April 2026.\nPhysical Unit Allocation\nScan QR\nCopyright © 2026 House of Abhinandan Lodha. All Rights Reserved.",
+  "hasNoActiveCampaign": false,
+  "searchInputs": [
+    {
+      "placeholder": "Search by Phone or Registration Number...",
+      "ariaLabel": "",
+      "cls": "ant-input ant-input-lg css-17wfwcs ant-input-outlined search-input",
+      "name": "",
+      "type": "text",
+      "id": "",
+      "disabled": false
+    }
+  ],
+  "buttons": [
+    {
+      "text": "Logout",
+      "ariaLabel": "",
+      "cls": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-button",
+      "disabled": false
+    },
+    {
+      "text": "Logout",
+      "ariaLabel": "",
+      "cls": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-button",
+      "disabled": false
+    },
+    {
+      "text": "Scan QR",
+      "ariaLabel": "",
+      "cls": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-lg",
+      "disabled": false
+    }
+  ],
+  "tableHeaders": [],
+  "tableRows": 0,
+  "campaignBannerCandidates": []
+}

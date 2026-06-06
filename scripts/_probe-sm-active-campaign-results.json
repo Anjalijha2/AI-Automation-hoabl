@@ -1,0 +1,51 @@
+{
+  "campaign": null,
+  "searches": [
+    {
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/campaign/active",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Active campaign retrieved\",\"data\":{\"id\":295,\"name\":\"Test New Physical Campaign\",\"status\":\"RUNNING\",\"startTime\":\"2026-06-06T04:15:00.000Z\",\"endTime\":\"2026-06-14T18:30:00.000Z\",\"description\":null},\"errors\":null}"
+    },
+    {
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/search?campaignId=295&q=9000000000",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[],\"errors\":null}"
+    },
+    {
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/search?campaignId=295&q=9999999999",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[],\"errors\":null}"
+    },
+    {
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/search?campaignId=295&q=8000000000",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[],\"errors\":null}"
+    },
+    {
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/search?campaignId=295&q=7000000000",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[],\"errors\":null}"
+    },
+    {
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/search?campaignId=295&q=7777777777",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[],\"errors\":null}"
+    },
+    {
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/search?campaignId=295&q=9876543210",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[],\"errors\":null}"
+    },
+    {
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/search?campaignId=295&q=0000099999",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[],\"errors\":null}"
+    },
+    {
+      "url": "https://uat-api.xrportal.in/api/v1/sales-manager/physical-event/search?campaignId=295&q=REG-001",
+      "status": 200,
+      "bodyPreview": "{\"success\":true,\"message\":\"Search results retrieved\",\"data\":[],\"errors\":null}"
+    }
+  ],
+  "errors": []
+}

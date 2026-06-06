@@ -1,0 +1,46 @@
+{
+  "1-loaded-active": {
+    "status": "CAPTURED",
+    "note": "Viewport snapshot with active campaign (id=295, RUNNING)",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-loaded-active.png",
+    "name": "allocation-loaded-active.png",
+    "bytes": 35740
+  },
+  "2-search-form": {
+    "status": "CAPTURED",
+    "note": "Search-card crop showing input + Scan QR",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-search-form.png",
+    "bytes": 5315
+  },
+  "3-search-result": {
+    "status": "CAPTURED_EMPTY",
+    "note": "Customer table headers (Customer Name | Phone Number | Registration Numbers | Registration Count | Action) visible + \"No data\" row. No customers seeded for campaign 295 in UAT — see /_probe-sm-active-campaign-results.json",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-search-result.png",
+    "name": "allocation-search-result.png",
+    "bytes": 40250
+  },
+  "4-no-result": {
+    "status": "CAPTURED",
+    "note": "ZZNOTFOUND -> No data",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-search-no-result.png",
+    "name": "allocation-search-no-result.png",
+    "bytes": 36538
+  },
+  "5-checkout": {
+    "status": "CAPTURED_REDIRECT",
+    "note": "Direct nav -> redirects to https://uat-web.xrportal.in/sales-manager/physical-allocation. UnitAllocationPage source guards with: if (!customer || !campaign) navigate('/sales-manager/physical-allocation'). Reachable only via Select-click from a non-empty search result.",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-checkout.png",
+    "name": "allocation-checkout.png",
+    "bytes": 35614,
+    "urlAfter": "https://uat-web.xrportal.in/sales-manager/physical-allocation"
+  },
+  "6-kyc": {
+    "status": "CAPTURED_REDIRECT",
+    "note": "Direct nav -> https://uat-web.xrportal.in/sales-manager/physical-allocation/kyc. body text length: 0. KycPage source requires location.state.customerContext — absent context renders a blank page (no crash, no redirect). Reachable only via the full search → Select → unit-select → KYC flow.",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\sm\\physical-allocation\\allocation-kyc.png",
+    "name": "allocation-kyc.png",
+    "bytes": 7089,
+    "urlAfter": "https://uat-web.xrportal.in/sales-manager/physical-allocation/kyc",
+    "bodyTextLen": 0
+  }
+}
