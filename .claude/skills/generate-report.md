@@ -1,85 +1,103 @@
 ---
 name: generate-report
-description: Parse Playwright results.json and produce structured execution summary. Called after any test run.
+description: Use when a test run finishes and an execution report needs to be built and/or emailed. Covers HTML+XLSX generation, catalogue workbook merge, and SMTP dispatch.
 ---
 
 # Skill: generate-report
 
-**Called by**: QA Agent
-**Inputs**: `reports/results.json`, portal name, sprint number
-**Outputs**: `manual-qa-repository/06-test-runs/<env>/sprint-<N>/execution-summary.md`, updated `DASHBOARD.md`
+**Called by**: QA Agent  
+**Inputs**: `reports/results.json`, TC catalogue markdown (`manual-qa-repository/01-test-cases/**/TC_*.md`), prior sprint XLSX (for history)  
+**Outputs**:
+- `manual-qa-repository/06-test-runs/<env>/sprint-<N>/execution-report.html`
+- `manual-qa-repository/06-test-runs/<env>/sprint-<N>/execution-report.xlsx`
+- Updated `manual-qa-repository/07-execution/TestCases-*Portal.xlsx` (columns K–O)
+- Email with HTML + XLSX attachments (optional)
 
 ---
 
-## Command
+## Step 1 — Generate report
 
 ```bash
-npm run generate:report
-# or:
-node automation-repository/utils/generate-report.js
+node scripts/generate-execution-report.js [--sprint <N>] [--env UAT]
+# defaults: --sprint 5  --env UAT
+```
+
+**What it does:**
+1. Scans `tests/**/*.spec.js` → collects all TC_IDs referenced → marks Automated / Not Automated
+2. Parses `manual-qa-repository/01-test-cases/**/TC_*.md` → TC catalogue rows
+3. Indexes `reports/results.json` → PASS / FAIL / SKIP per TC_ID
+4. Loads prior XLSX for execution history (prepend new entry, preserve prior)
+5. Writes `execution-report.html` (inline-styled, mail-safe)
+6. Writes `execution-report.xlsx` (Execution Report sheet + Summary sheet)
+7. Merges results into `manual-qa-repository/07-execution/TestCases-*Portal.xlsx` (cols K–O)
+
+**Column map written to catalogue workbooks:**
+
+| Col | Field | Notes |
+|-----|-------|-------|
+| K | Automation Status | Automated / Not Automated — always refreshed |
+| L | Last Run Status | PASS / FAIL / SKIP — colour-coded |
+| M | Execution Details | Prepend `YYYY-MM-DD HH:MM · STATUS`, keep history |
+| N | Actual Result (Run) | First error line or "As expected" |
+| O | Screenshot Link | Relative hyperlink, FAIL only |
+
+---
+
+## Step 2 — Send report email (optional)
+
+Requires `.env` with SMTP creds.
+
+```bash
+node scripts/send-execution-report.js [--sprint <N>] [--env UAT]
+```
+
+**.env keys:**
+
+```
+SMTP_HOST=smtp.office365.com
+SMTP_PORT=587
+SMTP_USER=<sender>
+SMTP_PASS=<password>
+SMTP_FROM=<sender>
+SMTP_SECURE=          # leave blank for STARTTLS on 587
+SMTP_IGNORE_TLS=      # true only for local maildev/mailpit :1025
+REPORT_TO=            # comma-separated recipients; default: anjali.jha@openspaceservices.com
+```
+
+Mail carries HTML body (summary table inlined) + two attachments:
+- `execution-report-sprint-<N>.html`
+- `execution-report-sprint-<N>.xlsx`
+
+---
+
+## npm shortcuts (if wired in package.json)
+
+```bash
+npm run report:exec   # generate HTML + XLSX + catalogue merge
+npm run report:send   # send email
 ```
 
 ---
 
-## Report Sections
+## If `results.json` missing
 
-### 1. Run Metadata
-```
-Portal: <portal>
-Sprint: <N>
-Run Date: <YYYY-MM-DD>
-Environment: UAT
-Executor: QA Agent
-```
-
-### 2. Summary Table
-
-| Metric | Count |
-|--------|-------|
-| Total TCs | N |
-| Passed | N |
-| Failed | N |
-| Skipped | N |
-| Pass Rate | N% |
-
-### 3. Per-Test Results
-
-| TC_ID | Title | Status | Duration | Failure Reason |
-|-------|-------|--------|----------|---------------|
-| TC_XXX_001 | ... | ✅ PASS | 1.2s | — |
-| TC_XXX_002 | ... | ❌ FAIL | 3.1s | Selector timeout |
-
-### 4. Failures Detail
-
-For each failure:
-```
-TC_ID: TC_XXX_002
-Step: <step name>
-Error: <exact error message>
-Screenshot: test-results/<screenshot>.png
-Root Cause: <selector stale / assertion drift / env issue>
-Action: <log bug / self-heal / investigate>
-```
-
-### 5. Coverage Map
-
-List which BRD/FRD requirements were covered vs. not covered this run.
+Script proceeds — TCs without results get `Last Run Status = —`. Automation Status column still refreshed from spec corpus. Report generated with partial data; log a warning.
 
 ---
 
 ## DASHBOARD.md Update
 
-After generating report, update `manual-qa-repository/DASHBOARD.md`:
+After report generation, update `manual-qa-repository/DASHBOARD.md`:
 - Last run date
-- Pass rate per portal
-- Open bug count (from BUG_TRACKER.md)
+- Pass rate per portal (from Summary sheet counts)
+- Open bug count (from `manual-qa-repository/04-bug-reports/BUG_TRACKER.md`)
 - Sprint status
 
 ---
 
 ## Constraints
 
-- Report path: `manual-qa-repository/06-test-runs/<env>/sprint-<N>/execution-summary.md`
-- Screenshots linked by relative path from repo root
-- Never delete previous run reports — append sprint number
-- If results.json missing or empty, report "No results found — run was not executed"
+- Never delete prior execution reports — new run overwrites same sprint file (history preserved in Execution Details column)
+- Screenshots linked by relative path from `OUT_DIR` (`06-test-runs/<env>/sprint-<N>/`)
+- Deprecated TCs in `01-test-cases/archived/` excluded from catalogue scan
+- TC_IDs found in `results.json` but absent from catalogue appended as orphan rows with note `(not in TC catalogue — from spec)`
