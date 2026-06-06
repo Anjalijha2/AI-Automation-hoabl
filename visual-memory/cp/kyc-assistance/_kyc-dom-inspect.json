@@ -1,0 +1,217 @@
+{
+  "url": "https://uat-web.xrportal.in/kyc",
+  "title": "HoABL | Growth Channel Partner Portal",
+  "h1": [],
+  "h2": [
+    "KYC"
+  ],
+  "h3": [],
+  "sectionHeaders": [
+    "KYC",
+    "Firm Details",
+    "Contact Details",
+    "Additional Details",
+    "KYC Document Upload"
+  ],
+  "inputs": [
+    {
+      "type": "text",
+      "name": "orgName",
+      "placeholder": "Enter Name",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "text",
+      "name": "address",
+      "placeholder": "Enter Full Address",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "search",
+      "name": "",
+      "placeholder": "",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": true
+    },
+    {
+      "type": "text",
+      "name": "ownerName",
+      "placeholder": "Enter Name",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "text",
+      "name": "email",
+      "placeholder": "Enter Email ID",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "text",
+      "name": "phone",
+      "placeholder": "Enter Mobile Number",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "text",
+      "name": "officePincode",
+      "placeholder": "Enter Pin Code",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "text",
+      "name": "panNumber",
+      "placeholder": "Enter PAN Number",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "text",
+      "name": "reraNumber",
+      "placeholder": "Enter RERA Number",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "file",
+      "name": "file",
+      "placeholder": "",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "file",
+      "name": "file",
+      "placeholder": "",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    },
+    {
+      "type": "file",
+      "name": "file",
+      "placeholder": "",
+      "ariaLabel": "",
+      "value": "",
+      "disabled": false,
+      "readOnly": false
+    }
+  ],
+  "selects": [
+    {
+      "placeholder": "",
+      "text": ""
+    }
+  ],
+  "uploads": [
+    {
+      "tag": "DIV",
+      "accept": "",
+      "cls": "ant-upload ant-upload-select",
+      "text": "Upload"
+    },
+    {
+      "tag": "SPAN",
+      "accept": "",
+      "cls": "ant-upload",
+      "text": "Upload"
+    },
+    {
+      "tag": "INPUT",
+      "accept": "",
+      "cls": "",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "accept": "",
+      "cls": "ant-upload ant-upload-select",
+      "text": "Upload"
+    },
+    {
+      "tag": "SPAN",
+      "accept": "",
+      "cls": "ant-upload",
+      "text": "Upload"
+    },
+    {
+      "tag": "INPUT",
+      "accept": "",
+      "cls": "",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "accept": "",
+      "cls": "ant-upload ant-upload-select",
+      "text": "Upload"
+    },
+    {
+      "tag": "SPAN",
+      "accept": "",
+      "cls": "ant-upload",
+      "text": "Upload"
+    },
+    {
+      "tag": "INPUT",
+      "accept": "",
+      "cls": "",
+      "text": ""
+    }
+  ],
+  "buttons": [
+    {
+      "text": "Logout",
+      "cls": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-button",
+      "disabled": false
+    },
+    {
+      "text": "Logout",
+      "cls": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-button",
+      "disabled": false
+    },
+    {
+      "text": "Logout",
+      "cls": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-button",
+      "disabled": false
+    },
+    {
+      "text": "Cancel",
+      "cls": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined btn-book-outline",
+      "disabled": false
+    },
+    {
+      "text": "Submit",
+      "cls": "ant-btn css-17wfwcs ant-btn-submit btn-book-solid ",
+      "disabled": true
+    }
+  ],
+  "scrollHeight": 1589,
+  "viewportHeight": 900
+}

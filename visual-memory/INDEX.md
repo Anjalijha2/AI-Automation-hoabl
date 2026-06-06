@@ -50,12 +50,14 @@ Used as: baseline references for selectors, layout, and regression comparison.
 
 **2026-06-05:** CP-portal OTP is `147258` (NOT `258369` — that's Admin/SM). Fresh storageState generated; 4 modules upgraded to FULL.
 
+**2026-06-06:** KYC Assistance upgraded STUB → FULL. Full-page screenshot, Business Region dropdown opened (3 options: MMR / Pune / BGLR), Submit-disabled gating documented (form gates via disabled button, NOT post-click inline errors). All 5 in-scope CP modules now FULL.
+
 | Module                | Index                                                                  | Status |
 | --------------------- | ---------------------------------------------------------------------- | ------ |
 | Login                 | [cp/login/INDEX.md](cp/login/INDEX.md)                                 | FULL   |
 | Customer Registration | [cp/customer-registration/INDEX.md](cp/customer-registration/INDEX.md) | FULL   |
 | JBP Submission        | [cp/jbp-submission/INDEX.md](cp/jbp-submission/INDEX.md)               | FULL   |
-| KYC Assistance        | [cp/kyc-assistance/INDEX.md](cp/kyc-assistance/INDEX.md)               | STUB   |
+| KYC Assistance        | [cp/kyc-assistance/INDEX.md](cp/kyc-assistance/INDEX.md)               | FULL   |
 | Leads Management      | [cp/leads-management/INDEX.md](cp/leads-management/INDEX.md)           | FULL   |
 | Project Information   | [cp/project-information/INDEX.md](cp/project-information/INDEX.md)     | STUB   |
 

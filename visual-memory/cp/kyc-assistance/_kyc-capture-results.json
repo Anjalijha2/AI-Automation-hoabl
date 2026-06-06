@@ -1,0 +1,45 @@
+{
+  "module": "kyc-assistance",
+  "captures": [
+    {
+      "name": "dom-inspect",
+      "status": "OK",
+      "note": "inputs=12 selects=1 uploads=9 btns=5"
+    },
+    {
+      "name": "kyc-loaded-full.png",
+      "status": "CAPTURED",
+      "note": "full-page 86995 bytes"
+    },
+    {
+      "name": "kyc-above-fold.png",
+      "status": "CAPTURED",
+      "note": "viewport 56989 bytes"
+    },
+    {
+      "name": "kyc-below-fold-submit.png",
+      "status": "CAPTURED",
+      "note": "bottom-of-form viewport 58737 bytes"
+    },
+    {
+      "name": "kyc-documents-section.png",
+      "status": "CAPTURED",
+      "note": "mid-page viewport 58433 bytes"
+    },
+    {
+      "name": "kyc-business-region-dropdown.png",
+      "status": "SKIPPED",
+      "note": "Business Region select not found by label scan"
+    },
+    {
+      "name": "kyc-validation-errors.png",
+      "status": "CAPTURED",
+      "note": "post-Submit validation state, 52619 bytes"
+    },
+    {
+      "name": "kyc-validation-full.png",
+      "status": "CAPTURED",
+      "note": "full-page post-Submit, 80117 bytes"
+    }
+  ]
+}
