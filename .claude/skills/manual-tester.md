@@ -58,6 +58,24 @@ Read BRD/FRD section at provided path in `.claude/docs/hoabl-knowledge-base/`. E
 - Business logic: rules, conditions, validations, workflows
 - Acceptance criteria: what conditions define pass/fail
 
+### Step 2b — DOC_DRIFT Check
+
+After reading BRD/FRD, scan for any URL, route, endpoint, or field name mentioned:
+1. Compare each URL/route in BRD/FRD against the Environment URL in visual-memory INDEX.md
+2. Compare each endpoint path in BRD/FRD against API calls documented in INDEX.md (if present)
+3. Compare field names in BRD/FRD against field labels in Key Structural Notes
+
+If mismatch found → raise DOC_DRIFT flag (non-blocking — TC generation continues):
+```
+DOC_DRIFT-NNN: <portal>/<module>
+BRD/FRD reference: [section] says [URL/field/endpoint]
+Observed (INDEX.md): [actual URL/field/endpoint from live capture]
+Action: BA Agent must update BRD/FRD to reflect actual implementation
+TC generation: using observed (actual) values in Steps/Expected Results — not stale BRD values
+```
+
+TC generation proceeds using the **observed** (INDEX.md) values — DOC_DRIFT is a flag, not a blocker.
+
 ### Step 3 — Cross-Reference
 
 For each BRD/FRD user journey:

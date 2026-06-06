@@ -32,6 +32,20 @@ Read the BRD/FRD for the module to identify distinct UI states:
 - Error / validation state
 - Any state referenced by existing TC_IDs in the current INDEX.md
 
+#### Interactive State Inventory (MANDATORY for FULL status)
+
+For every action button, icon, link, or control visible on the page that produces a secondary UI surface, add one capture entry:
+- "Add/Create" buttons → capture resulting form drawer/modal with **all fields visible**
+- "Edit/Update" icons → capture resulting **pre-populated** drawer/modal
+- "Delete/Remove" icons → capture resulting confirmation modal/popconfirm (**title + both buttons visible**)
+- "View/Details" links/icons → capture resulting detail panel or page
+- Row "More/⋮" menus → capture open menu state showing all options
+- Toggle/switch → capture both ON and OFF states if they reveal different UI
+
+**CAPTURE_STATUS: FULL requires ALL interactive surfaces captured.**
+**CAPTURE_STATUS: STUB** if interactive states are missing — even if landing/loaded states exist.
+A module captured without drawer/modal/confirm states is STUB, not FULL, regardless of how many page-level screenshots exist.
+
 ### Step 2 — Check Existing INDEX.md
 
 Read `visual-memory/<portal>/<module>/INDEX.md` if it exists.

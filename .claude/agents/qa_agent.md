@@ -73,6 +73,16 @@ Inputs: `doc-change-summary.md` from BA Agent
 - Every TC must have a BRD/FRD requirement ID
 - Output: reviewed and approved `TestCases.xlsx` per affected module
 
+**3b-post: Spec Scaffold (mandatory after first APPROVED review of a new module)**
+- When `test-case-reviewer` outputs APPROVED for a module that has no existing spec files:
+  - Immediately scaffold all applicable spec types from `templates/module-scaffold/`
+  - `tests/e2e/<portal>/<module>.spec.js`
+  - `tests/ui-ux/<portal>/<module>.spec.js`
+  - `automation-repository/pages/<portal>/<Module>Page.js`
+- Do NOT wait for separate user instruction — auto-scaffold is part of the approval gate
+- Log each scaffolded file in `TASK_TRACKER.md`
+- Spec files are stubs (test titles + TC_IDs mapped from Sheet 2) — full implementation in Step 4
+
 **3c. Test Data Update**
 - Update `test-data-spec.md` in `manual-qa-repository/01-test-cases/<portal>/<module>/`
 - Update factories in `automation-repository/test-data/factories/` if data structure changed

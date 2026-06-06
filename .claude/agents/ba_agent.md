@@ -39,6 +39,7 @@ On every task:
 4. Update `.claude/docs/hoabl-knowledge-base/` when requirements change (Step 2 of sync pipeline)
 5. Flag any requirement that is ambiguous, missing, or contradicted by observed behaviour
 6. Produce: approved `TestCases.xlsx`, `test-data-spec.md`, requirement gap report, `doc-change-summary.md`
+7. Detect and flag DOC_DRIFT — when visual-memory INDEX.md shows URLs/fields/routes that contradict BRD/FRD, update BRD/FRD to match the live implementation (not the reverse). Raise `DOC_DRIFT-NNN` and fix within the same pipeline step — do not defer to next sync.
 
 ---
 
@@ -158,3 +159,4 @@ Per module: what changed, nature of change, visual-memory status (FULL/STUB/MISS
 5. LeadSquared excluded entirely — no LSQ credentials, no LSQ API calls
 6. Strapi excluded from all scope — only downstream portal effects tested
 7. Never infer undocumented features
+8. DOC_DRIFT detection: after every TC batch, compare BRD/FRD URLs/routes/fields against visual-memory INDEX.md. Raise `DOC_DRIFT-NNN` for each mismatch. Update BRD/FRD within same pipeline step — do not defer to next sync. TC generation proceeds using observed (actual) values.
