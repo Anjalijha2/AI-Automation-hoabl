@@ -40,7 +40,7 @@ Zero VISUAL_MISMATCH, zero `[NO-VISUAL-EVIDENCE]`, zero `[STUB-EVIDENCE]`.
 
 None. Every TC Scenario references CP-FS-Leads §1.1–§1.6 (objective, scope, preconditions, lead info displayed, business rules, system actions).
 
-Two UX gaps are correctly raised by the TC file (TC_LEADS_FUNC_007, TC_LEADS_FUNC_008): "Resend Notification" and "Copy Link" actions produce no visible feedback (no toast, no modal). These are flagged as Bug Notes for BUG_TRACKER, not as TC defects — the TCs themselves accurately describe observed behaviour and tie it back to CP-FS-Leads §1.6 (System Actions — re-engagement / lead invitation).
+No logic gaps. Earlier UX-LEADS-001 / UX-LEADS-002 flags (no-toast on Resend Notification + Copy Link) were withdrawn 2026-06-07 — user confirmed both actions function correctly (clipboard receives URL, lead receives resend). Silent success is intended UX, not a defect.
 
 ## BRD/FRD Gaps
 
@@ -94,7 +94,7 @@ Negative coverage: TCs 6, 17 (no-match search; unauthenticated access).
 **Automation candidacy:** All 20 TCs eligible for Sheet 2.
 
 **Notes for downstream agents:**
-- QA Agent (Manual) — promote UX-LEADS-001 and UX-LEADS-002 to `manual-qa-repository/04-bug-reports/BUG_TRACKER.md` if confirmed as defects. Current Bug Notes section in TestCases.md is correctly raised but not yet logged.
+- QA Agent (Manual) — Bug Notes section removed 2026-06-07. UX-LEADS-001 / UX-LEADS-002 were false flags; both actions work correctly per user verification. Do not log to BUG_TRACKER.
 - Tech Lead Agent — locator map for `cp/leads-management` should expose: `h3:has-text("Leads")`, `.ant-select :has-text("All Team Leads")`, `.ant-select :has-text("Status")`, `input[placeholder="Search Customer"]`, table headers (9 columns), `button.reset-btn:has(svg:has(title:has-text("Resend Notification")))`, `button.reset-btn:has(svg:has(title:has-text("Copy Link")))`.
 - QA Agent (automation) — TC_LEADS_FUNC_008 requires `ctx.grantPermissions(['clipboard-read','clipboard-write'])`. TC_LEADS_BIZ_014 requires two CP fixtures; co-ordinate with Tech Lead Agent for the second `.auth/channel-partner-b.json`.
 - LSQ constraint observed — no LSQ API/credential references in any TC.

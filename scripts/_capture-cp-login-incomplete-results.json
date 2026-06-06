@@ -1,0 +1,212 @@
+{
+  "login/login-undertaking-modal": {
+    "status": "CAPTURED",
+    "note": "109385 bytes — Undertaking/Consent modal",
+    "ts": "2026-06-06T19:37:10.067Z",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\login\\login-undertaking-modal.png",
+    "bytes": 109385,
+    "modal": {
+      "rootClass": "ant-modal css-17wfwcs custom-modal-blur",
+      "textSnippet": "Undertaking\nPlease read this agreement carefully before you proceed\nThe Vendor: (i) acknowledges that House of Abhinandan Lodha Private Limited and its subsidiaries, affiliates and group companies (“HOABL”) is a separate and distinct business group and is not in any manner associated with or related to Lodha Developers Limited (formerly known as Macrotech Developers Limited) or any of ... Read more\nI Disagree\nI Agree",
+      "headings": [
+        {
+          "tag": "h4",
+          "text": "Undertaking"
+        },
+        {
+          "tag": "h6",
+          "text": "Please read this agreement carefully before you proceed"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "I Disagree",
+          "disabled": false,
+          "className": "btn-book-outline",
+          "html": "<button class=\"btn-book-outline\">I Disagree</button>"
+        },
+        {
+          "text": "I Agree",
+          "disabled": true,
+          "className": "btn-book-solid",
+          "html": "<button class=\"btn-book-solid\" disabled=\"\">I Agree</button>"
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "input",
+          "type": "checkbox",
+          "name": "",
+          "placeholder": "",
+          "ariaLabel": ""
+        }
+      ],
+      "inputCount": 1,
+      "buttonCount": 2
+    }
+  },
+  "login/login-incomplete-profile": {
+    "status": "CAPTURED",
+    "note": "136457 bytes — RegisterCp modal (incomplete profile / KYC form)",
+    "ts": "2026-06-06T19:37:16.015Z",
+    "file": "D:\\AI_Automation\\xanadu - AI automation\\visual-memory\\cp\\login\\login-incomplete-profile.png",
+    "bytes": 136457,
+    "finalUrl": "https://uat-web.xrportal.in/",
+    "modal": {
+      "rootClass": "ant-modal css-17wfwcs custom-modal-common",
+      "textSnippet": "GROWTH PARTNER REGISTRATION\nGrowth Partner Details\nMobile Number *\nEmail ID *\nGrowth Partner Owner Name *\nGrowth Partner Org Name *\nGrowth Partner Full Address *\nBusiness Region *\nSelect Business Region\nAlternate Mobile Number\nAlternate Email ID\nAdditional Details\nPin Code Office *\nPAN Number *\nRERA Number\nKYC Details\nPAN Card\nUpload\nGST\nUpload\nMAHA RERA Certificate\nUpload\nCancel\nSubmit",
+      "headings": [
+        {
+          "tag": "h4",
+          "text": "GROWTH PARTNER REGISTRATION"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Cancel",
+          "disabled": false,
+          "className": "ant-btn css-17wfwcs ant-btn-button btn-book-outline custom-btn-width-footer",
+          "html": "<button type=\"button\" class=\"ant-btn css-17wfwcs ant-btn-button btn-book-outline custom-btn-width-footer\"><span>Cancel</span></button>"
+        },
+        {
+          "text": "Submit",
+          "disabled": false,
+          "className": "ant-btn css-17wfwcs ant-btn-submit btn-book-solid custom-btn-width-footer",
+          "html": "<button type=\"submit\" class=\"ant-btn css-17wfwcs ant-btn-submit btn-book-solid custom-btn-width-footer\"><span>Submit</span></button>"
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "phone",
+          "placeholder": "Enter Mobile Number",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "email",
+          "placeholder": "Enter Email ID",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "ownerName",
+          "placeholder": "Enter Name",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "orgName",
+          "placeholder": "Enter Name",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "address",
+          "placeholder": "Enter Full Address",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "search",
+          "name": "",
+          "placeholder": "",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "phone2",
+          "placeholder": "Enter Mobile Number",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "email2",
+          "placeholder": "Enter Email ID",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "officePincode",
+          "placeholder": "Enter Pin Code",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "panNumber",
+          "placeholder": "Enter PAN Number",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "text",
+          "name": "reraNumber",
+          "placeholder": "Enter RERA Number",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "file",
+          "name": "file",
+          "placeholder": "",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "file",
+          "name": "file",
+          "placeholder": "",
+          "ariaLabel": ""
+        },
+        {
+          "tag": "input",
+          "type": "file",
+          "name": "file",
+          "placeholder": "",
+          "ariaLabel": ""
+        }
+      ],
+      "inputCount": 14,
+      "buttonCount": 2
+    },
+    "urlTimeline": [
+      {
+        "at": 1780774617662,
+        "url": "https://uat-web.xrportal.in/"
+      },
+      {
+        "at": 1780774618223,
+        "url": "https://uat-web.xrportal.in/"
+      }
+    ],
+    "apiResponses": [
+      {
+        "url": "https://uat-api.xrportal.in/api/v1/auth/cp/send-otp",
+        "status": 200,
+        "method": "POST",
+        "bodySnippet": "{\"success\":true,\"message\":\"OTP sent successfully\",\"data\":{\"phone\":\"9999999991\",\"otpExpires\":\"2026-06-07 01:17:03\"},\"errors\":null}"
+      },
+      {
+        "url": "https://uat-api.xrportal.in/api/v1/auth/cp/verify-otp",
+        "status": 200,
+        "method": "POST",
+        "bodySnippet": "{\"success\":true,\"message\":\"Consent Pending\",\"data\":{\"user\":{\"name\":\"\",\"firstName\":null,\"lastName\":null,\"role\":\"cp\",\"panNumber\":null,\"pincode\":null,\"address\":null,\"email\":null,\"phone\":\"9999999991\",\"countryCode\":\"+91\",\"isNri\":false,\"isConsented\":false,\"isCpRegistrationCompleted\":null,\"encHvCode\":null,\"hvCode\":null,\"orgName\":null,\"isLeadCp\":0,\"masterHvCode\":null}},\"errors\":null}"
+      },
+      {
+        "url": "https://uat-api.xrportal.in/api/v1/auth/cp/verify-otp",
+        "status": 200,
+        "method": "POST",
+        "bodySnippet": "{\"success\":true,\"message\":\"Registration Pending\",\"data\":{\"user\":{\"name\":\"\",\"firstName\":null,\"lastName\":null,\"role\":\"cp\",\"panNumber\":null,\"pincode\":null,\"address\":null,\"email\":null,\"phone\":\"9999999991\",\"countryCode\":\"+91\",\"isNri\":false,\"isConsented\":true,\"isCpRegistrationCompleted\":null,\"encHvCode\":null,\"hvCode\":null,\"orgName\":null,\"isLeadCp\":0,\"masterHvCode\":null}},\"errors\":null}"
+      }
+    ]
+  }
+}

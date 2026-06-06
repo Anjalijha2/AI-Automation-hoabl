@@ -30,45 +30,60 @@ CP self-KYC only (`POST /cp/registration` — unauthenticated). The WINNER-prere
 
 ### 1.4 KYC Form — Applicant Fields
 
-For each applicant (primary and co-applicants):
+<!-- DOC_DRIFT-CP-KYC-002 added 2026-06-07: Business Region options from live capture -->
 
+For the CP self-KYC firm record, the form sections (verified against live UI 2026-06-06) are:
+
+**Firm Details**
 | Field | Description |
 |-------|-------------|
-| Full Name | Legal name as on ID |
-| Date of Birth | Required for all applicants |
-| PAN Number | Format: ABCDE1234F |
-| Aadhaar Number | 12-digit format |
-| Full Current Address | Including pincode |
-| Occupation | Employment type |
-| Income Details | Monthly/annual income |
-| Relationship | Blood relative relationship to primary applicant |
+| Firm Name (`orgName`) | Required. Free text. |
+| Firm Address (`address`) | Required. Free text — full address. |
+| Business Region (select) | Required. **Options: MMR / Pune / BGLR** (Mumbai Metropolitan Region, Pune, Bengaluru). |
 
-### 1.5 Required Documents Per Applicant
+**Contact Details**
+| Field | Description |
+|-------|-------------|
+| Growth Partner Owner Name (`ownerName`) | Required. |
+| Email ID (`email`) | Required. Rendered as `type=text` in DOM. |
+| Phone Number (`phone`) | Required. Rendered as `type=text` in DOM. |
+
+**Additional Details**
+| Field | Description |
+|-------|-------------|
+| Pin Code Office (`officePincode`) | Required. |
+| PAN Number (`panNumber`) | Required. Format: ABCDE1234F. |
+| RERA Number (`reraNumber`) | **Optional** — no asterisk on label. |
+
+### 1.5 Required Documents
+
+<!-- DOC_DRIFT-CP-KYC-001 corrected 2026-06-07: 3 documents, not 4 -->
 
 | Document | Requirement |
 |----------|------------|
-| Passport photograph | Any image file |
-| PAN card image | Required |
-| Aadhaar card — front | Required |
-| Aadhaar card — back | Required |
+| PAN Card | Upload slot — file input, no client-side `accept` MIME restriction observed |
+| GST Certificate | Upload slot — file input, no client-side `accept` MIME restriction observed |
+| MAHA RERA Certificate | Upload slot — file input, no client-side `accept` MIME restriction observed |
 
-**All 4 documents are mandatory per applicant.** Submission is blocked if any are missing.
+**3 documents are defined per the live UI.** Document uploads are NOT required to enable Submit at the UI gating layer (verified 2026-06-06) — backend enforcement of document presence requires product clarification.
 
 ### 1.6 Co-Applicant Rules
 
-- Maximum 4 applicants total (1 primary + 3 co-applicants)
-- "Add Applicant" button is hidden/disabled once the limit is reached
-- All relationships must be blood relatives
-- Each co-applicant requires the same 4 documents as the primary applicant
+<!-- DOC_DRIFT-CP-KYC-001 corrected 2026-06-07: 3 documents, not 4 -->
+
+Co-applicants are NOT applicable to CP self-KYC (this is a single-firm record). The "max 4 applicants" / "Add Applicant" pattern described historically pertains to the buyer-KYC flow, which has no backend endpoint in the CP portal (see Section 1.2 FSD-CORRECTION).
 
 ### 1.7 Validations and Business Rules
 
-1. KYC can only be submitted after unit allocation is confirmed (WINNER status)
-2. Aadhaar number: 12 digits
-3. PAN number: format ABCDE1234F (5 alpha + 4 numeric + 1 alpha)
-4. All 4 documents per applicant are required — partial upload is not accepted
-5. Maximum file size and format restrictions apply to document uploads
-6. E-verification via OTP can be completed to confirm authenticity (`eVerificationCompleted` flag)
+<!-- DOC_DRIFT-CP-KYC-001 corrected 2026-06-07: 3 documents, not 4 -->
+<!-- DOC_DRIFT-CP-KYC-003 corrected 2026-06-07: disabled-button gating, not click-validation -->
+
+1. PAN number: format ABCDE1234F (5 alpha + 4 numeric + 1 alpha)
+2. Pincode: numeric (length not enforced at client per live capture)
+3. The 3 documents (PAN Card, GST Certificate, MAHA RERA Certificate) are listed as upload slots; backend mandatory enforcement is not exposed by client gating.
+4. Maximum file size and format restrictions: no client-side `accept` attribute on the file inputs — server-side enforcement only.
+5. **Submit gating is enforced by the disabled-button pattern, NOT by inline field error rendering.** The `Submit` button is `disabled=true` at the DOM level until all required fields (`orgName`, `address`, `Business Region`, `ownerName`, `email`, `phone`, `officePincode`, `panNumber`) carry non-empty values. Clicking the disabled Submit button is a no-op — no toast, no inline error, no navigation. There is no click-triggered validation error display.
+6. E-verification via OTP can be completed to confirm authenticity (`eVerificationCompleted` flag) — backend behaviour, not exposed on this form.
 
 ### 1.8 System Actions on Submission
 
@@ -84,46 +99,49 @@ For each applicant (primary and co-applicants):
 
 ---
 
-## How to Use: Completing KYC for Your Customer
+## How to Use: Completing Your CP Self-KYC
 
-**Who does this:** Channel Partner, after customer unit payment is confirmed
+<!-- DOC_DRIFT-CP-KYC-001 corrected 2026-06-07: 3 documents, not 4 -->
+<!-- DOC_DRIFT-CP-KYC-002 added 2026-06-07: Business Region options from live capture -->
+<!-- DOC_DRIFT-CP-KYC-003 corrected 2026-06-07: disabled-button gating, not click-validation -->
+
+**Who does this:** Channel Partner (firm-level self-KYC onboarding)
 
 ---
 
 **Step 1 — Navigate to KYC**
 
-From the navigation menu, click **KYC**. The KYC form will load for the customer whose unit has been allocated.
+From the sidebar, click **KYC**. The KYC form loads with four sections: Firm Details, Contact Details, Additional Details, KYC Document Upload.
 
-**Step 2 — Fill in primary applicant details**
+**Step 2 — Firm Details**
 
-Some fields may be pre-filled from the customer's registration. Verify and complete any missing information:
-- Legal full name, date of birth
-- PAN number (format: ABCDE1234F)
-- Aadhaar number (12 digits)
-- Full address including pincode
-- Occupation and income details
+- **Firm Name** — enter your legal firm name.
+- **Firm Address** — enter the full firm address.
+- **Business Region** — open the dropdown and select one of: **MMR**, **Pune**, or **BGLR**.
 
-**Step 3 — Upload primary applicant documents**
+**Step 3 — Contact Details**
 
-Upload all 4 required documents:
-1. **Passport photograph**
-2. **PAN card image**
-3. **Aadhaar card — front**
-4. **Aadhaar card — back**
+- **Growth Partner Owner Name** — required.
+- **Email ID** — required.
+- **Phone Number** — required.
 
-> All 4 documents are required. You will not be able to submit without all of them.
+**Step 4 — Additional Details**
 
-**Step 4 — Add co-applicants (if any)**
+- **Pin Code Office** — required.
+- **PAN Number** — required (format: ABCDE1234F).
+- **RERA Number** — optional.
 
-If the customer has co-applicants (family members sharing the unit):
-1. Click **+ Add Applicant**
-2. Fill in their details — name, contact, address, and relationship (must be a blood relative)
-3. Upload all 4 documents for each co-applicant
+**Step 5 — Upload documents**
 
-You can add up to 3 co-applicants (4 total including the primary). The Add Applicant button will disappear once this limit is reached.
+Upload the 3 required documents in the **KYC Document Upload** section:
+1. **PAN Card**
+2. **GST Certificate**
+3. **MAHA RERA Certificate**
 
-**Step 5 — Submit KYC**
+> The Submit button is **disabled by default** and only becomes enabled once all required text fields above are populated. The form does NOT display inline error messages on Submit click — instead, the button itself stays disabled until the form is complete. If Submit remains greyed out, scroll back through Firm Details / Contact Details / Additional Details and confirm every starred field has a value.
 
-Once all applicant details and documents are complete, click **Submit KYC**.
+**Step 6 — Submit KYC**
 
-On success, the customer's KYC status will update to completed and the registration unit will show `KYC Submitted`.
+Once the **Submit** button becomes enabled, click it. On success, your KYC enters review and the dashboard header indicator updates to "Your KYC is in review" until admin approval.
+
+To abandon the form without saving, click **Cancel**.
