@@ -1,932 +1,2675 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Customers Module — Admin Portal User Guide</title>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<style>
-  :root {
-    --c-bg: #f7f8fb;
-    --c-surface: #ffffff;
-    --c-border: #e5e7eb;
-    --c-text: #1f2937;
-    --c-muted: #6b7280;
-    --c-primary: #1e40af;
-    --c-primary-light: #dbeafe;
-    --c-primary-dark: #1e3a8a;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customers Module — Admin Portal User Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+      :root {
+        --c-bg: #f7f8fb;
+        --c-surface: #ffffff;
+        --c-border: #e5e7eb;
+        --c-text: #1f2937;
+        --c-muted: #6b7280;
+        --c-primary: #1e40af;
+        --c-primary-light: #dbeafe;
+        --c-primary-dark: #1e3a8a;
 
-    --c-read: #1565c0;
-    --c-read-bg: #e3f2fd;
-    --c-read-border: #90caf9;
+        --c-read: #1565c0;
+        --c-read-bg: #e3f2fd;
+        --c-read-border: #90caf9;
 
-    --c-write: #f9a825;
-    --c-write-bg: #fff8e1;
-    --c-write-border: #ffd54f;
+        --c-write: #f9a825;
+        --c-write-bg: #fff8e1;
+        --c-write-border: #ffd54f;
 
-    --c-irrev: #c62828;
-    --c-irrev-bg: #ffebee;
-    --c-irrev-border: #ef9a9a;
+        --c-irrev: #c62828;
+        --c-irrev-bg: #ffebee;
+        --c-irrev-border: #ef9a9a;
 
-    --c-system: #6a1b9a;
-    --c-system-bg: #f3e5f5;
+        --c-system: #6a1b9a;
+        --c-system-bg: #f3e5f5;
 
-    --c-green: #2e7d32;
-    --c-green-bg: #e8f5e9;
+        --c-green: #2e7d32;
+        --c-green-bg: #e8f5e9;
 
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  }
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
 
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: var(--c-bg);
-    color: var(--c-text);
-    line-height: 1.6;
-    font-size: 15px;
-  }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: var(--c-bg);
+        color: var(--c-text);
+        line-height: 1.6;
+        font-size: 15px;
+      }
 
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 280px;
-    height: 100vh;
-    background: var(--c-surface);
-    border-right: 1px solid var(--c-border);
-    padding: 24px 20px;
-    overflow-y: auto;
-    z-index: 100;
-  }
-  .sidebar .brand {
-    border-bottom: 1px solid var(--c-border);
-    padding-bottom: 16px;
-    margin-bottom: 16px;
-  }
-  .sidebar .brand h1 {
-    font-size: 18px;
-    margin: 0 0 4px;
-    color: var(--c-primary-dark);
-  }
-  .sidebar .brand p {
-    font-size: 12px;
-    color: var(--c-muted);
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .sidebar h3 {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--c-muted);
-    margin: 18px 0 8px;
-  }
-  .sidebar ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .sidebar li { margin: 2px 0; }
-  .sidebar a {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 6px 10px;
-    text-decoration: none;
-    color: var(--c-text);
-    font-size: 13px;
-    border-radius: 4px;
-    transition: background 0.15s;
-  }
-  .sidebar a:hover { background: var(--c-primary-light); color: var(--c-primary-dark); }
-  .sidebar .badge {
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 3px;
-    letter-spacing: 0.5px;
-  }
-  .badge.read { background: var(--c-read-bg); color: var(--c-read); }
-  .badge.write { background: var(--c-write-bg); color: var(--c-write); }
-  .badge.irrev { background: var(--c-irrev-bg); color: var(--c-irrev); }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        background: var(--c-surface);
+        border-right: 1px solid var(--c-border);
+        padding: 24px 20px;
+        overflow-y: auto;
+        z-index: 100;
+      }
+      .sidebar .brand {
+        border-bottom: 1px solid var(--c-border);
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+      }
+      .sidebar .brand h1 {
+        font-size: 18px;
+        margin: 0 0 4px;
+        color: var(--c-primary-dark);
+      }
+      .sidebar .brand p {
+        font-size: 12px;
+        color: var(--c-muted);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .sidebar h3 {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--c-muted);
+        margin: 18px 0 8px;
+      }
+      .sidebar ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .sidebar li {
+        margin: 2px 0;
+      }
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 6px 10px;
+        text-decoration: none;
+        color: var(--c-text);
+        font-size: 13px;
+        border-radius: 4px;
+        transition: background 0.15s;
+      }
+      .sidebar a:hover {
+        background: var(--c-primary-light);
+        color: var(--c-primary-dark);
+      }
+      .sidebar .badge {
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 3px;
+        letter-spacing: 0.5px;
+      }
+      .badge.read {
+        background: var(--c-read-bg);
+        color: var(--c-read);
+      }
+      .badge.write {
+        background: var(--c-write-bg);
+        color: var(--c-write);
+      }
+      .badge.irrev {
+        background: var(--c-irrev-bg);
+        color: var(--c-irrev);
+      }
 
-  .main {
-    margin-left: 280px;
-    max-width: 1100px;
-    padding: 32px 40px 80px;
-  }
+      .main {
+        margin-left: 280px;
+        max-width: 1100px;
+        padding: 32px 40px 80px;
+      }
 
-  .hero {
-    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-    color: #fff;
-    padding: 32px 36px;
-    border-radius: 12px;
-    margin-bottom: 32px;
-    box-shadow: var(--shadow-md);
-  }
-  .hero h1 { margin: 0 0 8px; font-size: 28px; }
-  .hero p { margin: 4px 0; opacity: 0.9; font-size: 14px; }
-  .hero .meta {
-    margin-top: 16px;
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    font-size: 13px;
-  }
-  .hero .meta span {
-    background: rgba(255,255,255,0.15);
-    padding: 4px 10px;
-    border-radius: 4px;
-  }
+      .hero {
+        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        color: #fff;
+        padding: 32px 36px;
+        border-radius: 12px;
+        margin-bottom: 32px;
+        box-shadow: var(--shadow-md);
+      }
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+      .hero p {
+        margin: 4px 0;
+        opacity: 0.9;
+        font-size: 14px;
+      }
+      .hero .meta {
+        margin-top: 16px;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 13px;
+      }
+      .hero .meta span {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 4px 10px;
+        border-radius: 4px;
+      }
 
-  section {
-    background: var(--c-surface);
-    border-radius: 10px;
-    padding: 28px 32px;
-    margin-bottom: 24px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--c-border);
-  }
-  section h2 {
-    margin: 0 0 16px;
-    font-size: 22px;
-    color: var(--c-primary-dark);
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--c-border);
-  }
-  section h3 {
-    font-size: 17px;
-    margin: 20px 0 8px;
-    color: var(--c-text);
-  }
-  section h4 {
-    font-size: 14px;
-    margin: 14px 0 6px;
-    color: var(--c-primary-dark);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
+      section {
+        background: var(--c-surface);
+        border-radius: 10px;
+        padding: 28px 32px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--c-border);
+      }
+      section h2 {
+        margin: 0 0 16px;
+        font-size: 22px;
+        color: var(--c-primary-dark);
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--c-border);
+      }
+      section h3 {
+        font-size: 17px;
+        margin: 20px 0 8px;
+        color: var(--c-text);
+      }
+      section h4 {
+        font-size: 14px;
+        margin: 14px 0 6px;
+        color: var(--c-primary-dark);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
 
-  .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px;
-    margin-top: 16px;
-  }
-  .feature-card {
-    border: 1px solid var(--c-border);
-    border-left-width: 4px;
-    border-radius: 6px;
-    padding: 12px 14px;
-    background: #fff;
-    transition: transform 0.15s, box-shadow 0.15s;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-  .feature-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-  .feature-card.read { border-left-color: var(--c-read); background: var(--c-read-bg); }
-  .feature-card.write { border-left-color: var(--c-write); background: var(--c-write-bg); }
-  .feature-card.irrev { border-left-color: var(--c-irrev); background: var(--c-irrev-bg); }
-  .feature-card .num {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--c-muted);
-    margin-bottom: 4px;
-  }
-  .feature-card h4 {
-    margin: 0 0 6px;
-    font-size: 15px;
-    text-transform: none;
-    letter-spacing: 0;
-    color: var(--c-text);
-  }
-  .feature-card p {
-    margin: 0;
-    font-size: 12.5px;
-    color: var(--c-muted);
-  }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .feature-card {
+        border: 1px solid var(--c-border);
+        border-left-width: 4px;
+        border-radius: 6px;
+        padding: 12px 14px;
+        background: #fff;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+      .feature-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+      .feature-card.read {
+        border-left-color: var(--c-read);
+        background: var(--c-read-bg);
+      }
+      .feature-card.write {
+        border-left-color: var(--c-write);
+        background: var(--c-write-bg);
+      }
+      .feature-card.irrev {
+        border-left-color: var(--c-irrev);
+        background: var(--c-irrev-bg);
+      }
+      .feature-card .num {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--c-muted);
+        margin-bottom: 4px;
+      }
+      .feature-card h4 {
+        margin: 0 0 6px;
+        font-size: 15px;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--c-text);
+      }
+      .feature-card p {
+        margin: 0;
+        font-size: 12.5px;
+        color: var(--c-muted);
+      }
 
-  .feature-block {
-    border-left: 4px solid var(--c-border);
-    padding-left: 20px;
-    margin: 28px 0;
-  }
-  .feature-block.read { border-color: var(--c-read); }
-  .feature-block.write { border-color: var(--c-write); }
-  .feature-block.irrev { border-color: var(--c-irrev); }
-  .feature-block .feature-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
-  }
-  .feature-block .feature-title h3 {
-    margin: 0;
-    font-size: 19px;
-  }
-  .feature-block .category-tag {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 3px;
-    letter-spacing: 0.5px;
-  }
-  .category-tag.read { background: var(--c-read-bg); color: var(--c-read); border: 1px solid var(--c-read-border); }
-  .category-tag.write { background: var(--c-write-bg); color: var(--c-write); border: 1px solid var(--c-write-border); }
-  .category-tag.irrev { background: var(--c-irrev-bg); color: var(--c-irrev); border: 1px solid var(--c-irrev-border); }
+      .feature-block {
+        border-left: 4px solid var(--c-border);
+        padding-left: 20px;
+        margin: 28px 0;
+      }
+      .feature-block.read {
+        border-color: var(--c-read);
+      }
+      .feature-block.write {
+        border-color: var(--c-write);
+      }
+      .feature-block.irrev {
+        border-color: var(--c-irrev);
+      }
+      .feature-block .feature-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      .feature-block .feature-title h3 {
+        margin: 0;
+        font-size: 19px;
+      }
+      .feature-block .category-tag {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 3px;
+        letter-spacing: 0.5px;
+      }
+      .category-tag.read {
+        background: var(--c-read-bg);
+        color: var(--c-read);
+        border: 1px solid var(--c-read-border);
+      }
+      .category-tag.write {
+        background: var(--c-write-bg);
+        color: var(--c-write);
+        border: 1px solid var(--c-write-border);
+      }
+      .category-tag.irrev {
+        background: var(--c-irrev-bg);
+        color: var(--c-irrev);
+        border: 1px solid var(--c-irrev-border);
+      }
 
-  ol.steps {
-    counter-reset: step;
-    list-style: none;
-    padding: 0;
-    margin: 8px 0 16px;
-  }
-  ol.steps > li {
-    counter-increment: step;
-    position: relative;
-    padding: 8px 8px 8px 44px;
-    margin: 6px 0;
-    background: #fafbfc;
-    border-radius: 6px;
-    border-left: 3px solid var(--c-primary);
-  }
-  ol.steps > li::before {
-    content: counter(step);
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    background: var(--c-primary);
-    color: #fff;
-    border-radius: 50%;
-    font-size: 12px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+      ol.steps {
+        counter-reset: step;
+        list-style: none;
+        padding: 0;
+        margin: 8px 0 16px;
+      }
+      ol.steps > li {
+        counter-increment: step;
+        position: relative;
+        padding: 8px 8px 8px 44px;
+        margin: 6px 0;
+        background: #fafbfc;
+        border-radius: 6px;
+        border-left: 3px solid var(--c-primary);
+      }
+      ol.steps > li::before {
+        content: counter(step);
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        background: var(--c-primary);
+        color: #fff;
+        border-radius: 50%;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-  .callout {
-    border-radius: 6px;
-    padding: 14px 18px;
-    margin: 14px 0;
-    border-left: 4px solid;
-    font-size: 14px;
-  }
-  .callout p { margin: 4px 0; }
-  .callout strong { display: block; margin-bottom: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .callout.warning { background: #fff5f5; border-color: var(--c-irrev); color: #7f1d1d; }
-  .callout.info { background: #eff6ff; border-color: var(--c-primary); color: #1e3a8a; }
-  .callout.success { background: var(--c-green-bg); border-color: var(--c-green); color: #1b5e20; }
-  .callout.notify { background: #f3e5f5; border-color: var(--c-system); color: #4a148c; }
-  .callout.review { background: #fffbeb; border-color: #f59e0b; color: #78350f; }
-  .callout.review ul { margin: 6px 0 0 18px; padding: 0; }
-  .callout.review li { margin: 2px 0; }
+      .callout {
+        border-radius: 6px;
+        padding: 14px 18px;
+        margin: 14px 0;
+        border-left: 4px solid;
+        font-size: 14px;
+      }
+      .callout p {
+        margin: 4px 0;
+      }
+      .callout strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .callout.warning {
+        background: #fff5f5;
+        border-color: var(--c-irrev);
+        color: #7f1d1d;
+      }
+      .callout.info {
+        background: #eff6ff;
+        border-color: var(--c-primary);
+        color: #1e3a8a;
+      }
+      .callout.success {
+        background: var(--c-green-bg);
+        border-color: var(--c-green);
+        color: #1b5e20;
+      }
+      .callout.notify {
+        background: #f3e5f5;
+        border-color: var(--c-system);
+        color: #4a148c;
+      }
+      .callout.review {
+        background: #fffbeb;
+        border-color: #f59e0b;
+        color: #78350f;
+      }
+      .callout.review ul {
+        margin: 6px 0 0 18px;
+        padding: 0;
+      }
+      .callout.review li {
+        margin: 2px 0;
+      }
 
-  .meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin: 8px 0 14px;
-    font-size: 13px;
-  }
-  .meta-row .pill {
-    background: #f1f5f9;
-    border: 1px solid var(--c-border);
-    padding: 4px 10px;
-    border-radius: 12px;
-    color: var(--c-muted);
-  }
-  .meta-row .pill strong { color: var(--c-text); }
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 8px 0 14px;
+        font-size: 13px;
+      }
+      .meta-row .pill {
+        background: #f1f5f9;
+        border: 1px solid var(--c-border);
+        padding: 4px 10px;
+        border-radius: 12px;
+        color: var(--c-muted);
+      }
+      .meta-row .pill strong {
+        color: var(--c-text);
+      }
 
-  code {
-    background: #f1f5f9;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-family: "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.88em;
-    color: #c2410c;
-  }
+      code {
+        background: #f1f5f9;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.88em;
+        color: #c2410c;
+      }
 
-  table.spec {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 10px 0 14px;
-    font-size: 13px;
-  }
-  table.spec th, table.spec td {
-    border: 1px solid var(--c-border);
-    padding: 8px 10px;
-    text-align: left;
-    vertical-align: top;
-  }
-  table.spec th {
-    background: #f1f5f9;
-    font-weight: 600;
-    color: var(--c-primary-dark);
-  }
-  table.spec tbody tr:nth-child(even) { background: #fafbfc; }
+      table.spec {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0 14px;
+        font-size: 13px;
+      }
+      table.spec th,
+      table.spec td {
+        border: 1px solid var(--c-border);
+        padding: 8px 10px;
+        text-align: left;
+        vertical-align: top;
+      }
+      table.spec th {
+        background: #f1f5f9;
+        font-weight: 600;
+        color: var(--c-primary-dark);
+      }
+      table.spec tbody tr:nth-child(even) {
+        background: #fafbfc;
+      }
 
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 16px;
-    padding: 12px;
-    background: #f8fafc;
-    border-radius: 6px;
-    font-size: 12.5px;
-  }
-  .legend-item { display: flex; align-items: center; gap: 6px; }
-  .legend-swatch {
-    width: 14px; height: 14px;
-    border-radius: 3px; border: 1px solid;
-  }
-  .legend-swatch.read { background: var(--c-read-bg); border-color: var(--c-read); }
-  .legend-swatch.write { background: var(--c-write-bg); border-color: var(--c-write); }
-  .legend-swatch.irrev { background: var(--c-irrev-bg); border-color: var(--c-irrev); }
+      .mermaid-wrap {
+        background: #fff;
+        border: 1px solid var(--c-border);
+        border-radius: 8px;
+        padding: 20px;
+        overflow-x: auto;
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+        padding: 12px;
+        background: #f8fafc;
+        border-radius: 6px;
+        font-size: 12.5px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .legend-swatch {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        border: 1px solid;
+      }
+      .legend-swatch.read {
+        background: var(--c-read-bg);
+        border-color: var(--c-read);
+      }
+      .legend-swatch.write {
+        background: var(--c-write-bg);
+        border-color: var(--c-write);
+      }
+      .legend-swatch.irrev {
+        background: var(--c-irrev-bg);
+        border-color: var(--c-irrev);
+      }
+      .legend-swatch.system {
+        background: var(--c-system-bg);
+        border-color: var(--c-system);
+      }
 
-  #back-to-top {
-    position: fixed;
-    right: 24px;
-    bottom: 24px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--c-primary);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    box-shadow: var(--shadow-md);
-    display: none;
-    z-index: 200;
-  }
-  #back-to-top:hover { background: var(--c-primary-dark); }
+      #back-to-top {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--c-primary);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        box-shadow: var(--shadow-md);
+        display: none;
+        z-index: 200;
+      }
+      #back-to-top:hover {
+        background: var(--c-primary-dark);
+      }
 
-  @media (max-width: 900px) {
-    .sidebar { transform: translateX(-100%); transition: transform 0.2s; }
-    .sidebar.open { transform: translateX(0); }
-    .main { margin-left: 0; padding: 20px; }
-  }
-  @media print {
-    .sidebar, #back-to-top { display: none !important; }
-    .main { margin-left: 0; max-width: 100%; padding: 0; }
-    section { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
-    .hero { background: #1e3a8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .feature-card, .callout { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  }
-</style>
-</head>
-<body>
+      @media (max-width: 900px) {
+        .sidebar {
+          transform: translateX(-100%);
+          transition: transform 0.2s;
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+      }
 
-<aside class="sidebar">
-  <div class="brand">
-    <h1>Customers Module</h1>
-    <p>Admin Portal User Guide</p>
-  </div>
-
-  <h3>Sections</h3>
-  <ul>
-    <li><a href="#overview">Overview</a></li>
-    <li><a href="#feature-list">Feature List</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#field-reference">Field Reference</a></li>
-    <li><a href="#troubleshooting">Troubleshooting</a></li>
-  </ul>
-
-  <h3>Read Operations</h3>
-  <ul>
-    <li><a href="#feat-1">1. Registration Dashboard <span class="badge read">READ</span></a></li>
-    <li><a href="#feat-2">2. Search by Phone <span class="badge read">READ</span></a></li>
-    <li><a href="#feat-3">3. Filter Registrations <span class="badge read">READ</span></a></li>
-    <li><a href="#feat-4">4. Pagination <span class="badge read">READ</span></a></li>
-    <li><a href="#feat-5">5. Refresh Table <span class="badge read">READ</span></a></li>
-    <li><a href="#feat-9">9. View Milestones <span class="badge read">READ</span></a></li>
-    <li><a href="#feat-12">12. Download Export <span class="badge read">READ</span></a></li>
-  </ul>
-
-  <h3>Reversible Write</h3>
-  <ul>
-    <li><a href="#feat-8">8. Home Loan Approval <span class="badge write">WRITE</span></a></li>
-    <li><a href="#feat-11">11. Update Parking <span class="badge write">WRITE</span></a></li>
-  </ul>
-
-  <h3>Irreversible Write</h3>
-  <ul>
-    <li><a href="#feat-6">6. Cancel Unit <span class="badge irrev">IRREV</span></a></li>
-    <li><a href="#feat-7">7. Cancel Registration <span class="badge irrev">IRREV</span></a></li>
-    <li><a href="#feat-10">10. Unit Swap <span class="badge irrev">IRREV</span></a></li>
-    <li><a href="#feat-13">13. Assign Unit <span class="badge irrev">IRREV</span></a></li>
-    <li><a href="#feat-14">14. Bulk Cancel Units <span class="badge irrev">IRREV</span></a></li>
-  </ul>
-</aside>
-
-<main class="main">
-
-  <div class="hero">
-    <h1>Customers Module</h1>
-    <p>Admin Portal — Main operational dashboard for buyer registrations</p>
-    <div class="meta">
-      <span>Audience: Admin / SM Admin</span>
-      <span>URL: /admin/customers</span>
-      <span>Last Updated: 2026-05-22</span>
-      <span>14 Features</span>
-    </div>
-  </div>
-
-  <!-- OVERVIEW -->
-  <section id="overview">
-    <h2>Overview</h2>
-    <p>The Customers page is the main operational dashboard for the admin team. It lists every buyer registration in the system with live KPI counts at the top and a searchable, filterable registration table below. From here you can cancel units, refund registrations, approve home loans, swap units, update parking, view milestone schedules, record offline payments, assign units, run bulk cancellations, and download an Excel export of all registrations.</p>
-    <p>This page loads automatically after login. You can also reach it from the left sidebar → <strong>Customers</strong>, or directly at <code>/admin/customers</code>.</p>
-
-    <h3>Page Layout (At a Glance)</h3>
-    <ol>
-      <li><strong>KPI Cards</strong> (top row, six tiles) — live counts.</li>
-      <li><strong>Controls bar</strong> — Cancel Bulk Units, Filter, Refresh, Download, Search by Phone.</li>
-      <li><strong>"Allocation Opened" banner</strong> — static label rendered as the table title.</li>
-      <li><strong>Registration table</strong> — one row per sub-registration; Actions column has a trash icon + three-dot menu.</li>
-      <li><strong>Pagination</strong> — bottom of table.</li>
-    </ol>
-
-    <div class="legend">
-      <div class="legend-item"><div class="legend-swatch read"></div> Read-only — no data change</div>
-      <div class="legend-item"><div class="legend-swatch write"></div> Reversible write — can be undone</div>
-      <div class="legend-item"><div class="legend-swatch irrev"></div> Irreversible — permanent, no undo</div>
-    </div>
-  </section>
-
-  <!-- FEATURE LIST -->
-  <section id="feature-list">
-    <h2>Feature List</h2>
-
-    <h3>Read Operations</h3>
-    <div class="feature-grid">
-      <a href="#feat-1" class="feature-card read"><span class="num">FEATURE 1</span><h4>Registration Dashboard</h4><p>Live KPI cards (6) + registration table with all buyer records.</p></a>
-      <a href="#feat-2" class="feature-card read"><span class="num">FEATURE 2</span><h4>Search by Phone</h4><p>Filter the table by buyer mobile number (phone-only match).</p></a>
-      <a href="#feat-3" class="feature-card read"><span class="num">FEATURE 3</span><h4>Filter Registrations</h4><p>Column-level filters: Allocation Status, Home Loan, Confirmation, KYC.</p></a>
-      <a href="#feat-4" class="feature-card read"><span class="num">FEATURE 4</span><h4>Pagination</h4><p>Page sizes 10 / 20 / 50 / 100; numbered navigation.</p></a>
-      <a href="#feat-5" class="feature-card read"><span class="num">FEATURE 5</span><h4>Refresh Table</h4><p>Reload table data from server without leaving the page.</p></a>
-      <a href="#feat-9" class="feature-card read"><span class="num">FEATURE 9</span><h4>View Milestones</h4><p>Milestone payment schedule for a Booked unit. Includes offline payment sub-flow.</p></a>
-      <a href="#feat-12" class="feature-card read"><span class="num">FEATURE 12</span><h4>Download Export</h4><p>Export all (or filtered) registrations as RegistrationData.xlsx (17 columns).</p></a>
-    </div>
-
-    <h3>Reversible Write</h3>
-    <div class="feature-grid">
-      <a href="#feat-8" class="feature-card write"><span class="num">FEATURE 8</span><h4>Home Loan Approval</h4><p>Manually approve a buyer's home loan — enables HOME_LOAN offer discount.</p></a>
-      <a href="#feat-11" class="feature-card write"><span class="num">FEATURE 11</span><h4>Update Parking Details</h4><p>Enable, update, or disable additional parking on a booked unit.</p></a>
-    </div>
-
-    <h3>Irreversible Write</h3>
-    <div class="feature-grid">
-      <a href="#feat-6" class="feature-card irrev"><span class="num">FEATURE 6</span><h4>Cancel Unit</h4><p>Cancel the allotted unit for a Booked row. No refund issued.</p></a>
-      <a href="#feat-7" class="feature-card irrev"><span class="num">FEATURE 7</span><h4>Cancel Registration</h4><p>Cancel a Registered/Waitlisted record and refund ₹999.</p></a>
-      <a href="#feat-10" class="feature-card irrev"><span class="num">FEATURE 10</span><h4>Unit Swap</h4><p>Reassign a buyer's allotted unit to a different unit.</p></a>
-      <a href="#feat-13" class="feature-card irrev"><span class="num">FEATURE 13</span><h4>Assign Unit / Offline Booking</h4><p>Assign a unit + record offline payment for a Registered row.</p></a>
-      <a href="#feat-14" class="feature-card irrev"><span class="num">FEATURE 14</span><h4>Bulk Cancel Units</h4><p>Cancel multiple sub-registrations at once.</p></a>
-    </div>
-  </section>
-
-  <!-- FEATURES -->
-  <section id="features">
-    <h2>Features</h2>
-
-    <!-- FEAT 1 -->
-    <div class="feature-block read" id="feat-1">
-      <div class="feature-title">
-        <h3>1. Registration Dashboard (KPI Cards + Table)</h3>
-        <span class="category-tag read">READ</span>
+      @media print {
+        .sidebar,
+        #back-to-top {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 0;
+        }
+        section {
+          box-shadow: none;
+          border: 1px solid #ddd;
+          page-break-inside: avoid;
+        }
+        .hero {
+          background: #1e3a8a !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .feature-card,
+        .callout {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>Customers Module</h1>
+        <p>Admin Portal User Guide</p>
       </div>
-      <p><strong>What it does.</strong> Gives a real-time at-a-glance view of all buyer registrations across the active project. The six KPI cards summarise totals; the table below lists every registration record with status, KYC, home loan, and unit-allotment information.</p>
-      <h4>Preconditions</h4>
-      <ul><li>Admin session.</li><li>Default landing route after login.</li></ul>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Log in. The Customers dashboard loads automatically.</li>
-        <li>Read the six KPI tiles at the top: <strong>Registered</strong> (sum of Booked Offline + Booked Online + Registered + Inactive), <strong>Inactive Registrations</strong>, <strong>Cancelled Registrations</strong>, <strong>KYC Pending (Booked)</strong>, <strong>Confirmed (Paid + KYC)</strong>, <strong>Active Towers</strong>.</li>
-        <li>Below the KPIs, the table heading shows the true total (e.g. "9,672 Registration Records").</li>
-        <li>Each row shows: Registration Details, Growth Partner, Phone, Home Loan Details, Confirmation Number, Allotted Unit, Allocation Status, Confirmation, Process Status, and Actions.</li>
-        <li>Sorted descending by created date — newest at top.</li>
-      </ol>
-      <div class="callout info">
-        <strong>Note (Corrected 2026-05-21)</strong>
-        <p>KPI tiles are computed by a separate aggregate query and always reflect <strong>global project totals</strong>. Applying a filter, search, or sort to the table does NOT recompute the KPI numbers. The <code>allotedCount</code> KPI is commented out in source — there is no "Alloted" tile.</p>
-      </div>
-      <div class="callout warning">
-        <strong>Warning</strong>
-        <p>The "Allocation Opened" label above the table is a <strong>static hardcoded label</strong> — it does NOT indicate whether an allocation campaign is actually open. Verify campaign state in the Allocation module.</p>
-      </div>
-    </div>
 
-    <!-- FEAT 2 -->
-    <div class="feature-block read" id="feat-2">
-      <div class="feature-title">
-        <h3>2. Search by Phone</h3>
-        <span class="category-tag read">READ</span>
-      </div>
-      <p><strong>What it does.</strong> Filters the registration table down to records matching a buyer's phone number.</p>
-      <div class="callout info">
-        <strong>Corrected 2026-05-21 — phone-only search</strong>
-        <p>This field performs a <code>LIKE %value%</code> substring match against <code>User.phone</code> ONLY. Despite the label, it cannot find a buyer by name, registration number, confirmation number, unit number, or tower name — those branches are commented out in source.</p>
-      </div>
-      <h4>Preconditions</h4>
-      <ul><li>You know the buyer's phone number.</li></ul>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Locate the <strong>Search by Phone</strong> field at the top right of the table.</li>
-        <li>Type the phone number (or any substring of it).</li>
-        <li>The table auto-filters to matching records.</li>
-        <li>To restore the full list, clear the field.</li>
-      </ol>
-      <p><strong>Result.</strong> For lookups by name, registration number, confirmation number, unit, or tower — use the <strong>Filter</strong> panel instead.</p>
-    </div>
-
-    <!-- FEAT 3 -->
-    <div class="feature-block read" id="feat-3">
-      <div class="feature-title">
-        <h3>3. Filter Registrations</h3>
-        <span class="category-tag read">READ</span>
-      </div>
-      <p><strong>What it does.</strong> Narrows the table by Allocation Status, Home Loan, Confirmation, or KYC stage.</p>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Click the <strong>Filter</strong> button above the table.</li>
-        <li>Select one or more criteria (see table below).</li>
-        <li>Click <strong>OK</strong> to apply. Filters use AND logic.</li>
-        <li>Click <strong>Reset Filters</strong> to clear everything.</li>
-      </ol>
-      <table class="spec">
-        <thead><tr><th>Filter</th><th>API Param</th><th>Accepted Values (exact, case-sensitive)</th></tr></thead>
-        <tbody>
-          <tr><td>Allocation Status</td><td><code>allotmentStatus</code></td><td><code>registered</code>, <code>booked_online</code>, <code>booked_offline</code>, <code>waitlisted</code>, <code>refunded</code>, <code>alloted</code></td></tr>
-          <tr><td>Home Loan</td><td><code>hasHomeLoan</code></td><td><code>true</code> = HomeLoan.status='completed'; <code>false</code> = in_progress or NULL</td></tr>
-          <tr><td>Confirmation</td><td><code>paymentStatus</code></td><td><code>Paid</code> / <code>Pending</code></td></tr>
-          <tr><td>Process Status</td><td><code>kycStatus</code></td><td><code>KYC Completed</code> / <code>KYC Pending</code></td></tr>
-        </tbody>
-      </table>
-      <div class="callout info">
-        <strong>Corrected 2026-05-21</strong>
-        <p>KPI cards above the table always reflect global project counts regardless of active filters. The filter is sent as <code>allotmentStatus</code> (NOT <code>allocationStatus</code>).</p>
-      </div>
-    </div>
-
-    <!-- FEAT 4 -->
-    <div class="feature-block read" id="feat-4">
-      <div class="feature-title">
-        <h3>4. Pagination</h3>
-        <span class="category-tag read">READ</span>
-      </div>
-      <p><strong>What it does.</strong> Lets you move between pages and change how many rows show at once.</p>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Scroll to the bottom of the table.</li>
-        <li>Adjust page size: click the dropdown ("10 / page" by default) → choose 10 / 20 / 50 / 100.</li>
-        <li>Navigate: click the page number, or use Previous / Next arrows.</li>
-        <li>Pagination text reads "1-10 of N items" (N = true total).</li>
-      </ol>
-    </div>
-
-    <!-- FEAT 5 -->
-    <div class="feature-block read" id="feat-5">
-      <div class="feature-title">
-        <h3>5. Refresh Table</h3>
-        <span class="category-tag read">READ</span>
-      </div>
-      <p><strong>What it does.</strong> Reloads the table data from the server without leaving the page.</p>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Click <strong>Refresh</strong> above the table.</li>
-        <li>A brief loading state shows; then the table redraws.</li>
-      </ol>
-      <p><strong>Result.</strong> The table reflects the latest server state — useful after another admin made a change.</p>
-    </div>
-
-    <!-- FEAT 6 -->
-    <div class="feature-block irrev" id="feat-6">
-      <div class="feature-title">
-        <h3>6. Cancel Unit (Booked rows)</h3>
-        <span class="category-tag irrev">IRREVERSIBLE</span>
-      </div>
-      <p><strong>What it does.</strong> Cancels just the allotted unit for a Booked row. Operates at <strong>RegistrationUnit</strong> level — parent Registration and sibling sub-registrations are not touched. <strong>No refund is issued.</strong></p>
-      <h4>Eligibility</h4>
+      <h3>Sections</h3>
       <ul>
-        <li>Row's Allocation Status = <strong>Booked Online</strong> or <strong>Booked Offline</strong>.</li>
-        <li>Internally: <code>status = WINNER</code> AND <code>allocationTransactionId</code> is present.</li>
-        <li>Off-system CRM Activity cleanup (Token, Form, Booking) and Mavis booking deletion must be done <strong>before</strong> triggering this.</li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#feature-list">Feature List</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#use-case">Use Case Diagram</a></li>
+        <li><a href="#review-checklist">Review Checklist</a></li>
       </ul>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Locate the Booked row in the table.</li>
-        <li>Hover the <strong>trash icon</strong> in the Actions column — tooltip reads "Cancel Unit".</li>
-        <li>Click the trash icon. Modal opens with two attestation checkboxes: <em>Activity - Token, Form, Booking deleted</em> and <em>Mavis - Booking entry deleted</em>.</li>
-        <li>Tick both checkboxes — Submit button enables only when both are ticked.</li>
-        <li>Click <strong>Submit</strong>.</li>
-      </ol>
-      <div class="callout success"><strong>Result</strong><p>Toast: "Unit cancelled successfully". The allotted unit is released; the row reflects the cancellation; no refund issued.</p></div>
-      <div class="callout warning">
-        <strong>Warning — Irreversible</strong>
-        <p>The attestation checkboxes are admin self-declarations — the backend does NOT auto-delete the CRM Activity or Mavis booking. Failing to perform those steps first leaves inconsistent state.</p>
-      </div>
-    </div>
 
-    <!-- FEAT 7 -->
-    <div class="feature-block irrev" id="feat-7">
-      <div class="feature-title">
-        <h3>7. Cancel Registration (Registered / Waitlisted rows, ₹999 refund)</h3>
-        <span class="category-tag irrev">IRREVERSIBLE</span>
-      </div>
-      <p><strong>What it does.</strong> Cancels a Registered or Waitlisted record (no unit allotted yet) and refunds the <strong>₹999</strong> registration confirmation amount to the buyer.</p>
-      <h4>Eligibility</h4>
+      <h3>Read Operations</h3>
       <ul>
-        <li>Row's Allocation Status = <strong>Registered</strong> or <strong>Waitlisted</strong>.</li>
-        <li>No unit allotted; only the ₹999 confirmation fee was paid.</li>
+        <li>
+          <a href="#feat-1"
+            >1. Registration Dashboard <span class="badge read">READ</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-2"
+            >2. Search by Phone <span class="badge read">READ</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-3"
+            >3. Filter Registrations <span class="badge read">READ</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-4"
+            >4. Reset Filters <span class="badge read">READ</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-5"
+            >5. Paginate Table <span class="badge read">READ</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-6"
+            >6. Refresh Table <span class="badge read">READ</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-7"
+            >7. Download Export <span class="badge read">READ</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-8"
+            >8. View Milestones <span class="badge read">READ</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-9"
+            >9. View Transaction Details <span class="badge read">READ</span></a
+          >
+        </li>
       </ul>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Locate the Registered/Waitlisted row.</li>
-        <li>Hover the <strong>trash icon</strong> — tooltip reads "Cancel Registration".</li>
-        <li>Click the trash icon. A confirmation popup shows unit details + refund amount <strong>₹999</strong>.</li>
-        <li>Click the red <strong>Cancel Registration</strong> button.</li>
-      </ol>
-      <div class="callout success"><strong>Result</strong><p>Toast: "Registration refunded successfully". Row status → Cancelled. ₹999 refunded to buyer's original payment method.</p></div>
-      <div class="callout warning"><strong>Warning</strong><p>Permanent and irreversible. Do not use on a Booked row — that is "Cancel Unit" (Feature 6), which does not refund.</p></div>
-    </div>
 
-    <!-- FEAT 8 -->
-    <div class="feature-block write" id="feat-8">
-      <div class="feature-title">
-        <h3>8. Home Loan Approval</h3>
-        <span class="category-tag write">WRITE</span>
-      </div>
-      <p><strong>What it does.</strong> Lets an admin manually approve a buyer's home loan application, making the HOME_LOAN offer discount eligible during the next allocation campaign.</p>
-      <h4>Eligibility</h4>
+      <h3>Reversible Write</h3>
       <ul>
-        <li>Buyer must have initiated a home loan application (<code>loanType = self</code> or <code>easiloan</code>).</li>
-        <li>Current <code>loanApprovalStatus</code> is <code>pending</code> or <code>null</code>.</li>
-        <li>Always available in the three-dot menu regardless of row status.</li>
+        <li>
+          <a href="#feat-10"
+            >10. Home Loan Approval <span class="badge write">WRITE</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-11"
+            >11. Update Parking <span class="badge write">WRITE</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-12"
+            >12. Offline Milestone Payment
+            <span class="badge write">WRITE</span></a
+          >
+        </li>
       </ul>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Find the buyer's row.</li>
-        <li>Click the <strong>three-dot (…) menu</strong> in the Actions column.</li>
-        <li>Select <strong>Home Loan Approval</strong>.</li>
-        <li>In the modal, flip the toggle to <strong>ON</strong>.</li>
-        <li>Click <strong>Save / Submit</strong>.</li>
-      </ol>
-      <div class="callout success"><strong>Result</strong><p><code>RegistrationHomeLoan.loanApprovalStatus</code> → <code>admin_approved</code>; <code>approvalSource</code> → <code>admin</code>. HOME_LOAN offer becomes eligible for next allocation campaign. No buyer notification is dispatched.</p></div>
-      <div class="callout info"><strong>Source-verified (2026-05-23)</strong><p><code>registration-unit.service.js</code> <code>updateHomeLoanDetails</code> (lines 349–387) — zero <code>sendSms</code> / <code>sendWhatsapp</code> / <code>sendEmail</code> calls. FRD claim of SMS/WhatsApp was incorrect.</p></div>
-    </div>
 
-    <!-- FEAT 9 -->
-    <div class="feature-block read" id="feat-9">
-      <div class="feature-title">
-        <h3>9. View Milestones (Booked rows)</h3>
-        <span class="category-tag read">READ</span>
-      </div>
-      <p><strong>What it does.</strong> Opens a dedicated milestone payment schedule page for the selected allotted unit, showing each milestone, dues, GST, principal, total amount, outstanding, payment status, and any recorded transactions. An <strong>Offline Payment</strong> action is available for payable rows.</p>
-      <h4>Eligibility</h4>
+      <h3>Irreversible Write</h3>
       <ul>
-        <li>Row's Allocation Status = Booked Online or Booked Offline.</li>
-        <li>Buyer must have submitted KYC — otherwise the milestone table is empty.</li>
+        <li>
+          <a href="#feat-13"
+            >13. Cancel Unit <span class="badge irrev">IRREVERSIBLE</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-14"
+            >14. Cancel Registration
+            <span class="badge irrev">IRREVERSIBLE</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-15"
+            >15. Assign Unit <span class="badge irrev">IRREVERSIBLE</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-16"
+            >16. Unit Swap <span class="badge irrev">IRREVERSIBLE</span></a
+          >
+        </li>
+        <li>
+          <a href="#feat-17"
+            >17. Bulk Cancel Units
+            <span class="badge irrev">IRREVERSIBLE</span></a
+          >
+        </li>
       </ul>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Locate the Booked row.</li>
-        <li>Click the <strong>three-dot (…) menu</strong> → <strong>View Milestones</strong>. Navigates to <code>/admin/milestone?rn=&lt;rn&gt;&amp;uid=&lt;uid&gt;</code>.</li>
-        <li>Read the Payment Status column: <strong>Pending</strong> (clock icon), <strong>Partial Payment</strong> (card icon), <strong>Paid</strong> (check-circle icon), empty = future date, <code>-</code> = zero-amount milestone.</li>
-        <li>Click <strong>View</strong> in the DETAILS column to see a payment breakdown drawer.</li>
-        <li>Click <strong>Offline Payment</strong> in the ACTION column to record an offline collection (see sub-flow).</li>
-        <li>Click <strong>Back to Customer Listing</strong> (top-left) to return.</li>
-      </ol>
+    </aside>
 
-      <h4>Offline Payment Sub-flow</h4>
-      <p>The drawer captures 11 fields (POST to <code>apiUrls.adminMilestonePaymentOffline</code>):</p>
-      <table class="spec">
-        <thead><tr><th>Field</th><th>Rules</th></tr></thead>
-        <tbody>
-          <tr><td>Registration Number</td><td>Auto-injected, read-only</td></tr>
-          <tr><td>Amount</td><td>Must be &gt; 0; for GST must equal <code>gstOutstanding</code> exactly (±0.01)</td></tr>
-          <tr><td>Payment Method</td><td>NEFT / Cheque / Cash / CC / DC / UPI</td></tr>
-          <tr><td>Transaction ID</td><td>Required — bank/cheque reference</td></tr>
-          <tr><td>Transaction Date &amp; Time</td><td>Format <code>YYYY-MM-DD HH:mm:ss</code>; cannot be in the future</td></tr>
-          <tr><td>Comments</td><td>Optional (max 500 chars)</td></tr>
-          <tr><td>Payment Proof</td><td>Required — PDF, JPG, PNG (max ~5 MB)</td></tr>
-        </tbody>
-      </table>
-      <div class="callout warning"><strong>Warning</strong><p>View Milestones triggers <strong>no buyer-facing notification</strong>. An empty milestone table on a Booked row almost always means KYC has not been submitted yet.</p></div>
-    </div>
-
-    <!-- FEAT 10 -->
-    <div class="feature-block irrev" id="feat-10">
-      <div class="feature-title">
-        <h3>10. Unit Swap (Booked rows)</h3>
-        <span class="category-tag irrev">IRREVERSIBLE</span>
+    <main class="main">
+      <div class="hero">
+        <h1>Customers Module — User Guide</h1>
+        <p>
+          The operational dashboard for buyer registrations. Monitor counts,
+          manage allotments, record offline payments, and process cancellations.
+        </p>
+        <div class="meta">
+          <span><strong>Portal:</strong> Admin</span>
+          <span><strong>URL:</strong> /admin/customers</span>
+          <span><strong>Last Updated:</strong> 2026-05-21</span>
+          <span><strong>BRD:</strong> ADMIN-BRD-Customers</span>
+          <span
+            ><strong>FRD:</strong> ADMIN-FS-Customers (+ Milestones, UnitSwap,
+            Parking)</span
+          >
+        </div>
       </div>
-      <p><strong>What it does.</strong> Reassigns a buyer's already-allotted unit to a different unit within the project.</p>
-      <h4>Eligibility</h4>
-      <ul>
-        <li>Row Allocation Status = Booked Online / Booked Offline.</li>
-        <li><strong>No allocation campaign is currently OPEN</strong> — backend blocks with <code>400 "Cannot swap unit when campaign is active"</code>.</li>
-        <li>No active Mavis booking row exists — must be deleted externally first.</li>
-        <li>Target unit status = <strong>AVAILABLE</strong> or <strong>RESERVED</strong>.</li>
-      </ul>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Before opening the modal, delete CRM Activity records (Token, Form, Booking) and the Mavis booking entry.</li>
-        <li>Locate the Booked row → click <strong>three-dot menu</strong> → <strong>Unit swap</strong>.</li>
-        <li>The modal opens. Pick a <strong>Tower</strong> then pick a <strong>Unit</strong>.</li>
-        <li>Tick both attestation checkboxes: "Activity deleted" and "Mavis booking deleted".</li>
-        <li>Click <strong>Submit</strong>.</li>
-      </ol>
-      <div class="callout success"><strong>Result</strong><p>Toast: "Unit swapped successfully". Old unit → RESERVED; new unit → BOOKED. <code>RegistrationUnit</code> fields updated. KYC flags reset.</p></div>
-      <div class="callout warning">
-        <strong>Warnings</strong>
-        <p>Milestone schedule is <strong>NOT auto-regenerated</strong> after a swap — known backend limitation. No buyer SMS/WhatsApp/Email is dispatched. Unit dropdown lists units of any typology — no filter on apartment type.</p>
-      </div>
-    </div>
 
-    <!-- FEAT 11 -->
-    <div class="feature-block write" id="feat-11">
-      <div class="feature-title">
-        <h3>11. Update Parking Details (Booked rows)</h3>
-        <span class="category-tag write">WRITE</span>
-      </div>
-      <p><strong>What it does.</strong> Enables, updates, or disables additional parking on a buyer's booked unit. System computes total parking amount that flows into the buyer's costing.</p>
-      <h4>Eligibility</h4>
-      <ul><li>Row Allocation Status = Booked Online / Booked Offline.</li></ul>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Locate the Booked row → click <strong>three-dot menu</strong> → <strong>Update Parking Details</strong>.</li>
-        <li>The Parking Details modal opens with an <strong>Additional Parking Enabled</strong> toggle.</li>
-        <li>To enable/update: flip toggle ON → enter <strong>Parking Count</strong> (1–500) and <strong>Parking Amount</strong>. Preview shows <em>Total = Count × Amount</em>.</li>
-        <li>To disable: flip toggle OFF. Both Count and Amount are immediately cleared (set to null).</li>
-        <li>Click <strong>Submit</strong>.</li>
-      </ol>
-      <div class="callout success"><strong>Result</strong><p>Toast: "Parking details updated successfully". <code>RegistrationUnit.isParkingSelected</code>, <code>parkingCount</code>, <code>parkingAmount</code> are written. Parking pool for the typology is adjusted.</p></div>
-      <div class="callout warning">
-        <strong>Warnings</strong>
-        <p><strong>No buyer SMS/WhatsApp/Email</strong> dispatched. Disabling parking clears both Count and Amount — no undo in-app. Backend rejects with <code>400 "No change in parking count"</code> if delta = 0.</p>
-      </div>
-    </div>
+      <section id="overview">
+        <h2>Overview</h2>
+        <p>
+          The Customers module is the default landing page after Admin login. It
+          surfaces six live KPI cards summarising registration health, a
+          paginated registration table, and a set of context-sensitive row
+          actions (trash icon, three-dot menu) that drive 15+ distinct workflows
+          ranging from read-only browsing through to irreversible unit
+          cancellation.
+        </p>
+        <div class="meta-row">
+          <span class="pill"
+            ><strong>Primary Actor:</strong> Admin / Sales Manager Admin (same
+            permissions)</span
+          >
+          <span class="pill"
+            ><strong>Secondary Actor:</strong> Buyer (notifications only)</span
+          >
+          <span class="pill"
+            ><strong>System Actor:</strong> KPI refresh · audit log · Mavis ·
+            LSQ · WebSocket · Kaleyra</span
+          >
+        </div>
+        <h3>Color coding used throughout this guide</h3>
+        <div class="legend">
+          <div class="legend-item">
+            <span class="legend-swatch read"></span> READ — non-destructive, no
+            DB writes
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch write"></span> REVERSIBLE WRITE — value
+            can be re-set
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch irrev"></span> IRREVERSIBLE WRITE —
+            cannot be undone in-app
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch system"></span> SYSTEM — automated
+            downstream effect
+          </div>
+        </div>
+      </section>
 
-    <!-- FEAT 12 -->
-    <div class="feature-block read" id="feat-12">
-      <div class="feature-title">
-        <h3>12. Download Export</h3>
-        <span class="category-tag read">READ</span>
-      </div>
-      <p><strong>What it does.</strong> Exports registration records as an Excel file named <code>RegistrationData.xlsx</code> with 17 columns.</p>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Click the <strong>Download</strong> button (top right area).</li>
-        <li>The file downloads automatically to your browser's default download folder.</li>
-        <li>Open in Excel.</li>
-      </ol>
-      <div class="callout info">
-        <strong>Corrected 2026-05-21 — export respects active filters</strong>
-        <p>Active filters <strong>ARE</strong> respected by the export. No active filter = full export. Active filter = filtered export across all pages. Click Reset Filters before Download if you want all records.</p>
-      </div>
-    </div>
+      <section id="feature-list">
+        <h2>Feature List</h2>
+        <p>
+          All 15+ features supported by the Customers module, grouped by
+          destructive potential.
+        </p>
 
-    <!-- FEAT 13 -->
-    <div class="feature-block irrev" id="feat-13">
-      <div class="feature-title">
-        <h3>13. Assign Unit / Offline Booking (Registered rows)</h3>
-        <span class="category-tag irrev">IRREVERSIBLE</span>
-      </div>
-      <p><strong>What it does.</strong> Assigns a unit to a Registered buyer and records an offline booking payment in a single transaction. Used when a buyer pays via bank transfer, cheque, UPI, or cash outside the online gateway.</p>
-      <h4>Eligibility</h4>
-      <ul>
-        <li>Row Allocation Status = <strong>Registered</strong>.</li>
-        <li>No unit currently allotted.</li>
-        <li>Target unit status = AVAILABLE or RESERVED.</li>
-      </ul>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Find the eligible Registered row → click <strong>three-dot menu</strong> → <strong>Assign Unit</strong>.</li>
-        <li>Pick a <strong>Tower</strong> then pick a <strong>Unit</strong> (only Available/Reserved units shown).</li>
-        <li>Enter payment details: Transaction ID, Mode of Transaction (UPI / NEFT-RTGS / Cheque / Cash), Booking Amount, Transaction Date.</li>
-        <li>Optionally upload Payment Proof (image or PDF).</li>
-        <li>Click <strong>Submit</strong>.</li>
-      </ol>
-      <div class="callout success"><strong>Result</strong><p>Offline payment recorded. Unit status → BOOKED. Mavis + LSQ synced. Buyer receives Kaleyra WhatsApp (template: <code>congrates_payment_success_27sept</code>) + Kaleyra SMS (<code>ALLOTMENT_PAYMENT_SUCCESS</code>, +91 numbers only). No email sent.</p></div>
-      <div class="callout info"><strong>Source-verified (2026-05-23)</strong><p><code>registration-unit.service.js</code> lines 877–885 calls <code>allocationNotificationService</code> → <code>allocation.service.js</code> lines 1816–1832. WhatsApp + SMS confirmed. Email NOT dispatched. FRD claim of "Email + WhatsApp" was partially incorrect.</p></div>
-      <div class="callout warning"><strong>Warning</strong><p>If the unit becomes unavailable between selection and submit, error: "Selected unit is no longer available. Please choose another unit." No booking is created.</p></div>
-    </div>
+        <h3>Read Operations</h3>
+        <div class="feature-grid">
+          <a href="#feat-1" class="feature-card read"
+            ><span class="num">FEATURE 1</span>
+            <h4>Registration Dashboard</h4>
+            <p>Live KPI cards (6) + registration table with 9,000+ rows.</p></a
+          >
+          <a href="#feat-2" class="feature-card read"
+            ><span class="num">FEATURE 2</span>
+            <h4>Search by Phone</h4>
+            <p>Filter the table by buyer mobile number.</p></a
+          >
+          <a href="#feat-3" class="feature-card read"
+            ><span class="num">FEATURE 3</span>
+            <h4>Filter Registrations</h4>
+            <p>
+              Column-level filters: Allocation Status, Process Status, etc.
+            </p></a
+          >
+          <a href="#feat-4" class="feature-card read"
+            ><span class="num">FEATURE 4</span>
+            <h4>Reset Filters</h4>
+            <p>Clear all active filters with a single click.</p></a
+          >
+          <a href="#feat-5" class="feature-card read"
+            ><span class="num">FEATURE 5</span>
+            <h4>Paginate Table</h4>
+            <p>Page sizes 10 / 20 / 50 / 100; numbered navigation.</p></a
+          >
+          <a href="#feat-6" class="feature-card read"
+            ><span class="num">FEATURE 6</span>
+            <h4>Refresh Table</h4>
+            <p>Reload table data in-place.</p></a
+          >
+          <a href="#feat-7" class="feature-card read"
+            ><span class="num">FEATURE 7</span>
+            <h4>Download Export</h4>
+            <p>Export <code>RegistrationData.xlsx</code> (all records).</p></a
+          >
+          <a href="#feat-8" class="feature-card read"
+            ><span class="num">FEATURE 8</span>
+            <h4>View Milestones</h4>
+            <p>Read the milestone payment schedule for a Booked unit.</p></a
+          >
+          <a href="#feat-9" class="feature-card read"
+            ><span class="num">FEATURE 9</span>
+            <h4>View Transaction Details</h4>
+            <p>Drawer showing payment classifications per milestone.</p></a
+          >
+        </div>
 
-    <!-- FEAT 14 -->
-    <div class="feature-block irrev" id="feat-14">
-      <div class="feature-title">
-        <h3>14. Bulk Cancel Units</h3>
-        <span class="category-tag irrev">IRREVERSIBLE</span>
-      </div>
-      <p><strong>What it does.</strong> Cancels multiple sub-registrations at once — useful for cleanup on test data or bulk corrections.</p>
-      <h4>Step-by-step</h4>
-      <ol class="steps">
-        <li>Click the <strong>Cancel Bulk Units</strong> button above the table.</li>
-        <li>The bulk cancel interface opens. Select the sub-registrations to cancel.</li>
-        <li>Confirm.</li>
-      </ol>
-      <div class="callout warning"><strong>Warning — Irreversible</strong><p>Permanent and irreversible. Recommended only for test records or after explicit business sign-off.</p></div>
-    </div>
+        <h3>Reversible Write Operations</h3>
+        <div class="feature-grid">
+          <a href="#feat-10" class="feature-card write"
+            ><span class="num">FEATURE 10</span>
+            <h4>Home Loan Approval</h4>
+            <p>Toggle loan approval status (any row).</p></a
+          >
+          <a href="#feat-11" class="feature-card write"
+            ><span class="num">FEATURE 11</span>
+            <h4>Update Parking Details</h4>
+            <p>Enable / count (1–500) / per-slot amount.</p></a
+          >
+          <a href="#feat-12" class="feature-card write"
+            ><span class="num">FEATURE 12</span>
+            <h4>Record Offline Milestone Payment</h4>
+            <p>11-field multipart form on a payable milestone row.</p></a
+          >
+        </div>
 
-  </section>
+        <h3>Irreversible Write Operations</h3>
+        <div class="feature-grid">
+          <a href="#feat-13" class="feature-card irrev"
+            ><span class="num">FEATURE 13</span>
+            <h4>Cancel Unit</h4>
+            <p>
+              Booked rows. Two-checkbox attestation. "Unit cancelled
+              successfully".
+            </p></a
+          >
+          <a href="#feat-14" class="feature-card irrev"
+            ><span class="num">FEATURE 14</span>
+            <h4>Cancel Registration</h4>
+            <p>Registered / Waitlisted rows. ₹999 refund.</p></a
+          >
+          <a href="#feat-15" class="feature-card irrev"
+            ><span class="num">FEATURE 15</span>
+            <h4>Assign Unit / Offline Booking</h4>
+            <p>Registered, no unit. Pick tower + unit + payment details.</p></a
+          >
+          <a href="#feat-16" class="feature-card irrev"
+            ><span class="num">FEATURE 16</span>
+            <h4>Unit Swap</h4>
+            <p>
+              Booked, no active campaign, no Mavis row. Two attestations.
+            </p></a
+          >
+          <a href="#feat-17" class="feature-card irrev"
+            ><span class="num">FEATURE 17</span>
+            <h4>Bulk Cancel Units</h4>
+            <p>Cancel multiple sub-registrations at once.</p></a
+          >
+        </div>
+      </section>
 
-  <!-- FIELD REFERENCE -->
-  <section id="field-reference">
-    <h2>Field Reference</h2>
+      <section id="features">
+        <h2>Feature Walkthroughs</h2>
 
-    <h3>Trash icon (Actions column) — context-sensitive</h3>
-    <table class="spec">
-      <thead><tr><th>Row state</th><th>Tooltip</th><th>CTA</th><th>Refund</th><th>Backend endpoint</th><th>Success toast</th></tr></thead>
-      <tbody>
-        <tr><td>Booked (WINNER + allocationTransactionId)</td><td>Cancel Unit</td><td>Submit (both checkboxes ticked)</td><td>None</td><td><code>PUT adminCancelAllUnits</code></td><td>"Unit cancelled successfully"</td></tr>
-        <tr><td>Registered / Waitlisted</td><td>Cancel Registration</td><td>Red "Cancel Registration" button</td><td>₹999</td><td><code>PUT refundRegistrationUnit</code></td><td>"Registration refunded successfully"</td></tr>
-        <tr><td>REFUND</td><td colspan="5">Cell shows <code>-</code> — no action available</td></tr>
-      </tbody>
-    </table>
+        <div class="feature-block read" id="feat-1">
+          <div class="feature-title">
+            <h3>1. Registration Dashboard</h3>
+            <span class="category-tag read">READ</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Renders six KPI cards plus the
+            registration table. KPIs are live and update as the underlying data
+            changes.
+          </p>
+          <div class="meta-row">
+            <span class="pill"
+              ><strong>Who can use it:</strong> Admin / Sales Manager
+              Admin</span
+            >
+            <span class="pill"
+              ><strong>When available:</strong> Always (default landing page
+              after login)</span
+            >
+          </div>
+          <h4>The six KPI cards</h4>
+          <table class="spec">
+            <thead>
+              <tr>
+                <th>Card</th>
+                <th>Definition</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Registered</td>
+                <td>
+                  Booked Offline + Booked Online + Registered + Inactive (NOT
+                  just "Registered" status alone)
+                </td>
+              </tr>
+              <tr>
+                <td>Inactive Registrations</td>
+                <td>Registrations set to inactive</td>
+              </tr>
+              <tr>
+                <td>Cancelled Registrations</td>
+                <td>Registrations that have been cancelled</td>
+              </tr>
+              <tr>
+                <td>KYC Pending (Booked)</td>
+                <td>Buyers who have paid and booked but not completed KYC</td>
+              </tr>
+              <tr>
+                <td>Confirmed (Paid + KYC)</td>
+                <td>Buyers who have both paid and completed KYC</td>
+              </tr>
+              <tr>
+                <td>Active Towers</td>
+                <td>Live count from the Config module's tower configuration</td>
+              </tr>
+            </tbody>
+          </table>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>
+              Log in to the Admin Portal. The Customers dashboard opens
+              automatically.
+            </li>
+            <li>Read the six KPI cards at the top.</li>
+            <li>
+              Scroll to the registration table. The heading shows the true total
+              (for example, <code>9,672 Registration Records</code>).
+            </li>
+            <li>Browse rows newest-first.</li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> Six KPI numbers render with
+            correct values. Table heading shows total count. Rows render with
+            all 10 columns.
+          </p>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None. Read-only.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>All 6 KPI cards visible at top of page.</li>
+              <li>
+                "Registered" KPI = sum of Booked Offline + Booked Online +
+                Registered + Inactive (verify against DB query).
+              </li>
+              <li>
+                "Active Towers" KPI matches Config module's active tower count.
+              </li>
+              <li>
+                Table heading shows total record count, not visible row count.
+              </li>
+              <li>Rows ordered by createdAt descending (newest first).</li>
+              <li>
+                "Allocation Opened" banner renders unconditionally (known UI bug
+                — assert presence only).
+              </li>
+            </ul>
+          </div>
+        </div>
 
-    <h3>Three-dot menu item visibility</h3>
-    <table class="spec">
-      <thead><tr><th>Menu item</th><th>Visible when</th></tr></thead>
-      <tbody>
-        <tr><td>Assign Unit</td><td>Row is Registered AND no unit allotted (<code>canAssignUnit</code>)</td></tr>
-        <tr><td>View Milestones</td><td>Row is Booked (<code>status=WINNER && allocationTransactionId !== null</code>)</td></tr>
-        <tr><td>Unit swap</td><td>Row is Booked (front-end gate) — backend additionally blocks if campaign is active or Mavis row exists</td></tr>
-        <tr><td>Update Parking Details</td><td>Row is Booked</td></tr>
-        <tr><td>Home Loan Approval</td><td>Always available</td></tr>
-      </tbody>
-    </table>
+        <div class="feature-block read" id="feat-2">
+          <div class="feature-title">
+            <h3>2. Search by Phone</h3>
+            <span class="category-tag read">READ</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Live-filters the registration table
+            by buyer phone number.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"><strong>When:</strong> Always</span>
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>
+              Locate the <strong>Search by Phone</strong> field at the top right
+              of the table.
+            </li>
+            <li>Type the buyer's phone number (full or partial).</li>
+            <li>The table filters to matching registrations.</li>
+            <li>Clear the field to restore the unfiltered list.</li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> Filter applies on input. KPIs
+            remain unchanged (KPIs are global, not filter-scoped).
+          </p>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Partial-match returns relevant rows.</li>
+              <li>
+                Clearing the field restores full list without page reload.
+              </li>
+              <li>KPIs unaffected by phone search.</li>
+              <li>
+                Search persists across pagination clicks within the same session
+                view.
+              </li>
+            </ul>
+          </div>
+        </div>
 
-    <h3>Notifications dispatched — source-verified 2026-05-23</h3>
-    <p style="font-size:13px;color:#6b7280;">All entries verified against backend source code. ✓ = grep-confirmed in <code>admin.controller.js</code>, <code>registration-unit.service.js</code>, <code>milestone-payment.controller.js</code>, <code>allocation.service.js</code>.</p>
-    <table class="spec">
-      <thead><tr><th>Action</th><th>Buyer Notification</th><th>Source file + evidence</th></tr></thead>
-      <tbody>
-        <tr><td>Cancel Unit</td><td><strong>None</strong> ✓</td><td><code>cancelRegistrationUnits</code> — no notification imports; only Python sync + Redis + audit</td></tr>
-        <tr><td>Cancel Registration</td><td><strong>None</strong> ✓</td><td>Confirmed by user (actual system knowledge)</td></tr>
-        <tr><td>Home Loan Approval</td><td><strong>None</strong> ✓</td><td><code>updateHomeLoanDetails</code> lines 349–387 — zero SMS/WA/email calls</td></tr>
-        <tr><td>Assign Unit / Offline Booking</td><td>WhatsApp (<code>congrates_payment_success_27sept</code>) + SMS (<code>ALLOTMENT_PAYMENT_SUCCESS</code>, +91 only) — <strong>no email</strong> ✓</td><td><code>adminAssignUnit</code> line 879 → <code>allocationNotificationService</code> → <code>allocation.service.js</code> lines 1816–1832</td></tr>
-        <tr><td>View Milestones (navigation)</td><td><strong>None</strong> ✓</td><td>GET handlers <code>getMilestoneUnitDetails</code> / <code>getMilestoneTransactionDetails</code> — read-only, no notification grep matches</td></tr>
-        <tr><td>Offline Payment (milestone sub-flow)</td><td><strong>None</strong> ✓</td><td><code>submitOfflineMilestonePayment</code> — full file grep returned zero notification matches</td></tr>
-        <tr><td>Unit Swap</td><td><strong>None</strong> ✓</td><td><code>swapRegistrationUnit</code> lines 69–282 — returns after Redis update only</td></tr>
-        <tr><td>Update Parking</td><td><strong>None</strong> ✓</td><td><code>updateParkingDetails</code> lines 285–347 — DB update + commit only</td></tr>
-        <tr><td>Bulk Cancel Units</td><td><strong>None</strong> ✓</td><td><code>cancelByExcelUpload</code> lines 2301–2688 — same shape as single cancel; no notification imports</td></tr>
-      </tbody>
-    </table>
-  </section>
+        <div class="feature-block read" id="feat-3">
+          <div class="feature-title">
+            <h3>3. Filter Registrations</h3>
+            <span class="category-tag read">READ</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Applies column-level filters via the
+            Filter button.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"><strong>When:</strong> Always</span>
+          </div>
+          <h4>Available filters</h4>
+          <table class="spec">
+            <thead>
+              <tr>
+                <th>Filter</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Allocation Status</td>
+                <td>Dropdown — Registered / Booked / Inactive / Cancelled</td>
+              </tr>
+              <tr>
+                <td>Process Status</td>
+                <td>Dropdown — KYC Pending / KYC Completed</td>
+              </tr>
+              <tr>
+                <td>Registration Details</td>
+                <td>Inline text search</td>
+              </tr>
+              <tr>
+                <td>Growth Partner HV Code</td>
+                <td>Inline text search</td>
+              </tr>
+              <tr>
+                <td>Confirmation Number</td>
+                <td>Inline text search</td>
+              </tr>
+              <tr>
+                <td>Allotted Unit</td>
+                <td>Inline text search</td>
+              </tr>
+              <tr>
+                <td>Home Loan Details</td>
+                <td>Filter</td>
+              </tr>
+            </tbody>
+          </table>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Click the <strong>Filter</strong> button above the table.</li>
+            <li>Select filter criteria from one or more controls.</li>
+            <li>Click <strong>OK</strong> to apply.</li>
+            <li>Confirm the table updates to matching rows.</li>
+          </ol>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Each filter independently narrows the row set.</li>
+              <li>Combining filters AND-merges results.</li>
+              <li>
+                Download button still exports ALL records regardless of active
+                filters.
+              </li>
+            </ul>
+          </div>
+        </div>
 
-  <!-- TROUBLESHOOTING -->
-  <section id="troubleshooting">
-    <h2>Troubleshooting</h2>
-    <table class="spec">
-      <thead><tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr></thead>
-      <tbody>
-        <tr><td>Trash tooltip says "Cancel Unit" but you expected "Cancel Registration"</td><td>Row is Booked — trash performs Cancel Unit on Booked rows</td><td>Use the correct flow per row state (see Field Reference)</td></tr>
-        <tr><td>Submit button disabled on Cancel Unit modal</td><td>One or both attestation checkboxes unticked</td><td>Tick both checkboxes</td></tr>
-        <tr><td>Unit Swap fails: "Cannot swap unit when campaign is active"</td><td>An allocation campaign is OPEN</td><td>Wait for campaign to close, or close it in the Allocation module</td></tr>
-        <tr><td>Unit Swap fails: "Mavis booking still exists"</td><td>Mavis booking row not deleted externally</td><td>Delete the Mavis booking entry, then retry</td></tr>
-        <tr><td>Milestone table is empty for a Booked row</td><td>Buyer has not submitted KYC yet</td><td>Wait for KYC submission — schedule generates then</td></tr>
-        <tr><td>After Unit Swap, milestone schedule looks stale</td><td>Backend does not auto-regenerate on swap</td><td>Escalate — known limitation</td></tr>
-        <tr><td>Update Parking fails: "No change in parking count"</td><td>Submitted count equals existing count (delta = 0)</td><td>Change the count or toggle OFF/ON with new count</td></tr>
-        <tr><td>Update Parking fails: "Available parking count (X) is less than required (Y)"</td><td>Typology parking pool exhausted</td><td>Reduce the count or wait for pool inventory to free up</td></tr>
-        <tr><td>Download contains only filtered records</td><td>Export respects active filters by design</td><td>Click Reset Filters before Download if you want all records</td></tr>
-        <tr><td>"Allocation Opened" banner always visible</td><td>Static hardcoded label in source</td><td>Check campaign state in the Allocation module — do not rely on this label</td></tr>
-      </tbody>
-    </table>
-  </section>
+        <div class="feature-block read" id="feat-4">
+          <div class="feature-title">
+            <h3>4. Reset Filters</h3>
+            <span class="category-tag read">READ</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Clears all active filters in one
+            click.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> Visible when one or more filters
+              active</span
+            >
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>
+              With at least one filter active, click the
+              <strong>Reset Filters</strong> button.
+            </li>
+            <li>All filter chips and inputs clear.</li>
+            <li>The table restores the full unfiltered list.</li>
+          </ol>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Reset clears all controls including the phone search.</li>
+              <li>Row count matches the table heading total after reset.</li>
+            </ul>
+          </div>
+        </div>
 
-</main>
+        <div class="feature-block read" id="feat-5">
+          <div class="feature-title">
+            <h3>5. Paginate Table</h3>
+            <span class="category-tag read">READ</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Navigates rows in pages and changes
+            page size.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"><strong>When:</strong> Always</span>
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Scroll to the pagination bar at the bottom of the table.</li>
+            <li>
+              Click the page size dropdown (default <code>10 / page</code>).
+            </li>
+            <li>
+              Select <strong>10</strong>, <strong>20</strong>,
+              <strong>50</strong>, or <strong>100</strong>.
+            </li>
+            <li>
+              Use numbered page buttons or Next / Previous arrows to navigate.
+            </li>
+          </ol>
+          <p>
+            <strong>API:</strong>
+            <code>GET /api/v1/admin/dashboard/all-buyers?page=&amp;limit=</code>
+          </p>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Page-size dropdown shows exactly 10 / 20 / 50 / 100.</li>
+              <li>
+                Range indicator (e.g. "1–10 of 9,672 items") updates on size
+                change.
+              </li>
+              <li>
+                Next / Prev disabled at first / last page boundary respectively.
+              </li>
+            </ul>
+          </div>
+        </div>
 
-<button id="back-to-top" aria-label="Back to top" title="Back to top">^</button>
+        <div class="feature-block read" id="feat-6">
+          <div class="feature-title">
+            <h3>6. Refresh Table</h3>
+            <span class="category-tag read">READ</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Reloads table data from the server
+            without navigating away.
+          </p>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Click the <strong>Refresh</strong> button above the table.</li>
+            <li>
+              The table re-fetches with current filter + pagination state
+              preserved.
+            </li>
+            <li>KPI counts also refresh.</li>
+          </ol>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Filters and page state retained across refresh.</li>
+              <li>KPI cards visibly refresh (network tab shows the call).</li>
+            </ul>
+          </div>
+        </div>
 
-<script>
-  if (window.mermaid) {
-    mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' } });
-  }
+        <div class="feature-block read" id="feat-7">
+          <div class="feature-title">
+            <h3>7. Download Export</h3>
+            <span class="category-tag read">READ</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Exports the complete registration
+            dataset to <code>RegistrationData.xlsx</code>. Always includes all
+            records, regardless of active filters.
+          </p>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>
+              Click the <strong>Download</strong> button (top right area).
+            </li>
+            <li>
+              The file downloads to the browser's default download location.
+            </li>
+            <li>Open <code>RegistrationData.xlsx</code> in Excel.</li>
+          </ol>
+          <p>
+            <strong>API:</strong>
+            <code>GET /api/v1/admin/dashboard/all-buyers?isDownload=1</code> or
+            <code>GET /api/v1/admin/export/registrations</code>. File contains
+            17 columns.
+          </p>
+          <div class="callout info">
+            <strong>Note</strong>
+            <p>
+              Filters on screen do NOT affect what is exported — the export
+              always returns every record.
+            </p>
+          </div>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>File name is exactly <code>RegistrationData.xlsx</code>.</li>
+              <li>Row count in XLSX equals total registration count in DB.</li>
+              <li>All 17 columns present.</li>
+              <li>
+                Download action is audit-logged (admin user ID + timestamp).
+              </li>
+            </ul>
+          </div>
+        </div>
 
-  const btn = document.getElementById('back-to-top');
-  window.addEventListener('scroll', () => {
-    btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
-    btn.style.alignItems = 'center';
-    btn.style.justifyContent = 'center';
-  });
-  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-</script>
+        <div class="feature-block read" id="feat-8">
+          <div class="feature-title">
+            <h3>8. View Milestones</h3>
+            <span class="category-tag read">READ</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Opens the Milestone Payment Schedule
+            for a Booked unit at <code>/admin/milestone?rn=&amp;uid=</code>.
+            Lists every construction-linked milestone with Paid / Partial /
+            Pending pill, amounts, and outstanding balance.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> Three-dot menu visible only when
+              <code>isBooked === true</code></span
+            >
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Locate a Booked Online / Booked Offline row.</li>
+            <li>
+              Click the three-dot (…) icon. Select
+              <strong>View Milestones</strong>.
+            </li>
+            <li>The Milestone Payment Schedule page opens.</li>
+            <li>
+              Read the schedule. Future-dated milestones render no status; past
+              milestones show Paid / Partial Payment / Pending pills.
+            </li>
+            <li>
+              Click <strong>Back to Customer Listing</strong> (top-left) to
+              return — page scrolls back to the customer table.
+            </li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> Page renders with header card
+            (Registration No. + Unit No.) and milestone table. Empty if KYC not
+            yet submitted.
+          </p>
+          <div class="callout info">
+            <strong>Note</strong>
+            <p>
+              Status pills hide for milestones whose <code>startDate</code> is
+              in the future. The special row <code>ml-or</code> with
+              <code>total = 0</code> renders blank.
+            </p>
+          </div>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None. This is a read-only page.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Menu item appears only on Booked rows.</li>
+              <li>
+                URL contains both <code>rn</code> and <code>uid</code> query
+                params.
+              </li>
+              <li>Empty state correctly shown when KYC not submitted.</li>
+              <li>
+                Pill rules: <code>balance &lt;= 0</code> → Pending;
+                <code>0 &lt; balance &lt; total</code> → Partial;
+                <code>balance &gt;= total</code> → Paid (where balance
+                semantically means "amount paid").
+              </li>
+              <li>
+                "Back to Customer Listing" returns to
+                <code>/admin/dashboard?scrollTo=customerTable</code>.
+              </li>
+            </ul>
+          </div>
+        </div>
 
-</body>
+        <div class="feature-block read" id="feat-9">
+          <div class="feature-title">
+            <h3>9. View Transaction Details</h3>
+            <span class="category-tag read">READ</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Opens an 800px right-side drawer with
+            payment transactions classified as Full Payment or Partial Payment
+            1, 2, …, etc.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> <strong>View</strong> button visible only
+              when the milestone has a <code>transactionId</code></span
+            >
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Open View Milestones (Feature 8).</li>
+            <li>
+              On any milestone with a transactionId, click
+              <strong>View</strong> in the DETAILS column.
+            </li>
+            <li>The Transaction Details drawer opens on the right.</li>
+            <li>Review the per-transaction breakdown.</li>
+          </ol>
+          <p>
+            <strong>API:</strong>
+            <code>GET adminMilestoneTransactionDetail</code> with
+            <code>transactionId</code>, <code>initialPaid</code>,
+            <code>isAllocation</code>, <code>registrationNumber</code>.
+          </p>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Drawer width is 800px.</li>
+              <li>GST-only entries always labelled "Full Payment".</li>
+              <li>
+                Multiple non-GST / HC entries labelled "Partial Payment 1, 2, …"
+                in chronological order.
+              </li>
+              <li>Drawer closes cleanly via X button.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feature-block write" id="feat-10">
+          <div class="feature-title">
+            <h3>10. Home Loan Approval</h3>
+            <span class="category-tag write">REVERSIBLE WRITE</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Admin-approves a buyer's home loan.
+            Sets <code>loanApprovalStatus = admin_approved</code> and
+            <code>approvalSource = admin</code>. Unlocks the HOME_LOAN offer
+            discount for that buyer during allocation.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> Always (any row state). Current
+              <code>loanApprovalStatus</code> must be <code>pending</code> or
+              <code>null</code>.</span
+            >
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Locate the buyer's row in the Customers table.</li>
+            <li>
+              Click the three-dot (…) menu. Select
+              <strong>Home Loan Approval</strong>.
+            </li>
+            <li>In the modal, flip the toggle to ON.</li>
+            <li>Click Submit.</li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> Buyer's home loan status updates
+            to "Admin Approved". HOME_LOAN discount becomes eligible at next
+            allocation campaign.
+          </p>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>Kaleyra SMS + WhatsApp confirming home loan approval.</p>
+          </div>
+          <div class="callout info">
+            <strong>System side-effects</strong>
+            <p>Audit log entry · LSQ activity sync to buyer's CRM record.</p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>
+                Menu item available on every row, regardless of allocation
+                status.
+              </li>
+              <li>Toggle visible inside modal; defaults to OFF.</li>
+              <li>
+                After submit, the row reflects "Approved" home loan status.
+              </li>
+              <li>
+                <code>admin_rejected</code> loans hidden from the home-loan
+                indicator (only pending / approved / admin_approved shown).
+              </li>
+              <li>SMS + WhatsApp delivered to buyer's mobile.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feature-block write" id="feat-11">
+          <div class="feature-title">
+            <h3>11. Update Parking Details</h3>
+            <span class="category-tag write">REVERSIBLE WRITE</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Enables / disables additional parking
+            for a Booked unit and sets parking count (1–500 slots) plus per-slot
+            amount. Updates the typology parking pool by the delta.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> Three-dot menu visible only when
+              <code>isBooked === true</code></span
+            >
+          </div>
+          <h4>Field schema</h4>
+          <table class="spec">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Validation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>additionalParkingEnabled</code></td>
+                <td>Boolean toggle. Required (both frontend and backend).</td>
+              </tr>
+              <tr>
+                <td><code>parkingCount</code></td>
+                <td>
+                  Integer. Frontend: required, min 1, max 500. Backend:
+                  <code>notRequired()</code> (known gap).
+                </td>
+              </tr>
+              <tr>
+                <td><code>parkingAmount</code></td>
+                <td>
+                  Per-slot amount. Frontend: required, positive. Backend:
+                  <code>notRequired()</code>.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Locate a Booked row. Click the three-dot (…) menu.</li>
+            <li>
+              Select <strong>Update Parking Details</strong>. The Parking
+              Details modal (600px) opens.
+            </li>
+            <li>
+              Toggle <strong>Additional Parking Enabled</strong> ON. Count +
+              Amount fields appear.
+            </li>
+            <li>Enter <strong>Parking Count</strong> (integer 1–500).</li>
+            <li>
+              Enter <strong>Parking Amount</strong> (per slot). The Total
+              Parking Amount preview updates automatically.
+            </li>
+            <li>Click Submit.</li>
+            <li>
+              To disable: flip toggle OFF — both fields clear automatically.
+              Submit.
+            </li>
+          </ol>
+          <p>
+            <strong>Backend checks on submit:</strong> delta against current
+            count must be non-zero; typology parking pool must have capacity for
+            positive deltas.
+          </p>
+          <p>
+            <strong>Expected result.</strong> Toast "Parking details updated
+            successfully". Modal closes. Table refetches.
+          </p>
+          <div class="callout warning">
+            <strong>Warning — backend validation gap</strong>
+            <p>
+              The backend Yup schema marks <code>parkingCount</code> and
+              <code>parkingAmount</code> as <code>notRequired()</code>. An
+              API-layer client bypassing the UI could submit
+              <code>{enabled: true, count: 0, amount: 0}</code> and it would be
+              coerced to 0/0. Frontend Formik is the only enforcement layer for
+              "count and amount required when toggle ON".
+            </p>
+          </div>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>
+              None. The buyer will see updated parking only after refreshing
+              their portal view.
+            </p>
+          </div>
+          <div class="callout info">
+            <strong>System side-effects</strong>
+            <p>
+              <code>auditActions.ADMIN_UPDATE_PARKING</code> emitted. Parking
+              pool <code>availableParkingSpots</code> decremented (or
+              incremented) by delta.
+              <strong>No milestone schedule regeneration.</strong>
+            </p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Menu item present only on Booked rows.</li>
+              <li>
+                Existing parking pre-fills the modal when
+                <code>isParkingSelected = 1</code>.
+              </li>
+              <li>Toggle OFF clears both fields client-side.</li>
+              <li>
+                Submit blocked when count outside 1–500 or non-integer (frontend
+                Formik).
+              </li>
+              <li>"No change in parking count" error on no-op delta.</li>
+              <li>
+                "Available parking count (X) is less than required (Y)" error on
+                pool exhaustion.
+              </li>
+              <li>
+                API regression test asserts the documented backend gap is
+                currently still present.
+              </li>
+              <li>Milestone schedule remains unchanged after update.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feature-block write" id="feat-12">
+          <div class="feature-title">
+            <h3>12. Record Offline Milestone Payment</h3>
+            <span class="category-tag write">REVERSIBLE WRITE</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Posts an admin-recorded offline
+            payment for a payable milestone. Submits 11 multipart fields
+            including a mandatory <code>paymentProof</code> file. Mirrors the SM
+            Portal offline payment flow.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> <strong>Offline Payment</strong> button
+              visible when <code>milestoneKey !== 'ml-or' OR total !== 0</code>,
+              <code>startDate</code> in past, and
+              <code>outstanding &gt; 0</code></span
+            >
+          </div>
+          <h4>Field schema (11 fields, all multipart/form-data)</h4>
+          <table class="spec">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Field</th>
+                <th>Required</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><code>registrationNumber</code></td>
+                <td>Yes</td>
+                <td>Auto from URL <code>?rn=</code></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><code>milestoneKey</code></td>
+                <td>Yes</td>
+                <td>e.g. <code>ml-or</code>, <code>ml-hcf</code></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><code>milestoneId</code></td>
+                <td>Yes</td>
+                <td>Integer</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><code>amount</code></td>
+                <td>Yes</td>
+                <td>
+                  &gt; 0. GST mode: must equal
+                  <code>gstOutstanding</code> (±0.01)
+                </td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><code>paymentType</code></td>
+                <td>Auto</td>
+                <td>
+                  1 Principal Full · 2 Principal Partial · 3 GST · 4 HCF Full ·
+                  5 HCF Partial
+                </td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><code>paymentMethod</code></td>
+                <td>Yes</td>
+                <td>NEFT / Cheque / Cash / CC / DC / UPI</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><code>transactionId</code></td>
+                <td>Yes</td>
+                <td>Free text</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><code>transactionDate</code></td>
+                <td>Yes</td>
+                <td>Cannot be in the future</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td><code>comments</code></td>
+                <td>No</td>
+                <td>Max 500 chars</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td><code>paymentProof</code></td>
+                <td>Yes</td>
+                <td>.pdf / .jpg / .jpeg / .png · single file</td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td><code>paymentFor</code></td>
+                <td>Conditional</td>
+                <td>
+                  Principal / GST radio. Rendered only when non-HCF AND both
+                  legs outstanding &gt; 0.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Open View Milestones (Feature 8) for the booked unit.</li>
+            <li>
+              On any past-dated milestone with outstanding balance, click
+              <strong>Offline Payment</strong>.
+            </li>
+            <li>The Offline Payment drawer (600px) opens.</li>
+            <li>
+              If non-HCF and both principal + GST outstanding: pick
+              <strong>Payment For</strong> (Principal or GST).
+            </li>
+            <li>
+              Enter <strong>Amount</strong> (auto-locked in GST mode to
+              <code>gstOutstanding</code>).
+            </li>
+            <li>
+              Pick <strong>Payment Method</strong> (NEFT / Cheque / Cash / CC /
+              DC / UPI).
+            </li>
+            <li>Enter <strong>Transaction ID</strong>.</li>
+            <li>
+              Pick <strong>Transaction Date &amp; Time</strong> (cannot be after
+              now).
+            </li>
+            <li>Optionally enter <strong>Comments</strong> (max 500 chars).</li>
+            <li>
+              Upload <strong>Payment Proof</strong> (required) — PDF, JPG, JPEG,
+              or PNG.
+            </li>
+            <li>Click <strong>Submit</strong>.</li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> Toast "Offline payment submitted
+            successfully". Schedule refetches.
+          </p>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>
+              None. No SMS / WhatsApp / email dispatched. Buyer sees the updated
+              payment status on next portal refresh.
+            </p>
+          </div>
+          <div class="callout info">
+            <strong>System side-effects</strong>
+            <p>
+              Audit log emitted on backend. Milestone tracking record updated.
+              <code>paymentProof</code> file stored.
+            </p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Offline Payment button hidden when outstanding ≤ 0.</li>
+              <li>
+                Offline Payment button hidden for future-dated milestones.
+              </li>
+              <li>
+                Submit blocked client-side when <code>paymentProof</code> empty.
+              </li>
+              <li>
+                GST mode: amount input disabled and pre-filled with
+                <code>gstOutstanding</code>.
+              </li>
+              <li>HCF milestones: no Payment For radio shown.</li>
+              <li>Transaction Date picker disables future dates.</li>
+              <li>
+                5MB file size note is informational only (client does not
+                enforce).
+              </li>
+              <li>
+                Multipart POST to
+                <code>adminMilestonePaymentOffline</code> contains all 11
+                fields.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feature-block irrev" id="feat-13">
+          <div class="feature-title">
+            <h3>13. Cancel Unit (Booked rows)</h3>
+            <span class="category-tag irrev">IRREVERSIBLE WRITE</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Cancels the allotted unit (the
+            <code>RegistrationUnit</code>) for a Booked row. Parent Registration
+            is untouched. Sibling sub-registrations remain intact. Releases the
+            unit back to inventory.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> Trash icon active when row is Booked
+              Online / Booked Offline (<code>status=WINNER</code> +
+              <code>allocationTransactionId</code>)</span
+            >
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Find the Booked row in the table.</li>
+            <li>
+              Click the <strong>trash</strong> icon in the Actions column.
+              Tooltip reads "Cancel Unit".
+            </li>
+            <li>
+              A confirmation modal opens titled
+              <em>"Please make sure that following actions are completed?"</em>.
+            </li>
+            <li>
+              Tick both attestation checkboxes:
+              <ul>
+                <li>
+                  <strong>Activity - Token, Form, Booking deleted</strong> (CRM
+                  cleanup)
+                </li>
+                <li>
+                  <strong>Mavis - Booking entry deleted</strong> (ERP cleanup)
+                </li>
+              </ul>
+            </li>
+            <li>
+              The <strong>Submit</strong> button enables once both are checked.
+            </li>
+            <li>Click <strong>Submit</strong>.</li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> Toast
+            <em>"Unit cancelled successfully"</em>. RegistrationUnit cancelled.
+            Unit released.
+          </p>
+          <div class="callout warning">
+            <strong>Warning — irreversible</strong>
+            <p>
+              There is no in-app undo. Use only for test records or confirmed
+              cancellations. CRM and Mavis cleanup must already be done
+              out-of-band — the checkboxes are admin attestations, not triggers.
+            </p>
+          </div>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>None (Kaleyra is not invoked on this branch).</p>
+          </div>
+          <div class="callout info">
+            <strong>System side-effects</strong>
+            <p>
+              Audit log entry · WebSocket cache invalidation for the released
+              unit · KPI counts refresh.
+            </p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Trash icon tooltip on Booked row reads "Cancel Unit".</li>
+              <li>Submit disabled until both checkboxes ticked.</li>
+              <li>
+                RegistrationUnit row status changes; parent Registration
+                unaffected.
+              </li>
+              <li>
+                Sibling sub-registrations (e.g. -B, -C of same GHNG) unaffected.
+              </li>
+              <li>Released unit becomes available again in WebSocket pool.</li>
+              <li>Rows in REFUND status show "-" instead of any action.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feature-block irrev" id="feat-14">
+          <div class="feature-title">
+            <h3>14. Cancel Registration (Registered / Waitlisted rows)</h3>
+            <span class="category-tag irrev">IRREVERSIBLE WRITE</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Cancels a Registered or Waitlisted
+            registration (no unit allotted) and refunds the ₹999 registration
+            confirmation amount back to the buyer's original payment method.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> Trash icon active when row is Registered
+              or Waitlisted (no unit allotted)</span
+            >
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Find the Registered / Waitlisted row.</li>
+            <li>
+              Click the <strong>trash</strong> icon. Tooltip reads "Cancel
+              Registration".
+            </li>
+            <li>
+              The confirmation popup shows the unit details (if any) and the
+              refund amount ₹999.
+            </li>
+            <li>Click the red <strong>Cancel Registration</strong> button.</li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> Toast
+            <em>"Registration refunded successfully"</em>. Status changes to
+            Cancelled. Refund transaction created for ₹999. KPI counts refresh.
+          </p>
+          <div class="callout warning">
+            <strong>Warning — irreversible</strong>
+            <p>
+              The refund cannot be undone in-app. Confirm the buyer's identity
+              and refund eligibility before clicking the red button.
+            </p>
+          </div>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>
+              Kaleyra SMS + WhatsApp with cancellation + refund confirmation.
+            </p>
+          </div>
+          <div class="callout info">
+            <strong>System side-effects</strong>
+            <p>
+              <code>RegistrationUnit.allocationStatus → cancelled</code> ·
+              Refund transaction created · Unit released back to inventory ·
+              WebSocket cache invalidated · KPI counts refreshed · Audit log
+              entry.
+            </p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>
+                Trash icon tooltip on Registered / Waitlisted row reads "Cancel
+                Registration".
+              </li>
+              <li>Modal shows ₹999 as the refund amount.</li>
+              <li>Red "Cancel Registration" button is the confirm action.</li>
+              <li>
+                Refund transaction is recorded against the buyer's original
+                payment method.
+              </li>
+              <li>Kaleyra SMS + WhatsApp delivered.</li>
+              <li>Registered KPI decrements; Cancelled KPI increments.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feature-block irrev" id="feat-15">
+          <div class="feature-title">
+            <h3>15. Assign Unit / Offline Booking</h3>
+            <span class="category-tag irrev">IRREVERSIBLE WRITE</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Assigns a unit to a Registered
+            (no-unit) row and captures an offline payment transaction in a
+            single submission. Bypasses the online payment gateway — used when
+            the buyer paid by bank transfer, cheque, UPI, etc.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> Three-dot menu visible when row is
+              Registered (<code>allocationStatus=available</code>) AND no unit
+              allotted</span
+            >
+          </div>
+          <h4>Field schema</h4>
+          <table class="spec">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Required</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tower</td>
+                <td>Yes</td>
+                <td>Dropdown — all project towers</td>
+              </tr>
+              <tr>
+                <td>Unit</td>
+                <td>Yes</td>
+                <td>
+                  Available / Reserved units only; format
+                  <code>&lt;Unit No&gt; – &lt;Typology&gt;</code>
+                </td>
+              </tr>
+              <tr>
+                <td>Transaction ID</td>
+                <td>Yes</td>
+                <td>Bank / cheque reference</td>
+              </tr>
+              <tr>
+                <td>Mode of Transaction</td>
+                <td>Yes</td>
+                <td>UPI / NEFT-RTGS / Cheque / Cash</td>
+              </tr>
+              <tr>
+                <td>Booking Amount</td>
+                <td>Yes</td>
+                <td>
+                  &gt; 0. System does NOT validate against expected amount.
+                </td>
+              </tr>
+              <tr>
+                <td>Transaction Date</td>
+                <td>Yes</td>
+                <td>Default: today</td>
+              </tr>
+              <tr>
+                <td>Upload Proof</td>
+                <td>No</td>
+                <td>Optional — image or PDF. Stored to Azure Blob.</td>
+              </tr>
+            </tbody>
+          </table>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Locate a Registered row with no allotted unit.</li>
+            <li>
+              Click the three-dot (…) menu. Select <strong>Assign Unit</strong>.
+            </li>
+            <li>The offline booking modal opens.</li>
+            <li>Pick <strong>Tower</strong> from the dropdown.</li>
+            <li>
+              Pick <strong>Unit</strong> (Available or Reserved only; format
+              <code>1203 – 2 BHK Rise Home</code>).
+            </li>
+            <li>
+              Enter <strong>Transaction ID / Reference No.</strong>,
+              <strong>Mode</strong>, <strong>Booking Amount</strong>,
+              <strong>Transaction Date</strong>.
+            </li>
+            <li>
+              (Optional) Upload payment proof — cheque image, transfer
+              screenshot, voucher.
+            </li>
+            <li>Click <strong>Submit</strong>.</li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> Unit marked BOOKED. Registration
+            status moves to Confirmed. KPI Registered decreases; Confirmed /
+            Booked increases.
+          </p>
+          <div class="callout warning">
+            <strong>Warning — booking amount not validated</strong>
+            <p>
+              The system does not check the booking amount against commercial
+              terms. Enter the correct amount — there is no safety net.
+            </p>
+          </div>
+          <div class="callout warning">
+            <strong>Warning — unit availability re-check at submit</strong>
+            <p>
+              If another admin allots the unit between modal open and submit,
+              the request fails with
+              <em
+                >"Selected unit is no longer available. Please choose another
+                unit."</em
+              >
+            </p>
+          </div>
+          <div class="callout warning">
+            <strong>Warning — single-booking constraint</strong>
+            <p>
+              If the registration already has an active unit booking:
+              <em>"This registration already has an active unit booking."</em>
+            </p>
+          </div>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>
+              Kaleyra Email + WhatsApp with unit details and payment
+              acknowledgement.
+            </p>
+          </div>
+          <div class="callout info">
+            <strong>System side-effects</strong>
+            <p>
+              Insert into
+              <code>payment_transactions</code> (<code>isOffline=1</code>,
+              <code>paymentSource=admin</code>, <code>status=completed</code>) ·
+              RegistrationUnit updated to <code>confirmed</code> with allocated
+              tower / floor / unit · Unit.status → BOOKED · WebSocket cache
+              invalidated · Mavis Bookings + Units sync · 3 LSQ activities
+              (Booking Token, Booking, Booking Form) · KPI refresh · Audit log
+              entry.
+            </p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>
+                Menu item appears only when allocationStatus = available AND no
+                unit allotted.
+              </li>
+              <li>Unit dropdown shows only Available / Reserved units.</li>
+              <li>
+                All five required fields validated for non-empty + amount &gt;
+                0.
+              </li>
+              <li>
+                Optional proof upload persists URL on the transaction record.
+              </li>
+              <li>
+                Race-condition error message rendered correctly when unit is
+                taken mid-flight.
+              </li>
+              <li>
+                Mavis Booking + Mavis Unit status updates verified post-submit.
+              </li>
+              <li>
+                All 3 LSQ activities created (out of LSQ scope for automation
+                but audit-log-trace expected).
+              </li>
+              <li>Kaleyra Email + WhatsApp delivered.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feature-block irrev" id="feat-16">
+          <div class="feature-title">
+            <h3>16. Unit Swap</h3>
+            <span class="category-tag irrev">IRREVERSIBLE WRITE</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Reassigns a buyer's already-allotted
+            unit to a different unit within the project. Operates at
+            <code>RegistrationUnit</code> level. Used for buyer-requested
+            changes or operational corrections.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When (UI gate):</strong>
+              <code>isBooked === true</code></span
+            >
+            <span class="pill"
+              ><strong>When (backend gates):</strong> no active allocation
+              campaign · no Mavis booking row · target unit AVAILABLE/RESERVED ·
+              typology mapped · not linked elsewhere</span
+            >
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>
+              <strong>Prerequisite 1.</strong> Confirm no allocation campaign is
+              currently active for the project. Close any open campaign in the
+              Allocation module first.
+            </li>
+            <li>
+              <strong>Prerequisite 2.</strong> Delete the Mavis (ERP) booking
+              row for this registration outside the portal.
+            </li>
+            <li>
+              <strong>Prerequisite 3.</strong> Delete the CRM Activity records —
+              Token, Form, Booking — for the current allotment.
+            </li>
+            <li>
+              In the Customers table, locate the Booked row whose unit needs to
+              change.
+            </li>
+            <li>Click the three-dot (…) icon → <strong>Unit swap</strong>.</li>
+            <li>
+              Review the read-only header (Registration No., Current Unit,
+              Apartment Type / carpet area).
+            </li>
+            <li>
+              Open the <strong>Tower</strong> dropdown — towers load lazily on
+              first open. Note: list includes inactive towers; pick carefully.
+            </li>
+            <li>
+              Open the <strong>Unit</strong> dropdown — populated with AVAILABLE
+              / RESERVED units in that tower. Typology is NOT filtered — confirm
+              the new typology before submit.
+            </li>
+            <li>
+              Tick both attestation checkboxes:
+              <ul>
+                <li>
+                  <strong>Activity - Token, Form, Booking deleted</strong>
+                </li>
+                <li><strong>Mavis - Booking entry deleted</strong></li>
+              </ul>
+            </li>
+            <li>Click <strong>Submit</strong>.</li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> Toast
+            <em>"Unit swapped successfully"</em>. Modal closes. Table refetches.
+            New unit BOOKED; previous unit returns to RESERVED (if not consumed
+            elsewhere).
+          </p>
+          <div class="callout warning">
+            <strong>Warning — irreversible, no in-app undo</strong>
+            <p>
+              Verify both the new unit selection and the attested cleanup before
+              submitting. There is no "undo swap".
+            </p>
+          </div>
+          <div class="callout warning">
+            <strong>Warning — milestone schedule NOT regenerated</strong>
+            <p>
+              Backend code path is commented out with developer note "need to
+              discuss". After swap the original unit's milestone schedule and
+              payment transactions remain attached to the registrationUnit —
+              potentially stale if the new typology / pricing differs. Pending
+              product decision.
+            </p>
+          </div>
+          <div class="callout warning">
+            <strong>Warning — open campaign blocks swap</strong>
+            <p>
+              Backend rejects with
+              <code>400 "Cannot swap unit when campaign is active"</code> if any
+              allocation campaign is open for the project. This is a hard gate —
+              no override.
+            </p>
+          </div>
+          <div class="callout warning">
+            <strong>Warning — typology mismatch allowed</strong>
+            <p>
+              The backend does NOT enforce same-typology swaps. Admin may swap
+              into a different apartment type / carpet area. Confirm acceptance
+              before submit.
+            </p>
+          </div>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>
+              None. No SMS, WhatsApp, or email is dispatched. Communicate the
+              change out-of-band if business requires.
+            </p>
+          </div>
+          <div class="callout info">
+            <strong>System side-effects</strong>
+            <p>
+              RegistrationUnit updated: unitId, towerId, typologyId,
+              allocatedTower/Floor/Unit · Reset flags:
+              bookingTokenActivitySubmitted, mavisBookingCreated,
+              mavisUnitUpdated, lsqBookingActivityId, lsqBookingFormActivityId,
+              isKycPdfSubmitted (and KYC-related flags if KYC was submitted) ·
+              New unit → BOOKED, previous unit → RESERVED · Redis cache updates
+              · <code>auditActions.ADMIN_UNIT_SWAP</code> emitted.
+            </p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Menu item visible only on Booked rows.</li>
+              <li>
+                Submit disabled until BOTH checkboxes ticked AND a new unit is
+                selected.
+              </li>
+              <li>Tower dropdown loads on first open (lazy).</li>
+              <li>
+                Unit dropdown filtered by
+                <code
+                  >towerId + projectId + status IN (AVAILABLE, RESERVED)</code
+                >
+                — no typology filter.
+              </li>
+              <li>
+                Open campaign correctly rejects with the documented 400 message.
+              </li>
+              <li>
+                Mavis row presence rejects with the documented 400 message.
+              </li>
+              <li>Target unit linked elsewhere returns 409.</li>
+              <li>
+                Milestone schedule confirmed unchanged after swap (open gap).
+              </li>
+              <li>No Kaleyra dispatch (verify via API trace).</li>
+              <li>
+                Audit row <code>ADMIN_UNIT_SWAP</code> written server-side.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feature-block irrev" id="feat-17">
+          <div class="feature-title">
+            <h3>17. Bulk Cancel Units</h3>
+            <span class="category-tag irrev">IRREVERSIBLE WRITE</span>
+          </div>
+          <p>
+            <strong>What it does.</strong> Cancels multiple sub-registrations
+            (units) at once. Per-row gates from Cancel Unit apply to each entry.
+            Useful for cleaning up cancelled allotments where a single buyer
+            holds several sub-registrations.
+          </p>
+          <div class="meta-row">
+            <span class="pill"><strong>Who:</strong> Admin / SM Admin</span>
+            <span class="pill"
+              ><strong>When:</strong> Always (button always visible)</span
+            >
+          </div>
+          <h4>Step-by-step</h4>
+          <ol class="steps">
+            <li>Click <strong>Cancel Bulk Units</strong> above the table.</li>
+            <li>Select the sub-registrations to cancel.</li>
+            <li>Confirm the bulk action.</li>
+          </ol>
+          <p>
+            <strong>Expected result.</strong> All selected sub-registrations
+            cancelled. Each row inherits the same per-row gate as Cancel Unit
+            (Feature 13).
+          </p>
+          <div class="callout warning">
+            <strong>Warning — irreversible per row</strong>
+            <p>
+              Each cancellation in the bulk is irreversible. There is no
+              transaction rollback if some succeed and some fail — partial
+              outcomes are possible.
+            </p>
+          </div>
+          <div class="callout notify">
+            <strong>Buyer notifications</strong>
+            <p>
+              Inherited from Cancel Unit (Feature 13) — none on this branch.
+            </p>
+          </div>
+          <div class="callout review">
+            <strong>Reviewer checklist</strong>
+            <ul>
+              <li>Button visible always.</li>
+              <li>Selection model is multi-select.</li>
+              <li>Per-row gates from Cancel Unit apply.</li>
+              <li>Audit log entries written per cancelled row.</li>
+              <li>
+                Partial-failure outcome handled — failed rows reported back to
+                admin.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="use-case">
+        <h2>Use Case Diagram</h2>
+        <p>
+          The full use-case flow across actors (Admin, Buyer, System), use cases
+          (15+), include/extend relationships, and system triggers. Source:
+          <code>customers-usecase.md</code>.
+        </p>
+
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+flowchart LR
+    Admin(["Admin /<br/>Sales Manager Admin"])
+    Buyer(["Buyer<br/>(secondary)"])
+    System(["System"])
+
+    subgraph READ ["Read Operations"]
+        UC1[/"View Registration Dashboard<br/>(KPI cards + table)"/]
+        UC2[/"Search by Phone"/]
+        UC3[/"Filter Registrations"/]
+        UC4[/"Paginate Table"/]
+        UC5[/"Refresh Table"/]
+        UC9a[/"View Milestone Schedule<br/>(read-only navigation)"/]
+        UC9b[/"View Transaction Details<br/>(drawer)"/]
+        UC12[/"Download Export<br/>(RegistrationData.xlsx, all records)"/]
+    end
+
+    subgraph WRITE_REV ["Write Operations - Reversible / Re-runnable"]
+        UC8[/"Approve Home Loan<br/>(toggle on row)"/]
+        UC11[/"Update Parking Details<br/>(toggle / count / amount)"/]
+        UC9c[/"Record Offline Milestone Payment<br/>(11-field multipart)"/]
+    end
+
+    subgraph WRITE_IRREV ["Write Operations - Irreversible"]
+        UC6[/"Cancel Unit<br/>(Booked rows)"/]
+        UC7[/"Cancel Registration<br/>(Registered/Waitlisted, refunds 999)"/]
+        UC10[/"Unit Swap<br/>(Booked rows)"/]
+        UC13[/"Assign Unit / Offline Booking<br/>(Registered rows)"/]
+        UC14[/"Bulk Cancel Units"/]
+    end
+
+    UC6_inc1[/"Attest Activity cleanup<br/>(Token, Form, Booking deleted)"/]
+    UC6_inc2[/"Attest Mavis cleanup<br/>(Booking entry deleted)"/]
+    UC10_inc1[/"Pick Tower"/]
+    UC10_inc2[/"Pick Target Unit<br/>(AVAILABLE or RESERVED, any typology)"/]
+    UC10_inc3[/"Attest Activity cleanup"/]
+    UC10_inc4[/"Attest Mavis cleanup"/]
+    UC11_inc1[/"Toggle Parking Enabled"/]
+    UC11_inc2[/"Enter Count (1-500) + Amount<br/>(only when toggle ON)"/]
+    UC13_inc1[/"Pick Tower + Unit"/]
+    UC13_inc2[/"Enter Transaction details<br/>(ID, Mode, Amount, Date)"/]
+
+    UC9d[/"Navigate Back to Customer Listing"/]
+    UC3_ext[/"Reset Filters"/]
+    UC13_ext[/"Upload Payment Proof (optional)"/]
+    UC9c_ext[/"Select Payment For: Principal or GST<br/>(only when non-HCF AND both outstanding > 0)"/]
+
+    UC_SYS_KPI[/"Refresh KPI counts (live)"/]
+    UC_SYS_AUDIT[/"Write audit log entry"/]
+    UC_SYS_MAVIS[/"Sync Mavis (ERP)"/]
+    UC_SYS_LSQ[/"Sync LeadSquared (CRM)"/]
+    UC_SYS_WS[/"Invalidate WebSocket unit cache"/]
+    UC_SYS_NOTIFY[/"Dispatch Kaleyra SMS / WhatsApp / Email"/]
+
+    Admin --- UC1
+    Admin --- UC2
+    Admin --- UC3
+    Admin --- UC4
+    Admin --- UC5
+    Admin -- "only when row isBooked" --- UC9a
+    Admin --- UC9b
+    Admin --- UC12
+
+    Admin -- "any row state" --- UC8
+    Admin -- "only when row isBooked" --- UC11
+    Admin -- "only on payable milestone row<br/>(past startDate, outstanding > 0)" --- UC9c
+
+    Admin -- "only when row is Booked<br/>(status=WINNER + allocationTransactionId)" --- UC6
+    Admin -- "only when row is Registered or Waitlisted" --- UC7
+    Admin -- "only when row isBooked<br/>AND NO active allocation campaign<br/>AND NO Mavis booking row" --- UC10
+    Admin -- "only when row is Registered<br/>AND no unit allotted" --- UC13
+    Admin --- UC14
+
+    UC6 -. "include" .-> UC6_inc1
+    UC6 -. "include" .-> UC6_inc2
+    UC10 -. "include" .-> UC10_inc1
+    UC10 -. "include" .-> UC10_inc2
+    UC10 -. "include" .-> UC10_inc3
+    UC10 -. "include" .-> UC10_inc4
+    UC11 -. "include" .-> UC11_inc1
+    UC11 -. "include" .-> UC11_inc2
+    UC13 -. "include" .-> UC13_inc1
+    UC13 -. "include" .-> UC13_inc2
+
+    UC3_ext -. "extend" .-> UC3
+    UC9d -. "extend" .-> UC9a
+    UC13_ext -. "extend" .-> UC13
+    UC9c_ext -. "extend" .-> UC9c
+
+    UC1 -. triggers .-> UC_SYS_KPI
+    UC5 -. triggers .-> UC_SYS_KPI
+    UC6 -. triggers .-> UC_SYS_AUDIT
+    UC6 -. triggers .-> UC_SYS_WS
+    UC7 -. triggers .-> UC_SYS_AUDIT
+    UC7 -. triggers .-> UC_SYS_NOTIFY
+    UC7 -. triggers .-> UC_SYS_WS
+    UC8 -. triggers .-> UC_SYS_AUDIT
+    UC8 -. triggers .-> UC_SYS_LSQ
+    UC8 -. triggers .-> UC_SYS_NOTIFY
+    UC10 -. triggers .-> UC_SYS_AUDIT
+    UC10 -. triggers .-> UC_SYS_WS
+    UC11 -. triggers .-> UC_SYS_AUDIT
+    UC13 -. triggers .-> UC_SYS_AUDIT
+    UC13 -. triggers .-> UC_SYS_MAVIS
+    UC13 -. triggers .-> UC_SYS_LSQ
+    UC13 -. triggers .-> UC_SYS_NOTIFY
+    UC13 -. triggers .-> UC_SYS_WS
+    UC9c -. triggers .-> UC_SYS_AUDIT
+
+    UC_SYS_NOTIFY --- Buyer
+
+    UC_SYS_KPI --- System
+    UC_SYS_AUDIT --- System
+    UC_SYS_MAVIS --- System
+    UC_SYS_LSQ --- System
+    UC_SYS_WS --- System
+    UC_SYS_NOTIFY --- System
+
+    classDef readOp fill:#e3f2fd,stroke:#1565c0
+    classDef writeRev fill:#fff8e1,stroke:#f9a825
+    classDef writeIrrev fill:#ffebee,stroke:#c62828
+    classDef sysOp fill:#f3e5f5,stroke:#6a1b9a
+    class UC1,UC2,UC3,UC4,UC5,UC9a,UC9b,UC12 readOp
+    class UC8,UC11,UC9c writeRev
+    class UC6,UC7,UC10,UC13,UC14 writeIrrev
+    class UC_SYS_KPI,UC_SYS_AUDIT,UC_SYS_MAVIS,UC_SYS_LSQ,UC_SYS_WS,UC_SYS_NOTIFY sysOp
+</pre>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <span class="legend-swatch read"></span> Read
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch write"></span> Reversible Write
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch irrev"></span> Irreversible Write
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch system"></span> System operations
+          </div>
+        </div>
+
+        <h3>Eligibility gate summary</h3>
+        <table class="spec">
+          <thead>
+            <tr>
+              <th>Use case</th>
+              <th>Front-end gate</th>
+              <th>Backend gate(s)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cancel Unit</td>
+              <td>
+                Trash icon on Booked row (<code>status=WINNER</code> +
+                <code>allocationTransactionId</code>)
+              </td>
+              <td>PUT adminCancelAllUnits — no further gate</td>
+            </tr>
+            <tr>
+              <td>Cancel Registration</td>
+              <td>Trash icon on Registered / Waitlisted row</td>
+              <td>PUT refundRegistrationUnit — no further gate</td>
+            </tr>
+            <tr>
+              <td>View Milestones</td>
+              <td>Three-dot menu when isBooked</td>
+              <td>None (read-only)</td>
+            </tr>
+            <tr>
+              <td>Record Offline Milestone Payment</td>
+              <td>
+                Button when
+                <code>milestoneKey !== 'ml-or' OR total !== 0</code>, startDate
+                past, outstanding &gt; 0
+              </td>
+              <td>
+                amount &gt; 0; GST mode amount = gstOutstanding (±0.01);
+                paymentProof required
+              </td>
+            </tr>
+            <tr>
+              <td>Unit Swap</td>
+              <td>Three-dot menu when isBooked</td>
+              <td>
+                No active campaign + no Mavis row + target AVAILABLE/RESERVED +
+                typology mapped + not linked elsewhere
+              </td>
+            </tr>
+            <tr>
+              <td>Update Parking</td>
+              <td>Three-dot menu when isBooked</td>
+              <td>
+                additionalParkingEnabled required; delta ≠ 0; pool ≥ delta
+              </td>
+            </tr>
+            <tr>
+              <td>Home Loan Approval</td>
+              <td>Always</td>
+              <td>loanApprovalStatus pending or null</td>
+            </tr>
+            <tr>
+              <td>Assign Unit</td>
+              <td>Three-dot menu when Registered AND no unit allotted</td>
+              <td>Unit re-check at submit; single-booking constraint</td>
+            </tr>
+            <tr>
+              <td>Bulk Cancel Units</td>
+              <td>Always</td>
+              <td>Inherits per-row gates</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Notification matrix</h3>
+        <table class="spec">
+          <thead>
+            <tr>
+              <th>Use case</th>
+              <th>Buyer notification</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cancel Unit</td>
+              <td>None</td>
+            </tr>
+            <tr>
+              <td>Cancel Registration</td>
+              <td>Kaleyra SMS + WhatsApp</td>
+            </tr>
+            <tr>
+              <td>Home Loan Approval</td>
+              <td>Kaleyra SMS + WhatsApp</td>
+            </tr>
+            <tr>
+              <td>Assign Unit / Offline Booking</td>
+              <td>Kaleyra Email + WhatsApp</td>
+            </tr>
+            <tr>
+              <td>View Milestones</td>
+              <td>None</td>
+            </tr>
+            <tr>
+              <td>Record Offline Milestone Payment</td>
+              <td>None</td>
+            </tr>
+            <tr>
+              <td><strong>Unit Swap</strong></td>
+              <td><strong>None</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Update Parking</strong></td>
+              <td><strong>None</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="review-checklist">
+        <h2>Reviewer Checklist (Master)</h2>
+        <p>
+          Consolidated checklist for manual QA review of the Customers module.
+          Each feature's specific checklist is also embedded in its individual
+          walkthrough above.
+        </p>
+
+        <div class="callout review">
+          <strong>Cross-feature regression checks</strong>
+          <ul>
+            <li>
+              All six KPI cards render with correct definitions and live counts.
+            </li>
+            <li>
+              "Allocation Opened" banner renders unconditionally (known UI bug —
+              verify presence, not state binding).
+            </li>
+            <li>
+              Trash icon tooltip context-switches between "Cancel Unit" (Booked)
+              and "Cancel Registration" (Registered / Waitlisted).
+            </li>
+            <li>
+              Three-dot menu items are context-sensitive per the visibility
+              matrix.
+            </li>
+            <li>
+              Download export ignores active filters — exports full dataset.
+            </li>
+            <li>REFUND rows show "-" in the Actions column.</li>
+            <li>Pagination range indicator updates on page-size change.</li>
+            <li>
+              Unit Swap milestone-schedule regeneration is NOT triggered (open
+              gap — verify schedule stable post-swap).
+            </li>
+            <li>
+              Parking validation gap: backend Yup is
+              <code>notRequired()</code> for count + amount (verify API
+              regression).
+            </li>
+            <li>
+              Kaleyra dispatch only on Cancel Registration, Home Loan Approval,
+              Assign Unit (verify NO dispatch on the others).
+            </li>
+            <li>Audit log rows written for all write operations.</li>
+            <li>
+              WebSocket cache invalidation on Cancel Unit, Cancel Registration,
+              Unit Swap, Assign Unit.
+            </li>
+            <li>
+              Mavis sync only on Assign Unit (and pre-deleted by admin for Unit
+              Swap).
+            </li>
+            <li>LSQ sync only on Home Loan Approval and Assign Unit.</li>
+          </ul>
+        </div>
+
+        <div class="callout warning">
+          <strong>Known issues to be aware of during review</strong>
+          <ul>
+            <li>
+              <strong>Allocation Opened banner</strong> is statically hardcoded
+              (<code>CustomerTable.jsx</code> L1602). Flagged for engineering
+              remediation.
+            </li>
+            <li>
+              <strong>Unit Swap milestone schedule regeneration</strong>
+              commented out with developer note "need to discuss" (<code
+                >registration-unit.service.js</code
+              >
+              L208–211). Open product decision.
+            </li>
+            <li>
+              <strong>Parking backend validation gap</strong>: count and amount
+              can be sent as 0 via direct API and would be coerced — only
+              frontend Formik enforces.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <button id="back-to-top" aria-label="Back to top" title="Back to top">
+      ^
+    </button>
+
+    <script>
+      if (window.mermaid) {
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: "default",
+          flowchart: { useMaxWidth: true, htmlLabels: true, curve: "basis" },
+        });
+      }
+
+      const btn = document.getElementById("back-to-top");
+      window.addEventListener("scroll", () => {
+        btn.style.display = window.scrollY > 400 ? "flex" : "none";
+        btn.style.alignItems = "center";
+        btn.style.justifyContent = "center";
+      });
+      btn.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }),
+      );
+    </script>
+  </body>
 </html>
