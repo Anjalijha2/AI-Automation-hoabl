@@ -1,157 +1,99 @@
-# Review Report — Admin Portal / Payment Transactions
+# Test Case Review Report — Payment Transactions — Admin — 2026-06-06
 
-**Reviewer:** BA Agent (self-review prior to QA Agent handoff via `test-case-reviewer`)
-**Module:** Payment Transactions
-**Generated:** 2026-06-03
-**Status:** APPROVED (pending QA Agent `test-case-reviewer` confirmation)
-
----
-
-## 1. Dual-Source Gate
-
-| Source | Path | Status |
-|--------|------|--------|
-| Visual Memory INDEX.md | `visual-memory/admin/payment-transactions/INDEX.md` | PRESENT — `CAPTURE_STATUS: FULL`, 6 screens documented |
-| BRD | `.claude/docs/hoabl-knowledge-base/Admin-Portal/BRD/ADMIN-BRD-Payment-Transactions.md` | PRESENT — Status: Complete, 10 sections |
-
-Both sources confirmed. Gate: PASSED.
+**Reviewer:** QA Agent via `test-case-reviewer` skill
+**TestCases source:** `manual-qa-repository/01-test-cases/admin/payment-transactions/TestCases.md`
+**BRD source:** `.claude/docs/hoabl-knowledge-base/Admin-Portal/BRD/ADMIN-BRD-Payment-Transactions.md`
+**Visual memory source:** `visual-memory/admin/payment-transactions/INDEX.md` (CAPTURE_STATUS: FULL, 6 screens)
 
 ---
 
-## 2. Visual Coverage
+## Summary
 
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| Total screens available | 6 | — | — |
-| Screens actively cited in TCs | 4 of 6 | ≥ 80% citation rate not required at this granularity | PASS |
-| TCs carrying visual evidence reference | 24 / 24 (100%) | ≥ 80% | PASS |
-| TCs with `[NO-VISUAL-EVIDENCE]` flag | 0 | 0 | PASS |
-| TCs with `[STUB-EVIDENCE]` flag | 0 | 0 | PASS |
-
-**Screens cited:**
-- `payment-transactions-loaded.png` — primary list view (cited by 14 TCs)
-- `payment-transactions-full.png` — full-page table inspection (cited by 4 TCs)
-- `payment-gateway-settings.png` — gateway panel (cited by 4 TCs)
-- `payment-settings-page.png` — settings inline mode (cited by 2 TCs)
-
-**Screens NOT cited:** `screenshot-desktop.png`, `screenshot-ui.png` — both are pre-INDEX.md stubs from 2026-05-17 captured before structural notes existed. They duplicate `payment-transactions-loaded.png` and `payment-transactions-full.png`. No TC value gained from citing them.
+| Metric | Value |
+|--------|-------|
+| Total TCs reviewed | 24 |
+| Approved | 24 |
+| Requires Changes | 0 |
+| BRD/FRD coverage | 100% — every TC carries a BRD § Req ID (§1, §2, §3, §4, §5, §6.3, §6.4, §6.5, §7, §8, §9) |
+| Visual coverage | 100% (24/24 TCs cite screenshots from INDEX.md Screens table) |
+| Doc logic coverage | 100% — every Scenario references a BRD § |
+| Visual status | FULL |
 
 ---
 
-## 3. BRD Coverage
+## Visual Evidence Gaps
 
-Every BRD section is mapped to ≥ 1 TC:
+| TC_ID | Expected Result Summary | Evidence Status | Screenshot Filename | Action |
+|-------|------------------------|-----------------|---------------------|--------|
 
-| BRD Section | TC Coverage |
-|-------------|-------------|
-| §1 Purpose (read-only ledger + gateway config) | TC_001, TC_015, TC_024 |
-| §2 Who Uses This (read-only) | TC_012, TC_013 |
-| §3 Transaction Types | TC_004, TC_023 |
-| §4 Transaction Sources | TC_004, TC_023 |
-| §5 Status Values | TC_004, TC_023 |
-| §6 rule 3 (at-least-one gateway) | TC_019 |
-| §6 rule 4 (no confirmation on update) | TC_018 |
-| §6 rule 5 (read-only enforcement) | TC_012, TC_013 |
-| §7 Reconciliation workflow | TC_002, TC_003, TC_005, TC_006–011, TC_021, TC_022 |
-| §8 Gateway Configuration workflow | TC_015, TC_016, TC_017, TC_018, TC_020 |
-| §9 Critical Risks (detail view limitation) | TC_014 |
+None. Every TC has a captured screenshot reference from INDEX.md.
 
-No BRD section is orphaned. No TC is orphaned (every TC carries a BRD/FRD Req ID).
+**VISUAL_MISMATCH check:** all 24 TCs cite filenames from this set in INDEX.md Screens table: `payment-transactions-loaded.png`, `payment-transactions-full.png`, `payment-gateway-settings.png`, `payment-settings-page.png`. All filenames present. Zero VISUAL_MISMATCH.
+
+INDEX.md Screens (authoritative): `screenshot-desktop.png` (stub), `screenshot-ui.png` (stub), `payment-transactions-loaded.png`, `payment-gateway-settings.png`, `payment-settings-page.png`, `payment-transactions-full.png` — 6 entries. 4 actively cited by TCs.
 
 ---
 
-## 4. TC Type Distribution
+## Logic Gaps
 
-| Type | Count | % |
-|------|-------|---|
-| UI | 5 | 21% |
-| FUNC | 9 | 38% |
-| BIZ | 4 | 17% |
-| NEG | 2 | 8% |
-| EDGE | 1 | 4% |
-| XMOD | 1 | 4% |
-| REG | 1 | 4% |
-| **Total** | **24** | **100%** |
+| TC_ID | Scenario Text | Missing Context | Action |
+|-------|--------------|-----------------|--------|
 
-Healthy spread across UI presence checks, functional flows, business rules, and negative/edge cases.
+None. Every TC Scenario references a BRD § (§1 purpose, §2 read-only enforcement, §3/4/5 column schema, §6 rules 3/4/5, §7 filter workflow, §8 gateway settings, §9 detail-view limitation). No purely mechanical TCs.
 
 ---
 
-## 5. Read-Only Enforcement (per user requirement)
+## BRD/FRD Gaps
 
-Three dedicated TCs enforce the read-only constraint:
+| Gap | BRD/FRD Section | Missing TC Type | Action |
+|-----|----------------|-----------------|--------|
 
-| TC | Surface | Assertion |
-|----|---------|-----------|
-| TC_PAYTX_BIZ_012 | Header strip | No Create/Add/New/+ buttons (only Refresh, Export, Settings allowed) |
-| TC_PAYTX_BIZ_013 | Row Actions column | No Edit/Delete/Remove/Cancel affordances per row |
-| TC_PAYTX_BIZ_014 | Eye icon / row detail | Documents BRD §9 known limitation — "Detail view coming soon" |
+None per TestCases.md Coverage Summary: "BRD sections cited — §1, §2, §3, §4, §5, §6 (rules 3, 4, 5), §7, §8, §9 — 100% — every BRD section mapped to ≥ 1 TC".
 
-Gateway Settings is the ONLY write operation in the module (covered by TC_017, TC_018, TC_019).
+Read-only enforcement covered by 3 dedicated TCs (BIZ_012, BIZ_013, BIZ_014). Gateway settings covered by 6 TCs (FUNC_015–XMOD_020). Filter coverage spans 8 TCs.
 
 ---
 
-## 6. Gateway Settings Toggle + Update (per user requirement)
+## Per-TC Status
 
-| TC | Coverage |
-|----|----------|
-| TC_PAYTX_FUNC_015 | Settings button toggle — panel renders inline, URL unchanged |
-| TC_PAYTX_UI_016 | Panel elements: View Tower button + Active toggle + Update button |
-| TC_PAYTX_FUNC_017 | Toggle Active → Inactive visual state change |
-| TC_PAYTX_FUNC_018 | Update persists immediately, no confirmation dialog (BRD §6 rule 4) |
-| TC_PAYTX_NEG_019 | At-least-one-gateway rule enforced (BRD §6 rule 3) |
-| TC_PAYTX_XMOD_020 | View Tower button navigates to Towers module |
-
-Toggle + Update is fully covered.
-
----
-
-## 7. Export TC (per user requirement)
-
-TC_PAYTX_FUNC_005 — Export button click + browser download event assertion. Covered.
-
----
-
-## 8. Filter TCs (per user requirement)
-
-| TC | Filter Type |
-|----|-------------|
-| TC_PAYTX_FUNC_006 | Date range only (Start + End) |
-| TC_PAYTX_FUNC_007 | Name search only |
-| TC_PAYTX_FUNC_008 | Phone search only |
-| TC_PAYTX_FUNC_009 | Registration number search only |
-| TC_PAYTX_FUNC_010 | Combined — date range + search (intersection) |
-| TC_PAYTX_FUNC_011 | Refresh preserves applied filter |
-| TC_PAYTX_NEG_021 | Invalid date range (End < Start) |
-| TC_PAYTX_EDGE_022 | Search with no matching results |
-
-Date range + name search + combined filter all covered, plus negative and edge cases.
+| TC_ID | Req ID | Visual Evidence | Logic Coverage | Status | Issue |
+|-------|--------|-----------------|----------------|--------|-------|
+| TC_PAYTX_UI_001 | §1 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_UI_002 | §7 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_UI_003 | §7, §8 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_UI_004 | §3, §4, §5 | payment-transactions-full.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_005 | §7.4 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_006 | §7.2 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_007 | §7.2 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_008 | §7.2 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_009 | §7.2 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_010 | §7.2 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_011 | §7.3 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_BIZ_012 | §2, §6 R5 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_BIZ_013 | §2 | payment-transactions-full.png | FULL | Approved | — |
+| TC_PAYTX_BIZ_014 | §9 | payment-transactions-full.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_015 | §1, §8.1 | payment-gateway-settings.png | FULL | Approved | — |
+| TC_PAYTX_UI_016 | §8 | payment-gateway-settings.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_017 | §8.2–§8.3 | payment-settings-page.png | FULL | Approved | — |
+| TC_PAYTX_FUNC_018 | §8.4, §6 R4 | payment-settings-page.png | FULL | Approved | — |
+| TC_PAYTX_NEG_019 | §6 R3 | payment-gateway-settings.png | FULL | Approved | — |
+| TC_PAYTX_XMOD_020 | §8 | payment-gateway-settings.png | FULL | Approved | — |
+| TC_PAYTX_NEG_021 | §7.2 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_EDGE_022 | §7.2 | payment-transactions-loaded.png | FULL | Approved | — |
+| TC_PAYTX_BIZ_023 | §3, §4, §5 | payment-transactions-full.png | FULL | Approved | — |
+| TC_PAYTX_REG_024 | §1, §7 | payment-transactions-loaded.png + payment-gateway-settings.png | FULL | Approved | — |
 
 ---
 
-## 9. Requirement Gaps Flagged
+## Approval
 
-None. BRD is complete and unambiguous for in-scope behaviour. Per BRD §9, the eye icon detail view is documented as not yet implemented — captured as TC_PAYTX_BIZ_014 (P3, verifies the placeholder state rather than treating as a bug).
+- [x] **Approved — proceed to automation** (visual ≥ 80%, no NO-VISUAL-EVIDENCE, no LOGIC_GAP, no VISUAL_MISMATCH)
+- [ ] Conditional
+- [ ] Rejected
 
----
+**Rationale:** All 24 TCs pass all four hard gates: visual coverage 100%, no NO-VISUAL-EVIDENCE, no LOGIC_GAP, no VISUAL_MISMATCH. INDEX.md is FULL with 6 captured screens; all TCs reference real captured filenames.
 
-## 10. Visual Gaps Flagged
-
-None. All TCs reference a captured screenshot. The two stub screens (`screenshot-desktop.png`, `screenshot-ui.png`) are redundant with full captures and intentionally not cited.
-
----
-
-## 11. Approval Decision
-
-**APPROVED for QA Agent handoff.**
-
-- Dual-source gate: PASSED
-- Visual coverage: 100% TC-level evidence
-- BRD coverage: 100% sections mapped
-- Read-only enforcement: 3 dedicated TCs
-- Gateway Settings: 6 TCs (toggle + Update + at-least-one rule)
-- Export: 1 TC
-- Filters: 8 TCs (positive + negative + edge)
-- Total: 24 TCs (17 automation candidates, 6 mutation-guarded, 1 manual-only)
-
-**Next step:** Hand off to QA Agent for `test-case-reviewer` skill execution, then locator map verification with Tech Lead Agent.
+**Action items:**
+1. Proceed with automation for all 24 Approved TCs (23 automatable; TC_PAYTX_BIZ_014 documented as "manual-only" until detail view ships per BRD §9).
+2. Three destructive TCs (FUNC_017, FUNC_018, NEG_019) require `test.skip(process.env.ENV === 'uat', ...)` guard or restore-state teardown — they mutate live gateway config per BRD §9 critical risk.
+3. Export download assertion (FUNC_005) uses Playwright `waitForEvent('download')`.

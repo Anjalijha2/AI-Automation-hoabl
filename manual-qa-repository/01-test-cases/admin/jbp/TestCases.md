@@ -6,7 +6,7 @@
 **BRD source:** `.claude/docs/hoabl-knowledge-base/Admin-Portal/BRD/ADMIN-BRD-JBP-Management.md`
 **Visual source:** `visual-memory/admin/jbp/INDEX.md` (CAPTURE_STATUS: FULL — 8 screens)
 **Generated:** 2026-06-03
-**Status:** Pending review
+**Status:** Conditional — TC_JBP_NEG_011 carries `[NO-VISUAL-EVIDENCE]` (Active Cycle Detected popup not captured; Tech Lead Agent re-capture pending). 22 of 23 TCs fully Approved (95.6% visual coverage). See `review-report.md`.
 
 ---
 
@@ -206,7 +206,7 @@
 | **Visual Evidence** | `[NO-VISUAL-EVIDENCE]` — popup not captured (no OPEN cycle existed in UAT at capture time) |
 | **Test Data** | Name: "Second cycle attempt"; future dates |
 | **Priority** | P1 |
-| **Status** | Approved — **CONDITIONAL** — requires an OPEN cycle to exist; popup visual evidence missing — flagged for Tech Lead Agent re-capture once OPEN cycle is available |
+| **Status** | Requires Changes — NO-VISUAL-EVIDENCE; popup not captured (no OPEN cycle existed in UAT at capture time). Blocked from Sheet 2 until Tech Lead Agent re-captures `jbp-active-cycle-popup.png`. |
 
 #### TC_JBP_FUNC_012 — Date filter inputs render on Cycle Management tab
 | Field | Value |

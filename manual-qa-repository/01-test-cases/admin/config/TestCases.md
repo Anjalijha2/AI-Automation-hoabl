@@ -7,6 +7,7 @@
 **Generated:** 2026-06-02
 **Source Rule:** Dual-source — Steps + Expected Results sourced from INDEX.md screenshots/selectors; Scenarios + business rules sourced from BRD/FRD.
 **Scope exclusion:** External Strapi CMS link (`manage-uat.xrportal.in`) explicitly out of scope per CLAUDE.md constraint #2. All TCs target the internal Config page only.
+**Status:** APPROVED — all 50 TCs pass visual + BRD + logic gates (100% visual coverage, zero LOGIC_GAP, zero VISUAL_MISMATCH, zero NO-VISUAL-EVIDENCE). See `review-report.md`.
 
 ---
 
