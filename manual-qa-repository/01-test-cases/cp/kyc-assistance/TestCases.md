@@ -26,7 +26,7 @@ Per FSD-CORRECTION 2026-05-25 (FRD Section 1.2):
 
 TC scenarios below reflect the live UI (CP self-KYC). Legacy customer-KYC flow described in older BRD/FRD sections is treated as deprecated / not applicable to the live `/kyc` route.
 
-**Status:** Conditional — DOC_DRIFT (BRD says 4 documents, live UI shows 3: PAN/GST/MAHA RERA); stale STUB-EVIDENCE/NO-VISUAL-EVIDENCE citations on 16 TCs need refresh against new 2026-06-06 screenshots; LOGIC_GAPs on NEG_014-019 (disabled-Submit gating vs asserted inline errors)
+**Status (re-reviewed 2026-06-07):** CONDITIONAL — BRD DOC_DRIFTs CLOSED in `CP-FS-KYC-Assistance.md` 2026-06-07 (3 docs, disabled-Submit gating, MMR/Pune/BGLR, `type=text` email/phone), but **TC text has not been edited** to match. Re-review outcome: 11 APPROVED / 8 CONDITIONAL (citation refresh or capture gap) / 11 NEEDS BA AGENT REGEN (stale logic) / 0 REJECTED. Strict visual coverage 40% (unchanged — TCs not edited); addressable on citation refresh alone = 73%. See `review-report.md` for per-TC validation and BA Agent regen list.
 
 ---
 
