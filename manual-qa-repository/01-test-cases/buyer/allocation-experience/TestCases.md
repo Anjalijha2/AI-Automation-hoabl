@@ -14,6 +14,7 @@
 
 **Dual-Source Gate:** PASS (visual FULL + BRD/FRD present)
 **Authoring Skill:** manual-tester (invoked by BA Agent)
+**Status:** Conditional (QA test-case-reviewer pass 2026-06-06 — 32 Approved + 8 Conditional; see review-report.md)
 
 ---
 
@@ -80,7 +81,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-experience-loaded.png |
 | Test Data | Mobile 8888888888 / OTP 258369 |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_002 — Personalised congratulations heading shows firstName
 
@@ -97,7 +98,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-experience-loaded.png |
 | Test Data | Test buyer profile with firstName set |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_003 — Confirmation-window countdown timer text format
 
@@ -114,7 +115,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-experience-loaded.png |
 | Test Data | Active campaign with > 1d remaining |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_004 — Countdown timer decrements in real time
 
@@ -131,7 +132,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-experience-loaded.png |
 | Test Data | Same as TC_ALLOC_UI_003 |
 | Priority | Medium |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_EDGE_005 — Countdown timer when < 1 day remaining
 
@@ -148,7 +149,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | [STUB-EVIDENCE — < 24h state not captured] |
 | Test Data | Campaign window ending within 24h |
 | Priority | Medium |
-| Status | Draft |
+| Status | Conditional |
 
 ### TC_ALLOC_UI_006 — Registration sidebar shows all buyer registrations with badges
 
@@ -165,7 +166,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png, allocation-booked-complete-kyc.png, allocation-experience-full.png |
 | Test Data | Multi-registration test buyer |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_007 — "Book Now" badge is a green pill on Available registrations
 
@@ -182,7 +183,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png |
 | Test Data | Test buyer registration -K |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_008 — "Booked" badge is a green check pill on booked registrations
 
@@ -199,7 +200,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png |
 | Test Data | Test buyer registration -J |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_009 — "Book Now" registration → center panel shows Registration No. + Select Unit button
 
@@ -216,7 +217,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png |
 | Test Data | Registration -K (Book Now) |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_010 — Select Unit button is enabled and clickable
 
@@ -233,7 +234,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png |
 | Test Data | Test buyer with -K registration |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_011 — Registration No. label format on Book Now center panel
 
@@ -250,7 +251,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png |
 | Test Data | Any Book Now registration |
 | Priority | Medium |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_012 — Right panel links rendered when Book Now state is active
 
@@ -267,7 +268,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png |
 | Test Data | Book Now registration |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_NEG_013 — Right panel links are greyed/disabled when no unit selected
 
@@ -284,7 +285,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png |
 | Test Data | Book Now registration with no held unit |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_014 — Select Unit click navigates to unit selection grid
 
@@ -301,7 +302,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png (entry state) + [STUB-EVIDENCE — tower/grid view not yet captured] |
 | Test Data | ACTIVE STATIC campaign with available units |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_E2E_015 — Select Unit → tower → unit → Add returns to Allotment with selected unit
 
@@ -318,7 +319,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png (entry) + [STUB-EVIDENCE — grid + right panel + Add not captured] |
 | Test Data | ACTIVE STATIC campaign + available units |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_016 — Booked + Paid center panel shows green checkmark + "Paid" + "Allotment Process Completed"
 
@@ -335,7 +336,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png |
 | Test Data | Registration -J (Booked, KYC required) |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_017 — Booked + KYC-pending center panel shows red "Complete KYC >" button
 
@@ -352,7 +353,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png |
 | Test Data | Booked registration -J |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_018 — "Required to complete the allotment!" helper text under Complete KYC button
 
@@ -369,7 +370,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png |
 | Test Data | Registration -J |
 | Priority | Medium |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_019 — Complete KYC button is enabled and clickable
 
@@ -386,7 +387,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png |
 | Test Data | Registration -J |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_020 — Complete KYC click navigates to /kyc with unitId query param
 
@@ -403,7 +404,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png (entry); KYC module visual memory for destination |
 | Test Data | Registration -J with booked unit |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_021 — Right panel links rendered for Booked registration
 
@@ -420,7 +421,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png |
 | Test Data | Registration -J |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_022 — Right panel links are active (not greyed) for Booked registration
 
@@ -437,7 +438,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png |
 | Test Data | Registration -J |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_023 — Floor & Unit Plan link opens architectural plan
 
@@ -454,7 +455,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png (entry) + [STUB-EVIDENCE — destination view not captured] |
 | Test Data | Booked registration -J |
 | Priority | Medium |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_024 — Cost Sheet link opens itemised pricing breakdown
 
@@ -471,7 +472,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png (entry) + [STUB-EVIDENCE — destination view not captured] |
 | Test Data | Booked registration with priced unit |
 | Priority | Medium |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_025 — Payment Schedule link navigates to milestone schedule
 
@@ -488,7 +489,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png (entry) + [STUB-EVIDENCE — destination not captured] |
 | Test Data | Booked registration |
 | Priority | Medium |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_026 — Pay Now link opens payment context for booked unit
 
@@ -505,7 +506,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png (entry) + [STUB-EVIDENCE — payment context not captured] |
 | Test Data | Booked registration with payment due |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_VAL_027 — Pay Now is greyed/inactive on Book Now state (no unit yet)
 
@@ -522,7 +523,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png |
 | Test Data | Book Now registration with no held unit |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_028 — Booked + KYC Completed center panel hides Complete KYC button
 
@@ -539,7 +540,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-experience-full.png + INDEX.md structural notes |
 | Test Data | Registration -C (1201-Glory, 1 Bed) or -D (1004-Grace, 2 Bed) |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_029 — Waitlisted registration shows black "Waitlisted" pill
 
@@ -556,7 +557,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-experience-full.png |
 | Test Data | Registration -A |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_030 — Each registration card has its own center-panel context
 
@@ -573,7 +574,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png, allocation-booked-complete-kyc.png, allocation-experience-full.png |
 | Test Data | Multi-registration test buyer |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_031 — Right panel links are scoped per active registration
 
@@ -590,7 +591,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-booked-complete-kyc.png + [STUB-EVIDENCE — destination views not captured] |
 | Test Data | Registrations -C and -D |
 | Priority | Medium |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_BIZ_032 — Countdown expiry transitions Available → Waitlisted
 
@@ -607,7 +608,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | [STUB-EVIDENCE — post-expiry state not captured] |
 | Test Data | Test campaign with controlled short end time |
 | Priority | High |
-| Status | Draft |
+| Status | Conditional |
 
 ### TC_ALLOC_WF_033 — Page auto-updates via WebSocket on campaign closure (no refresh)
 
@@ -624,7 +625,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | [STUB-EVIDENCE — live transition not captured] |
 | Test Data | Coordinated admin + buyer test |
 | Priority | Medium |
-| Status | Draft |
+| Status | Conditional |
 
 ### TC_ALLOC_E2E_034 — End-to-end STATIC unit selection + T&C + Pay (up to gateway)
 
@@ -641,7 +642,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-select-unit.png (entry) + [STUB-EVIDENCE — grid/T&C/Pay/gateway not captured]; `test.skip(process.env.ENV === 'uat', 'Skipped on UAT — live gateway')` from gateway onward |
 | Test Data | Mobile 8888888888 / OTP 258369; live ACTIVE STATIC campaign |
 | Priority | High |
-| Status | Draft |
+| Status | Conditional |
 
 ### TC_ALLOC_VAL_035 — Pay button DISABLED until T&C checkbox ticked
 
@@ -658,7 +659,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | [STUB-EVIDENCE — T&C state not captured] |
 | Test Data | Buyer with held unit |
 | Priority | High |
-| Status | Draft |
+| Status | Conditional |
 
 ### TC_ALLOC_BIZ_036 — Pre-event WAITLIST: waiting screen shown instead of Select Unit
 
@@ -675,7 +676,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | [STUB-EVIDENCE — pre-event waiting state not captured] |
 | Test Data | WAITLIST registration outside campaign window |
 | Priority | Medium |
-| Status | Draft |
+| Status | Conditional |
 
 ### TC_ALLOC_WF_037 — DYNAMIC campaign: auto-assigned unit + Proceed to Pay
 
@@ -692,7 +693,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | [STUB-EVIDENCE — DYNAMIC state not captured] |
 | Test Data | DYNAMIC campaign + eligible buyer |
 | Priority | Medium |
-| Status | Draft |
+| Status | Conditional |
 
 ### TC_ALLOC_NEG_038 — Unauthenticated access to /alloted redirects to login
 
@@ -709,7 +710,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-experience-loaded.png (used as authenticated contrast reference) |
 | Test Data | No auth |
 | Priority | High |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_FUNC_039 — Logout from Allotment page terminates session
 
@@ -726,7 +727,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-experience-loaded.png |
 | Test Data | Authenticated buyer session |
 | Priority | Medium |
-| Status | Draft |
+| Status | Approved |
 
 ### TC_ALLOC_UI_040 — Sidebar navigation present with Allotment active
 
@@ -743,7 +744,7 @@ The following BRD/FRD-driven journeys still lack live screenshots and are marked
 | Visual Evidence | allocation-experience-loaded.png |
 | Test Data | Test buyer |
 | Priority | Low |
-| Status | Draft |
+| Status | Approved |
 
 ---
 

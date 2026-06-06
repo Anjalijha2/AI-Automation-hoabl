@@ -10,6 +10,7 @@
 **Generator:** BA Agent (manual-tester skill) — regeneration v2 grounded in WINNER-account capture
 **Target Status:** APPROVED (≥80% visual coverage)
 **Prior version:** Conditional (STUB evidence) — overwritten by this v2
+**Status:** Approved (QA test-case-reviewer pass 2026-06-06 — 19 Approved; see review-report.md)
 
 ---
 

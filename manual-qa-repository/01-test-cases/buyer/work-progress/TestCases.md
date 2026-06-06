@@ -7,7 +7,7 @@
 **BRD/FRD:** `.claude/docs/hoabl-knowledge-base/Buyer-Portal/FRD/BUYER-FS-Work-Progress.md` (Feature 1) + `.claude/docs/hoabl-knowledge-base/Buyer-Portal/BRD/BUYER-BRD-Buyer-Portal.md` (nav item #11)
 **Visual Memory:** `visual-memory/buyer/work-progress/INDEX.md` — CAPTURE_STATUS: FULL
 **Generated:** 2026-06-03
-**Status:** Pending review (Phase 1 — BA Agent output)
+**Status:** Conditional (QA test-case-reviewer pass 2026-06-06 — 15 Approved + 1 Conditional VISUAL_GAP; see review-report.md)
 **Dual-source gate:** PASSED (BRD/FRD present, Visual Memory FULL)
 
 ---
@@ -53,7 +53,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-loaded.png`, `visual-memory/buyer/work-progress/work-progress-full.png` |
 | Test Data | Buyer mobile `8888888888`, OTP `258369` |
 | Priority | P1 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -73,7 +73,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-loaded.png` |
 | Test Data | — |
 | Priority | P1 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -93,7 +93,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png`, `visual-memory/buyer/work-progress/work-progress-full.png` |
 | Test Data | Expected tab list = `["Crest","Prestige","Triumph","Crown","Horizon","Radiance","Aspire","Preview"]` |
 | Priority | P1 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -113,7 +113,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-loaded.png`, `visual-memory/buyer/work-progress/work-progress-scrolled.png` |
 | Test Data | — |
 | Priority | P2 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -133,7 +133,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png`, `visual-memory/buyer/work-progress/work-progress-full.png` |
 | Test Data | Tab label = `Crest` |
 | Priority | P1 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -153,7 +153,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png` |
 | Test Data | Tab label = `Prestige` |
 | Priority | P1 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -173,7 +173,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png` |
 | Test Data | Tab label = `Triumph` |
 | Priority | P1 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -193,7 +193,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png` |
 | Test Data | Tab label = `Crown` |
 | Priority | P2 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -213,7 +213,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png` |
 | Test Data | Tab label = `Horizon` |
 | Priority | P2 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -233,7 +233,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png` |
 | Test Data | Tab label = `Radiance` |
 | Priority | P2 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -253,7 +253,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png` |
 | Test Data | Tab label = `Aspire` |
 | Priority | P2 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -273,7 +273,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png`, `visual-memory/buyer/work-progress/work-progress-full.png` |
 | Test Data | Compare any 2 of the 8 tab labels |
 | Priority | P1 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -293,7 +293,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-scrolled.png`, `visual-memory/buyer/work-progress/work-progress-full.png` |
 | Test Data | — |
 | Priority | P1 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -313,7 +313,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-loaded.png`, `visual-memory/buyer/work-progress/work-progress-full.png` |
 | Test Data | — |
 | Priority | P1 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -333,7 +333,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-loaded.png` |
 | Test Data | Pre-allocation buyer mobile, post-allocation buyer mobile (UAT) |
 | Priority | P2 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -353,7 +353,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-loaded.png`, `visual-memory/buyer/work-progress/work-progress-full.png` |
 | Test Data | — |
 | Priority | P2 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -373,7 +373,7 @@
 | Visual Evidence | `visual-memory/buyer/work-progress/work-progress-loaded.png` (Logout button visible) |
 | Test Data | — |
 | Priority | P2 |
-| Status | Pending |
+| Status | Approved |
 
 ---
 
@@ -393,7 +393,7 @@
 | Visual Evidence | `[VISUAL_GAP — unauthenticated state not captured]` — derived from INDEX.md note; recommend Tech Lead capture a redirected-state screenshot before automation |
 | Test Data | — |
 | Priority | P1 |
-| Status | Pending |
+| Status | Conditional |
 
 > **VISUAL_GAP:** buyer/work-progress
 > Journey: Unauthenticated direct access to `/work-progress`
