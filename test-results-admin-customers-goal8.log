@@ -1,0 +1,79 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 7 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ✓  1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (13.1s)
+  ✓  2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (6.5s)
+  ✓  3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (8.9s)
+  ✓  4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (9.4s)
+  ✓  5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (9.4s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+  ✓  6 [e2e] › tests\e2e\admin\customers.spec.js:929:5 › Customers — Admin Portal E2E › Goal 8 — Home Loan Approval › TC_CUST_FUNC_031 — ADM_CUST_031 — Home Loan Approval modal toggle defaults to OFF (25.6s)
+  ✘  7 [e2e] › tests\e2e\admin\customers.spec.js:939:5 › Customers — Admin Portal E2E › Goal 8 — Home Loan Approval › TC_CUST_FUNC_032 — ADM_CUST_032 — Home Loan Approval Submit disabled when toggle OFF (1.0m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+  ✘  8 [e2e] › tests\e2e\admin\customers.spec.js:939:5 › Customers — Admin Portal E2E › Goal 8 — Home Loan Approval › TC_CUST_FUNC_032 — ADM_CUST_032 — Home Loan Approval Submit disabled when toggle OFF (retry #1) (24.5s)
+
+
+  1) [e2e] › tests\e2e\admin\customers.spec.js:939:5 › Customers — Admin Portal E2E › Goal 8 — Home Loan Approval › TC_CUST_FUNC_032 — ADM_CUST_032 — Home Loan Approval Submit disabled when toggle OFF 
+
+    [31mTest timeout of 60000ms exceeded while running "beforeEach" hook.[39m
+
+      52 |    *   next test. A full page.goto() resets all Ant Design table state.
+      53 |    */
+    > 54 |   test.beforeEach(async ({ page }) => {
+         |        ^
+      55 |     customersPage = new CustomersPage(page);
+      56 |     await customersPage.navigate();
+      57 |     await customersPage.waitForLoad();
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:54:8
+
+    Error: browserContext.newPage: Test timeout of 60000ms exceeded.
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeDisabled[2m([22m[2m)[22m failed
+
+    Locator:  locator('.ant-modal:has-text(\'Home Loan Approval\') button.btn-book-solid')
+    Expected: disabled
+    Received: enabled
+    Timeout:  10000ms
+
+    Call log:
+    [2m  - Expect "toBeDisabled" with timeout 10000ms[22m
+    [2m  - waiting for locator('.ant-modal:has-text(\'Home Loan Approval\') button.btn-book-solid')[22m
+    [2m    13 × locator resolved to <button type="button" class="ant-btn css-17wfwcs ant-btn-button btn-book-solid">…</button>[22m
+    [2m       - unexpected value "enabled"[22m
+
+
+      945 |       // If toggle defaults OFF (per FUNC_031) then Submit must be disabled.
+      946 |       if (aria !== 'true') {
+    > 947 |         await expect(customersPage.homeLoanSubmitBtn).toBeDisabled();
+          |                                                       ^
+      948 |       }
+      949 |       await customersPage.closeHomeLoanModal();
+      950 |     });
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:947:55
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--de9d9-it-disabled-when-toggle-OFF-e2e-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--de9d9-it-disabled-when-toggle-OFF-e2e-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--de9d9-it-disabled-when-toggle-OFF-e2e-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--de9d9-it-disabled-when-toggle-OFF-e2e-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\admin-customers-Customers--de9d9-it-disabled-when-toggle-OFF-e2e-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [e2e] › tests\e2e\admin\customers.spec.js:939:5 › Customers — Admin Portal E2E › Goal 8 — Home Loan Approval › TC_CUST_FUNC_032 — ADM_CUST_032 — Home Loan Approval Submit disabled when toggle OFF 
+  6 passed (6.6m)

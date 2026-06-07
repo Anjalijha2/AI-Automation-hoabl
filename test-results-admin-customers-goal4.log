@@ -1,0 +1,23 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 13 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+  ✓   1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (12.3s)
+  ✓   2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (10.1s)
+  ✓   3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (8.6s)
+  ✓   4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (9.2s)
+  ✓   5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (10.7s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+  ✓   6 [e2e] › tests\e2e\admin\customers.spec.js:545:5 › Customers — Admin Portal E2E › Goal 4 — Cancel Unit › TC_CUST_FUNC_042 — Cancel Unit modal opens with two attestation checkboxes (13.1s)
+  ✓   7 [e2e] › tests\e2e\admin\customers.spec.js:557:5 › Customers — Admin Portal E2E › Goal 4 — Cancel Unit › TC_CUST_FUNC_043 — Cancel Unit Submit disabled until both attestations checked (9.5s)
+  ✓   8 [e2e] › tests\e2e\admin\customers.spec.js:573:5 › Customers — Admin Portal E2E › Goal 4 — Cancel Unit › TC_CUST_NEG_091 — Cancel Unit Submit remains disabled with only one attestation (39.0s)
+  -   9 [e2e] › tests\e2e\admin\customers.spec.js:584:10 › Customers — Admin Portal E2E › Goal 4 — Cancel Unit › TC_CUST_FUNC_098 — ADM_CUST_098 — Cancel Unit success toast confirms cancellation
+  -  10 [e2e] › tests\e2e\admin\customers.spec.js:588:10 › Customers — Admin Portal E2E › Goal 4 — Cancel Unit › TC_CUST_FUNC_099 — ADM_CUST_099 — Cancel Unit decrements Active Towers KPI when last unit
+  -  11 [e2e] › tests\e2e\admin\customers.spec.js:592:10 › Customers — Admin Portal E2E › Goal 4 — Cancel Unit › TC_CUST_FUNC_100 — ADM_CUST_100 — Cancel Unit emits audit entry server-side
+  -  12 [e2e] › tests\e2e\admin\customers.spec.js:596:10 › Customers — Admin Portal E2E › Goal 4 — Cancel Unit › TC_CUST_FUNC_101 — ADM_CUST_101 — Cancel Unit row state transitions to REFUND
+  ✓  13 [e2e] › tests\e2e\admin\customers.spec.js:600:5 › Customers — Admin Portal E2E › Goal 4 — Cancel Unit › TC_CUST_FUNC_104 — ADM_CUST_104 — Cancel Unit blocked for already-cancelled units (49.5s)
+
+  4 skipped
+  9 passed (6.8m)

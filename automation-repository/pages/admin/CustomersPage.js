@@ -603,6 +603,138 @@ class CustomersPage extends BasePage {
     await this.click(this.logoutMenuItem);
     await this.page.waitForURL(/\/admin\/?$/, { timeout: 10_000 });
   }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  //  Read-only destructive-modal helpers
+  //
+  //  Every helper below OPENS a modal/popup, lets the test ASSERT against it,
+  //  and provides a matching closeXxx() that dismisses without submitting.
+  //  Tests must NEVER click Confirm / Submit / Save / Approve buttons in these
+  //  modals on UAT — Pipeline Discipline rule #7.
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * findFirstRowMatching({ status }) — return the row-index of the FIRST table row
+   * whose Allocation Status column text matches `status` (case-insensitive substring).
+   * Returns null when no row matches (test should test.skip()).
+   *
+   * Caller must already have filtered/searched the table so the rows on screen
+   * are the candidate set (typically: searchByPhone('8888888888') first).
+   *
+   * @param {{ status?: string }} match
+   * @returns {Promise<number|null>}
+   */
+  async findFirstRowMatching({ status }) {
+    const rowCount = await this.tableRows.count();
+    if (rowCount === 0) return null;
+    // Determine the column index of "Allocation Status" from the live header row.
+    const headerCells = this.tableHeaderRow.locator('th');
+    const headerCount = await headerCells.count();
+    let statusCol = -1;
+    for (let i = 0; i < headerCount; i++) {
+      const txt = (await headerCells.nth(i).textContent()) || '';
+      if (/allocation status/i.test(txt)) { statusCol = i; break; }
+    }
+    if (statusCol === -1) {
+      // Header detection failed — fall back to scanning whole-row text.
+      for (let i = 0; i < rowCount; i++) {
+        const rowText = (await this.tableRows.nth(i).textContent()) || '';
+        if (status && new RegExp(status, 'i').test(rowText)) return i;
+      }
+      return null;
+    }
+    for (let i = 0; i < rowCount; i++) {
+      const cell = this.tableRows.nth(i).locator('td').nth(statusCol);
+      const txt = ((await cell.textContent()) || '').trim();
+      if (!status || new RegExp(status, 'i').test(txt)) return i;
+    }
+    return null;
+  }
+
+  // ── Cancel Registration (read-only open/close) ──────────────────────────────
+  async openCancelRegistrationPopup(rowIndex) {
+    await this.rowTrashIcon.nth(rowIndex).click();
+    await this.cancelModal.waitFor({ state: 'visible', timeout: 10_000 });
+  }
+  async closeCancelRegistrationPopup() {
+    // Try the modal's own Close button first; if it isn't visible (some variants
+    // only show an X icon) press Escape as a fallback.
+    const visible = await this.cancelModalCloseBtn.isVisible().catch(() => false);
+    if (visible) {
+      await this.click(this.cancelModalCloseBtn);
+    } else {
+      await this.page.keyboard.press('Escape');
+    }
+    await this.cancelModal.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+
+  // ── Cancel Unit modal (read-only open/close) ────────────────────────────────
+  // The Cancel-Unit entry point is the row trash icon when the row is in Booked/
+  // Confirmed state (FRD §5). It reuses the trash control but renders a different
+  // modal shape (two attestation checkboxes instead of a refund-amount line).
+  async openCancelUnitModal(rowIndex) {
+    await this.rowTrashIcon.nth(rowIndex).click();
+    await this.cancelUnitModal.waitFor({ state: 'visible', timeout: 10_000 });
+  }
+  async closeCancelUnitModal() {
+    await this.page.keyboard.press('Escape');
+    await this.cancelUnitModal.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+
+  // ── Unit Swap modal (read-only open/close) ──────────────────────────────────
+  async openUnitSwapModal(rowIndex) {
+    await this.openThreeDotMenu(rowIndex);
+    await this.click(this.unitSwapMenuItem);
+    await this.unitSwapModal.waitFor({ state: 'visible', timeout: 10_000 });
+  }
+  async closeUnitSwapModal() {
+    await this.page.keyboard.press('Escape');
+    await this.unitSwapModal.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+
+  // ── Update Parking modal (read-only open/close) ─────────────────────────────
+  async openParkingModal(rowIndex) {
+    await this.openThreeDotMenu(rowIndex);
+    await this.click(this.updateParkingMenuItem);
+    await this.updateParkingModal.waitFor({ state: 'visible', timeout: 10_000 });
+  }
+  async closeParkingModal() {
+    await this.page.keyboard.press('Escape');
+    await this.updateParkingModal.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+
+  // ── View Milestones nav (read-only — separate page) ─────────────────────────
+  async openViewMilestones(rowIndex) {
+    await this.openThreeDotMenu(rowIndex);
+    await Promise.all([
+      this.page.waitForURL(/\/admin\/milestone/, { timeout: 15_000 }),
+      this.click(this.viewMilestonesMenuItem),
+    ]);
+  }
+
+  // ── Home Loan Approval modal (read-only open/close) ─────────────────────────
+  async openHomeLoanModalReadOnly(rowIndex) {
+    await this.openThreeDotMenu(rowIndex);
+    await this.click(this.homeLoanApprovalMenuItem);
+    await this.homeLoanModal.waitFor({ state: 'visible', timeout: 10_000 });
+  }
+  async closeHomeLoanModal() {
+    await this.page.keyboard.press('Escape');
+    await this.homeLoanModal.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+
+  // ── Bulk Cancel toolbar (read-only — does not open the modal here) ──────────
+  async clickBulkCancelToolbarButton() {
+    await this.click(this.cancelBulkUnitsButton);
+  }
+
+  // ── Element accessors (used by lifted destructive tests) ────────────────────
+  // Convenience getters that return locators with friendlier names than the raw
+  // POM property naming. All exposed read-only — no submission.
+  get refundAmountText()        { return this.cancelModalRefundText; }
+  get cancelUnitSubmitButton()  { return this.cancelUnitConfirmBtn; }
+  get unitSwapSubmitButton()    { return this.unitSwapSubmitBtn; }
+  get parkingSubmitButton()     { return this.updateParkingSubmitBtn; }
 }
 
 module.exports = { CustomersPage };

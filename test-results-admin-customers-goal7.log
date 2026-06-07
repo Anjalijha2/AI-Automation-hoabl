@@ -1,0 +1,24 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 14 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  ✓   1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (9.7s)
+  ✓   2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (6.8s)
+  ✓   3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (11.3s)
+  ✓   4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (9.2s)
+  ✓   5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (10.7s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+  ✓   6 [e2e] › tests\e2e\admin\customers.spec.js:883:5 › Customers — Admin Portal E2E › Goal 7 — Offline Payment / Milestones › TC_CUST_FUNC_050 — View Milestones menu navigates to /admin/milestone with rn+uid query (9.4s)
+  -   7 [e2e] › tests\e2e\admin\customers.spec.js:891:10 › Customers — Admin Portal E2E › Goal 7 — Offline Payment / Milestones › TC_CUST_FUNC_051 — Offline Payment drawer opens from Milestones screen
+  -   8 [e2e] › tests\e2e\admin\customers.spec.js:895:10 › Customers — Admin Portal E2E › Goal 7 — Offline Payment / Milestones › TC_CUST_FUNC_052 — Offline Payment drawer renders all 11 form fields
+  -   9 [e2e] › tests\e2e\admin\customers.spec.js:899:10 › Customers — Admin Portal E2E › Goal 7 — Offline Payment / Milestones › TC_CUST_FUNC_053 — Offline Payment Submit posts payment + updates milestone state
+  -  10 [e2e] › tests\e2e\admin\customers.spec.js:903:10 › Customers — Admin Portal E2E › Goal 7 — Offline Payment / Milestones › TC_CUST_FUNC_054 — Offline Payment success toast confirms posted amount
+  -  11 [e2e] › tests\e2e\admin\customers.spec.js:907:10 › Customers — Admin Portal E2E › Goal 7 — Offline Payment / Milestones › TC_CUST_FUNC_055 — Offline Payment generates receipt downloadable from row
+  -  12 [e2e] › tests\e2e\admin\customers.spec.js:911:10 › Customers — Admin Portal E2E › Goal 7 — Offline Payment / Milestones › TC_CUST_FUNC_056 — Offline Payment with paid-in-full amount transitions milestone to COMPLETE
+  -  13 [e2e] › tests\e2e\admin\customers.spec.js:915:10 › Customers — Admin Portal E2E › Goal 7 — Offline Payment / Milestones › TC_CUST_NEG_057 — Offline Payment rejects amount > balance owed
+  -  14 [e2e] › tests\e2e\admin\customers.spec.js:919:10 › Customers — Admin Portal E2E › Goal 7 — Offline Payment / Milestones › TC_CUST_NEG_094 — Offline Payment double-submit prevented client-side
+
+  8 skipped
+  6 passed (3.7m)
