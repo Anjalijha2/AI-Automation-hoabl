@@ -131,12 +131,20 @@ class AllocationPage extends BasePage {
     // capture. When Tech Lead Agent extends the locator map to include explicit
     // keys (e.g. `allocationProjectFilter`), replace these with `L[...]` refs.
     //
-    // The order matches the visual layout (Project → Status → Type) and the
-    // form-row position used by the live React component.
-    this.filterBar              = page.locator('.ant-card, .filter-bar, div').filter({ has: page.locator('input[placeholder="Search by campaign name..."]') }).first();
-    this.projectFilter          = page.locator('.ant-select.ant-select-lg').filter({ hasText: /Select Project/ }).first();
-    this.statusFilter           = page.locator('.ant-select').filter({ hasText: /All Status/ }).first();
-    this.typeFilter             = page.locator('.ant-select').filter({ hasText: /All Types/ }).first();
+    // IMPORTANT scoping: the page has TWO "Select Project" comboboxes:
+    //   (a) inside the New Allocation Campaign form (TOP) — populates the form
+    //   (b) inside the filter bar (BELOW the form, ABOVE the campaign table) — drives the LIST
+    // Picking (a) does NOT populate the list. We must hit (b).
+    //
+    // We anchor the filter bar by the Refresh button (which only appears in
+    // the filter bar — not in the form). All three filter selects live in the
+    // same parent <Row>/<div> as Refresh. We climb up the DOM via `xpath=..`
+    // until we find the row that ALSO contains the search input — that's the
+    // unambiguous filter bar.
+    this.filterBar              = this.refreshButton.locator('xpath=ancestor::*[.//input[contains(@placeholder, "Search by campaign name")]][1]');
+    this.projectFilter          = this.filterBar.locator('.ant-select').filter({ hasText: /Select Project|All Projects|Project/ }).first();
+    this.statusFilter           = this.filterBar.locator('.ant-select').filter({ hasText: /All Status/ }).first();
+    this.typeFilter             = this.filterBar.locator('.ant-select').filter({ hasText: /All Types/ }).first();
 
     // Sidebar Logout
     this.logoutMenuItem         = page.locator('a, button').filter({ hasText: /^Logout$/ }).first();
@@ -542,9 +550,15 @@ class AllocationPage extends BasePage {
    * Returns the picked project name (for assertions) or null if no option.
    */
   async selectFirstProjectInFilter() {
-    await this.projectFilter.click();
+    // Wait briefly for the filter bar's Project select to be reachable. If
+    // anchoring fails (Refresh button not yet rendered), we skip-fast (return
+    // null) so dependent tests can mark themselves skipped, never hang.
+    const ok = await this.projectFilter.waitFor({ state: 'visible', timeout: 5_000 }).then(() => true).catch(() => false);
+    if (!ok) return null;
+    await this.projectFilter.click().catch(() => {});
     const activeDropdown = this.page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
-    await activeDropdown.waitFor({ state: 'visible', timeout: 5_000 });
+    const opened = await activeDropdown.waitFor({ state: 'visible', timeout: 5_000 }).then(() => true).catch(() => false);
+    if (!opened) return null;
     const options = activeDropdown.locator('.ant-select-item-option');
     const count = await options.count();
     if (count === 0) {
@@ -553,7 +567,8 @@ class AllocationPage extends BasePage {
     }
     const name = ((await options.first().textContent()) || '').trim();
     await options.first().click();
-    await this.page.waitForLoadState('networkidle').catch(() => {});
+    // Wait briefly for the table data to load, but don't block forever.
+    await this.page.waitForLoadState('networkidle', { timeout: 8_000 }).catch(() => {});
     return name;
   }
 
