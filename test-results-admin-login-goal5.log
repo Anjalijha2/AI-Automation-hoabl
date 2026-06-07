@@ -1,0 +1,116 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 13 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  ✓   1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (11.4s)
+  ✓   2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (6.4s)
+  ✓   3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (8.0s)
+  ✓   4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (8.3s)
+  ✓   5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (8.6s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+  ✓   6 [e2e] › tests\e2e\admin\login.spec.js:245:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_001 — ADMIN-BRD-Login §7 — all-zeros mobile rejected (4.0s)
+  ✓   7 [e2e] › tests\e2e\admin\login.spec.js:251:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_002 — ADMIN-BRD-Login §7 — partial OTP (3 digits) → login rejected (6.1s)
+  ✓   8 [e2e] › tests\e2e\admin\login.spec.js:261:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_003 — ADMIN-FS-Login Feature1 §3 — access /admin/customers without session → redirect to login (8.7s)
+  ✓   9 [e2e] › tests\e2e\admin\login.spec.js:267:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_037 — ADMIN-BRD-Login §7 — SQL injection in mobile field is sanitized at input (4.3s)
+  ✘  10 [e2e] › tests\e2e\admin\login.spec.js:279:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_038 — ADMIN-BRD-Login §7 — XSS injection in mobile field is sanitized at input (1.0m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  ✓  11 [e2e] › tests\e2e\admin\login.spec.js:279:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_038 — ADMIN-BRD-Login §7 — XSS injection in mobile field is sanitized at input (retry #1) (5.6s)
+  -  12 [e2e] › tests\e2e\admin\login.spec.js:289:10 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_039 — ADMIN-BRD-Login §7 — unregistered admin mobile rejected at SEND-OTP
+  ✘  13 [e2e] › tests\e2e\admin\login.spec.js:296:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_065 — ADMIN-FS-Login Feature1 — tampered JWT in localStorage → redirect to login (30.6s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+  ✘  14 [e2e] › tests\e2e\admin\login.spec.js:296:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_065 — ADMIN-FS-Login Feature1 — tampered JWT in localStorage → redirect to login (retry #1) (2.0m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  ✓  15 [e2e] › tests\e2e\admin\login.spec.js:313:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_066 — ADMIN-BRD-Login §7 — leading-zero 10-digit mobile rejected (9.4s)
+
+
+  1) [e2e] › tests\e2e\admin\login.spec.js:296:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_065 — ADMIN-FS-Login Feature1 — tampered JWT in localStorage → redirect to login 
+
+    Error: expected to be back on login after tampered JWT — url=https://uat-web.xrportal.in/admin/customers, mobileVisible=false
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+
+      308 |       const urlOnRoot = /\/admin\/?$/.test(url) || /\/admin\/login/.test(url);
+      309 |       expect(onLogin || urlOnRoot,
+    > 310 |         `expected to be back on login after tampered JWT — url=${url}, mobileVisible=${onLogin}`).toBe(true);
+          |                                                                                                   ^
+      311 |     });
+      312 |
+      313 |     test('TC_LOGIN_NEG_066 — ADMIN-BRD-Login §7 — leading-zero 10-digit mobile rejected', async ({ page }) => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\login.spec.js:310:99
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--6ec99-Storage-→-redirect-to-login-e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--6ec99-Storage-→-redirect-to-login-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-login-Login-—-Admin--6ec99-Storage-→-redirect-to-login-e2e\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: expected to be back on login after tampered JWT — url=https://uat-web.xrportal.in/admin/customers, mobileVisible=false
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+
+      308 |       const urlOnRoot = /\/admin\/?$/.test(url) || /\/admin\/login/.test(url);
+      309 |       expect(onLogin || urlOnRoot,
+    > 310 |         `expected to be back on login after tampered JWT — url=${url}, mobileVisible=${onLogin}`).toBe(true);
+          |                                                                                                   ^
+      311 |     });
+      312 |
+      313 |     test('TC_LOGIN_NEG_066 — ADMIN-BRD-Login §7 — leading-zero 10-digit mobile rejected', async ({ page }) => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\login.spec.js:310:99
+
+    [31mTearing down "context" exceeded the test timeout of 60000ms.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--6ec99-Storage-→-redirect-to-login-e2e-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-login-Login-—-Admin--6ec99-Storage-→-redirect-to-login-e2e-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--6ec99-Storage-→-redirect-to-login-e2e-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\admin-login-Login-—-Admin--6ec99-Storage-→-redirect-to-login-e2e-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [e2e] › tests\e2e\admin\login.spec.js:279:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_038 — ADMIN-BRD-Login §7 — XSS injection in mobile field is sanitized at input 
+
+    [31mTest timeout of 60000ms exceeded while running "beforeEach" hook.[39m
+
+      11 |   let loginPage;
+      12 |
+    > 13 |   test.beforeEach(async ({ page }) => {
+         |        ^
+      14 |     loginPage = new LoginPage(page);
+      15 |     await loginPage.navigate();
+      16 |   });
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\login.spec.js:13:8
+
+    Error: browser.newContext: Error setting storage state:
+    net::ERR_ABORTED; maybe frame was detached?
+    Call log:
+    [2m  - navigating to "https://uat-web.xrportal.in", waiting until "load"[22m
+
+
+  1 failed
+    [e2e] › tests\e2e\admin\login.spec.js:296:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_065 — ADMIN-FS-Login Feature1 — tampered JWT in localStorage → redirect to login 
+  1 flaky
+    [e2e] › tests\e2e\admin\login.spec.js:279:5 › Login — Admin Portal E2E › Goal 5 — Negative › TC_LOGIN_NEG_038 — ADMIN-BRD-Login §7 — XSS injection in mobile field is sanitized at input 
+  1 skipped
+  10 passed (17.0m)

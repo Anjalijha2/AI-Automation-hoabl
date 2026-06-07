@@ -52,6 +52,23 @@ const SPEC_TO_XLSX_ALIAS = {
   TC_LOGIN_EDGE_002: ['ADM_LGN_020'],
   TC_LOGIN_FUNC_BACK:['ADM_LGN_030'],
   TC_LOGIN_E2E_001:  ['ADM_LGN_031'],  // shares with FUNC_001 (1 xlsx row tracks both)
+  // ── Admin Login — new TCs (27) ──────────────────────────────────────────
+  TC_LOGIN_UI_006:    ['ADM_LGN_006'],    // copyright footer
+  TC_LOGIN_UI_026:    ['ADM_LGN_026'],    // OTP countdown timer
+  TC_LOGIN_UI_040:    ['ADM_LGN_040'],    // responsive 375×667
+  TC_LOGIN_FUNC_004b: ['ADM_LGN_004'],    // T&C link clickable
+  TC_LOGIN_FUNC_005:  ['ADM_LGN_005'],    // Privacy Policy link clickable
+  TC_LOGIN_FUNC_019:  ['ADM_LGN_019'],    // OTP auto-advance focus
+  TC_LOGIN_FUNC_027:  ['ADM_LGN_027'],    // Re-Send disabled during timer
+  TC_LOGIN_FUNC_028:  ['ADM_LGN_028'],    // Re-Send enabled after timer
+  TC_LOGIN_FUNC_029:  ['ADM_LGN_029'],    // Re-Send click restarts timer
+  TC_LOGIN_FUNC_068:  ['ADM_LGN_068'],    // OTP paste auto-fills
+  TC_LOGIN_FUNC_069:  ['ADM_LGN_069'],    // backspace moves to previous
+  TC_LOGIN_NEG_037:   ['ADM_LGN_037'],    // SQL injection sanitized
+  TC_LOGIN_NEG_038:   ['ADM_LGN_038'],    // XSS injection sanitized
+  TC_LOGIN_NEG_039:   ['ADM_LGN_039'],    // unregistered mobile (fixme)
+  TC_LOGIN_NEG_065:   ['ADM_LGN_065'],    // tampered JWT redirect
+  TC_LOGIN_NEG_066:   ['ADM_LGN_066'],    // leading-zero mobile rejected
   // ── Admin Customers ─────────────────────────────────────────────────────
   TC_CUST_FUNC_001: ['ADM_CUST_001', 'ADM_CUST_002', 'ADM_CUST_003', 'ADM_CUST_006', 'TC_CUST_UI_041'],  // page load + KPI + table heading + banner
   TC_CUST_FUNC_002: ['ADM_CUST_007', 'ADM_CUST_009', 'ADM_CUST_010', 'ADM_CUST_011', 'ADM_CUST_012'],  // table columns

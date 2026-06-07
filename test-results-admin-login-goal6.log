@@ -1,0 +1,53 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 12 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  ✓   1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (11.6s)
+  ✓   2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (11.8s)
+  ✓   3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (9.4s)
+  ✓   4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (12.5s)
+  ✓   5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (13.7s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ✓   6 [e2e] › tests\e2e\admin\login.spec.js:326:5 › Login — Admin Portal E2E › Goal 6 — Edge / E2E › TC_LOGIN_EDGE_001 — ADMIN-BRD-Login §7 — mobile with spaces → trimmed or rejected (36.1s)
+  ✓   7 [e2e] › tests\e2e\admin\login.spec.js:334:5 › Login — Admin Portal E2E › Goal 6 — Edge / E2E › TC_LOGIN_EDGE_002 — ADMIN-BRD-Login §6 rule 3 — OTP box 5 digits only → login rejected (10.6s)
+  ✓   8 [e2e] › tests\e2e\admin\login.spec.js:342:5 › Login — Admin Portal E2E › Goal 6 — Edge / E2E › TC_LOGIN_FUNC_BACK — ADMIN-BRD-Login §5 — back button returns to mobile screen (28.8s)
+  ✓   9 [e2e] › tests\e2e\admin\login.spec.js:351:5 › Login — Admin Portal E2E › Goal 6 — Edge / E2E › TC_LOGIN_E2E_001 — ADMIN-BRD-Login §5 — full login → navigate → logout flow (38.7s)
+  ✘  10 [e2e] › tests\e2e\admin\login.spec.js:362:5 › Login — Admin Portal E2E › Goal 6 — Edge / E2E › TC_LOGIN_UI_040 — ADMIN-BRD-Login §3 — login page renders on 375×667 mobile viewport (30.1s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ✓  11 [e2e] › tests\e2e\admin\login.spec.js:370:5 › Login — Admin Portal E2E › Goal 6 — Edge / E2E › TC_LOGIN_FUNC_004b — ADMIN-BRD-Login §3 — Terms & Conditions link is clickable and has href (35.7s)
+  ✓  12 [e2e] › tests\e2e\admin\login.spec.js:377:5 › Login — Admin Portal E2E › Goal 6 — Edge / E2E › TC_LOGIN_FUNC_005 — ADMIN-BRD-Login §3 — Privacy Policy link is clickable and has href (29.5s)
+
+
+  1) [e2e] › tests\e2e\admin\login.spec.js:362:5 › Login — Admin Portal E2E › Goal 6 — Edge / E2E › TC_LOGIN_UI_040 — ADMIN-BRD-Login §3 — login page renders on 375×667 mobile viewport 
+
+    Error: A snapshot doesn't exist at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\login.spec.js-snapshots\login-ui-040-mobile-viewport-e2e-win32.png, writing actual.
+
+      365 |       await expect(loginPage.mobileInput).toBeVisible();
+      366 |       await expect(loginPage.sendOtpBtn).toBeVisible();
+    > 367 |       await expect(page).toHaveScreenshot('login-ui-040-mobile-viewport.png', { maxDiffPixels: 500 });
+          |       ^
+      368 |     });
+      369 |
+      370 |     test('TC_LOGIN_FUNC_004b — ADMIN-BRD-Login §3 — Terms & Conditions link is clickable and has href', async () => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\login.spec.js:367:7
+
+    attachment #1: login-ui-040-mobile-viewport (image/png) ────────────────────────────────────────
+    Expected: tests\e2e\admin\login.spec.js-snapshots\login-ui-040-mobile-viewport-e2e-win32.png
+    Received: test-results\admin-login-Login-—-Admin--54a74--on-375×667-mobile-viewport-e2e\login-ui-040-mobile-viewport-actual.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--54a74--on-375×667-mobile-viewport-e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--54a74--on-375×667-mobile-viewport-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-login-Login-—-Admin--54a74--on-375×667-mobile-viewport-e2e\error-context.md
+
+  1 failed
+    [e2e] › tests\e2e\admin\login.spec.js:362:5 › Login — Admin Portal E2E › Goal 6 — Edge / E2E › TC_LOGIN_UI_040 — ADMIN-BRD-Login §3 — login page renders on 375×667 mobile viewport 
+  11 passed (6.3m)
