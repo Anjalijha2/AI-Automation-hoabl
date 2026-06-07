@@ -20,7 +20,9 @@ test.describe('Login — Admin Portal E2E', () => {
   test('TC_LOGIN_FUNC_001 — ADMIN-BRD-Login §5 — valid mobile + valid OTP → redirect to /admin/customers', async ({ page }) => {
     await loginPage.loginWithOtp(MOBILE, OTP);
     await loginPage.expectLoginSuccess();
-    await expect(page).toHaveScreenshot('login-func-001-customers.png', { maxDiffPixels: 100 });
+    // Post-login /admin/customers shows live KPI counts + table data — full-page
+    // screenshot drifts every run. Functional success verified by URL.
+    await expect(page).toHaveURL(/\/admin\/customers/);
   });
 
   test('TC_LOGIN_FUNC_002 — ADMIN-BRD-Login §5 — Send OTP transitions to OTP screen', async ({ page }) => {
@@ -149,9 +151,8 @@ test.describe('Login — Admin Portal E2E', () => {
     // Login
     await loginPage.loginWithOtp(MOBILE, OTP);
     await loginPage.expectLoginSuccess();
-    await expect(page).toHaveScreenshot('login-e2e-001-dashboard.png', { maxDiffPixels: 100 });
 
-    // Navigate
+    // Navigate — assert URL only (dashboard data is dynamic, screenshot drifts)
     await expect(page).toHaveURL(/\/admin\/customers/);
 
     // Logout
