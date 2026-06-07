@@ -123,6 +123,76 @@ class AllocationPage extends BasePage {
 
     // KPI cards (Allocation module surface KPIs about active/upcoming campaigns)
     this.kpiCards               = page.locator('.ant-statistic, .kpi-card, [class*="card"]:has-text("Campaign")');
+
+    // ── Derived list-controls (visual-memory INDEX.md, 2026-06-02) ──────────
+    // The campaign-list filter bar exposes three Ant Selects + a search input +
+    // a Refresh button. The locator map only ships the search input + Refresh;
+    // the three filter selects are derived structurally from the visual-memory
+    // capture. When Tech Lead Agent extends the locator map to include explicit
+    // keys (e.g. `allocationProjectFilter`), replace these with `L[...]` refs.
+    //
+    // The order matches the visual layout (Project → Status → Type) and the
+    // form-row position used by the live React component.
+    this.filterBar              = page.locator('.ant-card, .filter-bar, div').filter({ has: page.locator('input[placeholder="Search by campaign name..."]') }).first();
+    this.projectFilter          = page.locator('.ant-select.ant-select-lg').filter({ hasText: /Select Project/ }).first();
+    this.statusFilter           = page.locator('.ant-select').filter({ hasText: /All Status/ }).first();
+    this.typeFilter             = page.locator('.ant-select').filter({ hasText: /All Types/ }).first();
+
+    // Sidebar Logout
+    this.logoutMenuItem         = page.locator('a, button').filter({ hasText: /^Logout$/ }).first();
+
+    // ── Row-level action controls (Active / Upcoming rows) ──────────────────
+    // Per visual-memory: Active row → [View, Stop]; Upcoming row → [View, Cancel].
+    this.rowViewLink            = page.locator('tbody.ant-table-tbody tr.ant-table-row a:has-text("View")');
+    this.rowStopButton          = page.locator('tbody.ant-table-tbody tr.ant-table-row button:has-text("Stop")');
+    this.rowCancelButton        = page.locator('tbody.ant-table-tbody tr.ant-table-row button:has-text("Cancel")');
+
+    // ── Stop modal / Cancel modal / Notify modal ────────────────────────────
+    // Visual-memory: all three reuse the standard `.ant-modal-content` shell.
+    // Title text differentiates which one is on screen.
+    this.stopModalContainer     = page.locator('.ant-modal-content', { hasText: 'Stop Allocation Now?' });
+    this.stopModalTitle         = this.stopModalContainer.locator('.ant-modal-title');
+    this.stopModalBody          = this.stopModalContainer.locator('.ant-modal-body');
+    this.stopModalCloseBtn      = this.stopModalContainer.locator('button:has-text("Close")');
+    this.stopModalConfirmBtn    = this.stopModalContainer.locator('button:has-text("Yes, Stop Now")');
+
+    this.cancelModalContainer   = page.locator('.ant-modal-content', { hasText: 'Cancel Allocation?' });
+    this.cancelModalTitle       = this.cancelModalContainer.locator('.ant-modal-title');
+    this.cancelModalBody        = this.cancelModalContainer.locator('.ant-modal-body');
+    this.cancelModalCloseBtn    = this.cancelModalContainer.locator('button:has-text("Close")');
+    this.cancelModalConfirmBtn  = this.cancelModalContainer.locator('button:has-text("Yes, Cancel")');
+
+    this.notifyModalContainer   = page.locator('.ant-modal-content', { hasText: 'Notify Registrants?' });
+    this.notifyModalTitle       = this.notifyModalContainer.locator('.ant-modal-title');
+    this.notifyModalBody        = this.notifyModalContainer.locator('.ant-modal-body');
+    this.notifyModalCancelBtn   = this.notifyModalContainer.locator('button:has-text("Cancel")');
+    this.notifyModalConfirmBtn  = this.notifyModalContainer.locator('button:has-text("Yes, Notify All")');
+
+    // ── Campaign detail page locators (derived from visual-memory) ──────────
+    // Reached at /admin/allocation/campaigns/<id>. Headings differ by type.
+    this.backToOverviewButton   = page.locator('button:has-text("Back to Allocation Overview")');
+    this.detailHeading          = page.locator('h2'); // "Static / Dynamic / Physical Campaign Details"
+    this.detailCampaignName     = page.locator('h3').first();
+    this.campaignActionsHeading = page.locator('h4:has-text("Campaign Actions")');
+    this.downloadBookingsBtn    = page.locator('button:has-text("Download Bookings")');
+    this.downloadPendingBtn     = page.locator('button:has-text("Download Pending")');
+    this.notifyRegistrantsBtn   = page.locator('button:has-text("Notify Registrants")');
+    this.roundsHeading          = page.locator(':text("Round-Wise Data")');
+    this.kpiStatRow             = page.locator('.ant-statistic, [class*="kpi"], [class*="stat"]').filter({ hasText: /Registrations|Units|Booked|Pending/ });
+
+    // ── Form section (page-level: New Allocation Campaign) ──────────────────
+    this.newCampaignHeading     = page.locator('h5:has-text("New Allocation Campaign")');
+    this.pageHeading            = page.locator('h5:has-text("Allocation")').first();
+    this.tableColumnHeaders     = page.locator('.ant-table-thead th');
+    this.descriptionTextarea    = page.locator('textarea.ant-input');
+    this.charCountText          = page.locator(':text-matches("\\\\d+\\\\s*/\\\\s*255")');
+
+    // Empty-state placeholder ("Please select a project to view campaigns" /
+    // "No campaigns found")
+    this.emptyStatePlaceholder  = page.locator('.ant-empty, :text("Please select a project to view campaigns"), :text("No campaigns found")');
+
+    // Form field-error explain text (visual-memory: 4 inline red errors)
+    this.formItemErrors         = page.locator('.ant-form-item-explain-error');
   }
 
   // ── Navigation ────────────────────────────────────────────────────────────
@@ -460,6 +530,183 @@ class AllocationPage extends BasePage {
     const d = new Date(Date.now() + minutesFromNow * 60_000);
     const pad = (n) => String(n).padStart(2, '0');
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  // ── Goal-based helpers added 2026-06-06 ────────────────────────────────────
+
+  /**
+   * selectFirstProjectInFilter() — opens the Project filter Select above the
+   * campaign list and clicks the first option. Required because the list
+   * itself is gated server-side ("Please select a project to view campaigns").
+   *
+   * Returns the picked project name (for assertions) or null if no option.
+   */
+  async selectFirstProjectInFilter() {
+    await this.projectFilter.click();
+    const activeDropdown = this.page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
+    await activeDropdown.waitFor({ state: 'visible', timeout: 5_000 });
+    const options = activeDropdown.locator('.ant-select-item-option');
+    const count = await options.count();
+    if (count === 0) {
+      await this.page.keyboard.press('Escape');
+      return null;
+    }
+    const name = ((await options.first().textContent()) || '').trim();
+    await options.first().click();
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    return name;
+  }
+
+  /**
+   * openStatusFilter() — opens the Status filter and returns the list of options.
+   */
+  async openStatusFilter() {
+    await this.statusFilter.click();
+    const activeDropdown = this.page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
+    await activeDropdown.waitFor({ state: 'visible', timeout: 5_000 });
+    const opts = activeDropdown.locator('.ant-select-item-option');
+    const count = await opts.count();
+    const labels = [];
+    for (let i = 0; i < count; i++) {
+      labels.push(((await opts.nth(i).textContent()) || '').trim());
+    }
+    return labels;
+  }
+
+  /**
+   * closeAnyOpenDropdown() — press Escape to dismiss any open Ant Select / Modal.
+   */
+  async closeAnyOpenDropdown() {
+    await this.page.keyboard.press('Escape');
+    await this.page.waitForTimeout(200);   // brief settle for dropdown close animation
+  }
+
+  /**
+   * pickStatusFilter(label) — open Status filter, click option by label.
+   */
+  async pickStatusFilter(label) {
+    await this.statusFilter.click();
+    const activeDropdown = this.page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
+    await activeDropdown.waitFor({ state: 'visible', timeout: 5_000 });
+    await activeDropdown.locator(`.ant-select-item-option:has-text("${label}")`).first().click();
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+  }
+
+  /**
+   * openCampaignDetailByRow(rowIndex) — click the View link in the Nth row,
+   * landing on /admin/allocation/campaigns/<id>. Returns true if it navigated.
+   */
+  async openCampaignDetailByRow(rowIndex = 0) {
+    const view = this.rowViewLink.nth(rowIndex);
+    const count = await this.rowViewLink.count();
+    if (count === 0) return false;
+    await view.click();
+    await this.page.waitForURL(/\/admin\/allocation\/campaigns\/\d+/, { timeout: 15_000 }).catch(() => {});
+    return /\/admin\/allocation\/campaigns\/\d+/.test(this.page.url());
+  }
+
+  /**
+   * goBackToOverview() — click the "Back to Allocation Overview" button on detail.
+   */
+  async goBackToOverview() {
+    await this.backToOverviewButton.first().click();
+    await this.page.waitForURL(/\/admin\/allocation(\?|$|\/)/, { timeout: 10_000 }).catch(() => {});
+  }
+
+  /**
+   * openStopModalForActiveRow() — find the first Active row in the table and
+   * click its Stop button to open the Stop confirmation modal.
+   *
+   * READ-ONLY: this only OPENS the modal. The Close button MUST be clicked by
+   * the caller — never `Yes, Stop Now`. (Pipeline Discipline rule #7.)
+   *
+   * Returns true if the modal opened, false if no Active row exists.
+   */
+  async openStopModalForActiveRow() {
+    const rows = await this.getCampaignsList();
+    const active = rows.find(r => /active/i.test(r.status));
+    if (!active) return false;
+    const row = this.page.locator('tr.ant-table-row', { hasText: active.name }).first();
+    const stopBtn = row.locator('button:has-text("Stop")').first();
+    const has = await stopBtn.count();
+    if (!has) return false;
+    await stopBtn.click();
+    await this.stopModalContainer.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {});
+    return true;
+  }
+
+  /**
+   * openCancelModalForUpcomingRow() — find the first Upcoming row in the table
+   * and click its Cancel button. READ-ONLY: caller must Close — never confirm.
+   *
+   * Returns true if the modal opened, false if no Upcoming row exists.
+   */
+  async openCancelModalForUpcomingRow() {
+    const rows = await this.getCampaignsList();
+    const upcoming = rows.find(r => /upcoming/i.test(r.status));
+    if (!upcoming) return false;
+    const row = this.page.locator('tr.ant-table-row', { hasText: upcoming.name }).first();
+    const cancelBtn = row.locator('button:has-text("Cancel")').first();
+    const has = await cancelBtn.count();
+    if (!has) return false;
+    await cancelBtn.click();
+    await this.cancelModalContainer.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {});
+    return true;
+  }
+
+  /**
+   * closeStopModal() — click the modal Close button to dismiss without action.
+   */
+  async closeStopModal() {
+    await this.stopModalCloseBtn.first().click();
+    await this.stopModalContainer.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+
+  /**
+   * closeCancelModal() — same as closeStopModal but for the Cancel modal.
+   */
+  async closeCancelModal() {
+    await this.cancelModalCloseBtn.first().click();
+    await this.cancelModalContainer.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+
+  /**
+   * openNotifyModalOnDetail() — on a campaign detail page, click Notify Registrants.
+   * Caller MUST press Cancel — do not click Yes, Notify All on UAT.
+   *
+   * Returns true if the modal opened.
+   */
+  async openNotifyModalOnDetail() {
+    const has = await this.notifyRegistrantsBtn.count();
+    if (!has) return false;
+    await this.notifyRegistrantsBtn.first().click();
+    await this.notifyModalContainer.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {});
+    return true;
+  }
+
+  /**
+   * closeNotifyModal() — dismiss via Cancel (NOT confirm).
+   */
+  async closeNotifyModal() {
+    await this.notifyModalCancelBtn.first().click();
+    await this.notifyModalContainer.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+
+  /**
+   * getPaginationFooterText() — return the Ant pagination "Total N campaigns"
+   * text below the table, or '' if not visible.
+   */
+  async getPaginationFooterText() {
+    const footer = this.page.locator('.ant-pagination-total-text, :text-matches("Total\\\\s+\\\\d+\\\\s+campaigns?")').first();
+    if (!(await footer.count())) return '';
+    return ((await footer.textContent()) || '').trim();
+  }
+
+  /**
+   * countVisibleRows() — number of campaign rows currently rendered.
+   */
+  async countVisibleRows() {
+    return this.campaignRows.count();
   }
 }
 

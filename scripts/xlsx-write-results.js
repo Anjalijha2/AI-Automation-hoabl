@@ -162,6 +162,64 @@ const SPEC_TO_XLSX_ALIAS = {
   TC_CUST_FUNC_032: ['ADM_CUST_032'],
   // ── Admin Customers — Goal 9 (Bulk Cancel, fixme) ───────────────────────
   TC_CUST_NEG_092:  ['ADM_CUST_092'],
+
+  // ── Admin Allocation — goal-based refactor (2026-06-06) ─────────────────
+  // Goal 1 — Smoke
+  ADM_ALLOC_001:    ['ADM_ALLOC_001'],
+  ADM_ALLOC_001b:   ['ADM_ALLOC_001'],
+  ADM_ALLOC_005:    ['ADM_ALLOC_005'],
+  ADM_ALLOC_SM_001: ['ADM_ALLOC_001'],         // page-heading variant of #001
+  // Goal 2 — Read
+  ADM_ALLOC_002:    ['ADM_ALLOC_002'],
+  ADM_ALLOC_003:    ['ADM_ALLOC_003'],
+  ADM_ALLOC_004:    ['ADM_ALLOC_004'],
+  ADM_ALLOC_023:    ['ADM_ALLOC_023'],
+  ADM_ALLOC_028:    ['ADM_ALLOC_028'],
+  ADM_ALLOC_035:    ['ADM_ALLOC_035'],
+  ADM_ALLOC_034:    ['ADM_ALLOC_034'],
+  ADM_ALLOC_R_001:  ['ADM_ALLOC_002'],         // pagination ⊂ table render
+  ADM_ALLOC_R_002:  ['ADM_ALLOC_002'],         // empty-state ⊂ table render
+  ADM_ALLOC_R_003:  ['ADM_ALLOC_002'],         // header count ⊂ table render
+  // Goal 3 — Filter / Search
+  ADM_ALLOC_F_001:  ['ADM_ALLOC_002'],
+  ADM_ALLOC_F_002:  ['ADM_ALLOC_003'],         // status options ⊂ status column TC
+  ADM_ALLOC_F_003:  ['ADM_ALLOC_003'],
+  ADM_ALLOC_F_004:  ['ADM_ALLOC_002'],
+  ADM_ALLOC_F_005:  ['ADM_ALLOC_002'],
+  // Goal 4 — Detail
+  ADM_ALLOC_D_001:  ['ADM_ALLOC_028'],         // detail navigation
+  ADM_ALLOC_D_002:  ['ADM_ALLOC_028'],
+  ADM_ALLOC_D_003:  ['ADM_ALLOC_028'],
+  ADM_ALLOC_D_004:  ['ADM_ALLOC_028'],
+  ADM_ALLOC_053:    ['ADM_ALLOC_053'],
+  ADM_ALLOC_D_005:  ['ADM_ALLOC_053'],         // STATIC has no Notify ⊂ #053
+  ADM_ALLOC_D_006:  ['ADM_ALLOC_012'],         // Round-Wise Data ⊂ Dynamic create
+  // Goal 5 — Create / Edit (UI-only)
+  ADM_ALLOC_006:    ['ADM_ALLOC_006'],
+  ADM_ALLOC_011:    ['ADM_ALLOC_011'],
+  ADM_ALLOC_C_001:  ['ADM_ALLOC_007'],         // Static pick (UI) ⊂ static create
+  ADM_ALLOC_C_002:  ['ADM_ALLOC_006'],         // description ⊂ create-form fields
+  ADM_ALLOC_C_003:  ['ADM_ALLOC_006'],         // reset ⊂ create-form fields
+  ADM_ALLOC_040:    ['ADM_ALLOC_040'],
+  ADM_ALLOC_041:    ['ADM_ALLOC_041'],
+  // Goal 6 — Stop / Cancel / Notify (modal open + close)
+  ADM_ALLOC_016:    ['ADM_ALLOC_016'],
+  ADM_ALLOC_017:    ['ADM_ALLOC_017'],
+  ADM_ALLOC_020:    ['ADM_ALLOC_020'],
+  ADM_ALLOC_018:    ['ADM_ALLOC_018'],
+  ADM_ALLOC_019:    ['ADM_ALLOC_019'],
+  ADM_ALLOC_024:    ['ADM_ALLOC_024'],
+  ADM_ALLOC_S_001:  ['ADM_ALLOC_042'],         // Notify modal ⊂ Notify endpoint TC
+  // Goal 7 — Negative / Validation
+  ADM_ALLOC_010:    ['ADM_ALLOC_010'],
+  ADM_ALLOC_008:    ['ADM_ALLOC_008'],
+  ADM_ALLOC_009:    ['ADM_ALLOC_009'],
+  ADM_ALLOC_N_001:  ['ADM_ALLOC_039'],         // blank form errors ⊂ dynamic round req
+  ADM_ALLOC_033:    ['ADM_ALLOC_033'],
+  // Goal 9 — Integration (read-only)
+  ADM_ALLOC_FSD_036: ['ADM_ALLOC_FSD_036'],
+  ADM_ALLOC_I_001:   ['ADM_ALLOC_049'],        // sidebar present ⊂ config xref
+  ADM_ALLOC_FSD_037: ['ADM_ALLOC_FSD_037'],
 };
 
 // Normalize: ensure all alias values are arrays internally
@@ -184,7 +242,7 @@ function parseLog(content) {
   // Pattern: "  ✓  6 [e2e] › path › TC_LOGIN_FUNC_001 — ... (35.1s)"
   //          "  ✘  7 [e2e] › path › TC_LOGIN_FUNC_001 — ... (retry #1) (1.1m)"
   //          "  -  19 [e2e] › path › TC_LOGIN_NEG_014 — ..."
-  const rx = /^\s*([✓✘\-])\s+\d+\s+\[[^\]]+\][^\n]*?(TC[_-][A-Z][A-Z0-9_]+_\d+[a-z]?|ADM_[A-Z]+_\d+|SM_[A-Z]+_\d+|CP_[A-Z]+_\d+|BYR_[A-Z]+_\d+)[^\n]*?(?:\(([^)]+)\))?$/gm;
+  const rx = /^\s*([✓✘\-])\s+\d+\s+\[[^\]]+\][^\n]*?(TC[_-][A-Z][A-Z0-9_]+_\d+[a-z]?|ADM(?:_[A-Z]+)+_\d+[a-z]?|SM(?:_[A-Z]+)+_\d+[a-z]?|CP(?:_[A-Z]+)+_\d+[a-z]?|BYR(?:_[A-Z]+)+_\d+[a-z]?)[^\n]*?(?:\(([^)]+)\))?$/gm;
   let m;
   while ((m = rx.exec(content))) {
     const symbol = m[1];
