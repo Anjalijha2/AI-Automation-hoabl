@@ -1,0 +1,273 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 17 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  ✓   1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (16.1s)
+  ✓   2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (17.2s)
+  ✓   3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (17.9s)
+  ✓   4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (18.1s)
+  ✘   5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (1.1m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ✓   6 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (retry #1) (21.6s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+  ✘   7 [e2e] › tests\e2e\admin\customers.spec.js:65:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_001 — BRD-CUST §3 — Customers page loads as default post-login (24.1s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  ✘   8 [e2e] › tests\e2e\admin\customers.spec.js:65:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_001 — BRD-CUST §3 — Customers page loads as default post-login (retry #1) (33.8s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  ✓   9 [e2e] › tests\e2e\admin\customers.spec.js:77:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_002 — BRD-CUST §3 — Sidebar navigation opens Customers module (23.9s)
+  ✓  10 [e2e] › tests\e2e\admin\customers.spec.js:93:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_003 — BRD-CUST §5 — Search by Phone filters registration table (34.9s)
+  ✘  11 [e2e] › tests\e2e\admin\customers.spec.js:109:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_004 — BRD-CUST §5 — Filter by Allocation Status returns matching rows (16.3s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+  ✓  12 [e2e] › tests\e2e\admin\customers.spec.js:109:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_004 — BRD-CUST §5 — Filter by Allocation Status returns matching rows (retry #1) (22.3s)
+  ✘  13 [e2e] › tests\e2e\admin\customers.spec.js:119:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_005 — BRD-CUST §5 — Reset Filters restores full record list (1.0m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ✓  14 [e2e] › tests\e2e\admin\customers.spec.js:119:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_005 — BRD-CUST §5 — Reset Filters restores full record list (retry #1) (24.8s)
+  -  15 [e2e] › tests\e2e\admin\customers.spec.js:142:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_006 — BRD-CUST §5/§6 BR3 — Cancel Registration flow refunds ₹999 and updates status
+  -  16 [e2e] › tests\e2e\admin\customers.spec.js:170:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_007 — BRD-CUST §5 — Home Loan Approval toggle marks loan approved
+  ✘  17 [e2e] › tests\e2e\admin\customers.spec.js:189:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008 — BRD-CUST §5/§6 BR5 — Download exports RegistrationData.xlsx (no filter = all records) (1.0m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+  ✓  18 [e2e] › tests\e2e\admin\customers.spec.js:189:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008 — BRD-CUST §5/§6 BR5 — Download exports RegistrationData.xlsx (no filter = all records) (retry #1) (19.8s)
+  ✓  19 [e2e] › tests\e2e\admin\customers.spec.js:203:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008b — FRD-CUST TechSpec §3 — Download with active filter downloads filtered records only (18.2s)
+  ✓  20 [e2e] › tests\e2e\admin\customers.spec.js:219:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_009 — BRD-CUST §5 — Refresh button reloads table data without navigation (27.1s)
+  ✓  21 [e2e] › tests\e2e\admin\customers.spec.js:235:3 › Customers — Admin Portal E2E › TC_CUST_REG_002 — BRD-CUST §6 BR1/BR4 — KPI counts stable after filter+reset cycle (12.3s)
+  -  22 [e2e] › tests\e2e\admin\customers.spec.js:269:3 › Customers — Admin Portal E2E › TC_CUST_NEG_002 — BRD-CUST §5 — Search by non-existent phone returns empty result
+
+
+  1) [e2e] › tests\e2e\admin\customers.spec.js:65:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_001 — BRD-CUST §3 — Customers page loads as default post-login 
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+      Expected an image 1904px by 1294px, received 1904px by 1299px. 41379 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: customers-e2e-001-default-landing.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(customers-e2e-001-default-landing.png)" with timeout 10000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - Expected an image 1904px by 1294px, received 1898px by 1314px. 41559 pixels (ratio 0.02 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - Expected an image 1898px by 1314px, received 1904px by 1299px.[22m
+    [2m  - waiting 250ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - captured a stable screenshot[22m
+    [2m  - Expected an image 1904px by 1294px, received 1904px by 1299px. 41379 pixels (ratio 0.02 of all image pixels) are different.[22m
+
+
+      72 |     // Take a full-page screenshot and compare to the saved baseline.
+      73 |     // maxDiffPixels: 200 allows for minor rendering differences (anti-aliasing, fonts).
+    > 74 |     await expect(page).toHaveScreenshot('customers-e2e-001-default-landing.png', { maxDiffPixels: 200, fullPage: true });
+         |                        ^
+      75 |   });
+      76 |
+      77 |   test('TC_CUST_FUNC_002 — BRD-CUST §3 — Sidebar navigation opens Customers module', async ({ page }) => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:74:24
+
+    attachment #1: customers-e2e-001-default-landing (image/png) ───────────────────────────────────
+    Expected: tests\e2e\admin\customers.spec.js-snapshots\customers-e2e-001-default-landing-e2e-win32.png
+    Received: test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e\customers-e2e-001-default-landing-actual.png
+    Diff:     test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e\customers-e2e-001-default-landing-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+      Expected an image 1904px by 1294px, received 1904px by 1299px. 41379 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: customers-e2e-001-default-landing.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(customers-e2e-001-default-landing.png)" with timeout 10000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - Expected an image 1904px by 1294px, received 1898px by 1314px. 41559 pixels (ratio 0.02 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - Expected an image 1898px by 1314px, received 1904px by 1299px.[22m
+    [2m  - waiting 250ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - captured a stable screenshot[22m
+    [2m  - Expected an image 1904px by 1294px, received 1904px by 1299px. 41379 pixels (ratio 0.02 of all image pixels) are different.[22m
+
+
+      72 |     // Take a full-page screenshot and compare to the saved baseline.
+      73 |     // maxDiffPixels: 200 allows for minor rendering differences (anti-aliasing, fonts).
+    > 74 |     await expect(page).toHaveScreenshot('customers-e2e-001-default-landing.png', { maxDiffPixels: 200, fullPage: true });
+         |                        ^
+      75 |   });
+      76 |
+      77 |   test('TC_CUST_FUNC_002 — BRD-CUST §3 — Sidebar navigation opens Customers module', async ({ page }) => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:74:24
+
+    attachment #1: customers-e2e-001-default-landing (image/png) ───────────────────────────────────
+    Expected: tests\e2e\admin\customers.spec.js-snapshots\customers-e2e-001-default-landing-e2e-win32.png
+    Received: test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e-retry1\customers-e2e-001-default-landing-actual.png
+    Diff:     test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e-retry1\customers-e2e-001-default-landing-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e-retry1\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\admin-customers-Customers--d335d-loads-as-default-post-login-e2e-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer ─────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.fill: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="tel"], input[placeholder*="Mobile" i], input[name*="mobile" i], input[id*="mobile" i]').first()[22m
+
+
+      42 |   ).first();
+      43 |   await mobileInput.waitFor({ state: 'visible', timeout: 15_000 });
+    > 44 |   await mobileInput.fill(mobile);
+         |                     ^
+      45 |
+      46 |   const sendOtpBtn = page.getByRole('button', { name: /send otp/i }).first();
+      47 |   await sendOtpBtn.click();
+        at genericOtpLogin (D:\AI_Automation\xanadu - AI automation\automation-repository\fixtures\auth.setup.js:44:21)
+        at D:\AI_Automation\xanadu - AI automation\automation-repository\fixtures\auth.setup.js:149:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\auth.setup.js-authenticate-as-buyer-auth-setup\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\auth.setup.js-authenticate-as-buyer-auth-setup\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\auth.setup.js-authenticate-as-buyer-auth-setup\error-context.md
+
+  3) [e2e] › tests\e2e\admin\customers.spec.js:109:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_004 — BRD-CUST §5 — Filter by Allocation Status returns matching rows 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m1012[39m
+    Received: [31m9684[39m
+
+      114 |     await customersPage.applyStatusFilter('Cancelled');
+      115 |     const recordCount = await customersPage.getTableRecordsCount();
+    > 116 |     expect(recordCount).toBe(cancelledKpi);
+          |                         ^
+      117 |   });
+      118 |
+      119 |   test('TC_CUST_FUNC_005 — BRD-CUST §5 — Reset Filters restores full record list', async () => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:116:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--76aab-tatus-returns-matching-rows-e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--76aab-tatus-returns-matching-rows-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--76aab-tatus-returns-matching-rows-e2e\error-context.md
+
+  4) [e2e] › tests\e2e\admin\customers.spec.js:119:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_005 — BRD-CUST §5 — Reset Filters restores full record list 
+
+    [31mTest timeout of 60000ms exceeded while running "beforeEach" hook.[39m
+
+      52 |    *   next test. A full page.goto() resets all Ant Design table state.
+      53 |    */
+    > 54 |   test.beforeEach(async ({ page }) => {
+         |        ^
+      55 |     customersPage = new CustomersPage(page);
+      56 |     await customersPage.navigate();
+      57 |     await customersPage.waitForLoad();
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:54:8
+
+    Error: browserContext.newPage: Test timeout of 60000ms exceeded.
+
+  5) [e2e] › tests\e2e\admin\customers.spec.js:189:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008 — BRD-CUST §5/§6 BR5 — Download exports RegistrationData.xlsx (no filter = all records) 
+
+    [31mTest timeout of 60000ms exceeded while running "beforeEach" hook.[39m
+
+      52 |    *   next test. A full page.goto() resets all Ant Design table state.
+      53 |    */
+    > 54 |   test.beforeEach(async ({ page }) => {
+         |        ^
+      55 |     customersPage = new CustomersPage(page);
+      56 |     await customersPage.navigate();
+      57 |     await customersPage.waitForLoad();
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:54:8
+
+    Error: page.waitForLoadState: Test timeout of 60000ms exceeded.
+
+       at ..\automation-repository\pages\admin\CustomersPage.js:200
+
+      198 |   async waitForLoad() {
+      199 |     await this.tableRecordsHeading.waitFor({ state: 'visible', timeout: 15_000 });
+    > 200 |     await this.page.waitForLoadState('networkidle');
+          |                     ^
+      201 |   }
+      202 |
+      203 |   // ── Search & Filter ──────────────────────────────────────────────────────────
+        at CustomersPage.waitForLoad (D:\AI_Automation\xanadu - AI automation\automation-repository\pages\admin\CustomersPage.js:200:21)
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:57:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--5876c-xlsx-no-filter-all-records--e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--5876c-xlsx-no-filter-all-records--e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--5876c-xlsx-no-filter-all-records--e2e\error-context.md
+
+  1 failed
+    [e2e] › tests\e2e\admin\customers.spec.js:65:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_001 — BRD-CUST §3 — Customers page loads as default post-login 
+  4 flaky
+    [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer ──────
+    [e2e] › tests\e2e\admin\customers.spec.js:109:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_004 — BRD-CUST §5 — Filter by Allocation Status returns matching rows 
+    [e2e] › tests\e2e\admin\customers.spec.js:119:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_005 — BRD-CUST §5 — Reset Filters restores full record list 
+    [e2e] › tests\e2e\admin\customers.spec.js:189:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008 — BRD-CUST §5/§6 BR5 — Download exports RegistrationData.xlsx (no filter = all records) 
+  3 skipped
+  9 passed (21.0m)

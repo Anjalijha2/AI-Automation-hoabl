@@ -1,0 +1,16 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 7 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  ✓  1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (1.2m)
+  ✓  2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (20.0s)
+  ✓  3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (8.9s)
+  ✓  4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (12.9s)
+  ✓  5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (18.2s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  ✓  6 [e2e] › tests\e2e\admin\login.spec.js:20:3 › Login — Admin Portal E2E › TC_LOGIN_FUNC_001 — ADMIN-BRD-Login §5 — valid mobile + valid OTP → redirect to /admin/customers (30.8s)
+  ✓  7 [e2e] › tests\e2e\admin\login.spec.js:150:3 › Login — Admin Portal E2E › TC_LOGIN_E2E_001 — ADMIN-BRD-Login §5 — full login → navigate → logout flow (38.1s)
+
+  7 passed (7.7m)

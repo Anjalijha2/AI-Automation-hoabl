@@ -1,0 +1,269 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 21 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+  ✓   1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (8.1s)
+  ✓   2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (10.1s)
+  ✓   3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (7.1s)
+  ✓   4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (12.5s)
+  ✓   5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (22.5s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+  ✘   6 [e2e] › tests\e2e\admin\login.spec.js:20:3 › Login — Admin Portal E2E › TC_LOGIN_FUNC_001 — ADMIN-BRD-Login §5 — valid mobile + valid OTP → redirect to /admin/customers (35.1s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+  ✘   7 [e2e] › tests\e2e\admin\login.spec.js:20:3 › Login — Admin Portal E2E › TC_LOGIN_FUNC_001 — ADMIN-BRD-Login §5 — valid mobile + valid OTP → redirect to /admin/customers (retry #1) (1.1m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ✓   8 [e2e] › tests\e2e\admin\login.spec.js:26:3 › Login — Admin Portal E2E › TC_LOGIN_FUNC_002 — ADMIN-BRD-Login §5 — Send OTP transitions to OTP screen (16.2s)
+  ✓   9 [e2e] › tests\e2e\admin\login.spec.js:33:3 › Login — Admin Portal E2E › TC_LOGIN_FUNC_003 — ADMIN-BRD-Login §6 rule 7 — session persists after page refresh (27.9s)
+  ✓  10 [e2e] › tests\e2e\admin\login.spec.js:40:3 › Login — Admin Portal E2E › TC_LOGIN_FUNC_004 — ADMIN-FS-Login Feature3 — logout clears session and redirects to login (13.1s)
+  ✓  11 [e2e] › tests\e2e\admin\login.spec.js:54:3 › Login — Admin Portal E2E › TC_LOGIN_VAL_001 — ADMIN-BRD-Login §7 — empty mobile → Send OTP does nothing (5.3s)
+  ✓  12 [e2e] › tests\e2e\admin\login.spec.js:60:3 › Login — Admin Portal E2E › TC_LOGIN_VAL_002 — ADMIN-BRD-Login §7 — short mobile (5 digits) → OTP not sent (5.1s)
+  ✓  13 [e2e] › tests\e2e\admin\login.spec.js:67:3 › Login — Admin Portal E2E › TC_LOGIN_VAL_003 — ADMIN-BRD-Login §7 — empty OTP → Submit does not log in (5.4s)
+  ✓  14 [e2e] › tests\e2e\admin\login.spec.js:75:3 › Login — Admin Portal E2E › TC_LOGIN_VAL_004 — ADMIN-BRD-Login §7 — wrong OTP → error shown, stays on OTP screen (8.0s)
+  ✓  15 [e2e] › tests\e2e\admin\login.spec.js:85:3 › Login — Admin Portal E2E › TC_LOGIN_VAL_005 — ADMIN-BRD-Login §6 rule 2 — non-numeric chars blocked from mobile field (4.7s)
+  ✓  16 [e2e] › tests\e2e\admin\login.spec.js:94:3 › Login — Admin Portal E2E › TC_LOGIN_NEG_001 — ADMIN-BRD-Login §7 — all-zeros mobile rejected (6.3s)
+  ✓  17 [e2e] › tests\e2e\admin\login.spec.js:100:3 › Login — Admin Portal E2E › TC_LOGIN_NEG_002 — ADMIN-BRD-Login §7 — partial OTP (3 digits) → login rejected (5.2s)
+  ✓  18 [e2e] › tests\e2e\admin\login.spec.js:110:3 › Login — Admin Portal E2E › TC_LOGIN_NEG_003 — ADMIN-FS-Login Feature1 §3 — access /admin/customers without session → redirect to login (5.9s)
+  ✓  19 [e2e] › tests\e2e\admin\login.spec.js:118:3 › Login — Admin Portal E2E › TC_LOGIN_EDGE_001 — ADMIN-BRD-Login §7 — mobile with spaces → trimmed or rejected (4.8s)
+  ✓  20 [e2e] › tests\e2e\admin\login.spec.js:127:3 › Login — Admin Portal E2E › TC_LOGIN_EDGE_002 — ADMIN-BRD-Login §6 rule 3 — OTP box 5 digits only → login rejected (5.1s)
+  ✓  21 [e2e] › tests\e2e\admin\login.spec.js:137:3 › Login — Admin Portal E2E › TC_LOGIN_FUNC_BACK — ADMIN-BRD-Login §5 — back button returns to mobile screen (7.9s)
+  ✘  22 [e2e] › tests\e2e\admin\login.spec.js:148:3 › Login — Admin Portal E2E › TC_LOGIN_E2E_001 — ADMIN-BRD-Login §5 — full login → navigate → logout flow (15.9s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+  ✘  23 [e2e] › tests\e2e\admin\login.spec.js:148:3 › Login — Admin Portal E2E › TC_LOGIN_E2E_001 — ADMIN-BRD-Login §5 — full login → navigate → logout flow (retry #1) (18.0s)
+
+
+  1) [e2e] › tests\e2e\admin\login.spec.js:20:3 › Login — Admin Portal E2E › TC_LOGIN_FUNC_001 — ADMIN-BRD-Login §5 — valid mobile + valid OTP → redirect to /admin/customers 
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Timeout: 10000ms
+      Failed to take two consecutive stable screenshots.
+
+      Snapshot: login-func-001-customers.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(login-func-001-customers.png)" with timeout 10000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - 1287562 pixels (ratio 0.69 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - 1310123 pixels (ratio 0.70 of all image pixels) are different.[22m
+    [2m  - waiting 250ms before taking screenshot[22m
+    [2m  - Timeout 10000ms exceeded.[22m
+
+
+      21 |     await loginPage.loginWithOtp(MOBILE, OTP);
+      22 |     await loginPage.expectLoginSuccess();
+    > 23 |     await expect(page).toHaveScreenshot('login-func-001-customers.png', { maxDiffPixels: 100 });
+         |                        ^
+      24 |   });
+      25 |
+      26 |   test('TC_LOGIN_FUNC_002 — ADMIN-BRD-Login §5 — Send OTP transitions to OTP screen', async ({ page }) => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\login.spec.js:23:24
+
+    attachment #1: login-func-001-customers (image/png) ────────────────────────────────────────────
+    Expected: tests\e2e\admin\login.spec.js-snapshots\login-func-001-customers-e2e-win32.png
+    Received: test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e\login-func-001-customers-actual.png
+    Previous: test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e\login-func-001-customers-previous.png
+    Diff:     test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e\login-func-001-customers-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Timeout: 10000ms
+      Failed to take two consecutive stable screenshots.
+
+      Snapshot: login-func-001-customers.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(login-func-001-customers.png)" with timeout 10000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - 1287562 pixels (ratio 0.69 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - 1310123 pixels (ratio 0.70 of all image pixels) are different.[22m
+    [2m  - waiting 250ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - Timeout 10000ms exceeded.[22m
+
+
+      21 |     await loginPage.loginWithOtp(MOBILE, OTP);
+      22 |     await loginPage.expectLoginSuccess();
+    > 23 |     await expect(page).toHaveScreenshot('login-func-001-customers.png', { maxDiffPixels: 100 });
+         |                        ^
+      24 |   });
+      25 |
+      26 |   test('TC_LOGIN_FUNC_002 — ADMIN-BRD-Login §5 — Send OTP transitions to OTP screen', async ({ page }) => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\login.spec.js:23:24
+
+    attachment #1: login-func-001-customers (image/png) ────────────────────────────────────────────
+    Expected: tests\e2e\admin\login.spec.js-snapshots\login-func-001-customers-e2e-win32.png
+    Received: test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e-retry1\login-func-001-customers-actual.png
+    Previous: test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e-retry1\login-func-001-customers-previous.png
+    Diff:     test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e-retry1\login-func-001-customers-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e-retry1\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\admin-login-Login-—-Admin--bfce0-redirect-to-admin-customers-e2e-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [e2e] › tests\e2e\admin\login.spec.js:148:3 › Login — Admin Portal E2E › TC_LOGIN_E2E_001 — ADMIN-BRD-Login §5 — full login → navigate → logout flow 
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+      32590 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: login-e2e-001-dashboard.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(login-e2e-001-dashboard.png)" with timeout 10000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - 362500 pixels (ratio 0.20 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - 363863 pixels (ratio 0.20 of all image pixels) are different.[22m
+    [2m  - waiting 250ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - captured a stable screenshot[22m
+    [2m  - 32590 pixels (ratio 0.02 of all image pixels) are different.[22m
+
+
+      150 |     await loginPage.loginWithOtp(MOBILE, OTP);
+      151 |     await loginPage.expectLoginSuccess();
+    > 152 |     await expect(page).toHaveScreenshot('login-e2e-001-dashboard.png', { maxDiffPixels: 100 });
+          |                        ^
+      153 |
+      154 |     // Navigate
+      155 |     await expect(page).toHaveURL(/\/admin\/customers/);
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\login.spec.js:152:24
+
+    attachment #1: login-e2e-001-dashboard (image/png) ─────────────────────────────────────────────
+    Expected: tests\e2e\admin\login.spec.js-snapshots\login-e2e-001-dashboard-e2e-win32.png
+    Received: test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e\login-e2e-001-dashboard-actual.png
+    Diff:     test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e\login-e2e-001-dashboard-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+      32590 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: login-e2e-001-dashboard.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(login-e2e-001-dashboard.png)" with timeout 10000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - 32590 pixels (ratio 0.02 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - taking page screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - captured a stable screenshot[22m
+    [2m  - 32590 pixels (ratio 0.02 of all image pixels) are different.[22m
+
+
+      150 |     await loginPage.loginWithOtp(MOBILE, OTP);
+      151 |     await loginPage.expectLoginSuccess();
+    > 152 |     await expect(page).toHaveScreenshot('login-e2e-001-dashboard.png', { maxDiffPixels: 100 });
+          |                        ^
+      153 |
+      154 |     // Navigate
+      155 |     await expect(page).toHaveURL(/\/admin\/customers/);
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\login.spec.js:152:24
+
+    attachment #1: login-e2e-001-dashboard (image/png) ─────────────────────────────────────────────
+    Expected: tests\e2e\admin\login.spec.js-snapshots\login-e2e-001-dashboard-e2e-win32.png
+    Received: test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e-retry1\login-e2e-001-dashboard-actual.png
+    Diff:     test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e-retry1\login-e2e-001-dashboard-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e-retry1\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\admin-login-Login-—-Admin--15487-in-→-navigate-→-logout-flow-e2e-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [e2e] › tests\e2e\admin\login.spec.js:20:3 › Login — Admin Portal E2E › TC_LOGIN_FUNC_001 — ADMIN-BRD-Login §5 — valid mobile + valid OTP → redirect to /admin/customers 
+    [e2e] › tests\e2e\admin\login.spec.js:148:3 › Login — Admin Portal E2E › TC_LOGIN_E2E_001 — ADMIN-BRD-Login §5 — full login → navigate → logout flow 
+  19 passed (12.5m)
