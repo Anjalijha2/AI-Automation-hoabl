@@ -1,0 +1,15 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 6 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+  ✓  1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (13.8s)
+  ✓  2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (1.0m)
+  ✓  3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (9.5s)
+  ✓  4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (10.5s)
+  ✓  5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (9.4s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+  ✓  6 [e2e] › tests\e2e\admin\customers.spec.js:325:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_022 — ADM_CUST_022 — Change page size to 50 updates pagination row count (13.3s)
+
+  6 passed (2.4m)
