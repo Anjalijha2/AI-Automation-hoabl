@@ -1,0 +1,17 @@
+# SM xlsx Inventory — TestCases-SMPortal.xlsx
+Total data TC rows across sheets: 370
+
+| Sheet | Rows | Data | Dominant | Supplemental | Sup# | Dups |
+|-------|-----:|-----:|----------|--------------|-----:|-----:|
+| Login | 76 | 68 | SM_LGN(32) | TC_SMLOGIN_FUNC(14), TC_SMLOGIN_UI(6), TC_SMLOGIN_VAL(6), TC_SMLOGIN_NEG(5), SM_LGN_FSD(3), TC_SMLOGIN_E2E(1), TC_SMLOGIN_EDGE(1) | 36 | 0 |
+| Physical Allocation | 166 | 156 | TC_PHYSALLOC_FUNC(28) | SM_PA(21), TC_PHYSALLOC_UI(20), SM_ALLOC(19), TC_SMPA_FUNC(18), TC_PHYSALLOC_E2E(9), TC_PHYSALLOC_NEG(8), TC_PHYSALLOC_VAL(6), TC_SMPA_UI(5), TC_SMPA_NEG(5), TC_PHYSALLOC_BIZ(4), TC_SMPA_BIZ(3), SM_ALLOC_FSD(2), TC_SMPA_E2E(2), TC_SMPA_VAL(2), TC_PHYSALLOC_API(2), TC_PHYSALLOC_REG(1), TC_PHYSALLOC_EDGE(1) | 128 | 0 |
+| Tower Heatmap | 70 | 60 | SM_TH(19) | TC_SMTWR_FUNC(13), SM_HMP(10), TC_SMTWR_UI(8), TC_SMTWR_NEG(5), TC_SMTWR_BIZ(4), SM_HMP_FSD(1) | 41 | 0 |
+| Callback Requests | 87 | 86 | TC_CBR_FUNC(31) | SM_CB(25), TC_CBR_BIZ(8), TC_CBR_UI(7), SM_CB_FSD(6), TC_CBR_EDGE(4), TC_CBR_NEG(3), TC_CBR_VAL(2) | 55 | 0 |
+
+## In-sheet duplicates
+
+
+## Non-TC rows (col 1 noise)
+
+
+# End.

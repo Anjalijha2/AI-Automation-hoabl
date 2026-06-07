@@ -1,0 +1,48 @@
+# Admin xlsx Inventory — TestCases-AdminPortal.xlsx
+Path: D:\AI_Automation\xanadu - AI automation\manual-qa-repository\07-execution\TestCases-AdminPortal.xlsx
+Total data TC rows across sheets: 617
+
+| Sheet | Total Rows | Data TCs | Dominant (latest) | Stale Prefixes | Stale Count | Dups |
+|-------|-----------:|---------:|-------------------|----------------|------------:|-----:|
+| Login | 64 | 55 | ADM_LGN (47) | ADM_LGN_FSD(8) | 8 | 0 |
+| Customers | 112 | 99 | ADM_CUST (48) | TC_CUST_FUNC(26), TC_CUST_NEG(19), TC_CUST_API(3), TC_CUST_VAL(2), TC_CUST_UI(1) | 51 | 0 |
+| Sales Managers | 61 | 52 | ADM_SM (49) | ADM_SM_FSD(3) | 3 | 0 |
+| Payment Transactions | 61 | 52 | ADM_PAY (49) | ADM_PAY_FSD(3) | 3 | 0 |
+| Allocation | 63 | 53 | ADM_ALLOC (50) | ADM_ALLOC_FSD(3) | 3 | 0 |
+| Towers | 54 | 45 | ADM_TWR (41) | ADM_TWR_FSD(4) | 4 | 0 |
+| JBP | 66 | 55 | ADM_JBP (44) | ADM_JBP_FSD(11) | 11 | 0 |
+| Offers | 57 | 47 | ADM_OFR (45) | ADM_OFR_FSD(2) | 2 | 0 |
+| Channel Partners | 60 | 50 | ADM_CP (47) | ADM_CP_FSD(3) | 3 | 0 |
+| Admin CMS | 49 | 41 | ADM_CMS (39) | ADM_CMS_FSD(2) | 2 | 0 |
+| Config | 79 | 68 | ADM_CFG (63) | ADM_CFG_FSD(5) | 5 | 0 |
+
+## Duplicates (sample)
+
+
+## Other / unclassified column-1 values (potential data drift)
+
+### Login — 1 non-TC rows
+  - r1:ADMIN PORTAL — Login Test Cases
+### Customers — 2 non-TC rows
+  - r1:ADMIN PORTAL — Customers Test Cases
+  - r51:TC_CUST_FUNC_036b
+### Sales Managers — 1 non-TC rows
+  - r1:ADMIN PORTAL — Sales Managers Test Cases
+### Payment Transactions — 1 non-TC rows
+  - r1:ADMIN PORTAL — Payment Transactions Test Cases
+### Allocation — 1 non-TC rows
+  - r1:ADMIN PORTAL — Allocation Test Cases
+### Towers — 1 non-TC rows
+  - r1:ADMIN PORTAL — Towers Test Cases
+### JBP — 1 non-TC rows
+  - r1:ADMIN PORTAL — JBP Test Cases
+### Offers — 1 non-TC rows
+  - r1:ADMIN PORTAL — Offers Test Cases
+### Channel Partners — 1 non-TC rows
+  - r1:ADMIN PORTAL — Channel Partners Test Cases
+### Admin CMS — 1 non-TC rows
+  - r1:ADMIN PORTAL — Admin CMS Test Cases
+### Config — 1 non-TC rows
+  - r1:ADMIN PORTAL — Config Test Cases
+
+# End of inventory.

@@ -1,0 +1,44 @@
+# Buyer xlsx Inventory — TestCases-BuyerPortal.xlsx
+Total data TC rows across sheets: 762
+
+| Sheet | Rows | Data | Dominant | Supplemental | Sup# | Dups |
+|-------|-----:|-----:|----------|--------------|-----:|-----:|
+| Registration Login | 68 | 57 | BYR_LGN(43) | TC_BUYER_LOGIN_FUNC(4), TC_BUYER_LOGIN_VAL(3), TC_BUYER_LOGIN_UI(2), TC_BUYER_LOGIN_NEG(2), TC_BUYER_LOGIN_EDGE(1), TC_BUYER_LOGIN_E2E(1), TC_BUYER_LOGIN_REG(1) | 14 | 0 |
+| Home Dashboard | 101 | 91 | BYR_DASH(41) | TC_HOMEDASH_FUNC(32), TC_HOMEDASH_UI(10), TC_HOMEDASH_NEG(3), TC_HOMEDASH_EDGE(2), TC_HOMEDASH_BIZ(2), TC_HOMEDASH_E2E(1) | 50 | 0 |
+| KYC | 111 | 98 | BYR_KYC(66) | TC_KYC_FUNC(14), TC_KYC_UI(5), TC_KYC_BIZ(4), TC_KYC_NEG(3), TC_KYC_VAL(2), TC_KYC_EDGE(2), TC_KYC_WF(2) | 32 | 0 |
+| Unit Details | 35 | 34 | BYR_UNIT(15) | TC_BUYUD_FUNC(8), TC_BUYUD_NEG(4), TC_BUYUD_UI(2), TC_BUYUD_VAL(1), TC_BUYUD_BIZ(1), TC_BUYUD_REG(1), TC_BUYUD_XMOD(1), TC_BUYUD_EDGE(1) | 19 | 0 |
+| Project Information | 81 | 70 | BYR_PROJ(50) | TC_PROJINFO_UI(9), TC_PROJINFO_FUNC(7), TC_PROJINFO_E2E(1), TC_PROJINFO_NEG(1), TC_PROJINFO_REG(1), TC_PROJINFO_EDGE(1) | 20 | 0 |
+| Payment Schedule | 67 | 58 | BYR_PAY(25) | TC_PAYSCH_FUNC(20), TC_PAYSCH_UI(6), BYR_PAY_FSD(3), TC_PAYSCH_NEG(3), TC_PAYSCH_E2E(1) | 33 | 0 |
+| Home Loan | 116 | 106 | BYR_LOAN(47) | TC_HOMELOAN_FUNC(21), TC_HOMELOAN_UI(12), TC_HOMELOAN_VAL(10), BYR_LOAN_FSD(5), TC_HOMELOAN_REG(3), TC_HOMELOAN_EDGE(3), TC_HOMELOAN_BIZ(2), TC_HOMELOAN_E2E(2), TC_HOMELOAN_NEG(1) | 59 | 0 |
+| Allocation Experience | 122 | 111 | BYR_ALLOC(71) | TC_ALLOC_UI(16), TC_ALLOC_FUNC(13), TC_ALLOC_NEG(2), TC_ALLOC_E2E(2), TC_ALLOC_VAL(2), TC_ALLOC_BIZ(2), TC_ALLOC_WF(2), TC_ALLOC_EDGE(1) | 40 | 0 |
+| Callback Request | 87 | 74 | BYR_CB(56) | TC_CALLBACK_FUNC(8), TC_CALLBACK_UI(4), TC_CALLBACK_VAL(4), TC_CALLBACK_NEG(1), TC_CALLBACK_EDGE(1) | 18 | 0 |
+| Work Progress | 74 | 63 | BYR_WRK(45) | TC_WP_FUNC(9), TC_WP_UI(4), TC_WP_BIZ(3), TC_WP_E2E(1), TC_WP_NEG(1) | 18 | 0 |
+
+## In-sheet duplicates
+
+
+## Non-TC rows (col 1 noise)
+
+### Registration Login — 3
+  - r21:Corrections
+  - r22:New
+### Home Dashboard — 3
+  - r35:Corrections
+  - r36:New
+### KYC — 3
+  - r28:Corrections
+  - r29:New
+### Project Information — 3
+  - r32:Corrections
+  - r33:New
+### Allocation Experience — 3
+  - r26:Corrections
+  - r27:New
+### Callback Request — 3
+  - r26:Corrections
+  - r27:New
+### Work Progress — 3
+  - r27:Corrections
+  - r28:New
+
+# End.

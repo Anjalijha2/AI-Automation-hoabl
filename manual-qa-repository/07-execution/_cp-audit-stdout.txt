@@ -1,0 +1,33 @@
+# CP xlsx Inventory — TestCases-CPPortal.xlsx
+Total data TC rows across sheets: 386
+
+| Sheet | Rows | Data | Dominant | Supplemental | Sup# | Dups |
+|-------|-----:|-----:|----------|--------------|-----:|-----:|
+| Login | 93 | 80 | CP_LGN(45) | TC_CP_LOGIN_NEG(9), TC_CP_LOGIN_FUNC(9), TC_CP_LOGIN_UI(7), TC_CP_LOGIN_VAL(5), TC_CP_LOGIN_E2E(1), TC_CP_LOGIN_DC(1), TC_CP_LOGIN_BIZ(1), TC_CP_LOGIN_REG(1), TC_CP_LOGIN_EDGE(1) | 35 | 0 |
+| Leads Management | 76 | 66 | CP_LEAD(46) | TC_LEADS_FUNC(8), TC_LEADS_UI(7), TC_LEADS_NEG(2), TC_LEADS_BIZ(2), TC_LEADS_VAL(1) | 20 | 0 |
+| Customer Registration | 101 | 88 | CP_REG(38) | TC_CPREG_UI(21), TC_CPREG_FUNC(18), TC_CPREG_NEG(4), TC_CPREG_VAL(2), TC_CPREG_BIZ(2), TC_CPREG_REG(2), TC_CPREG_E2E(1) | 50 | 0 |
+| KYC Assistance | 83 | 70 | CP_KYC(40) | TC_CPKYC_FUNC(13), TC_CPKYC_NEG(6), TC_CPKYC_E2E(4), TC_CPKYC_UI(3), TC_CPKYC_VAL(2), TC_CPKYC_BIZ(2) | 30 | 0 |
+| JBP Submission | 93 | 82 | CP_JBP(45) | TC_JBP_UI(12), TC_JBP_FUNC(7), TC_JBP_BIZ(6), TC_JBP_VAL(4), TC_JBP_E2E(2), TC_JBP_NEG(2), TC_JBP_EDGE(2), TC_JBP_REG(1), TC_JBP_XMOD(1) | 37 | 0 |
+
+## In-sheet duplicates
+
+
+## Non-TC rows (col 1 noise)
+
+### Login — 3
+  - r12:Corrections
+  - r22:New
+### Leads Management — 3
+  - r27:New
+  - r44:MAJOR
+### Customer Registration — 3
+  - r21:MAJOR
+  - r22:New
+### KYC Assistance — 4
+  - r20:CRITICAL
+  - r21:Existing
+### JBP Submission — 3
+  - r23:Corrections
+  - r27:New
+
+# End.

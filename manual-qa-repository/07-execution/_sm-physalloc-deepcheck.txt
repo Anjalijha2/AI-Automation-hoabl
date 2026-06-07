@@ -1,0 +1,36 @@
+Scenario column index: 4
+
+Total TCs: 156
+Distinct prefixes: 18
+
+=== Prefix Generation Map ===
+  TC_PHYSALLOC_FUNC: 28 TCs
+  SM_PA: 21 TCs
+  TC_PHYSALLOC_UI: 20 TCs
+  SM_ALLOC: 19 TCs
+  TC_SMPA_FUNC: 18 TCs
+  TC_PHYSALLOC_E2E: 9 TCs
+  TC_PHYSALLOC_NEG: 8 TCs
+  TC_PHYSALLOC_VAL: 6 TCs
+  TC_SMPA_UI: 5 TCs
+  TC_SMPA_NEG: 5 TCs
+  TC_PHYSALLOC_BIZ: 4 TCs
+  TC_SMPA_BIZ: 3 TCs
+  SM_ALLOC_FSD: 2 TCs
+  TC_SMPA_E2E: 2 TCs
+  TC_SMPA_VAL: 2 TCs
+  TC_PHYSALLOC_API: 2 TCs
+  TC_PHYSALLOC_REG: 1 TCs
+  TC_PHYSALLOC_EDGE: 1 TCs
+
+=== Cross-prefix scenario clusters: 2 ===
+
+  "selecting a customer navigates to checkout..." (2 TCs across SM_ALLOC, TC_SMPA_FUNC):
+    - SM_ALLOC_006: Selecting a customer navigates to checkout screen
+    - TC_SMPA_FUNC_011: Selecting a customer navigates to checkout sub-route with customer context loaded
+
+  "search by registration number returns the..." (2 TCs across SM_PA, TC_SMPA_FUNC):
+    - SM_PA_028: Search by registration number returns the matching customer
+    - TC_SMPA_FUNC_008: Search by registration number returns the specific registered customer
+
+=== Estimated removable rows: 2 (keep 1 per cluster) ===
