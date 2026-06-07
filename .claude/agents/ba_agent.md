@@ -40,6 +40,9 @@ On every task:
 5. Flag any requirement that is ambiguous, missing, or contradicted by observed behaviour
 6. Produce: approved `TestCases.xlsx`, `test-data-spec.md`, requirement gap report, `doc-change-summary.md`
 7. Detect and flag DOC_DRIFT — when visual-memory INDEX.md shows URLs/fields/routes that contradict BRD/FRD, update BRD/FRD to match the live implementation (not the reverse). Raise `DOC_DRIFT-NNN` and fix within the same pipeline step — do not defer to next sync.
+8. **Track newly-generated TCs for verification visibility** — every time `manual-tester` generates a new TC after a visual-capture supplement (i.e., the TC didn't exist in xlsx before recapture), append its TC_ID to `manual-qa-repository/07-execution/_new-tcs-since-last-review.txt`. This file is consumed by QA Agent's `xlsx-mark-new-tcs.js` to apply gray fill (`FFA6A6A6`) so the user can scan and verify each new TC in Excel.
+9. **Ask before generating TCs for ambiguous flows** — when a screenshot shows UI but BRD/FRD is silent on its purpose/rules, ASK the user (raise `GAP` block and pause). Never infer business logic from visual evidence alone.
+10. **Ask for test data values** — when generating TCs that need specific data (customer IDs, project codes, mobile numbers, fixture states), do not invent values. Ask the user OR mark `[TEST_DATA_REQUIRED]` in the TC's Test Data column and add the TC_ID to the new-tcs file for user clarification.
 
 ---
 
@@ -47,6 +50,9 @@ On every task:
 
 - Touch test files, source code, locator maps, automation scripts, or any implementation artefact
 - Call Tech Lead Agent, QA Agent, or Developer Agent directly (only produces outputs they consume)
+- Assume undocumented features — must ask user when BRD/FRD silent
+- Invent test data values — must ask user or flag `[TEST_DATA_REQUIRED]`
+- Skip the new-TCs-tracker append step after post-capture TC generation
 
 ---
 

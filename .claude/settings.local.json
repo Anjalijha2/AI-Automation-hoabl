@@ -7,7 +7,60 @@
       "mcp__plugin_playwright_playwright__browser_fill_form",
       "mcp__plugin_playwright_playwright__browser_snapshot",
       "mcp__plugin_playwright_playwright__browser_click",
-      "mcp__plugin_playwright_playwright__browser_evaluate"
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "Bash(npm install *)",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__click",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(s['label'],s['status'],s.get\\('bodyPreview',''\\)[:200]\\) for s in d['steps']]\")"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Edit(./.env)",
+      "Edit(**/.env)",
+      "Write(./.env)",
+      "Write(**/.env)",
+      "Bash(cat .env)",
+      "Bash(cat ./.env)",
+      "Bash(cat **/.env)",
+      "Bash(head .env)",
+      "Bash(tail .env)",
+      "Bash(less .env)",
+      "Bash(more .env)",
+      "Bash(grep * .env*)",
+      "Bash(type .env)",
+      "Bash(cp .env*)",
+      "Bash(mv .env*)",
+      "Bash(printenv:*)",
+      "Bash(env)",
+      "Bash(env:*)",
+      "Bash(set)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\":\"Pipeline Discipline Active (XR Portal QA): 1) Goal-based execution mandatory — group tests into Smoke/Read/Search/Actions/Modals/Negative/E2E and run sequentially. 2) Coverage gap report (scripts/coverage-report.js) BEFORE every spec run. 3) Update xlsx + TestCases.md after every goal via scripts/xlsx-write-results.js. 4) Mark new post-capture TCs with gray fill via scripts/xlsx-mark-new-tcs.js. 5) Test data is asked, not assumed. 6) Silent UX is not a bug — verify backend side-effect first. 7) No live-portal mutations (Submit/Delete/Save/Approve) without explicit user OK. 8) Commit per goal: feat(portal-module): goal N/total — Feature green (P/T passed). Full rules: .claude/CLAUDE.md Pipeline Discipline section.\"}'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const cmd=(j.tool_input&&j.tool_input.command)||'';if(/playwright test.*\\.spec\\.js/.test(cmd)){console.log(JSON.stringify({systemMessage:'Playwright spec ran. NEXT STEP per Pipeline Discipline rule #3: run node scripts/xlsx-write-results.js <portal> <sheet> <log> to populate Pass/Fail/Screenshot columns in xlsx + mirror to TestCases.md.'}));}}catch(e){}})\""
+          }
+        ]
+      }
     ]
   }
 }

@@ -264,6 +264,28 @@ Every batch of test cases requires BOTH sources. Neither alone is sufficient.
 
 ---
 
+## Pipeline Discipline (mandatory — do not skip any item)
+
+These rules apply to EVERY spec execution. They were added 2026-06-07 after repeated user direction. Encoded here so future sessions follow them without re-instruction.
+
+1. **Goal-based execution mandatory.** Group module spec tests into goals (Smoke → Read → Search/Filter → Actions → Modals → Negative → E2E). Run Goal 1 → green → Goal 2 → ... Never run a full module suite in one shot. See `.claude/skills/goal-orchestrator.md`.
+2. **Coverage gap report before every Gate D run.** Run `node scripts/coverage-report.js <portal> <sheet> <specPath>`. Write `manual-qa-repository/06-test-runs/<sprint>/coverage-<portal>-<module>.md` with three sections: TC_IDs Updated / TC_IDs Missing / Features With No TC.
+3. **xlsx + TestCases.md update after every goal.** Run `node scripts/xlsx-write-results.js <portal> <sheet> <logPath>`. Populates Status / Automation Status / Last Run Status / Execution Details / Actual Result (Run) / Screenshot Link columns. Mirror to TestCases.md.
+4. **Mark new post-capture TCs with gray fill.** When BA Agent generates TCs after a visual-capture supplement, write TC_IDs to `manual-qa-repository/07-execution/_new-tcs-since-last-review.txt`. QA Agent runs `node scripts/xlsx-mark-new-tcs.js <portal> <sheet>` to apply `FFA6A6A6` fill so user can scan + verify each new TC in Excel.
+5. **Test data is asked, not assumed.** Mobile numbers, OTPs, customer records, project IDs, fixture states — ask the user. Never invent values. Never hardcode unless in `automation-repository/constants/testData.js` or this file.
+6. **Silent UX is not a bug.** Verify backend side-effect (clipboard, API call, downstream record) before flagging missing toast/modal as a defect. See feedback memory `feedback_silent_ux_not_bug.md`.
+7. **No live-portal mutations without user OK.** UAT accounts are stateful. Never Submit / Delete / Save / Approve on a fixture without explicit authorisation. Capture-only operations (open modal, view drawer) are safe.
+8. **Commit per goal.** Format: `feat(<portal>-<module>): goal <N>/<total> — <Feature> green (<P>/<T> passed)`. Per-goal commits give traceable history; do not batch.
+9. **xlsx file lock check.** If xlsx is locked (user has it open in Excel), STOP — ask user to close, then resume. Never silently fail.
+10. **Owned scripts (run from project root):**
+    - `scripts/coverage-report.js` — module coverage gap
+    - `scripts/xlsx-audit-portal.js` — per-portal inventory
+    - `scripts/xlsx-write-results.js` — populate execution columns post-run
+    - `scripts/xlsx-mark-new-tcs.js` — gray fill for new TCs
+    - `scripts/xlsx-regen-consolidated.js` — sync Consolidated.xlsx
+
+---
+
 ## Adding a New Module (Sprint)
 
 1. Tech Lead Agent scans source → calls `locator-map-builder` → updates `locators/<portal>/locator-map.json`

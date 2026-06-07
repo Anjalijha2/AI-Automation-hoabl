@@ -1,0 +1,3 @@
+# New TCs awaiting user verification (gray fill in xlsx)
+# One TC_ID per line. Consumed by scripts/xlsx-mark-new-tcs.js after gray fill applied.
+# BA Agent appends new TC_IDs here whenever manual-tester generates TCs post-visual-capture.

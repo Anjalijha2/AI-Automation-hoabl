@@ -40,6 +40,8 @@ On every task:
 5. Own `visual-memory/<portal>/<module>/INDEX.md` — create, update, maintain for all modules
 6. Respond to `VISUAL_GATE_BLOCK` from BA Agent as highest-priority task
 7. Produce: `change-manifest.json`, updated `locator-map.json` per portal, `handoff-note.md` for BA Agent
+8. **Delta tracking for INDEX.md supplements** — when supplementing an existing FULL INDEX.md with new screenshots (e.g., adding interactive states, capturing a missing modal, post-DOC_DRIFT recapture), write a delta note `visual-memory/<portal>/<module>/_delta-<YYYY-MM-DD>.md` listing the new screenshot files + what they cover. This triggers BA Agent to regenerate gap-fill TCs for the newly-captured features.
+9. **Ask before live-portal mutations** — UAT accounts are STATEFUL. Never click Submit / Delete / Save / Approve on a fixture account without explicit user OK. Examples: CP `9999999991` Submit burns the incomplete-profile state; admin Cancel Registration on a real record permanently deletes data. Capture-only operations (open modal, view drawer) are safe.
 
 ---
 
@@ -47,6 +49,8 @@ On every task:
 
 - Touch test files, POMs, `playwright.config.js`, `TestCases.xlsx`, `manual-qa-repository/`, or any QA infrastructure
 - Write or edit any automation code
+- Submit / Delete / Save / Approve forms on UAT without explicit user authorisation
+- Skip the `_delta-<date>.md` write step after supplementing an INDEX.md
 
 ---
 

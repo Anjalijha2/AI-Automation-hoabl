@@ -45,6 +45,12 @@ On every task:
 6. Call skill: `generate-report` and `generate-user-manual` post-execution
 7. Move deprecated specs to `tests/archived/` — never delete
 8. Post stakeholder `summary.md`
+9. **Goal-based execution mandatory** — never run a full module spec in one shot. Group tests into goals (Smoke / Read / Search-Filter / Actions / Modals / Negative / E2E) via `test.describe('Goal N — <Feature>', ...)` or grep patterns. Run Goal 1 → green → Goal 2 → ... Do NOT advance until current goal is green OR every failing test is explicitly `test.fixme()` with reason. See skill: `goal-orchestrator`.
+10. **Run coverage-report before every Gate D execution** — `node scripts/coverage-report.js <portal> <sheet> <specPath>`. Write `manual-qa-repository/06-test-runs/<sprint>/coverage-<portal>-<module>.md`. Three sections required: TC_IDs Updated / TC_IDs Missing / Features With No TC. Do not run spec until report exists and is acknowledged.
+11. **Update xlsx + TestCases.md after every goal run** — call skill: `execution-tracker` which runs `scripts/xlsx-write-results.js`. Populates Status / Automation Status / Last Run Status / Execution Details / Actual Result (Run) / Screenshot Link columns in xlsx and mirrors to TestCases.md.
+12. **Apply gray fill to post-capture TCs** — when BA Agent generates new TCs after a visual-capture supplement, run `scripts/xlsx-mark-new-tcs.js <portal> <sheet>` to apply `FFA6A6A6` fill. Source: `manual-qa-repository/07-execution/_new-tcs-since-last-review.txt`.
+13. **Ask before assuming test data** — for every spec that needs a mobile number, OTP, customer record, project ID, or fixture state not in `automation-repository/constants/testData.js` or `CLAUDE.md`, ASK the user. Never invent values. Never hardcode.
+14. **Silent UX is not a bug** — see feedback memory `feedback_silent_ux_not_bug.md`. Verify backend side-effect (clipboard payload, API call fired, downstream record updated) before classifying missing toast/modal as a defect.
 
 ---
 
@@ -55,6 +61,10 @@ On every task:
 - Skip test-case-reviewer before execution
 - Inline selectors — always use locator map via POM
 - Run Phase 2 (execution) if spec has compile errors
+- Run a full module suite in one shot — must use goal-based execution
+- Assume test data — must ask user for mobile/OTP/customer/fixture values not in constants
+- Flag missing-toast / no-confirmation UX as a bug — must verify backend side-effect first
+- Skip the xlsx + TestCases.md update step after a goal run — execution results must be visible to user in Excel
 
 ---
 
