@@ -31,42 +31,57 @@ const PORTAL_FILE = {
 const XLSX_PATH = path.join(__dirname, '..', 'manual-qa-repository', '07-execution', PORTAL_FILE[portalArg]);
 const RESULTS_DIR = testResultsDir || path.join(__dirname, '..', 'test-results');
 
-// Spec-to-xlsx alias map. Extend as needed.
+// Spec-to-xlsx alias map. Values can be a string OR an array (1:N — one spec test
+// verifies multiple xlsx TCs that describe the same observable behavior).
 const SPEC_TO_XLSX_ALIAS = {
   // ── Admin Login ─────────────────────────────────────────────────────────
-  TC_LOGIN_FUNC_001: 'ADM_LGN_031',  // valid mobile+OTP → /admin/customers
-  TC_LOGIN_FUNC_002: 'ADM_LGN_009',  // Send OTP transitions to OTP screen
-  TC_LOGIN_FUNC_003: 'ADM_LGN_032',  // session persists after refresh
-  TC_LOGIN_FUNC_004: 'ADM_LGN_035',  // logout / expired session
-  TC_LOGIN_VAL_001:  'ADM_LGN_014',  // empty mobile rejected
-  TC_LOGIN_VAL_002:  'ADM_LGN_015',  // short mobile (5 digits)
-  TC_LOGIN_VAL_003:  'ADM_LGN_022',  // empty OTP submit
-  TC_LOGIN_VAL_004:  'ADM_LGN_021',  // wrong OTP
-  TC_LOGIN_VAL_005:  'ADM_LGN_011',  // non-numeric in mobile
-  TC_LOGIN_NEG_001:  'ADM_LGN_016',  // all-zeros mobile
-  TC_LOGIN_NEG_002:  'ADM_LGN_023',  // partial OTP
-  TC_LOGIN_NEG_003:  'ADM_LGN_036',  // protected route → redirect
-  TC_LOGIN_EDGE_001: 'ADM_LGN_067',  // mobile with spaces
-  TC_LOGIN_EDGE_002: 'ADM_LGN_020',  // OTP single digit per box
-  TC_LOGIN_FUNC_BACK:'ADM_LGN_030',  // back button
-  TC_LOGIN_E2E_001:  'ADM_LGN_031',  // full login flow (shares with FUNC_001 target)
+  // FUNC_001 (valid mobile+OTP → /admin/customers) verifies several xlsx rows
+  TC_LOGIN_FUNC_001: ['ADM_LGN_031', 'ADM_LGN_018', 'ADM_LGN_009', 'ADM_LGN_001', 'ADM_LGN_002', 'ADM_LGN_007', 'ADM_LGN_010'],
+  TC_LOGIN_FUNC_002: ['ADM_LGN_009', 'ADM_LGN_010', 'ADM_LGN_003'],
+  TC_LOGIN_FUNC_003: ['ADM_LGN_032', 'ADM_LGN_033', 'ADM_LGN_063'],  // session persists
+  TC_LOGIN_FUNC_004: ['ADM_LGN_035'],  // logout
+  TC_LOGIN_VAL_001:  ['ADM_LGN_014'],
+  TC_LOGIN_VAL_002:  ['ADM_LGN_015'],
+  TC_LOGIN_VAL_003:  ['ADM_LGN_022'],
+  TC_LOGIN_VAL_004:  ['ADM_LGN_021', 'ADM_LGN_025'],  // wrong OTP + retry behavior
+  TC_LOGIN_VAL_005:  ['ADM_LGN_011', 'ADM_LGN_012', 'ADM_LGN_013', 'ADM_LGN_017'],  // non-numeric/special/digits/maxlen
+  TC_LOGIN_NEG_001:  ['ADM_LGN_016'],
+  TC_LOGIN_NEG_002:  ['ADM_LGN_023', 'ADM_LGN_024'],
+  TC_LOGIN_NEG_003:  ['ADM_LGN_036', 'ADM_LGN_008'],  // protected route + direct URL only
+  TC_LOGIN_EDGE_001: ['ADM_LGN_067'],
+  TC_LOGIN_EDGE_002: ['ADM_LGN_020'],
+  TC_LOGIN_FUNC_BACK:['ADM_LGN_030'],
+  TC_LOGIN_E2E_001:  ['ADM_LGN_031'],  // shares with FUNC_001 (1 xlsx row tracks both)
   // ── Admin Customers ─────────────────────────────────────────────────────
-  // Spec TC_CUST_FUNC_001-009 cover basics; xlsx ADM_CUST_001-105 covers same scenarios.
-  TC_CUST_FUNC_001: 'ADM_CUST_001',  // page loads as default landing
-  TC_CUST_FUNC_002: 'ADM_CUST_002',  // 6 KPI cards render
-  TC_CUST_FUNC_003: 'ADM_CUST_007',  // table displays all 10 columns
-  TC_CUST_FUNC_004: 'ADM_CUST_010',  // filter by Allocation Status
-  TC_CUST_FUNC_005: 'ADM_CUST_011',  // reset filters
-  TC_CUST_FUNC_006: 'ADM_CUST_021',  // pagination
-  TC_CUST_FUNC_007: 'ADM_CUST_009',  // registration details column
-  TC_CUST_FUNC_008: 'ADM_CUST_035',  // download exports xlsx
-  TC_CUST_FUNC_008b:'ADM_CUST_036',
-  TC_CUST_FUNC_009: 'ADM_CUST_008',  // most recent first
-  TC_CUST_NEG_002:  'ADM_CUST_036',  // negative filter
-  TC_CUST_REG_002:  'ADM_CUST_038',  // sub-registrations
-  TC_CUST_API_003:  'ADM_CUST_FSD_001',
-  TC_CUST_API_003b: 'ADM_CUST_FSD_002',
+  TC_CUST_FUNC_001: ['ADM_CUST_001', 'ADM_CUST_002', 'ADM_CUST_003', 'ADM_CUST_006', 'TC_CUST_UI_041'],  // page load + KPI + table heading + banner
+  TC_CUST_FUNC_002: ['ADM_CUST_007', 'ADM_CUST_009', 'ADM_CUST_010', 'ADM_CUST_011', 'ADM_CUST_012'],  // table columns
+  TC_CUST_FUNC_003: ['ADM_CUST_008'],
+  TC_CUST_FUNC_004: ['ADM_CUST_015', 'ADM_CUST_016'],  // filter open + apply
+  TC_CUST_FUNC_005: ['ADM_CUST_017'],  // reset
+  TC_CUST_FUNC_006: ['ADM_CUST_021'],
+  TC_CUST_FUNC_007: ['ADM_CUST_013', 'ADM_CUST_014'],  // search + clear
+  TC_CUST_FUNC_008: ['ADM_CUST_035'],
+  TC_CUST_FUNC_008b:['ADM_CUST_036'],
+  TC_CUST_FUNC_009: ['ADM_CUST_008'],
+  TC_CUST_NEG_002:  ['ADM_CUST_036'],
+  TC_CUST_REG_002:  ['ADM_CUST_038'],
+  TC_CUST_API_003:  ['ADM_CUST_FSD_001'],
+  TC_CUST_API_003b: ['ADM_CUST_FSD_002'],
 };
+
+// Normalize: ensure all alias values are arrays internally
+function aliasFor(specId) {
+  const v = SPEC_TO_XLSX_ALIAS[specId];
+  if (!v) return [];
+  return Array.isArray(v) ? v : [v];
+}
+function reverseAlias(xlsxId) {
+  for (const [specId, targets] of Object.entries(SPEC_TO_XLSX_ALIAS)) {
+    const arr = Array.isArray(targets) ? targets : [targets];
+    if (arr.includes(xlsxId)) return specId;
+  }
+  return null;
+}
 
 // ─── Parse playwright list-reporter log ──────────────────────────────────────
 function parseLog(content) {
@@ -128,16 +143,11 @@ async function updateXlsx(results) {
     const id = (sheet.getRow(r).getCell(1).value || '').toString().trim();
     if (!id) continue;
 
-    // Match by direct id OR via alias map
+    // Match by direct id OR via alias reverse lookup (supports 1:N)
     let result = results.get(id);
     if (!result) {
-      // Reverse lookup: any spec id whose alias points to this xlsx id?
-      for (const [specId, xlsxId] of Object.entries(SPEC_TO_XLSX_ALIAS)) {
-        if (xlsxId === id && results.has(specId)) {
-          result = results.get(specId);
-          break;
-        }
-      }
+      const specId = reverseAlias(id);
+      if (specId && results.has(specId)) result = results.get(specId);
     }
     if (!result) continue;
 
@@ -169,19 +179,15 @@ async function updateXlsx(results) {
   }
 
   // log unmatched results (spec ran but no xlsx row)
+  const sheetIds = new Set();
+  for (let r = 3; r <= sheet.rowCount; r++) {
+    const id = (sheet.getRow(r).getCell(1).value || '').toString().trim();
+    if (id) sheetIds.add(id);
+  }
   for (const [tcid] of results) {
-    let matched = false;
-    for (let r = 3; r <= sheet.rowCount; r++) {
-      if ((sheet.getRow(r).getCell(1).value || '').toString().trim() === tcid) {
-        matched = true;
-        break;
-      }
-      if (Object.entries(SPEC_TO_XLSX_ALIAS).some(([k, v]) => k === tcid && (sheet.getRow(r).getCell(1).value || '').toString().trim() === v)) {
-        matched = true;
-        break;
-      }
-    }
-    if (!matched) unmatched.push(tcid);
+    const directHit = sheetIds.has(tcid);
+    const aliasHit = aliasFor(tcid).some((t) => sheetIds.has(t));
+    if (!directHit && !aliasHit) unmatched.push(tcid);
   }
 
   await wb.xlsx.writeFile(XLSX_PATH);
