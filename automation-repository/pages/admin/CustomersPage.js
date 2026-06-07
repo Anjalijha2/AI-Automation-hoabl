@@ -161,6 +161,108 @@ class CustomersPage extends BasePage {
     // Used by regression tests that verify logout does not break the Customers page.
     this.adminAvatar             = page.locator(C.adminAvatar.selector);
     this.logoutMenuItem          = page.locator(C.logoutMenuItem.selector);
+
+    // ── Three-dot menu items (opened via rowThreeDotMenu) ─────────────────────
+    // These dropdown items become visible only after clicking the ⋯ button on a row.
+    this.viewMilestonesMenuItem  = page.locator(C.viewMilestonesMenuItem.selector);
+    this.unitSwapMenuItem        = page.locator(C.unitSwapMenuItem.selector);
+    this.updateParkingMenuItem   = page.locator(C.updateParkingMenuItem.selector);
+
+    // ── Cancel Unit modal (Activity/Mavis attestation checkboxes) ─────────────
+    // Same modal shape is reused for single-cancel and bulk-cancel flows.
+    this.cancelUnitModal         = page.locator(C.cancelUnitModal.selector);
+    this.cancelUnitAttestation1  = page.locator(C.cancelUnitAttestation1.selector);
+    this.cancelUnitAttestation2  = page.locator(C.cancelUnitAttestation2.selector);
+    this.cancelUnitConfirmBtn    = page.locator(C.cancelUnitConfirmBtn.selector);
+
+    // ── Unit Swap modal ───────────────────────────────────────────────────────
+    this.unitSwapModal           = page.locator(C.unitSwapModal.selector);
+    this.unitSwapTowerDropdown   = page.locator(C.unitSwapTowerDropdown.selector);
+    this.unitSwapUnitDropdown    = page.locator(C.unitSwapUnitDropdown.selector);
+    this.unitSwapAttestation1    = page.locator(C.unitSwapAttestation1.selector);
+    this.unitSwapAttestation2    = page.locator(C.unitSwapAttestation2.selector);
+    this.unitSwapSubmitBtn       = page.locator(C.unitSwapSubmitBtn.selector);
+
+    // ── Update Parking modal ──────────────────────────────────────────────────
+    this.updateParkingModal      = page.locator(C.updateParkingModal.selector);
+    this.parkingToggle           = page.locator(C.parkingToggle.selector);
+    this.parkingCountInput       = page.locator(C.parkingCountInput.selector);
+    this.parkingAmountInput      = page.locator(C.parkingAmountInput.selector);
+    this.parkingPreviewText      = page.locator(C.parkingPreviewText.selector);
+    this.updateParkingSubmitBtn  = page.locator(C.updateParkingSubmitBtn.selector);
+  }
+
+  // ── Per-row action helpers ────────────────────────────────────────────────────
+
+  /**
+   * trashIconForRow(rowIndex) — return the trash (cancel-registration) icon for row N.
+   * Visibility-only assertions can use this; clicking is destructive.
+   */
+  trashIconForRow(rowIndex) {
+    return this.rowTrashIcon.nth(rowIndex);
+  }
+
+  /**
+   * threeDotMenuForRow(rowIndex) — return the ⋯ overflow menu button for row N.
+   */
+  threeDotMenuForRow(rowIndex) {
+    return this.rowThreeDotMenu.nth(rowIndex);
+  }
+
+  /**
+   * openThreeDotMenu(rowIndex) — open the ⋯ menu and wait for the dropdown to render.
+   * Used in read-only visibility tests (we open the dropdown but do not click any item).
+   */
+  async openThreeDotMenu(rowIndex) {
+    await this.rowThreeDotMenu.nth(rowIndex).click();
+    const activeDropdown = this.page.locator('.ant-dropdown:not(.ant-dropdown-hidden)');
+    await activeDropdown.waitFor({ state: 'visible', timeout: 5_000 });
+    return activeDropdown;
+  }
+
+  /**
+   * closeAnyOpenDropdown() — press Escape to dismiss any open Ant Design dropdown.
+   * Helpful after read-only visibility checks so leftover menus don't interfere
+   * with subsequent assertions.
+   */
+  async closeAnyOpenDropdown() {
+    await this.page.keyboard.press('Escape');
+  }
+
+  // ── Pagination helpers ────────────────────────────────────────────────────────
+
+  /**
+   * clickNextPage() — click the Next-page chevron in the pagination bar.
+   * Waits for the click to settle. Caller should verify the "current page" indicator.
+   */
+  async clickNextPage() {
+    await this.scrollToPagination();
+    await this.click(this.paginationNextBtn);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * gotoPageNumber(n) — click a specific page number link in the pagination bar.
+   * Ant Design renders each numbered page as li.ant-pagination-item-N.
+   */
+  async gotoPageNumber(n) {
+    await this.scrollToPagination();
+    const pageItem = this.page.locator(`li.ant-pagination-item-${n}`);
+    await pageItem.waitFor({ state: 'visible', timeout: 5_000 });
+    await pageItem.click();
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * getCurrentPageNumber() — read the active page number from the pagination bar.
+   * Returns null if the active page indicator is not found.
+   */
+  async getCurrentPageNumber() {
+    const active = this.page.locator('li.ant-pagination-item-active');
+    const txt = await active.textContent().catch(() => null);
+    if (!txt) return null;
+    const m = txt.match(/(\d+)/);
+    return m ? Number(m[1]) : null;
   }
 
   // ── Navigation ──────────────────────────────────────────────────────────────
@@ -197,7 +299,9 @@ class CustomersPage extends BasePage {
    */
   async waitForLoad() {
     await this.tableRecordsHeading.waitFor({ state: 'visible', timeout: 15_000 });
-    await this.page.waitForLoadState('networkidle');
+    // networkidle can hang on /admin/customers due to background polling — use
+    // domcontentloaded + table heading visibility as readiness signal instead.
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   // ── Search & Filter ──────────────────────────────────────────────────────────

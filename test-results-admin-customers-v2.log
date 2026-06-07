@@ -1,0 +1,286 @@
+[dotenv@17.3.1] injecting env (19) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[global-setup] Target: https://uat-web.xrportal.in/admin
+
+Running 86 tests using 1 worker
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+  ✓   1 [auth-setup] › automation-repository\fixtures\auth.setup.js:26:1 › authenticate as admin (11.7s)
+  ✓   2 [auth-setup] › automation-repository\fixtures\auth.setup.js:66:1 › authenticate as sales manager (8.1s)
+  ✓   3 [auth-setup] › automation-repository\fixtures\auth.setup.js:95:1 › authenticate as channel partner (6.8s)
+  ✓   4 [auth-setup] › automation-repository\fixtures\auth.setup.js:116:1 › authenticate as channel partner (incomplete KYC) (9.0s)
+  ✓   5 [auth-setup] › automation-repository\fixtures\auth.setup.js:148:1 › authenticate as buyer (8.5s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  ✓   6 [e2e] › tests\e2e\admin\customers.spec.js:65:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_001 — BRD-CUST §3 — Customers page loads as default post-login (10.1s)
+  ✘   7 [e2e] › tests\e2e\admin\customers.spec.js:76:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_002 — BRD-CUST §3 — Sidebar navigation opens Customers module (1.0m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ✓   8 [e2e] › tests\e2e\admin\customers.spec.js:76:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_002 — BRD-CUST §3 — Sidebar navigation opens Customers module (retry #1) (24.5s)
+  ✘   9 [e2e] › tests\e2e\admin\customers.spec.js:92:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_003 — BRD-CUST §5 — Search by Phone filters registration table (1.0m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+  ✓  10 [e2e] › tests\e2e\admin\customers.spec.js:92:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_003 — BRD-CUST §5 — Search by Phone filters registration table (retry #1) (15.6s)
+  ✓  11 [e2e] › tests\e2e\admin\customers.spec.js:108:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_004 — BRD-CUST §5 — Filter by Allocation Status returns matching rows (41.1s)
+  ✓  12 [e2e] › tests\e2e\admin\customers.spec.js:118:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_005 — BRD-CUST §5 — Reset Filters restores full record list (52.4s)
+  -  13 [e2e] › tests\e2e\admin\customers.spec.js:141:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_006 — BRD-CUST §5/§6 BR3 — Cancel Registration flow refunds ₹999 and updates status
+  -  14 [e2e] › tests\e2e\admin\customers.spec.js:169:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_007 — BRD-CUST §5 — Home Loan Approval toggle marks loan approved
+  ✓  15 [e2e] › tests\e2e\admin\customers.spec.js:188:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008 — BRD-CUST §5/§6 BR5 — Download exports RegistrationData.xlsx (no filter = all records) (13.9s)
+  ✘  16 [e2e] › tests\e2e\admin\customers.spec.js:202:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008b — FRD-CUST TechSpec §3 — Download with active filter downloads filtered records only (1.1m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+  ✓  17 [e2e] › tests\e2e\admin\customers.spec.js:202:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008b — FRD-CUST TechSpec §3 — Download with active filter downloads filtered records only (retry #1) (29.4s)
+  ✓  18 [e2e] › tests\e2e\admin\customers.spec.js:218:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_009 — BRD-CUST §5 — Refresh button reloads table data without navigation (47.6s)
+  ✓  19 [e2e] › tests\e2e\admin\customers.spec.js:234:3 › Customers — Admin Portal E2E › TC_CUST_REG_002 — BRD-CUST §6 BR1/BR4 — KPI counts stable after filter+reset cycle (17.2s)
+  -  20 [e2e] › tests\e2e\admin\customers.spec.js:268:3 › Customers — Admin Portal E2E › TC_CUST_NEG_002 — BRD-CUST §5 — Search by non-existent phone returns empty result
+  ✓  21 [e2e] › tests\e2e\admin\customers.spec.js:291:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_018 — ADM_CUST_018 — Reset Filters clears active filters and restores list (41.7s)
+  ✓  22 [e2e] › tests\e2e\admin\customers.spec.js:300:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_019 — ADM_CUST_019 — Apply multiple filters sequentially narrows result set (12.1s)
+  ✓  23 [e2e] › tests\e2e\admin\customers.spec.js:317:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_020 — ADM_CUST_020 — Refresh button reloads table without navigation (8.4s)
+  ✘  24 [e2e] › tests\e2e\admin\customers.spec.js:325:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_022 — ADM_CUST_022 — Change page size to 50 updates pagination row count (31.5s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+  ✘  25 [e2e] › tests\e2e\admin\customers.spec.js:325:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_022 — ADM_CUST_022 — Change page size to 50 updates pagination row count (retry #1) (31.9s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  ✓  26 [e2e] › tests\e2e\admin\customers.spec.js:333:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_023 — ADM_CUST_023 — Navigate to next page via Next button (11.3s)
+  ✓  27 [e2e] › tests\e2e\admin\customers.spec.js:345:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_024 — ADM_CUST_024 — Navigate by direct page number link (15.4s)
+  ✘  28 [e2e] › tests\e2e\admin\customers.spec.js:354:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_025 — ADM_CUST_025 — Trash (delete) icon visible on every row (1.1m)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+  ✓  29 [e2e] › tests\e2e\admin\customers.spec.js:354:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_025 — ADM_CUST_025 — Trash (delete) icon visible on every row (retry #1) (11.4s)
+  ✓  30 [e2e] › tests\e2e\admin\customers.spec.js:362:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_030 — ADM_CUST_030 — Three-dot menu opens action dropdown (13.4s)
+  ✓  31 [e2e] › tests\e2e\admin\customers.spec.js:377:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_033 — ADM_CUST_033 — Cancel Bulk Units button visible in toolbar (13.6s)
+  ✓  32 [e2e] › tests\e2e\admin\customers.spec.js:382:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_034 — ADM_CUST_034 — Download button visible in toolbar (29.9s)
+  -  33 [e2e] › tests\e2e\admin\customers.spec.js:389:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_037 — ADM_CUST_037 — Search by non-existent phone shows empty table
+  -  34 [e2e] › tests\e2e\admin\customers.spec.js:404:3 › Customers — Admin Portal E2E › TC_CUST_NEG_010 — ADM_CUST_010 — Global search does NOT match buyer name (phone-only search)
+  ✓  35 [e2e] › tests\e2e\admin\customers.spec.js:414:3 › Customers — Admin Portal E2E › TC_CUST_NEG_011 — ADM_CUST_011 — KPI counts unchanged when status filter is applied (12.1s)
+  ✓  36 [e2e] › tests\e2e\admin\customers.spec.js:429:3 › Customers — Admin Portal E2E › TC_CUST_NEG_049 — ADM_CUST_049 — REFUND-status rows expose limited actions (10.3s)
+  -  37 [e2e] › tests\e2e\admin\customers.spec.js:451:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_026 — ADM_CUST_026 — Trash icon opens Cancel Registration confirmation popup
+  -  38 [e2e] › tests\e2e\admin\customers.spec.js:460:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_027 — ADM_CUST_027 — Cancel Registration popup shows refund amount text
+  -  39 [e2e] › tests\e2e\admin\customers.spec.js:468:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_028 — ADM_CUST_028 — Cancel Registration Close button dismisses popup without action
+  -  40 [e2e] › tests\e2e\admin\customers.spec.js:477:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_029 — ADM_CUST_029 — Cancel Registration confirm button cancels registration and refunds ₹999
+  -  41 [e2e] › tests\e2e\admin\customers.spec.js:487:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_044 — Cancel Registration available only for Registered status rows
+  -  42 [e2e] › tests\e2e\admin\customers.spec.js:494:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_045 — Cancel Registration disables after first click (prevents double submit)
+  -  43 [e2e] › tests\e2e\admin\customers.spec.js:499:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_046 — Cancel Registration popup shows refund amount ₹999 (exact)
+  -  44 [e2e] › tests\e2e\admin\customers.spec.js:504:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_047 — Cancel Registration success toast contains "refunded successfully" text
+  -  45 [e2e] › tests\e2e\admin\customers.spec.js:509:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_102 — Cancel Registration emits audit-log entry server-side
+  -  46 [e2e] › tests\e2e\admin\customers.spec.js:513:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_103 — Cancel Registration row moves from Registered to Cancelled cohort post-confirm
+  -  47 [e2e] › tests\e2e\admin\customers.spec.js:517:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_105 — Cancel Registration disabled for KYC-Pending rows
+  -  48 [e2e] › tests\e2e\admin\customers.spec.js:525:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_042 — Cancel Unit modal opens with two attestation checkboxes
+  -  49 [e2e] › tests\e2e\admin\customers.spec.js:534:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_043 — Cancel Unit Submit disabled until both attestations checked
+  -  50 [e2e] › tests\e2e\admin\customers.spec.js:543:8 › Customers — Admin Portal E2E › TC_CUST_NEG_091 — Cancel Unit Submit remains disabled with only one attestation
+  -  51 [e2e] › tests\e2e\admin\customers.spec.js:547:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_098 — ADM_CUST_098 — Cancel Unit success toast confirms cancellation
+  -  52 [e2e] › tests\e2e\admin\customers.spec.js:551:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_099 — ADM_CUST_099 — Cancel Unit decrements Active Towers KPI when last unit
+  -  53 [e2e] › tests\e2e\admin\customers.spec.js:555:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_100 — ADM_CUST_100 — Cancel Unit emits audit entry server-side
+  -  54 [e2e] › tests\e2e\admin\customers.spec.js:559:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_101 — ADM_CUST_101 — Cancel Unit row state transitions to REFUND
+  -  55 [e2e] › tests\e2e\admin\customers.spec.js:563:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_104 — ADM_CUST_104 — Cancel Unit blocked for already-cancelled units
+  -  56 [e2e] › tests\e2e\admin\customers.spec.js:571:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_060 — Unit Swap modal opens via three-dot menu
+  -  57 [e2e] › tests\e2e\admin\customers.spec.js:579:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_061 — Unit Swap modal shows Tower and Unit dropdowns
+  -  58 [e2e] › tests\e2e\admin\customers.spec.js:587:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_062 — Unit Swap Tower dropdown populates from /towers?action=unit-swap
+  -  59 [e2e] › tests\e2e\admin\customers.spec.js:591:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_063 — Unit Swap Unit dropdown filters to AVAILABLE+RESERVED units
+  -  60 [e2e] › tests\e2e\admin\customers.spec.js:595:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_064 — Unit Swap Submit disabled until both attestations + unit selected
+  -  61 [e2e] › tests\e2e\admin\customers.spec.js:603:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_071 — Unit Swap success toast and old unit released back to inventory
+  -  62 [e2e] › tests\e2e\admin\customers.spec.js:607:8 › Customers — Admin Portal E2E › TC_CUST_NEG_065 — Unit Swap blocked when no units available in target tower
+  -  63 [e2e] › tests\e2e\admin\customers.spec.js:611:8 › Customers — Admin Portal E2E › TC_CUST_NEG_066 — Unit Swap rejects swap to same unit (no-op)
+  -  64 [e2e] › tests\e2e\admin\customers.spec.js:615:8 › Customers — Admin Portal E2E › TC_CUST_NEG_067 — Unit Swap rejects swap when target unit pricing differs
+  -  65 [e2e] › tests\e2e\admin\customers.spec.js:619:8 › Customers — Admin Portal E2E › TC_CUST_NEG_068 — Unit Swap audit attestations recorded server-side
+  -  66 [e2e] › tests\e2e\admin\customers.spec.js:623:8 › Customers — Admin Portal E2E › TC_CUST_NEG_069 — Unit Swap concurrent edit conflict shows error toast
+  -  67 [e2e] › tests\e2e\admin\customers.spec.js:627:8 › Customers — Admin Portal E2E › TC_CUST_NEG_070 — Unit Swap aborted on attestation uncheck mid-flow
+  -  68 [e2e] › tests\e2e\admin\customers.spec.js:635:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_080 — Update Parking modal opens via three-dot menu
+  -  69 [e2e] › tests\e2e\admin\customers.spec.js:643:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_081 — Parking toggle reveals count + amount inputs when enabled
+  -  70 [e2e] › tests\e2e\admin\customers.spec.js:652:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_082 — Parking preview text computes count × amount live
+  -  71 [e2e] › tests\e2e\admin\customers.spec.js:656:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_083 — Parking Submit persists count and amount
+  -  72 [e2e] › tests\e2e\admin\customers.spec.js:660:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_086 — Parking toggle disabled retains zero state on submit
+  -  73 [e2e] › tests\e2e\admin\customers.spec.js:664:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_087 — Parking count max 500 enforced client-side
+  -  74 [e2e] › tests\e2e\admin\customers.spec.js:668:8 › Customers — Admin Portal E2E › TC_CUST_VAL_084 — Parking count rejects non-digit input
+  -  75 [e2e] › tests\e2e\admin\customers.spec.js:672:8 › Customers — Admin Portal E2E › TC_CUST_VAL_085 — Parking amount rejects non-decimal input
+  -  76 [e2e] › tests\e2e\admin\customers.spec.js:676:8 › Customers — Admin Portal E2E › TC_CUST_NEG_088 — Parking Submit disabled when count empty but toggle on
+  -  77 [e2e] › tests\e2e\admin\customers.spec.js:680:8 › Customers — Admin Portal E2E › TC_CUST_NEG_089 — Parking Submit disabled when amount empty but toggle on
+  -  78 [e2e] › tests\e2e\admin\customers.spec.js:684:8 › Customers — Admin Portal E2E › TC_CUST_NEG_090 — Parking modal Cancel discards pending changes
+  -  79 [e2e] › tests\e2e\admin\customers.spec.js:688:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_093 — Parking update emits audit-log entry server-side
+  -  80 [e2e] › tests\e2e\admin\customers.spec.js:697:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_050 — View Milestones menu navigates to /admin/milestone with rn+uid query
+  -  81 [e2e] › tests\e2e\admin\customers.spec.js:705:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_051 — Offline Payment drawer opens from Milestones screen
+  -  82 [e2e] › tests\e2e\admin\customers.spec.js:710:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_052 — Offline Payment drawer renders all 11 form fields
+  -  83 [e2e] › tests\e2e\admin\customers.spec.js:714:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_053 — Offline Payment Submit posts payment + updates milestone state
+  -  84 [e2e] › tests\e2e\admin\customers.spec.js:718:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_054 — Offline Payment success toast confirms posted amount
+  -  85 [e2e] › tests\e2e\admin\customers.spec.js:722:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_055 — Offline Payment generates receipt downloadable from row
+  -  86 [e2e] › tests\e2e\admin\customers.spec.js:726:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_056 — Offline Payment with paid-in-full amount transitions milestone to COMPLETE
+  -  87 [e2e] › tests\e2e\admin\customers.spec.js:730:8 › Customers — Admin Portal E2E › TC_CUST_NEG_057 — Offline Payment rejects amount > balance owed
+  -  88 [e2e] › tests\e2e\admin\customers.spec.js:734:8 › Customers — Admin Portal E2E › TC_CUST_NEG_094 — Offline Payment double-submit prevented client-side
+  -  89 [e2e] › tests\e2e\admin\customers.spec.js:742:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_031 — ADM_CUST_031 — Home Loan Approval modal toggle defaults to OFF
+  -  90 [e2e] › tests\e2e\admin\customers.spec.js:751:8 › Customers — Admin Portal E2E › TC_CUST_FUNC_032 — ADM_CUST_032 — Home Loan Approval Submit disabled when toggle OFF
+  -  91 [e2e] › tests\e2e\admin\customers.spec.js:762:8 › Customers — Admin Portal E2E › TC_CUST_NEG_092 — Cancel Bulk Units flow gated until at least one row selected
+
+
+  1) [e2e] › tests\e2e\admin\customers.spec.js:325:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_022 — ADM_CUST_022 — Change page size to 50 updates pagination row count 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      328 |     // After resize, the pagination total text should still resolve to a valid string
+      329 |     const totalTxt = await customersPage.paginationTotalText.textContent().catch(() => '');
+    > 330 |     expect((totalTxt || '').length).toBeGreaterThan(0);
+          |                                     ^
+      331 |   });
+      332 |
+      333 |   test('TC_CUST_FUNC_023 — ADM_CUST_023 — Navigate to next page via Next button', async () => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:330:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--a9d50-pdates-pagination-row-count-e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--a9d50-pdates-pagination-row-count-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--a9d50-pdates-pagination-row-count-e2e\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      328 |     // After resize, the pagination total text should still resolve to a valid string
+      329 |     const totalTxt = await customersPage.paginationTotalText.textContent().catch(() => '');
+    > 330 |     expect((totalTxt || '').length).toBeGreaterThan(0);
+          |                                     ^
+      331 |   });
+      332 |
+      333 |   test('TC_CUST_FUNC_023 — ADM_CUST_023 — Navigate to next page via Next button', async () => {
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:330:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--a9d50-pdates-pagination-row-count-e2e-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--a9d50-pdates-pagination-row-count-e2e-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--a9d50-pdates-pagination-row-count-e2e-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--a9d50-pdates-pagination-row-count-e2e-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\admin-customers-Customers--a9d50-pdates-pagination-row-count-e2e-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [e2e] › tests\e2e\admin\customers.spec.js:76:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_002 — BRD-CUST §3 — Sidebar navigation opens Customers module 
+
+    [31mTest timeout of 60000ms exceeded while running "beforeEach" hook.[39m
+
+      52 |    *   next test. A full page.goto() resets all Ant Design table state.
+      53 |    */
+    > 54 |   test.beforeEach(async ({ page }) => {
+         |        ^
+      55 |     customersPage = new CustomersPage(page);
+      56 |     await customersPage.navigate();
+      57 |     await customersPage.waitForLoad();
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:54:8
+
+    Error: browserContext.newPage: Test timeout of 60000ms exceeded.
+
+  3) [e2e] › tests\e2e\admin\customers.spec.js:92:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_003 — BRD-CUST §5 — Search by Phone filters registration table 
+
+    [31mTest timeout of 60000ms exceeded while running "beforeEach" hook.[39m
+
+      52 |    *   next test. A full page.goto() resets all Ant Design table state.
+      53 |    */
+    > 54 |   test.beforeEach(async ({ page }) => {
+         |        ^
+      55 |     customersPage = new CustomersPage(page);
+      56 |     await customersPage.navigate();
+      57 |     await customersPage.waitForLoad();
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:54:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--5639b--filters-registration-table-e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--5639b--filters-registration-table-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--5639b--filters-registration-table-e2e\error-context.md
+
+  4) [e2e] › tests\e2e\admin\customers.spec.js:202:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008b — FRD-CUST TechSpec §3 — Download with active filter downloads filtered records only 
+
+    [31mTest timeout of 60000ms exceeded while running "beforeEach" hook.[39m
+
+      52 |    *   next test. A full page.goto() resets all Ant Design table state.
+      53 |    */
+    > 54 |   test.beforeEach(async ({ page }) => {
+         |        ^
+      55 |     customersPage = new CustomersPage(page);
+      56 |     await customersPage.navigate();
+      57 |     await customersPage.waitForLoad();
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:54:8
+
+    Error: locator.waitFor: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('h3.table-title') to be visible[22m
+
+
+       at ..\automation-repository\pages\admin\CustomersPage.js:301
+
+      299 |    */
+      300 |   async waitForLoad() {
+    > 301 |     await this.tableRecordsHeading.waitFor({ state: 'visible', timeout: 15_000 });
+          |                                    ^
+      302 |     await this.page.waitForLoadState('networkidle');
+      303 |   }
+      304 |
+        at CustomersPage.waitForLoad (D:\AI_Automation\xanadu - AI automation\automation-repository\pages\admin\CustomersPage.js:301:36)
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:57:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--2e8e4-loads-filtered-records-only-e2e\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--2e8e4-loads-filtered-records-only-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--2e8e4-loads-filtered-records-only-e2e\error-context.md
+
+  5) [e2e] › tests\e2e\admin\customers.spec.js:354:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_025 — ADM_CUST_025 — Trash (delete) icon visible on every row 
+
+    [31mTest timeout of 60000ms exceeded while running "beforeEach" hook.[39m
+
+      52 |    *   next test. A full page.goto() resets all Ant Design table state.
+      53 |    */
+    > 54 |   test.beforeEach(async ({ page }) => {
+         |        ^
+      55 |     customersPage = new CustomersPage(page);
+      56 |     await customersPage.navigate();
+      57 |     await customersPage.waitForLoad();
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:54:8
+
+    Error: page.waitForLoadState: Test timeout of 60000ms exceeded.
+
+       at ..\automation-repository\pages\admin\CustomersPage.js:302
+
+      300 |   async waitForLoad() {
+      301 |     await this.tableRecordsHeading.waitFor({ state: 'visible', timeout: 15_000 });
+    > 302 |     await this.page.waitForLoadState('networkidle');
+          |                     ^
+      303 |   }
+      304 |
+      305 |   // ── Search & Filter ──────────────────────────────────────────────────────────
+        at CustomersPage.waitForLoad (D:\AI_Automation\xanadu - AI automation\automation-repository\pages\admin\CustomersPage.js:302:21)
+        at D:\AI_Automation\xanadu - AI automation\tests\e2e\admin\customers.spec.js:57:5
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\admin-customers-Customers--aea7e-e-icon-visible-on-every-row-e2e\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\admin-customers-Customers--aea7e-e-icon-visible-on-every-row-e2e\error-context.md
+
+  1 failed
+    [e2e] › tests\e2e\admin\customers.spec.js:325:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_022 — ADM_CUST_022 — Change page size to 50 updates pagination row count 
+  4 flaky
+    [e2e] › tests\e2e\admin\customers.spec.js:76:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_002 — BRD-CUST §3 — Sidebar navigation opens Customers module 
+    [e2e] › tests\e2e\admin\customers.spec.js:92:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_003 — BRD-CUST §5 — Search by Phone filters registration table 
+    [e2e] › tests\e2e\admin\customers.spec.js:202:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_008b — FRD-CUST TechSpec §3 — Download with active filter downloads filtered records only 
+    [e2e] › tests\e2e\admin\customers.spec.js:354:3 › Customers — Admin Portal E2E › TC_CUST_FUNC_025 — ADM_CUST_025 — Trash (delete) icon visible on every row 
+  60 skipped
+  21 passed (25.1m)
