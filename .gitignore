@@ -5,5 +5,7 @@ discovery/videos/
 reports/
 automation-repository/fixtures/.auth/
 test-results/
+test-results-*.log
+test-results-*/
 .playwright-mcp/
 .claude/agent-memory/
