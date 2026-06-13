@@ -1,0 +1,708 @@
+{
+  "portal": "Admin",
+  "module": "Channel Partners",
+  "sheetName": "Channel Partners - Master",
+  "replaceSheets": ["Channel Partners", "Channel Partners (Exec)"],
+  "notes": [
+    "1. HV Code = a Channel Partner's unique HoABL Venture code (e.g., HV00026097). Master HV Code = the HV Code of the Master CP a Member CP is mapped under.",
+    "2. CP = Channel Partner (a licensed broker/agent). Master CP = a senior CP who can have Member CPs mapped beneath them; Member CP = the default type on registration. Only Master CPs appear in the Map-to-Master dropdown.",
+    "3. [TEST_DATA_REQUIRED] = a disposable UAT CP record (a Member CP that can safely be mapped or marked as Master) must be supplied before executing this destructive/state-changing test.",
+    "4. [VERIFY WITH DEV] = behaviour not confirmed by visual-memory screenshots and/or BRD/FRD/FS; confirm before treating Pass/Fail as authoritative.",
+    "5. The header count is a LIVE total of all CPs in the system and does NOT change when search or column filters are applied. BRD/FRD/FS text says '2705 Channel Partners' but the live page (visual-memory, captured 2026-06-03) shows '2709 Channel Partners' — read the current number, do NOT assert the literal 2705 (see DOC_DRIFT-CP-001).",
+    "6. The header action button is labelled 'Map to Master' in the live UI (visual-memory), not 'Map Master CP' as written in BRD/FRD; it is disabled until at least one row checkbox is ticked. The mapping modal title is 'Map CPs to Master' and its confirm button is 'Map to Master' (see DOC_DRIFT-CP-002).",
+    "7. The row Actions cell confirmed in visual-memory contains only a single eye icon (View CP detail). The three-dot (…) menu and the 'Mark as Master' option described in BRD/FRD/FS are NOT visible in the captured screenshots — all three-dot / Mark-as-Master cases are flagged [VERIFY WITH DEV] until the live control is confirmed (see DOC_DRIFT-CP-003).",
+    "8. The CP Detail drawer (title 'Channel Partner Details' per FRD/FS) is NOT captured in visual-memory — all drawer-internal field/section cases are flagged [VERIFY WITH DEV] because the rendered drawer state is unconfirmed (see DOC_DRIFT-CP-004).",
+    "9. CP KYC Status (Pending / Approved / Rejected / Verified) is the CP's own KYC from the CP Portal — NOT the Admin Customers KYC flow. On UAT all test CPs are 'Pending' by default; the KYC approval flow is not exercised here.",
+    "10. SM Name / SM Email ID / SM Mobile Number columns are auto-populated from the Sales Manager assigned to the CP (via the Sales Managers module). They show '-' when no SM is linked.",
+    "11. No CP notification (SMS / WhatsApp / email) is dispatched for any admin action in this module — Mark-as-Master, Map-to-Master and Bulk-Map are all silent by design (FS §8). Verify the DB/audit side-effect, never flag the absence of a toast/SMS as a defect.",
+    "12. There is NO admin-side CP create / approve / reject / activate / deactivate / delete — confirmed against the admin-cp route set (list / get / mark-master / map-master / bulk-map-excel only). Any BRD claim of CP CRUD from admin is invalid.",
+    "13. Destructive / state-changing tests (Mark as Master, Map to Master, Bulk Map) require user authorisation before running on UAT — they mutate stateful CP records."
+  ],
+  "subModules": [
+    {
+      "name": "List & Landing",
+      "tcs": [
+        {
+          "id": "ADM_CP_001",
+          "scenario": "To verify the Channel Partners page loads",
+          "description": "Verify that the Channel Partners list page opens at /admin/channel-partners when the sidebar item is selected.",
+          "precond": "An admin is logged in (mobile 8888888888 / OTP 258369).",
+          "steps": "1. Click \"Channel Partners\" in the left sidebar.\n2. Watch the URL and the page content.",
+          "testData": "(no input)",
+          "expected": "The browser lands on /admin/channel-partners, the heading showing the channel partner count is visible, the filter bar (Search by Phone, Reset Filters, Refresh, Map to Master) is shown, and the CP table finishes loading with rows.",
+          "evidence": "channel-partners-loaded.png + channel-partners-full.png + BRD §3 / FRD §2 / FS Feature 1"
+        },
+        {
+          "id": "ADM_CP_002",
+          "scenario": "To verify the header shows the live total count",
+          "description": "Verify that the page heading shows the current total Channel Partner count and that it is read as a live number, not a fixed literal.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Read the heading at the top left of the page.\n2. Note the number shown before the words 'Channel Partners'.",
+          "testData": "(no input)",
+          "expected": "The heading reads '<N> Channel Partners' showing the current system total (visual-memory shows 2709; BRD/FRD say 2705 — read whatever the live number is, do not assert 2705). See DOC_DRIFT-CP-001.",
+          "evidence": "channel-partners-full.png (h3 '2709 Channel Partners') + BRD §4 / FS Feature 1 §4"
+        },
+        {
+          "id": "ADM_CP_003",
+          "scenario": "To verify the header action buttons",
+          "description": "Verify that the header shows the Map to Master, Reset Filters and Refresh controls in the correct default states.",
+          "precond": "An admin is on the Channel Partners page with no rows selected.",
+          "steps": "1. Inspect the buttons in the filter/header bar.\n2. Note their labels and whether each is enabled or disabled.",
+          "testData": "(no input)",
+          "expected": "Three controls are visible: a 'Map to Master' button (disabled while no row is selected), a 'Reset Filters' button (enabled), and a 'Refresh' button (enabled). The live label is 'Map to Master', not 'Map Master CP' (see DOC_DRIFT-CP-002).",
+          "evidence": "channel-partners-loaded.png + channel-partners-full.png + BRD §4 / FS Feature 1 §4"
+        },
+        {
+          "id": "ADM_CP_005",
+          "scenario": "To verify the CP table columns",
+          "description": "Verify that the CP table renders the checkbox column plus all 13 data columns in order.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Read the column headers from left to right.",
+          "testData": "(no input)",
+          "expected": "Columns appear in order: (selection checkbox), Owner Name, Firm Name, HV Code, Master HV Code, Business Region, Pincode, Phone, CP Type, SM Name, SM Email ID, SM Mobile Number, KYC Status, Actions.",
+          "evidence": "channel-partners-loaded.png + BRD §4 / FRD §3 / FS Feature 1 §5"
+        },
+        {
+          "id": "ADM_CP_006",
+          "scenario": "To verify the selection checkbox column",
+          "description": "Verify that a selection checkbox is shown as the leftmost column on every row.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Look at the leftmost column of the table.",
+          "testData": "(no input)",
+          "expected": "Each row has a checkbox in the leftmost column for row selection.",
+          "evidence": "channel-partners-loaded.png + channel-partners-row-selected.png"
+        },
+        {
+          "id": "ADM_CP_007",
+          "scenario": "To verify the Actions column content",
+          "description": "Verify what controls appear in the Actions column of a CP row.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Inspect the Actions cell on any row.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] The captured screenshot shows a single eye icon (View CP detail) only. BRD/FRD also describe a three-dot (…) menu, but it is not present in the captured row. [To verify] whether a three-dot menu exists alongside the eye icon in the live UI (see DOC_DRIFT-CP-003).",
+          "evidence": "channel-partners-loaded.png (single cp-row-action eye icon) vs BRD §4 / FRD §3.RowActions"
+        },
+        {
+          "id": "ADM_CP_008",
+          "scenario": "To verify the CP Type values",
+          "description": "Verify that the CP Type column shows only Master CP or Member CP.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Read the CP Type column values across several rows.",
+          "testData": "(no input)",
+          "expected": "CP Type shows only 'Master CP' or 'Member CP' (rendered as a tag, e.g. a default tag reading 'Standalone'/'Member CP' / 'Master CP'). [VERIFY WITH DEV] visual-memory shows a 'Standalone' tag value — confirm how 'Standalone' maps to Master/Member.",
+          "evidence": "channel-partners-loaded.png (ant-tag 'Standalone') + FRD §3 / FS Feature 1 §5"
+        },
+        {
+          "id": "ADM_CP_009",
+          "scenario": "To verify the KYC Status values",
+          "description": "Verify that the KYC Status column shows one of the documented status values.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Read the KYC Status column values.",
+          "testData": "(no input)",
+          "expected": "KYC Status shows one of: Pending / Approved / Rejected / Verified (rendered as a coloured tag — Pending shown as an orange tag). On UAT most test CPs are 'Pending'.",
+          "evidence": "channel-partners-loaded.png (ant-tag-orange 'Pending') + FS Feature 1 §5 / FRD §10 KYC source"
+        },
+        {
+          "id": "ADM_CP_010",
+          "scenario": "To verify SM columns show dash when unassigned",
+          "description": "Verify that the SM Name / SM Email ID / SM Mobile Number columns show '-' for a CP with no assigned Sales Manager.",
+          "precond": "A CP with no assigned Sales Manager exists.",
+          "steps": "1. Locate a CP row that has no SM assigned.\n2. Read the three SM columns for that row.",
+          "testData": "[TEST_DATA_REQUIRED] HV Code/phone of a CP that has no SM assigned",
+          "expected": "SM Name, SM Email ID and SM Mobile Number all show '-' for that row.",
+          "evidence": "BRD §6 rule 7 / FS Feature 1 §6 — column data from SM assignment"
+        }
+      ]
+    },
+    {
+      "name": "Search by Phone",
+      "tcs": [
+        {
+          "id": "ADM_CP_011",
+          "scenario": "To verify phone search filters the table",
+          "description": "Verify that typing a phone number in the search field filters the table to the matching CP(s) server-side.",
+          "precond": "An admin is on the Channel Partners page; a known CP phone number is available.",
+          "steps": "1. Type a known CP phone number into the 'Search by Phone' field at the top.\n2. Wait for the table to refresh.",
+          "testData": "Phone: 8888888888 (Master CP) — [TEST_DATA_REQUIRED] confirm current owner/HV for assertion",
+          "expected": "The table filters to show the matching CP row(s). The result is returned from the server (server-side filter).",
+          "evidence": "INDEX.md Search bar (input placeholder 'Search by Phone') + FS Feature 2 / BRD §5"
+        },
+        {
+          "id": "ADM_CP_011b",
+          "scenario": "To verify phone search for a Member CP",
+          "description": "Verify that searching a Member CP's phone returns that Member CP row with the correct type.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Type a known Member CP phone into the 'Search by Phone' field.\n2. Wait for the table to refresh.",
+          "testData": "Phone: 7888888888 (Member CP per FRD) — [TEST_DATA_REQUIRED] confirm still valid",
+          "expected": "The table shows the matching Member CP row with CP Type = Member CP.",
+          "evidence": "FRD §3 Test CP data (7888888888 Member CP) + FS Feature 2"
+        },
+        {
+          "id": "ADM_CP_012",
+          "scenario": "To verify header count is unchanged by search",
+          "description": "Verify that applying a phone search does NOT change the header total count.",
+          "precond": "An admin is on the Channel Partners page; note the header count first.",
+          "steps": "1. Note the header count.\n2. Type a phone number into 'Search by Phone' and wait.\n3. Read the header count again.",
+          "testData": "Phone: 8888888888",
+          "expected": "The header count is unchanged after searching — it still shows the full system total (e.g. 2709). The count is a static total (BRD §6 rule 1).",
+          "evidence": "channel-partners-full.png + BRD §6 rule 1 / FS Feature 2 §5"
+        },
+        {
+          "id": "ADM_CP_040",
+          "scenario": "To verify phone search with no match",
+          "description": "Verify the empty-result behaviour when a phone search matches no CP.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Type a phone number that matches no CP into 'Search by Phone'.\n2. Wait for the table to refresh.",
+          "testData": "Phone: 0000000000",
+          "expected": "The table shows no data rows (empty / no-data state). The header total count is unchanged. [VERIFY WITH DEV] exact empty-state text/illustration is not captured in visual-memory.",
+          "evidence": "FS Feature 2 §5 + INDEX.md (empty-state text not captured)"
+        }
+      ]
+    },
+    {
+      "name": "Column Filters",
+      "tcs": [
+        {
+          "id": "ADM_CP_013",
+          "scenario": "To verify Owner Name column search",
+          "description": "Verify that the Owner Name column has a magnifying-glass search and filters the table by owner name.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Click the magnifying-glass icon on the Owner Name column header.\n2. Type a partial owner name and apply.",
+          "testData": "[TEST_DATA_REQUIRED] a known owner name fragment",
+          "expected": "A search input appears; after typing and applying, the table shows only rows whose Owner Name matches.",
+          "evidence": "FRD §3 column filter types / FS Feature 3"
+        },
+        {
+          "id": "ADM_CP_014",
+          "scenario": "To verify Firm Name column search",
+          "description": "Verify that the Firm Name column has a search icon and filters by firm name.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Click the search icon on the Firm Name column.\n2. Type a firm name and apply.",
+          "testData": "[TEST_DATA_REQUIRED] a known firm name fragment",
+          "expected": "The table filters to rows whose Firm Name matches the typed text.",
+          "evidence": "FRD §3 / FS Feature 3 §5"
+        },
+        {
+          "id": "ADM_CP_015",
+          "scenario": "To verify HV Code column search",
+          "description": "Verify that the HV Code column has a search icon and filters by HV Code.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Click the search icon on the HV Code column.\n2. Type an HV Code and apply.",
+          "testData": "HV Code: HV00026097 (test CP per FRD)",
+          "expected": "The table filters to rows whose HV Code matches.",
+          "evidence": "FRD §3 / FS Feature 3 §5"
+        },
+        {
+          "id": "ADM_CP_016",
+          "scenario": "To verify Pincode column search",
+          "description": "Verify that the Pincode column has a search icon and filters by pincode.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Click the search icon on the Pincode column.\n2. Type a pincode and apply.",
+          "testData": "[TEST_DATA_REQUIRED] a known pincode in the data",
+          "expected": "The table filters to rows whose Pincode matches.",
+          "evidence": "FRD §3 / FS Feature 3 §5"
+        },
+        {
+          "id": "ADM_CP_017",
+          "scenario": "To verify Master HV Code funnel filter",
+          "description": "Verify that the Master HV Code column has a funnel filter that lists Master CPs and filters members mapped under a chosen master.",
+          "precond": "An admin is on the Channel Partners page; at least one Master CP with mapped members exists.",
+          "steps": "1. Click the funnel icon on the Master HV Code column.\n2. Select a Master HV Code from the dropdown and apply.",
+          "testData": "[TEST_DATA_REQUIRED] a Master HV Code that has members mapped",
+          "expected": "A dropdown of Master HV Codes appears; selecting one filters the table to the Member CPs mapped under that Master.",
+          "evidence": "FRD §3 / FS Feature 3 §5"
+        },
+        {
+          "id": "ADM_CP_018",
+          "scenario": "To verify Business Region funnel filter",
+          "description": "Verify that the Business Region column has a funnel filter that filters CPs by region.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Click the funnel icon on the Business Region column.\n2. Select a region and apply.",
+          "testData": "[TEST_DATA_REQUIRED] a configured business region value",
+          "expected": "A dropdown of regions appears; selecting one filters the table to CPs in that region.",
+          "evidence": "FRD §3 / FS Feature 3 §5"
+        },
+        {
+          "id": "ADM_CP_019",
+          "scenario": "To verify CP Type filter = Master CP",
+          "description": "Verify that filtering CP Type by Master CP returns only Master CP rows.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Click the funnel icon on the CP Type column.\n2. Select 'Master CP' and apply.",
+          "testData": "CP Type = Master CP",
+          "expected": "The table shows only rows whose CP Type is Master CP.",
+          "evidence": "FRD §3 (CP Type values) / FS Feature 3 §6"
+        },
+        {
+          "id": "ADM_CP_020",
+          "scenario": "To verify CP Type filter = Member CP",
+          "description": "Verify that filtering CP Type by Member CP returns only Member CP rows.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Click the funnel icon on the CP Type column.\n2. Select 'Member CP' and apply.",
+          "testData": "CP Type = Member CP",
+          "expected": "The table shows only rows whose CP Type is Member CP.",
+          "evidence": "FRD §3 / FS Feature 3 §6"
+        },
+        {
+          "id": "ADM_CP_051",
+          "scenario": "To verify a column search + phone search combine",
+          "description": "Verify that a column filter can be combined with the phone search input (filters are additive).",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Apply a CP Type = Master CP funnel filter.\n2. Additionally type a phone number in 'Search by Phone'.\n3. Observe the result.",
+          "testData": "CP Type = Master CP; Phone = a known Master CP phone",
+          "expected": "The table shows rows matching BOTH the CP Type filter and the phone search (combined/additive filtering per FS Feature 3 §6 rule 1).",
+          "evidence": "FS Feature 3 §6 rule 1 (filters combine with phone search)"
+        }
+      ]
+    },
+    {
+      "name": "Reset Filters & Refresh",
+      "tcs": [
+        {
+          "id": "ADM_CP_021",
+          "scenario": "To verify Reset Filters clears everything",
+          "description": "Verify that Reset Filters clears the phone search and all column filters and re-fetches the full list.",
+          "precond": "An admin has applied a phone search and at least one column filter.",
+          "steps": "1. With filters active, click 'Reset Filters'.\n2. Wait for the table to reload.",
+          "testData": "(no input)",
+          "expected": "All search inputs and column filters are cleared and the full CP list is re-fetched from the server (wait for reload before checking counts).",
+          "evidence": "INDEX.md Reset Filters button + BRD §6 rule 3 / FS Feature 2 §6 rule 2"
+        },
+        {
+          "id": "ADM_CP_022",
+          "scenario": "To verify Refresh reloads data",
+          "description": "Verify that Refresh reloads the table data from the server without navigating away.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Click 'Refresh'.\n2. Observe the table.",
+          "testData": "(no input)",
+          "expected": "The table data is reloaded from the server; the page does not navigate away and the header total count is unchanged. [VERIFY WITH DEV] whether Refresh preserves active filters or clears them is not documented — confirm with dev.",
+          "evidence": "INDEX.md Refresh button + FRD §4a / BRD §4 (behaviour vs Reset not specified)"
+        }
+      ]
+    },
+    {
+      "name": "CP Detail Drawer",
+      "tcs": [
+        {
+          "id": "ADM_CP_023",
+          "scenario": "To verify the eye icon opens the detail drawer",
+          "description": "Verify that clicking the eye icon in the Actions column opens the CP detail drawer.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Click the eye icon in the Actions column on any CP row.\n2. Observe the drawer.",
+          "testData": "(no input)",
+          "expected": "A drawer slides in from the right with the title 'Channel Partner Details'. [VERIFY WITH DEV] drawer is not captured in visual-memory — confirm the title and slide-in (see DOC_DRIFT-CP-004).",
+          "evidence": "channel-partners-loaded.png (cp-row-action eye icon) + FRD §3 / FS Feature 4 (drawer not captured)"
+        },
+        {
+          "id": "ADM_CP_024",
+          "scenario": "To verify the Basic Information section",
+          "description": "Verify that the drawer shows a Basic Information section with HV Code, Owner Name and CP Type.",
+          "precond": "The CP detail drawer is open.",
+          "steps": "1. Locate the Basic Information section in the drawer.\n2. Read its fields.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] Basic Information shows HV Code, Owner Name and CP Type. [To verify] against the live drawer — not captured in visual-memory.",
+          "evidence": "FS Feature 4 §5 + FRD §3 drawer sections (drawer not captured)"
+        },
+        {
+          "id": "ADM_CP_025",
+          "scenario": "To verify the Firm Details section",
+          "description": "Verify that the drawer shows a Firm Details section with Firm Name, Business Region and Pincode.",
+          "precond": "The CP detail drawer is open.",
+          "steps": "1. Locate the Firm Details section.\n2. Read its fields.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] Firm Details shows Firm Name, Business Region and Pincode. [To verify] against the live drawer.",
+          "evidence": "FS Feature 4 §5 (drawer not captured)"
+        },
+        {
+          "id": "ADM_CP_026",
+          "scenario": "To verify the Contact Details section",
+          "description": "Verify that the drawer shows a Contact Details section with Phone and Email.",
+          "precond": "The CP detail drawer is open.",
+          "steps": "1. Locate the Contact Details section.\n2. Read its fields.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] Contact Details shows Phone and Email. [To verify] against the live drawer.",
+          "evidence": "FS Feature 4 §5 (drawer not captured)"
+        },
+        {
+          "id": "ADM_CP_027",
+          "scenario": "To verify the Additional Details section",
+          "description": "Verify that the drawer shows an Additional Details section with KYC Status and Master HV Code.",
+          "precond": "The CP detail drawer is open.",
+          "steps": "1. Locate the Additional Details section.\n2. Read its fields.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] Additional Details shows KYC Status and Master HV Code. [To verify] against the live drawer.",
+          "evidence": "FS Feature 4 §5 (drawer not captured)"
+        },
+        {
+          "id": "ADM_CP_027b",
+          "scenario": "To verify the drawer is read-only",
+          "description": "Verify that the CP detail drawer offers no edit / save / approve controls — it is view-only.",
+          "precond": "The CP detail drawer is open.",
+          "steps": "1. Scan the entire drawer for any edit, save, approve or delete control.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] No editable field or action button exists in the drawer — it is read-only (FS Feature 4 §6 rule 1). [To verify] against the live drawer.",
+          "evidence": "FS Feature 4 §6 rule 1 (drawer not captured)"
+        },
+        {
+          "id": "ADM_CP_046",
+          "scenario": "To verify the drawer KYC documents section",
+          "description": "Verify whether the drawer exposes a KYC documents section for a CP with submitted KYC.",
+          "precond": "The CP detail drawer is open on a CP with KYC Status = Approved/Verified.",
+          "steps": "1. Scroll within the drawer to look for a KYC documents section.",
+          "testData": "[TEST_DATA_REQUIRED] a CP with KYC Status Approved/Verified (note: UAT CPs are Pending by default)",
+          "expected": "[VERIFY WITH DEV] A KYC documents section is NOT described in the FS drawer sections (Basic / Firm / Contact / Additional). [To verify] whether any KYC document view exists in the drawer; the admin can in no case edit/approve KYC from here (note 12 — no admin KYC mutation).",
+          "evidence": "Prior workbook ADM_CP_046 (speculative) vs FS Feature 4 §5 (no KYC-docs section documented)"
+        },
+        {
+          "id": "ADM_CP_047",
+          "scenario": "To verify a Master CP drawer shows mapped member count",
+          "description": "Verify whether the drawer for a Master CP shows a count of mapped Member CPs.",
+          "precond": "The drawer is open on a Master CP with mapped members.",
+          "steps": "1. Open the drawer on a Master CP that has members mapped.\n2. Look for a mapped-members count.",
+          "testData": "[TEST_DATA_REQUIRED] a Master CP with at least 3 mapped members",
+          "expected": "[VERIFY WITH DEV] A mapped-member count is NOT listed among the documented FS drawer sections. [To verify] whether the Master CP drawer surfaces a mapped-members count in the live UI.",
+          "evidence": "Prior workbook ADM_CP_047 (speculative) vs FS Feature 4 §5 (no member-count field documented)"
+        },
+        {
+          "id": "ADM_CP_028",
+          "scenario": "To verify the drawer closes with X",
+          "description": "Verify that clicking the X (close) button dismisses the detail drawer.",
+          "precond": "The CP detail drawer is open.",
+          "steps": "1. Click the X / close button in the drawer header.\n2. Observe the page.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] The drawer slides out and the table view resumes. [To verify] against the live drawer.",
+          "evidence": "FRD §3 (.ant-drawer-close) / FS Feature 4 §4 (drawer not captured)"
+        }
+      ]
+    },
+    {
+      "name": "Mark as Master (3-dot menu)",
+      "tcs": [
+        {
+          "id": "ADM_CP_029",
+          "scenario": "To verify the 3-dot menu shows Mark as Master",
+          "description": "Verify that the three-dot (…) menu on a Member CP row exposes a 'Mark as Master' option.",
+          "precond": "A Member CP row is identified.",
+          "steps": "1. Click the three-dot (…) menu in the Actions column on a Member CP row.\n2. Read the menu options.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable Member CP",
+          "expected": "[VERIFY WITH DEV] A dropdown opens containing a 'Mark as Master' option (the menu may also contain navigation items — match by text). The three-dot menu itself is NOT visible in captured screenshots; confirm it exists (see DOC_DRIFT-CP-003).",
+          "evidence": "FRD §3 RowActions / FS Feature 5 §4 vs channel-partners-loaded.png (only eye icon captured)"
+        },
+        {
+          "id": "ADM_CP_030",
+          "scenario": "To verify Mark as Master elevates a Member CP",
+          "description": "Verify that selecting Mark as Master changes the CP's type from Member CP to Master CP and makes it available in the Map-to-Master dropdown.",
+          "precond": "A disposable Member CP is available; user has authorised the state change on UAT.",
+          "steps": "1. Open the three-dot menu on the Member CP row.\n2. Click 'Mark as Master'.\n3. Observe the CP Type and the Map-to-Master dropdown afterwards.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable Member CP (HV Code/phone)",
+          "expected": "[VERIFY WITH DEV] The CP Type changes from Member CP to Master CP immediately with no confirmation dialog, and the CP's HV Code now appears in the Map-to-Master modal dropdown. Confirm the menu/flow exists in the live UI (DOC_DRIFT-CP-003).",
+          "evidence": "FS Feature 5 §5/§6 (immediate, no dialog) + FRD §10 mark-master logic (menu not captured)"
+        },
+        {
+          "id": "ADM_CP_FSD_044",
+          "scenario": "To verify Mark as Master dispatches NO notification",
+          "description": "Verify that marking a CP as Master sends no SMS / WhatsApp / email to the CP — the action is silent.",
+          "precond": "A Mark-as-Master action has just been performed on a disposable CP.",
+          "steps": "1. Perform Mark as Master on a CP.\n2. Inspect the messaging/email dispatch logs and the CP's phone.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable Member CP",
+          "expected": "No SMS, no WhatsApp and no email is dispatched. Only the DB update (cpType → Master CP) and the audit-log entry occur (FS Feature 5 §8/§9). Silence is by design — do not flag absence of a message as a defect.",
+          "evidence": "FS Feature 5 §8 Notifications None / §9 Audit"
+        }
+      ]
+    },
+    {
+      "name": "Row Selection & Map button state",
+      "tcs": [
+        {
+          "id": "ADM_CP_004",
+          "scenario": "To verify Map to Master is disabled with no selection",
+          "description": "Verify that the Map to Master button is disabled when no row is selected.",
+          "precond": "An admin is on the Channel Partners page with no rows selected.",
+          "steps": "1. Observe the Map to Master button state with no checkbox ticked.",
+          "testData": "(no input)",
+          "expected": "The Map to Master button is disabled / greyed out.",
+          "evidence": "channel-partners-loaded.png (button[disabled]) + BRD §7 / FS Feature 6 §6 rule 1"
+        },
+        {
+          "id": "ADM_CP_031",
+          "scenario": "To verify selecting one row enables Map to Master",
+          "description": "Verify that ticking a single row checkbox enables the Map to Master button.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Tick the checkbox on one CP row.\n2. Observe the Map to Master button.",
+          "testData": "(no input)",
+          "expected": "The Map to Master button becomes enabled once one row is selected.",
+          "evidence": "channel-partners-row-selected.png (Map to Master enabled) + FS Feature 6 §4"
+        },
+        {
+          "id": "ADM_CP_032",
+          "scenario": "To verify selecting multiple rows enables Map to Master",
+          "description": "Verify that selecting multiple rows keeps the Map to Master button enabled.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Tick the checkboxes on three CP rows.\n2. Observe the Map to Master button.",
+          "testData": "(no input)",
+          "expected": "The Map to Master button is enabled with multiple rows selected (multi-select supported).",
+          "evidence": "channel-partners-row-selected.png + FS Feature 6 §2 (multi-row select)"
+        },
+        {
+          "id": "ADM_CP_050",
+          "scenario": "To verify deselecting all rows disables Map to Master",
+          "description": "Verify that unchecking all selected rows returns the Map to Master button to its disabled state.",
+          "precond": "Two rows are currently selected and Map to Master is enabled.",
+          "steps": "1. Uncheck the first selected row.\n2. Uncheck the second selected row.\n3. Observe the Map to Master button.",
+          "testData": "(no input)",
+          "expected": "After both rows are unchecked the Map to Master button returns to disabled and the selection count is zero.",
+          "evidence": "channel-partners-loaded.png vs channel-partners-row-selected.png + FS Feature 6 §6 rule 1"
+        }
+      ]
+    },
+    {
+      "name": "Map to Master Modal",
+      "tcs": [
+        {
+          "id": "ADM_CP_033",
+          "scenario": "To verify Map to Master opens the modal",
+          "description": "Verify that clicking Map to Master with rows selected opens the mapping modal.",
+          "precond": "At least one CP row is selected.",
+          "steps": "1. Click the enabled 'Map to Master' button.\n2. Observe the modal.",
+          "testData": "(no input)",
+          "expected": "A modal opens titled 'Map CPs to Master' containing a Master HV Code selector, a Cancel button and a confirm button labelled 'Map to Master'.",
+          "evidence": "channel-partners-map-modal.png (.ant-modal-title 'Map CPs to Master') + FS Feature 6 §5"
+        },
+        {
+          "id": "ADM_CP_034",
+          "scenario": "To verify the modal shows the selected count",
+          "description": "Verify that the mapping modal shows how many CPs will be mapped.",
+          "precond": "Three CP rows are selected; the modal is open.",
+          "steps": "1. Inspect the modal body for a count of selected CPs.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] The modal shows the count of selected CPs to be mapped (e.g. '3 CP(s)'). The exact wording is not captured in the modal screenshot — confirm the text.",
+          "evidence": "channel-partners-map-modal.png + FS Feature 6 §5 (count note)"
+        },
+        {
+          "id": "ADM_CP_035",
+          "scenario": "To verify the Master HV Code dropdown lists only Master CPs",
+          "description": "Verify that the Master HV Code dropdown in the mapping modal contains only CPs marked as Master.",
+          "precond": "The mapping modal is open.",
+          "steps": "1. Open the Master HV Code dropdown in the modal.\n2. Inspect the listed values.",
+          "testData": "(no input)",
+          "expected": "The dropdown lists only Master CP HV Codes — no Member CPs appear (BRD §6 rule 6 / FS Feature 6 §5).",
+          "evidence": "channel-partners-map-modal.png + BRD §6 rule 6 / FRD §10 masters endpoint"
+        },
+        {
+          "id": "ADM_CP_036",
+          "scenario": "To verify confirming with no Master selected is blocked",
+          "description": "Verify that the mapping cannot be confirmed without selecting a Master HV Code.",
+          "precond": "The mapping modal is open with no Master selected.",
+          "steps": "1. Without selecting a Master HV Code, click the 'Map to Master' confirm button.",
+          "testData": "(no input)",
+          "expected": "The mapping is blocked — a validation prompt requires a Master HV Code to be selected before confirming (BRD §7 / FS validation). [VERIFY WITH DEV] exact validation message not captured.",
+          "evidence": "BRD §7 validations (Master HV Code required) + channel-partners-map-modal.png"
+        },
+        {
+          "id": "ADM_CP_037",
+          "scenario": "To verify confirming the mapping updates Master HV Code",
+          "description": "Verify that selecting a Master and confirming maps the selected CPs and updates the Master HV Code column.",
+          "precond": "Two disposable Member CPs are selected; user has authorised the state change on UAT.",
+          "steps": "1. With two Member CP rows selected, click Map to Master.\n2. Select a Master HV Code in the modal.\n3. Click the 'Map to Master' confirm button.\n4. Observe the table.",
+          "testData": "[TEST_DATA_REQUIRED] two disposable Member CPs + one valid Master HV Code",
+          "expected": "The modal closes and the Master HV Code column updates for the two mapped rows to the chosen master. [VERIFY WITH DEV] whether a success toast appears — backend update is the authoritative side-effect (silent action per FS §8).",
+          "evidence": "channel-partners-map-modal.png + FS Feature 6 §6/§7 (map-master)"
+        },
+        {
+          "id": "ADM_CP_037b",
+          "scenario": "To verify Cancel closes the modal without mapping",
+          "description": "Verify that clicking Cancel in the mapping modal closes it without changing any mapping.",
+          "precond": "The mapping modal is open with rows selected.",
+          "steps": "1. Click the Cancel button in the modal.\n2. Observe the table.",
+          "testData": "(no input)",
+          "expected": "The modal closes and no Master HV Code values change for the selected rows.",
+          "evidence": "channel-partners-map-modal.png (Cancel button) + FS Feature 6 §5"
+        },
+        {
+          "id": "ADM_CP_042",
+          "scenario": "To verify remapping an already-mapped CP replaces the master",
+          "description": "Verify that mapping a CP that is already under Master A to Master B replaces the existing relationship.",
+          "precond": "A disposable Member CP already mapped to Master A; user has authorised the change.",
+          "steps": "1. Select the CP currently mapped to Master A.\n2. Map it to Master B and confirm.\n3. Read the Master HV Code column for that row.",
+          "testData": "[TEST_DATA_REQUIRED] a Member CP mapped to Master A + a second Master B",
+          "expected": "The Master HV Code updates from Master A to Master B — the previous mapping is replaced (a CP has only one Master at a time, FS Feature 6 §6 rule 4).",
+          "evidence": "FS Feature 6 §6 rule 4 (one master at a time, remap replaces)"
+        },
+        {
+          "id": "ADM_CP_049",
+          "scenario": "To verify mapping a Master under another Master is rejected",
+          "description": "Verify that attempting to map a Master CP under another Master CP is rejected by the backend.",
+          "precond": "Two Master CPs (Master A and Master B) exist; user has authorised the attempt.",
+          "steps": "1. Select Master B's row.\n2. Click Map to Master.\n3. Choose Master A in the dropdown.\n4. Click the confirm button.",
+          "testData": "[TEST_DATA_REQUIRED] two Master CPs",
+          "expected": "[VERIFY WITH DEV] The mapping is rejected (a Master cannot be mapped under another Master) and Master B remains a Master CP. The exact UI/HTTP behaviour is not documented in FS — confirm with dev.",
+          "evidence": "FRD §10 mark-master/map-master logic (rejection behaviour not explicitly specified)"
+        }
+      ]
+    },
+    {
+      "name": "Bulk Map (Excel upload)",
+      "tcs": [
+        {
+          "id": "ADM_CP_048",
+          "scenario": "To verify Bulk Map via Excel upload",
+          "description": "Verify that bulk mapping CPs to a Master via an Excel upload submits the file and returns per-row outcomes.",
+          "precond": "An XLSX of Member HV Code / Master HV Code pairings is prepared; user has authorised the change on UAT.",
+          "steps": "1. Locate the Bulk Map Excel upload control.\n2. Upload the prepared XLSX.\n3. Observe the response/outcome.",
+          "testData": "[TEST_DATA_REQUIRED] an XLSX with columns Member HV Code, Master HV Code (5 valid pairings)",
+          "expected": "[VERIFY WITH DEV] The upload is accepted and a per-row outcome is returned (POST /api/v1/admin/cp/bulk-map-excel, multipart field 'doc'). The upload control is NOT visible in captured screenshots — confirm its existence/location in the live UI.",
+          "evidence": "FRD §10 API (bulk-map-excel, field 'doc') — UI control not captured in visual-memory"
+        },
+        {
+          "id": "ADM_CP_048b",
+          "scenario": "To verify Bulk Map rejects an invalid file type",
+          "description": "Verify the bulk-map upload rejects a non-Excel file.",
+          "precond": "The bulk-map upload control is available.",
+          "steps": "1. Attempt to upload a non-XLSX file (e.g. a .txt or .png) to the bulk-map control.\n2. Observe the result.",
+          "testData": "[TEST_DATA_REQUIRED] a non-XLSX file",
+          "expected": "[VERIFY WITH DEV] The upload is rejected with a file-type validation error. Accepted file types/size limits are not documented — confirm with dev.",
+          "evidence": "FRD §10 bulk-map-excel (file-type validation not specified)"
+        }
+      ]
+    },
+    {
+      "name": "Pagination & Boundary",
+      "tcs": [
+        {
+          "id": "ADM_CP_041",
+          "scenario": "To verify pagination advances the list",
+          "description": "Verify that the CP list is paginated and the next page loads the following set of CPs.",
+          "precond": "An admin is on the Channel Partners page (more than one page of CPs).",
+          "steps": "1. Note the rows on page 1.\n2. Click the next page control.\n3. Observe the rows.",
+          "testData": "(no input)",
+          "expected": "The next page of CP rows loads (the list shows ~10 rows per page per visual-memory). [VERIFY WITH DEV] exact page-size control / range text not captured.",
+          "evidence": "channel-partners-loaded.png (10 rows) + FS Feature 1 §4a (pagination)"
+        },
+        {
+          "id": "ADM_CP_041b",
+          "scenario": "To verify the last partial page",
+          "description": "Verify that navigating to the final page shows the remaining partial set of CP rows.",
+          "precond": "An admin is on the Channel Partners page.",
+          "steps": "1. Navigate to the last page using pagination.\n2. Observe the row count on the last page.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] The last page shows the remaining CPs (a partial page when the total is not an exact multiple of the page size). Page-size options not captured — confirm.",
+          "evidence": "FS Feature 1 §4a (pagination) — page-size not captured"
+        }
+      ]
+    },
+    {
+      "name": "Integration / Cross-module",
+      "tcs": [
+        {
+          "id": "ADM_CP_038",
+          "scenario": "To verify SM columns reflect the assigned SM",
+          "description": "Verify that the SM Name / SM Email ID / SM Mobile Number columns show the Sales Manager assigned to the CP via the Sales Managers module.",
+          "precond": "A CP with an assigned SM exists (assignment made in the Sales Managers module).",
+          "steps": "1. Locate the CP with a known assigned SM.\n2. Read its SM Name, SM Email ID and SM Mobile Number columns.",
+          "testData": "[TEST_DATA_REQUIRED] a CP with a known assigned SM and that SM's details",
+          "expected": "The three SM columns show the assigned SM's name, email and mobile (auto-populated from the SM assignment).",
+          "evidence": "BRD §6 rule 7 / §8 Sales Managers dependency + FRD §6 integration"
+        },
+        {
+          "id": "ADM_CP_039",
+          "scenario": "To verify a CP appears as Growth Partner in Customers",
+          "description": "Verify that a CP who registered a buyer is shown as the Growth Partner (by HV Code) in the Customers module.",
+          "precond": "A CP has at least one buyer registration.",
+          "steps": "1. Open the Customers module.\n2. Find a registration brought by the known CP.\n3. Read the Growth Partner column.",
+          "testData": "[TEST_DATA_REQUIRED] a CP HV Code with a known buyer registration",
+          "expected": "The Growth Partner column in Customers shows that CP's HV Code (cross-module link, BRD §8 Customers dependency).",
+          "evidence": "BRD §8 Customers dependency / FRD §6 integration"
+        }
+      ]
+    },
+    {
+      "name": "API & Security",
+      "tcs": [
+        {
+          "id": "ADM_CP_052",
+          "scenario": "To verify unauthenticated access is blocked",
+          "description": "Verify that hitting /admin/channel-partners with no admin session redirects to login.",
+          "precond": "No active admin session.",
+          "steps": "1. Clear the session.\n2. Navigate directly to /admin/channel-partners.",
+          "testData": "(no input)",
+          "expected": "The browser is redirected to the Admin login page; the CP list is not shown.",
+          "evidence": "FS Feature 1 §3 (admin session required) + dimensions §9 auth"
+        },
+        {
+          "id": "ADM_CP_053",
+          "scenario": "To verify an expired/invalid token is rejected on the CP list API",
+          "description": "Verify the CP list API rejects an invalid or expired bearer token.",
+          "precond": "An invalid/expired bearer token is available.",
+          "steps": "1. Call GET /api/v1/admin/cp with an invalid/expired token.\n2. Observe the HTTP status.",
+          "testData": "[TEST_DATA_REQUIRED] an invalid/expired bearer token",
+          "expected": "The API responds 401 Unauthorized (or 403 Forbidden) and returns no CP data.",
+          "evidence": "FRD §10 API GET /cp + dimensions §9 auth"
+        },
+        {
+          "id": "ADM_CP_054",
+          "scenario": "To verify the CP list API is more permissive than the UI search",
+          "description": "Verify the backend CP list API accepts query params the UI does not surface as controls (UI-vs-backend split).",
+          "precond": "A valid admin bearer token is available.",
+          "steps": "1. Call GET /api/v1/admin/cp with cpType, masterHvCode and businessRegion query params directly.\n2. Observe the filtered result.",
+          "testData": "[TEST_DATA_REQUIRED] a valid admin bearer token",
+          "expected": "[VERIFY WITH DEV] The API filters by the supplied params even where no UI control exists. Confirm whether the API enforces the same constraints as the UI.",
+          "evidence": "FRD §10 API query params + dimensions §8 UI-vs-backend"
+        },
+        {
+          "id": "ADM_CP_FSD_045",
+          "scenario": "To verify SM Admin is denied on CP admin endpoints",
+          "description": "Verify that a Sales Manager Admin role is forbidden from the admin CP endpoints (only the admin role is allowed).",
+          "precond": "A valid SM Admin bearer token is available.",
+          "steps": "1. Call GET /api/v1/admin/cp with an SM Admin token.\n2. Observe the HTTP status.",
+          "testData": "[TEST_DATA_REQUIRED] a valid SM Admin bearer token",
+          "expected": "[VERIFY WITH DEV] HTTP 403 Forbidden — only the admin role is permitted on admin CP endpoints. Note BRD §2 lists 'Sales Manager Admin' as a user of this screen, which conflicts with a 403 — confirm the authoritative role rule with dev.",
+          "evidence": "FSD-CORRECTION (prior workbook ADM_CP_FSD_045) vs BRD §2 (SM Admin listed as user) — conflict, verify"
+        },
+        {
+          "id": "ADM_CP_FSD_044b",
+          "scenario": "To verify Map to Master dispatches NO notification",
+          "description": "Verify that mapping CPs to a Master sends no SMS / WhatsApp / email — the action is silent.",
+          "precond": "A Map-to-Master action has just been performed on disposable CPs.",
+          "steps": "1. Map disposable Member CPs to a Master.\n2. Inspect the messaging/email dispatch logs and the CP phones.",
+          "testData": "[TEST_DATA_REQUIRED] disposable Member CPs",
+          "expected": "No SMS, WhatsApp or email is dispatched to any mapped CP. Only the DB update (masterHvCode) and the audit-log entry occur (FS Feature 6 §8/§9). Silence is by design.",
+          "evidence": "FS Feature 6 §8 Notifications None / §9 Audit"
+        }
+      ]
+    },
+    {
+      "name": "Error Handling & Negative",
+      "tcs": [
+        {
+          "id": "ADM_CP_FSD_043",
+          "scenario": "To verify there is no admin CP create/approve/delete",
+          "description": "Verify that no UI or API exists to create, approve, reject, activate, deactivate or delete a CP from the Channel Partners screen.",
+          "precond": "An admin is logged in on the Channel Partners page.",
+          "steps": "1. Inspect the page and row actions for any create / approve / reject / activate / deactivate / delete control.\n2. Enumerate the admin-cp API routes.",
+          "testData": "(no input)",
+          "expected": "No such UI control or API endpoint exists — the admin CP route set is limited to list / get / mark-master / map-master / bulk-map-excel. Any BRD claim of admin CP CRUD is invalid (see note 12).",
+          "evidence": "FSD-CORRECTION (prior workbook ADM_CP_FSD_043) + FRD §10 route set"
+        },
+        {
+          "id": "ADM_CP_055",
+          "scenario": "To verify the CP list server-error state",
+          "description": "Verify the page behaviour when the CP list API returns a server error (500).",
+          "precond": "The CP list API can be made to return 500 (or a 500 is simulated).",
+          "steps": "1. Open the Channel Partners page when the list API returns 500.\n2. Observe the page.",
+          "testData": "[TEST_DATA_REQUIRED] a way to force/simulate a 500 on GET /cp",
+          "expected": "[VERIFY WITH DEV] The page shows an error / retry state rather than an empty table with no explanation. Exact error-state text/illustration is not documented or captured — confirm with dev.",
+          "evidence": "dimensions §5 negative/error handling (no documented error string)"
+        },
+        {
+          "id": "ADM_CP_056",
+          "scenario": "To verify the empty list state (no CPs)",
+          "description": "Verify the no-data state when the filtered CP list returns zero rows.",
+          "precond": "A filter combination that yields zero CPs is available.",
+          "steps": "1. Apply a filter combination that matches no CP.\n2. Observe the table area.",
+          "testData": "[TEST_DATA_REQUIRED] a filter set that yields zero rows",
+          "expected": "[VERIFY WITH DEV] The table shows an empty / no-data state and the header total count is unchanged. Exact empty-state wording is not captured in visual-memory.",
+          "evidence": "dimensions §5 empty-state + BRD §6 rule 1 (count static)"
+        }
+      ]
+    }
+  ]
+}

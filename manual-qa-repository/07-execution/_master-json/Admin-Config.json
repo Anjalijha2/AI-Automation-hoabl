@@ -1,0 +1,1147 @@
+{
+  "portal": "Admin",
+  "module": "Config",
+  "sheetName": "Config - Master",
+  "replaceSheets": ["Config", "Config (Exec)"],
+  "notes": [
+    "1. URL = /admin/cms. The sidebar item labelled \"Config\" opens THIS module (page title \"Configurations\"). The slug \"/admin/cms\" is retained from the module's former \"CMS\" name; /admin/config is not yet a route (302-redirects to /admin/customers).",
+    "2. SCOPE GUARD: the separate sidebar item \"CMS\" opens an external Strapi portal at manage-uat.xrportal.in and is EXCLUDED entirely (CLAUDE.md constraint #2). No TC tests it except ADM_CFG_049 which only confirms the two are distinct.",
+    "3. GHNG = registration-number prefix (e.g. GHNG-1000008563-A); a sub-registration suffix is -A/-B/-C.",
+    "4. [TEST_DATA_REQUIRED] = a disposable UAT record/unit/SM-row/tower must be supplied before executing this test.",
+    "5. [VERIFY WITH DEV] = behaviour not confirmed in BRD/FRD/FS; confirm before treating Pass/Fail as authoritative.",
+    "6. DESTRUCTIVE-LIVE WARNING: every Submit / Update / Save on this page changes LIVE config or cancels LIVE bookings/registrations immediately (only Tower Configuration requires an explicit save click). Per CLAUDE.md Pipeline Discipline #7, do NOT click Submit/Update/Save on a fixture without explicit user authorisation. Where possible the TC asserts the OPEN/un-saved state only.",
+    "7. The page has 9 stacked sections (single long scroll): 1 Tower Configuration, 2 Registration Status, 3 Unit Status, 4 Unit Cost Update, 5 Bulk Booking Cancellation, 6 Bulk Registration Cancellation, 7 Sales Managers, 8 Customer Actions Card, 9 Max Preferences Per Unit. Each upload section has its OWN Upload File + Submit button — always scroll to the correct section before clicking.",
+    "8. Bulk uploads are SILENT by design (FS §8 of every feature + BRD §11): no SMS/WhatsApp/email is dispatched on save or cancellation. Asserting \"no notification\" is a required case, not an omission.",
+    "9. KNOWN BUG_010 (open): Registration Status (S2) Submit without selecting a file shows no validation error (silent failure). ADM_CFG_015 asserts the buggy actual behaviour.",
+    "10. Backend latest-correction values (BRD/FRD §11, dated 2026-05-21) OVERRIDE older FRD/FS body text where they conflict. S4 real columns = allocationAmount/allocationPercent/allocationCalcType (NOT Agreement_Value/EarlyBird); S3 transitions strictly AVAILABLE<->RESERVED (BOOKED->AVAILABLE rejected); S5 cancelable status = WINNER only; S8 \"2 Bed Peak Home\" is server-force-disabled. See coverage-matrix DOC_DRIFT-001..006.",
+    "11. Execution-order convention: read/landing TCs first, then per-section in page order (S1..S9), then cross-section downloads, then API/DB-layer FSD-series, then negative/error. Authoring leaves cols 10-12 (Actual/Status/Tester) blank."
+  ],
+  "subModules": [
+    {
+      "name": "Login & Landing",
+      "tcs": [
+        {
+          "id": "ADM_CFG_001",
+          "scenario": "To verify the Config page loads at /admin/cms",
+          "description": "Verify that clicking the Config sidebar item opens the Configurations page at /admin/cms.",
+          "precond": "An admin is logged in (mobile 8888888888 / OTP 258369).",
+          "steps": "1. Log in to the Admin portal.\n2. In the left sidebar, click 'Config'.\n3. Observe the address bar and the page heading.",
+          "testData": "Mobile: 8888888888, OTP: 258369",
+          "expected": "The URL ends in /admin/cms and the page heading reads 'Configurations'."
+        },
+        {
+          "id": "ADM_CFG_002",
+          "scenario": "To verify the page is a single long-scroll with 9 sections",
+          "description": "Verify that the Configurations page renders all nine functional sections on one long-scrolling page.",
+          "precond": "An admin is on the Configurations page.",
+          "steps": "1. Scroll the page from top to bottom.\n2. Note each section heading in order.",
+          "testData": "(no input)",
+          "expected": "Nine sections appear in order: Tower Configuration, Registration Status, Unit Status, Unit Cost Update, Bulk Booking Cancellation, Bulk Registration Cancellation, Sales Managers, Customer Actions Card, Max Preferences Per Unit."
+        },
+        {
+          "id": "ADM_CFG_049",
+          "scenario": "To verify Config is distinct from the external CMS link",
+          "description": "Verify that the sidebar 'Config' (this module) is separate from the sidebar 'CMS' which opens the external Strapi portal (out of scope).",
+          "precond": "An admin is logged in and the sidebar is visible.",
+          "steps": "1. Note the 'Config' sidebar item targets /admin/cms (this module).\n2. Note the separate 'CMS' sidebar item targets manage-uat.xrportal.in.\n3. Do NOT open the external CMS link.",
+          "testData": "(no input)",
+          "expected": "'Config' opens /admin/cms (Configurations page). 'CMS' is a different, external destination (manage-uat.xrportal.in) and is excluded from this scope."
+        },
+        {
+          "id": "ADM_CFG_069",
+          "scenario": "To verify Config requires an authenticated admin session",
+          "description": "Verify that opening /admin/cms with no active admin session redirects to login.",
+          "precond": "No active admin session (session cleared / fresh browser).",
+          "steps": "1. With no session, open https://uat-web.xrportal.in/admin/cms directly.\n2. Observe the result.",
+          "testData": "[TEST_DATA_REQUIRED] cleared session",
+          "expected": "The user is redirected to the Admin login page (mobile-OTP screen); the Configurations page does not render."
+        }
+      ]
+    },
+    {
+      "name": "Section 1 — Tower Configuration",
+      "tcs": [
+        {
+          "id": "ADM_CFG_003",
+          "scenario": "To verify the Tower Configuration grid shows 18 towers",
+          "description": "Verify that Section 1 renders a grid of all 18 tower cards, each with a name, View Tower link, and Active/Inactive toggle.",
+          "precond": "An admin is on the Configurations page.",
+          "steps": "1. Scroll to the 'Tower Configuration' section.\n2. Count the tower cards and inspect one card's controls.",
+          "testData": "(no input)",
+          "expected": "18 tower cards are shown (Dawn, Aura, Glory, Pride, Grace, Aspire, Blossom, Crest, Triumph, Crown, Prime, Pinnacle, Prestige, Horizon, Radiance, Fortune, Bright, Grand). Each card shows the tower name, a 'View Tower' link, and an Active/Inactive toggle."
+        },
+        {
+          "id": "ADM_CFG_004",
+          "scenario": "To verify the default Active/Inactive tower state on UAT",
+          "description": "Verify the default toggle state of the towers on the current UAT seed and record it against the documented expectation.",
+          "precond": "An admin is on the Tower Configuration section; no toggles changed this session.",
+          "steps": "1. Read the green/grey state of each tower toggle without changing any.\n2. Note which towers are Active (green) and which are Inactive (grey).",
+          "testData": "(no input)",
+          "expected": "CONFLICT: visual-memory shows only Horizon, Pinnacle and Bright Inactive (i.e. ~15 of 18 Active); BRD/FRD state only Crest + Crown are Active by default. Record the observed live state; flag DOC_DRIFT-001. [VERIFY WITH DEV] which is the canonical seed."
+        },
+        {
+          "id": "ADM_CFG_007",
+          "scenario": "To verify each tower card has a View Tower link and a state label",
+          "description": "Verify that every tower card exposes a 'View Tower' link and that its toggle reflects an Active or Inactive label/colour.",
+          "precond": "An admin is on the Tower Configuration section.",
+          "steps": "1. Inspect several tower cards.\n2. Confirm the 'View Tower' link and the green (Active) / grey (Inactive) toggle state on each.",
+          "testData": "(no input)",
+          "expected": "Each of the 18 cards shows a 'View Tower' link and a toggle whose colour indicates Active (green) or Inactive (grey)."
+        },
+        {
+          "id": "ADM_CFG_070",
+          "scenario": "To verify the full control inventory of Tower Configuration",
+          "description": "Verify, without saving, that Section 1 contains exactly the documented controls: 18 toggles, 18 View Tower links, and one Update Tower Configuration button.",
+          "precond": "An admin is on the Tower Configuration section.",
+          "steps": "1. Enumerate every interactive control in the section from top to bottom.\n2. Do NOT click any toggle or the Update button.",
+          "testData": "(no input)",
+          "expected": "Exactly 18 Active/Inactive toggles, 18 'View Tower' links, and a single 'Update Tower Configuration' button at the bottom of the section. No other controls."
+        },
+        {
+          "id": "ADM_CFG_005",
+          "scenario": "To verify toggling a tower does not auto-save",
+          "description": "Verify that flipping a tower toggle does not persist until 'Update Tower Configuration' is clicked.",
+          "precond": "An admin is on the Tower Configuration section.",
+          "steps": "1. Flip one tower's toggle (do NOT click Update).\n2. Reload the page WITHOUT clicking Update Tower Configuration.\n3. Observe that tower's state after reload.",
+          "testData": "[TEST_DATA_REQUIRED] one disposable tower to toggle (no save)",
+          "expected": "After reload the toggle reverts to its original state — the change was discarded because it was never saved (BRD §6 rule 1)."
+        },
+        {
+          "id": "ADM_CFG_006",
+          "scenario": "To verify Update Tower Configuration saves toggle changes",
+          "description": "Verify that clicking 'Update Tower Configuration' persists the current toggle states and shows the success toast.",
+          "precond": "An admin is on the section; user has authorised a Config write. A disposable tower is identified.",
+          "steps": "1. Flip one disposable tower's toggle.\n2. Click 'Update Tower Configuration'.\n3. Observe the toast and reload to confirm persistence.",
+          "testData": "[TEST_DATA_REQUIRED] one disposable tower; user authorisation to save",
+          "expected": "Toast 'Tower Status Updated Successfully' appears; after reload the toggle keeps its saved state."
+        },
+        {
+          "id": "ADM_CFG_008",
+          "scenario": "To verify View Tower opens that tower in the Towers page",
+          "description": "Verify that clicking a tower's 'View Tower' link navigates to the Towers module with that tower pre-selected.",
+          "precond": "An admin is on the Tower Configuration section.",
+          "steps": "1. Click 'View Tower' on a known tower card (e.g. Crest).\n2. Observe the destination page and selected tower.",
+          "testData": "Tower name: Crest",
+          "expected": "The Towers page opens with the chosen tower's floor/unit grid pre-selected (cross-module link to /admin/towers)."
+        },
+        {
+          "id": "ADM_CFG_071",
+          "scenario": "To verify no minimum number of active towers is enforced",
+          "description": "Verify that the section does not block reducing active towers below any minimum (FS Feature 1 §6 rule 4).",
+          "precond": "An admin is on the Tower Configuration section; user authorisation for a Config write.",
+          "steps": "1. Toggle towers so that very few (or zero) remain Active.\n2. Click Update Tower Configuration.\n3. Observe whether any minimum-count validation blocks the save.",
+          "testData": "[TEST_DATA_REQUIRED] disposable tower set; user authorisation",
+          "expected": "No minimum-active validation is enforced; the save is accepted (FS Feature 1 §6 rule 4). [VERIFY WITH DEV] downstream impact of zero active towers."
+        },
+        {
+          "id": "ADM_CFG_009",
+          "scenario": "To verify toggling all 18 towers OFF and saving",
+          "description": "Verify the edge behaviour of setting every tower Inactive and saving.",
+          "precond": "An admin is on the section; user authorisation for a Config write.",
+          "steps": "1. Toggle all 18 towers to Inactive.\n2. Click Update Tower Configuration.\n3. Observe the result and the downstream Active Towers KPI.",
+          "testData": "[TEST_DATA_REQUIRED] full disposable tower set; user authorisation",
+          "expected": "All 18 save as Inactive; the success toast appears and the Customers Active Towers KPI shows 0 active. [VERIFY WITH DEV] whether the allocation grid handles zero active towers gracefully."
+        },
+        {
+          "id": "ADM_CFG_050",
+          "scenario": "To verify Update with no changes still triggers a save call",
+          "description": "Verify the no-op behaviour of clicking Update Tower Configuration without changing any toggle.",
+          "precond": "An admin is on the section; no toggle changed; user authorisation.",
+          "steps": "1. Without changing any toggle, click 'Update Tower Configuration'.\n2. Observe the response.",
+          "testData": "[TEST_DATA_REQUIRED] user authorisation (no state change)",
+          "expected": "The save call fires and the success toast appears even though nothing changed (idempotent save). No error is shown."
+        },
+        {
+          "id": "ADM_CFG_072",
+          "scenario": "To verify Tower save behaviour on a server error",
+          "description": "Verify how Section 1 responds if the status-update save call fails (server 500 / network drop).",
+          "precond": "The status-update call can be forced to fail (dev/mock). No confirmed error copy in spec.",
+          "steps": "1. Force the tower status-update call to return 500 / drop.\n2. Click Update Tower Configuration.\n3. Observe the UI.",
+          "testData": "[TEST_DATA_REQUIRED] forced 500 on status-update",
+          "expected": "[VERIFY WITH DEV] — no error-message copy is documented in BRD/FRD/FS. Record the actual behaviour (error toast, silent failure, or retry) and confirm intended handling with dev."
+        },
+        {
+          "id": "ADM_CFG_073",
+          "scenario": "To verify the tower save sends no buyer/SM notification",
+          "description": "Verify that saving Tower Configuration is silent — no SMS/WhatsApp/email dispatched (FS Feature 1 §8).",
+          "precond": "An admin saved a tower toggle change; user authorisation.",
+          "steps": "1. Save a tower toggle change.\n2. Check that no buyer or SM notification is dispatched as a side-effect.",
+          "testData": "[TEST_DATA_REQUIRED] disposable tower; notification-sink visibility",
+          "expected": "No SMS / WhatsApp / email is sent on tower-config save (silent by design, FS Feature 1 §8)."
+        },
+        {
+          "id": "ADM_CFG_074",
+          "scenario": "To verify a tower save updates Active Towers KPI and unit cache (integration)",
+          "description": "Verify that saving a tower state refreshes the Customers Active Towers KPI and triggers the Python WebSocket unit-availability cache update.",
+          "precond": "An admin saved a tower toggle change; user authorisation.",
+          "steps": "1. Note the Active Towers KPI in Customers before the change.\n2. Toggle one tower and save in Config.\n3. Re-check the Customers Active Towers KPI and the buyer-side unit grid.",
+          "testData": "[TEST_DATA_REQUIRED] one disposable inactive tower; user authorisation",
+          "expected": "Active Towers KPI in Customers changes by one; the Python real-time unit cache is notified and the buyer-side grid reflects the new tower state (FS Feature 1 §7)."
+        },
+        {
+          "id": "ADM_CFG_FSD_057",
+          "scenario": "[API] To verify the tower status-update endpoint persists a batch",
+          "description": "Verify that PUT /api/v1/admin/towers/status-update applies the batch of {towerId,isActive} and returns success (API-layer path behind Section 1).",
+          "precond": "A valid admin JWT and a disposable tower id. NO-VISUAL-EVIDENCE — API layer. User authorisation.",
+          "steps": "1. Send PUT /api/v1/admin/towers/status-update with a batch of {towerId,isActive}.\n2. Inspect the response and the persisted tower state.",
+          "testData": "[TEST_DATA_REQUIRED] disposable tower id; admin JWT",
+          "expected": "The endpoint applies all toggles in one batch and returns success; tower records reflect the new isActive values."
+        }
+      ]
+    },
+    {
+      "name": "Section 2 — Registration Status (Bulk Upload)",
+      "tcs": [
+        {
+          "id": "ADM_CFG_010",
+          "scenario": "To verify Registration Status section controls render",
+          "description": "Verify Section 2 shows the Sample File Download, Upload File, Submit controls and the active/inactive registration counters.",
+          "precond": "An admin is on the Configurations page.",
+          "steps": "1. Scroll to 'Registration Status'.\n2. Note the Sample File Download, Upload File and Submit buttons, and the counters.",
+          "testData": "(no input)",
+          "expected": "Section shows 'Sample File Download', 'Upload File', 'Submit', and counters 'Total active registration: N' / 'Total inactive registration: N'. (Live counters; figures point-in-time, see DOC_DRIFT-002.)"
+        },
+        {
+          "id": "ADM_CFG_075",
+          "scenario": "To verify the full control inventory of Registration Status",
+          "description": "Verify Section 2 contains exactly one Sample File Download, one Upload File input, and one Submit button.",
+          "precond": "An admin is on the Registration Status section.",
+          "steps": "1. Enumerate every control in the section.\n2. Do not upload or submit.",
+          "testData": "(no input)",
+          "expected": "Exactly one Sample File Download button, one Upload File input (accepts .xlsx/.csv), one Submit button. No other controls."
+        },
+        {
+          "id": "ADM_CFG_011",
+          "scenario": "To verify the Registration Status sample download",
+          "description": "Verify that Sample File Download returns the current registrations template with correct registration numbers.",
+          "precond": "An admin is on the Registration Status section.",
+          "steps": "1. Click 'Sample File Download'.\n2. Open the downloaded file.",
+          "testData": "(no input)",
+          "expected": "A file downloads containing columns 'Registration Number' and 'Allocation Status', populated with current registration numbers (e.g. GHNG-1000008563-A)."
+        },
+        {
+          "id": "ADM_CFG_012",
+          "scenario": "To verify an Allow upload makes registrations eligible",
+          "description": "Verify that uploading a file with Allocation Status = Allow makes those registrations eligible for the campaign.",
+          "precond": "An admin has a sample edited with disposable registration numbers; no active campaign; user authorisation.",
+          "steps": "1. Edit the sample, set Allocation Status = Allow for the disposable rows.\n2. Upload the file and click Submit (Section 2 only).\n3. Observe the result.",
+          "testData": "[TEST_DATA_REQUIRED] disposable registration numbers; user authorisation",
+          "expected": "Rows are accepted; each registration is set status=PREALLOCATED, availableForAllocation=true and becomes eligible for the next campaign (BRD §11.7 dual-write)."
+        },
+        {
+          "id": "ADM_CFG_013",
+          "scenario": "To verify a Forbid upload blocks registrations",
+          "description": "Verify that uploading Allocation Status = Forbid blocks those registrations from the campaign.",
+          "precond": "An admin has a sample with disposable registration numbers; no active campaign; user authorisation.",
+          "steps": "1. Set Allocation Status = Forbid for the disposable rows.\n2. Upload and Submit (Section 2).\n3. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] disposable registration numbers; user authorisation",
+          "expected": "Each registration is set status=WAITLIST, availableForAllocation=false and is excluded from the campaign eligible pool (BRD §11.7 dual-write)."
+        },
+        {
+          "id": "ADM_CFG_014",
+          "scenario": "To verify Allocation Status is case-insensitive",
+          "description": "Verify that 'allow', 'Allow' and 'ALLOW' (and the Forbid equivalents) are all accepted.",
+          "precond": "An admin has a sample with mixed-case status values; user authorisation.",
+          "steps": "1. In the sample, use 'allow', 'Allow', 'ALLOW' across different rows.\n2. Upload and Submit.\n3. Observe row processing.",
+          "testData": "[TEST_DATA_REQUIRED] disposable rows with mixed-case Allow values",
+          "expected": "All case variants are accepted and processed identically (BRD §5 case-insensitive note)."
+        },
+        {
+          "id": "ADM_CFG_076",
+          "scenario": "To verify Registration Status is blocked during an active campaign",
+          "description": "Verify the submit-time re-check that rejects a Registration Status upload while a campaign is active (§11.7).",
+          "precond": "An active allocation campaign exists; an admin has a valid file; user authorisation.",
+          "steps": "1. With a campaign active, upload a valid Registration Status file and Submit.\n2. Observe the response.",
+          "testData": "[TEST_DATA_REQUIRED] active campaign + disposable rows",
+          "expected": "HTTP 400 'Cannot update registration-unit when campaign is active' — the upload is rejected (BRD §11.7)."
+        },
+        {
+          "id": "ADM_CFG_077",
+          "scenario": "To verify WINNER/HOLD registration rows are skipped",
+          "description": "Verify that rows whose RegistrationUnit status is WINNER or HOLD are excluded from the Registration Status update (§11.7).",
+          "precond": "The upload contains at least one WINNER and one HOLD registration; user authorisation.",
+          "steps": "1. Include a WINNER row and a HOLD row in the upload.\n2. Submit.\n3. Inspect which rows were applied.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER reg + a HOLD reg + a normal reg",
+          "expected": "WINNER and HOLD rows are skipped (not updated); only non-WINNER/non-HOLD rows are applied (BRD §11.7, Op.notIn ['WINNER','HOLD'])."
+        },
+        {
+          "id": "ADM_CFG_FSD_058",
+          "scenario": "[API] To verify the dual-write status + boolean on update",
+          "description": "Verify the update endpoint writes BOTH a status enum and the availableForAllocation boolean, not just the boolean (§11.7).",
+          "precond": "A valid admin JWT and disposable registrations. NO-VISUAL-EVIDENCE — API/DB layer.",
+          "steps": "1. POST update-registrations-status with Allow then Forbid rows.\n2. Inspect each registration's status and availableForAllocation in the DB.",
+          "testData": "[TEST_DATA_REQUIRED] disposable registrations; admin JWT",
+          "expected": "Allow -> {status=PREALLOCATED, availableForAllocation=true}; Forbid -> {status=WAITLIST, availableForAllocation=false}. Both fields are written (BRD §11.7 corrects prior boolean-only FRD)."
+        },
+        {
+          "id": "ADM_CFG_078",
+          "scenario": "To verify Registration Status upload sends no notification",
+          "description": "Verify the Registration Status update is silent — no buyer/SM notification (FS Feature 2 §8).",
+          "precond": "An admin submitted a valid Registration Status file; user authorisation.",
+          "steps": "1. Submit a valid Registration Status file.\n2. Verify no buyer/SM notification is dispatched.",
+          "testData": "[TEST_DATA_REQUIRED] disposable rows; notification-sink visibility",
+          "expected": "No SMS / WhatsApp / email is sent (silent by design, FS Feature 2 §8)."
+        },
+        {
+          "id": "ADM_CFG_079",
+          "scenario": "To verify Registration Status syncs Redis and Python broadcast (integration)",
+          "description": "Verify that a Registration Status update triggers a Redis sync and the Python /broadcast-registrations fan-out (§11.7).",
+          "precond": "An admin submitted a valid file; downstream visibility into Redis/Python; user authorisation.",
+          "steps": "1. Submit a valid Registration Status file.\n2. Inspect the Redis registration cache and the Python /broadcast-registrations inbound.",
+          "testData": "[TEST_DATA_REQUIRED] disposable rows; downstream observability",
+          "expected": "Redis is updated and a Python /broadcast-registrations call fires for the affected registrations (BRD §11.7 side-effects)."
+        },
+        {
+          "id": "ADM_CFG_015",
+          "scenario": "To verify Submit without a file shows no validation (KNOWN BUG_010)",
+          "description": "Verify the known-bug behaviour: clicking Submit in Section 2 with no file selected fails silently with no validation message.",
+          "precond": "An admin is on the Registration Status section with no file selected.",
+          "steps": "1. Without selecting a file, click 'Submit' in Section 2.\n2. Observe the UI.",
+          "testData": "(no file)",
+          "expected": "KNOWN BUG_010: no validation message is shown and nothing happens (silent failure). Expected-after-fix: an error prompting to select a file first."
+        }
+      ]
+    },
+    {
+      "name": "Section 3 — Unit Status (Bulk Upload)",
+      "tcs": [
+        {
+          "id": "ADM_CFG_016",
+          "scenario": "To verify the Unit Status sample download",
+          "description": "Verify Section 3 Sample File Download returns the unit-status template.",
+          "precond": "An admin is on the Unit Status section.",
+          "steps": "1. Click 'Sample File Download' in Section 3.\n2. Open the file.",
+          "testData": "(no input)",
+          "expected": "A file downloads with columns Tower, Floor, Unit_No, Unit_Type, Status, Update (1=apply, 0=skip)."
+        },
+        {
+          "id": "ADM_CFG_080",
+          "scenario": "To verify the full control inventory of Unit Status",
+          "description": "Verify Section 3 contains exactly Sample File Download, Upload File, Submit, plus the unit counters.",
+          "precond": "An admin is on the Unit Status section.",
+          "steps": "1. Enumerate every control in Section 3.\n2. Do not upload or submit.",
+          "testData": "(no input)",
+          "expected": "One Sample File Download, one Upload File input (.xlsx/.csv), one Submit button, and 'Total active unit: N' / 'Total inactive unit: N' counters."
+        },
+        {
+          "id": "ADM_CFG_017",
+          "scenario": "To verify upload sets units to AVAILABLE",
+          "description": "Verify that uploading rows with Status=AVAILABLE and Update=1 sets those units Available.",
+          "precond": "An admin has a sample with disposable units set AVAILABLE/Update=1; user authorisation.",
+          "steps": "1. Set Status=AVAILABLE, Update=1 for the disposable units.\n2. Upload and Submit (Section 3).\n3. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] disposable units; user authorisation",
+          "expected": "The units are set AVAILABLE; the real-time unit cache refreshes (FS Feature 3 §7)."
+        },
+        {
+          "id": "ADM_CFG_018",
+          "scenario": "To verify upload sets units to RESERVED",
+          "description": "Verify that uploading rows with Status=RESERVED and Update=1 sets those units Reserved.",
+          "precond": "An admin has a sample with disposable units set RESERVED/Update=1; user authorisation.",
+          "steps": "1. Set Status=RESERVED, Update=1 for the disposable units.\n2. Upload and Submit.\n3. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] disposable units; user authorisation",
+          "expected": "The units are set RESERVED (AVAILABLE<->RESERVED is the supported transition, BRD §11.8)."
+        },
+        {
+          "id": "ADM_CFG_019",
+          "scenario": "To verify Update=0 rows are skipped",
+          "description": "Verify that Unit Status rows with Update=0 are not processed (routing between apply/skip).",
+          "precond": "An admin has a sample mixing Update=1 and Update=0 rows; user authorisation.",
+          "steps": "1. Set some rows Update=1 and others Update=0.\n2. Upload and Submit.\n3. Inspect which units changed.",
+          "testData": "[TEST_DATA_REQUIRED] mixed Update 1/0 rows",
+          "expected": "Only Update=1 rows are applied; Update=0 rows are skipped unchanged (BRD §6 rule 4)."
+        },
+        {
+          "id": "ADM_CFG_020",
+          "scenario": "To verify all rows Update=0 shows 'No rows marked'",
+          "description": "Verify the edge case where every row has Update=0.",
+          "precond": "An admin has a sample with all rows Update=0; user authorisation.",
+          "steps": "1. Set Update=0 on every row.\n2. Upload and Submit.\n3. Observe the message.",
+          "testData": "[TEST_DATA_REQUIRED] all-zero Update sample",
+          "expected": "A 'No rows marked for update' message is shown; no unit is changed (BRD §7 validations)."
+        },
+        {
+          "id": "ADM_CFG_021",
+          "scenario": "To verify an invalid status value returns a row error",
+          "description": "Verify that an unrecognised Status value (e.g. BLOCKED) is flagged as a row error in the result file.",
+          "precond": "An admin has a sample with an invalid Status value; user authorisation.",
+          "steps": "1. Put Status=BLOCKED, Update=1 on a row.\n2. Upload and Submit.\n3. Inspect the result file.",
+          "testData": "[TEST_DATA_REQUIRED] a row with Status=BLOCKED",
+          "expected": "That row returns an error in the result file; the unit is not changed (BRD §7 validations)."
+        },
+        {
+          "id": "ADM_CFG_081",
+          "scenario": "To verify BOOKED->AVAILABLE is rejected",
+          "description": "Verify that attempting a BOOKED->AVAILABLE transition is rejected (only AVAILABLE<->RESERVED supported, §11.8).",
+          "precond": "An admin has a sample setting a BOOKED unit to AVAILABLE; user authorisation.",
+          "steps": "1. Put a currently-BOOKED unit with Status=AVAILABLE, Update=1.\n2. Upload and Submit.\n3. Inspect the result.",
+          "testData": "[TEST_DATA_REQUIRED] a BOOKED unit",
+          "expected": "The row is rejected/skipped — BOOKED->AVAILABLE is NOT supported (BRD §11.8). Records DOC_DRIFT-004 against the older FS 'high-risk operation' wording."
+        },
+        {
+          "id": "ADM_CFG_FSD_059",
+          "scenario": "[API] To verify strict AVAILABLE<->RESERVED transitions",
+          "description": "Verify the update-units-status endpoint enforces only AVAILABLE<->RESERVED and rejects all other transitions (§11.8).",
+          "precond": "A valid admin JWT and disposable units in mixed states. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. POST update-units-status with AVAILABLE->RESERVED, RESERVED->AVAILABLE, and a BOOKED->AVAILABLE row.\n2. Inspect per-row outcome.",
+          "testData": "[TEST_DATA_REQUIRED] units in AVAILABLE, RESERVED, BOOKED; admin JWT",
+          "expected": "AVAILABLE<->RESERVED rows succeed; the BOOKED->AVAILABLE row is rejected (BRD §11.8)."
+        },
+        {
+          "id": "ADM_CFG_082",
+          "scenario": "To verify Unit Status upload sends no notification",
+          "description": "Verify the Unit Status update is silent (FS Feature 3 §8).",
+          "precond": "An admin submitted a valid Unit Status file; user authorisation.",
+          "steps": "1. Submit a valid Unit Status file.\n2. Verify no notification dispatched.",
+          "testData": "[TEST_DATA_REQUIRED] disposable units; notification-sink visibility",
+          "expected": "No SMS / WhatsApp / email is sent (silent by design)."
+        },
+        {
+          "id": "ADM_CFG_083",
+          "scenario": "To verify Unit Status refreshes the Python unit cache (integration)",
+          "description": "Verify that a Unit Status update triggers the Python real-time unit cache refresh (FS Feature 3 §7).",
+          "precond": "An admin submitted a valid file; downstream visibility; user authorisation.",
+          "steps": "1. Submit a valid Unit Status file.\n2. Inspect the Python unit-cache refresh and the buyer-side grid.",
+          "testData": "[TEST_DATA_REQUIRED] disposable units; downstream observability",
+          "expected": "The Python service is notified and the buyer/admin tower grid reflects the new statuses immediately (FS Feature 3 §7)."
+        }
+      ]
+    },
+    {
+      "name": "Section 4 — Unit Cost Update (Pricing)",
+      "tcs": [
+        {
+          "id": "ADM_CFG_022",
+          "scenario": "To verify the Available Unit Inventory Download",
+          "description": "Verify Section 4 'Available Unit Inventory Download' returns the current pricing spreadsheet.",
+          "precond": "An admin is on the Unit Cost Update section.",
+          "steps": "1. Click 'Available Unit Inventory Download'.\n2. Open the file.",
+          "testData": "(no input)",
+          "expected": "An XLSX downloads with the current unit pricing rows. Per BRD §11.8 it excludes units with status BOOKED/HOLD/REFUGE/PBT (only AVAILABLE/RESERVED appear)."
+        },
+        {
+          "id": "ADM_CFG_084",
+          "scenario": "To verify the full control inventory of Unit Cost Update",
+          "description": "Verify Section 4 has exactly Available Unit Inventory Download, Upload File, Submit.",
+          "precond": "An admin is on the Unit Cost Update section.",
+          "steps": "1. Enumerate every control in Section 4.\n2. Do not upload or submit.",
+          "testData": "(no input)",
+          "expected": "One 'Available Unit Inventory Download' button, one Upload File input, one Submit button. (Note label differs from other sections' 'Sample File Download'.)"
+        },
+        {
+          "id": "ADM_CFG_023",
+          "scenario": "To verify uploading modified prices updates units",
+          "description": "Verify that re-uploading the inventory file with changed prices and Update=1 updates those units.",
+          "precond": "An admin downloaded the inventory, edited disposable rows; user authorisation.",
+          "steps": "1. Edit pricing fields and set Update=1 for disposable rows.\n2. Upload and Submit (Section 4).\n3. Observe the unit detail price.",
+          "testData": "[TEST_DATA_REQUIRED] disposable units; user authorisation",
+          "expected": "Prices update immediately and the new values appear in unit detail/Towers views (FS Feature 4 §7)."
+        },
+        {
+          "id": "ADM_CFG_025",
+          "scenario": "To verify the EarlyBird change reflects in unit detail",
+          "description": "Verify that an updated early-bird benefit value is reflected in the unit detail.",
+          "precond": "An admin updated the early-bird value for a disposable unit; user authorisation.",
+          "steps": "1. Change the early-bird value for a disposable unit, Update=1.\n2. Upload and Submit.\n3. Open that unit's detail.",
+          "testData": "[TEST_DATA_REQUIRED] disposable unit",
+          "expected": "The unit detail shows the updated early-bird benefit (FS Feature 4 §7). [VERIFY WITH DEV] exact early-bird column name under §11.8 header set (see ADM_CFG_085)."
+        },
+        {
+          "id": "ADM_CFG_026",
+          "scenario": "To verify Update=0 rows are skipped in pricing upload",
+          "description": "Verify that pricing rows with Update=0 are not applied.",
+          "precond": "An admin has a file mixing Update=1 and Update=0 rows; user authorisation.",
+          "steps": "1. Set some rows Update=1 and others Update=0.\n2. Upload and Submit.\n3. Inspect which prices changed.",
+          "testData": "[TEST_DATA_REQUIRED] mixed Update 1/0 rows",
+          "expected": "Only Update=1 rows are repriced; Update=0 rows are unchanged."
+        },
+        {
+          "id": "ADM_CFG_085",
+          "scenario": "To verify the required pricing columns (allocation calc type)",
+          "description": "Verify that the upload requires allocationAmount/allocationPercent/allocationCalcType and that PERCENT vs AMOUNT modes require the matching field (§11.8).",
+          "precond": "An admin has a file in each calc mode; user authorisation.",
+          "steps": "1. Submit a PERCENT-mode row missing allocationPercent and an AMOUNT-mode row missing allocationAmount.\n2. Observe per-row validation.",
+          "testData": "[TEST_DATA_REQUIRED] PERCENT row w/o percent; AMOUNT row w/o amount",
+          "expected": "Rows missing the required field for their allocationCalcType are rejected. Real columns are allocationAmount/allocationPercent/allocationCalcType — NOT the older Agreement_Value/EarlyBird (DOC_DRIFT-003, BRD §11.8). [VERIFY WITH DEV] exact live header set."
+        },
+        {
+          "id": "ADM_CFG_086",
+          "scenario": "To verify an empty pricing submission is rejected",
+          "description": "Verify that submitting a pricing file with no rows marked for update returns the documented error (§11.8).",
+          "precond": "An admin has a pricing file with no Update=1 rows; user authorisation.",
+          "steps": "1. Upload a file with no rows marked Update=1.\n2. Submit.\n3. Observe the message.",
+          "testData": "[TEST_DATA_REQUIRED] no-marked-row file",
+          "expected": "HTTP 400 'No rows marked for update' (BRD §11.8)."
+        },
+        {
+          "id": "ADM_CFG_087",
+          "scenario": "To verify chunked processing aborts after 2 chunk failures",
+          "description": "Verify that pricing rows are processed in 250-row chunks and processing aborts after 2 chunk failures (§11.8).",
+          "precond": "An admin has a large file (>250 rows) containing failing rows in multiple chunks; user authorisation.",
+          "steps": "1. Build a file >500 rows with intentional failures across chunks.\n2. Upload and Submit.\n3. Inspect how far processing got.",
+          "testData": "[TEST_DATA_REQUIRED] >500-row file with cross-chunk failures",
+          "expected": "Rows are processed in chunks of 250 and processing aborts after the 2nd failing chunk (BRD §11.8). Boundary: chunk size 250."
+        },
+        {
+          "id": "ADM_CFG_024",
+          "scenario": "To verify pricing changes take effect immediately during an active campaign",
+          "description": "Verify the high-risk rule that price changes apply instantly even during a live campaign (no draft/preview).",
+          "precond": "An active campaign exists; an admin uploads a price change; user authorisation.",
+          "steps": "1. With a campaign active, upload a price change for a disposable unit and Submit.\n2. Re-fetch the unit detail in an allocation session.",
+          "testData": "[TEST_DATA_REQUIRED] active campaign + disposable unit",
+          "expected": "The new price is reflected immediately in new unit-detail requests; no draft/preview step (FS Feature 4 §6, Domain Red Flag HIGH)."
+        },
+        {
+          "id": "ADM_CFG_088",
+          "scenario": "To verify pricing update sends no buyer notification",
+          "description": "Verify that price changes dispatch no automatic buyer notification (FS Feature 4 §8).",
+          "precond": "An admin uploaded a price change; user authorisation.",
+          "steps": "1. Upload a price change and Submit.\n2. Verify no buyer notification is dispatched.",
+          "testData": "[TEST_DATA_REQUIRED] disposable unit; notification-sink visibility",
+          "expected": "No automatic buyer notification about price changes (silent by design, FS Feature 4 §8)."
+        },
+        {
+          "id": "ADM_CFG_089",
+          "scenario": "To verify Agreement Value feeds Offers base + sample excludes BOOKED/HOLD",
+          "description": "Verify pricing set here is the base for Offers discounts and that the download sample excludes BOOKED/HOLD/REFUGE/PBT units (integration + §11.8).",
+          "precond": "An admin downloaded the inventory and knows an Offers-linked unit.",
+          "steps": "1. Inspect the downloaded inventory for status coverage.\n2. Cross-check that an updated Agreement Value flows through to the Offers discount base.",
+          "testData": "[TEST_DATA_REQUIRED] Offers-linked unit",
+          "expected": "The sample contains only AVAILABLE/RESERVED units (BOOKED/HOLD/REFUGE/PBT excluded, §11.8); the Agreement Value is the base price Offers discounts are applied on (BRD §8 Offers dependency)."
+        },
+        {
+          "id": "ADM_CFG_FSD_060",
+          "scenario": "[API] To verify the per-unit edit endpoint (pricing + status in one call)",
+          "description": "Verify the new PATCH /api/v1/admin/units/:id accepts pricing fields and status together (§11.9). No UI surface.",
+          "precond": "A valid admin JWT and a disposable unit id. NO-VISUAL-EVIDENCE — API layer; no UI control exists.",
+          "steps": "1. PATCH /api/v1/admin/units/:id with pricing fields and a status change.\n2. Inspect the persisted unit.",
+          "testData": "[TEST_DATA_REQUIRED] disposable unit id; admin JWT",
+          "expected": "The unit's pricing and status update in a single call (BRD §11.9). [VERIFY WITH DEV] — endpoint not exposed in the Config UI; API-only."
+        }
+      ]
+    },
+    {
+      "name": "Section 5 — Bulk Booking Cancellation",
+      "tcs": [
+        {
+          "id": "ADM_CFG_027",
+          "scenario": "To verify the bulk booking cancellation sample download",
+          "description": "Verify Section 5 Sample File Download returns the booking-cancellation template.",
+          "precond": "An admin is on the Bulk Booking Cancellation section.",
+          "steps": "1. Click 'Sample File Download' in Section 5.\n2. Open the file.",
+          "testData": "(no input)",
+          "expected": "A template XLSX downloads for booking cancellation (column set per the live sample)."
+        },
+        {
+          "id": "ADM_CFG_090",
+          "scenario": "To verify the full control inventory of Bulk Booking Cancellation",
+          "description": "Verify Section 5 has exactly Sample File Download, Upload File, Submit.",
+          "precond": "An admin is on the Bulk Booking Cancellation section.",
+          "steps": "1. Enumerate every control in Section 5.\n2. Do not upload or submit.",
+          "testData": "(no input)",
+          "expected": "One Sample File Download, one Upload File input (.xlsx), one Submit button."
+        },
+        {
+          "id": "ADM_CFG_028",
+          "scenario": "To verify uploading a booking cancellation list",
+          "description": "Verify that uploading a list of cancelable bookings cancels them.",
+          "precond": "An admin has a file with disposable cancelable (WINNER) bookings; no active campaign; user authorisation.",
+          "steps": "1. Fill the sample with disposable WINNER bookings.\n2. Upload and Submit (Section 5).\n3. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] disposable WINNER bookings; user authorisation",
+          "expected": "Each listed booking is cancelled and its unit released back to inventory (BRD §11.4 / FS Feature 5 §7)."
+        },
+        {
+          "id": "ADM_CFG_060",
+          "scenario": "To verify cancellation releases allotted units back to inventory",
+          "description": "Verify that bulk booking cancellation sets the unit back to AVAILABLE inventory.",
+          "precond": "An admin cancelled a disposable booking; user authorisation.",
+          "steps": "1. Cancel a disposable booking via Section 5.\n2. Check the unit's status in the Towers grid.",
+          "testData": "[TEST_DATA_REQUIRED] disposable WINNER booking",
+          "expected": "The released unit returns to AVAILABLE and becomes selectable in future campaigns (FS Feature 5 §7)."
+        },
+        {
+          "id": "ADM_CFG_056",
+          "scenario": "To verify booking cancellation is blocked during an active campaign",
+          "description": "Verify the submit-time re-check blocking cancellation while a campaign is active (§11.4).",
+          "precond": "An active campaign exists; an admin uploads a cancellation file; user authorisation.",
+          "steps": "1. With a campaign active, upload a booking cancellation and Submit.\n2. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] active campaign + booking",
+          "expected": "HTTP 400 'Cannot cancel booking when campaign is active' (BRD §11.4)."
+        },
+        {
+          "id": "ADM_CFG_091",
+          "scenario": "To verify cancellation is blocked by an existing Mavis booking",
+          "description": "Verify that a booking with an unresolved Mavis booking cannot be cancelled until that step is cleared (§11.4).",
+          "precond": "A booking with a live Mavis booking exists; env prefix (U for UAT) aligned; user authorisation.",
+          "steps": "1. Upload a cancellation for a booking that still has a Mavis booking.\n2. Submit and observe.",
+          "testData": "[TEST_DATA_REQUIRED] booking with Mavis state; UAT prefix 'U'",
+          "expected": "HTTP 400 'Mavis booking still exists, please clear that step first' (BRD §11.4). Note: bookingNumber is queried with the 'U' (uat) prefix (§11.5)."
+        },
+        {
+          "id": "ADM_CFG_092",
+          "scenario": "To verify only WINNER status is cancelable; others 'Not cancelable'",
+          "description": "Verify that only RegistrationUnit.status=WINNER is cancelable and all other statuses are skipped with a 'Not cancelable' row error (§11.4).",
+          "precond": "An admin has a file mixing WINNER and non-WINNER bookings; user authorisation.",
+          "steps": "1. Include a WINNER row and several non-WINNER rows.\n2. Upload, Submit, inspect the result file.",
+          "testData": "[TEST_DATA_REQUIRED] WINNER + non-WINNER bookings",
+          "expected": "Only WINNER rows cancel; non-WINNER rows return 'Not cancelable' in the result file (BRD §11.4). Records DOC_DRIFT-005 against the friendly 'Booked' label."
+        },
+        {
+          "id": "ADM_CFG_029",
+          "scenario": "To verify booking cancellation does not auto-refund",
+          "description": "Verify that cancelling a booking does NOT automatically trigger a financial refund (BRD §6 rule 5).",
+          "precond": "An admin cancelled a paid disposable booking; user authorisation.",
+          "steps": "1. Cancel a paid disposable booking via Section 5.\n2. Check the payment/refund state.",
+          "testData": "[TEST_DATA_REQUIRED] paid disposable booking",
+          "expected": "No automatic refund is initiated; refund is a separate manual step (BRD §6 rule 5)."
+        },
+        {
+          "id": "ADM_CFG_093",
+          "scenario": "To verify booking cancellation sends zero notifications",
+          "description": "Verify that cancelUnitsExcel dispatches no notification (FS Feature 5 §8, FSD-correction 2026-05-25).",
+          "precond": "An admin cancelled a disposable booking; user authorisation.",
+          "steps": "1. Cancel a disposable booking via Section 5.\n2. Verify no buyer notification is dispatched.",
+          "testData": "[TEST_DATA_REQUIRED] disposable booking; notification-sink visibility",
+          "expected": "Zero notifications dispatched (FS Feature 5 §8 — cancelUnitsExcel sends none). Corrects the older 'Buyers receive cancellation notifications' How-to wording."
+        },
+        {
+          "id": "ADM_CFG_058",
+          "scenario": "To verify already-cancelled rows show Unchanged",
+          "description": "Verify the edge case of submitting already-cancelled bookings.",
+          "precond": "An admin has a file with already-cancelled bookings; user authorisation.",
+          "steps": "1. Include already-cancelled bookings in the file.\n2. Submit and inspect the result.",
+          "testData": "[TEST_DATA_REQUIRED] already-cancelled bookings",
+          "expected": "Already-cancelled rows are reported as Unchanged / skipped (not re-cancelled). [VERIFY WITH DEV] exact label."
+        },
+        {
+          "id": "ADM_CFG_057",
+          "scenario": "To verify a non-existent registration number is flagged Error",
+          "description": "Verify that a booking-cancellation row with an unknown registration number returns a row error.",
+          "precond": "An admin has a file with a fake registration number; user authorisation.",
+          "steps": "1. Add a non-existent registration number to the file.\n2. Submit and inspect the result file.",
+          "testData": "[TEST_DATA_REQUIRED] fake registration number",
+          "expected": "That row is flagged as an error in the result file; no real booking is affected."
+        },
+        {
+          "id": "ADM_CFG_059",
+          "scenario": "To verify booking cancellation accepts XLSX only (CSV rejected)",
+          "description": "Verify Section 5 accepts .xlsx only and rejects a .csv upload.",
+          "precond": "An admin has a .csv version of the file.",
+          "steps": "1. Attempt to upload a .csv into Section 5.\n2. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] a .csv file",
+          "expected": "The .csv is rejected; only .xlsx is accepted (INDEX.md / FRD accept = .xlsx)."
+        },
+        {
+          "id": "ADM_CFG_FSD_061",
+          "scenario": "[DB] To verify the cancellation cascade across 5+ models",
+          "description": "Verify booking cancellation cascades across registration_units, payment_transactions, MilestonePaymentTracking, RegistrationUnitPaymentSchedule, RegistrationUnitOffer and releases ParkingInventory (§11.6).",
+          "precond": "A disposable WINNER booking with payments/milestones/offer/parking; user authorisation. NO-VISUAL-EVIDENCE — DB layer.",
+          "steps": "1. Cancel a disposable booking that has linked payments, milestone tracking, payment schedule, offer and parking.\n2. Inspect each model after cancellation.",
+          "testData": "[TEST_DATA_REQUIRED] fully-linked disposable WINNER booking",
+          "expected": "registration_units clears 20+ columns; payment_transactions, MilestonePaymentTracking, RegistrationUnitPaymentSchedule, RegistrationUnitOffer are soft-deleted; ParkingInventory HOLD/BOOKED rows release to AVAILABLE (BRD §11.6)."
+        }
+      ]
+    },
+    {
+      "name": "Section 6 — Bulk Registration Cancellation",
+      "tcs": [
+        {
+          "id": "ADM_CFG_030",
+          "scenario": "To verify the registration cancellation sample download",
+          "description": "Verify Section 6 Sample File Download returns the registration-cancellation template.",
+          "precond": "An admin is on the Bulk Registration Cancellation section.",
+          "steps": "1. Click 'Sample File Download' in Section 6.\n2. Open the file.",
+          "testData": "(no input)",
+          "expected": "A template downloads with columns 'Registration Number' and 'Update' (1=cancel, 0=skip)."
+        },
+        {
+          "id": "ADM_CFG_094",
+          "scenario": "To verify the full control inventory of Bulk Registration Cancellation",
+          "description": "Verify Section 6 has exactly Sample File Download, Upload File, Submit.",
+          "precond": "An admin is on the Bulk Registration Cancellation section.",
+          "steps": "1. Enumerate every control in Section 6.\n2. Do not upload or submit.",
+          "testData": "(no input)",
+          "expected": "One Sample File Download, one Upload File input (.xlsx), one Submit button."
+        },
+        {
+          "id": "ADM_CFG_031",
+          "scenario": "To verify upload cancels all sub-registrations",
+          "description": "Verify that uploading a registration number cancels ALL its sub-registrations (cascading).",
+          "precond": "An admin has a disposable registration with multiple sub-registrations; user authorisation.",
+          "steps": "1. Add the disposable registration number (Update=1) to the file.\n2. Upload and Submit (Section 6).\n3. Inspect all sub-registrations.",
+          "testData": "[TEST_DATA_REQUIRED] disposable reg with subs A/B/C",
+          "expected": "All sub-registrations (A, B, C...) under that registration are cancelled in one row (BRD §6 rule 6, cascading)."
+        },
+        {
+          "id": "ADM_CFG_063",
+          "scenario": "To verify cancellation marks all sub-registrations Cancelled",
+          "description": "Verify that after a Section 6 cancellation each sub-registration record shows Cancelled.",
+          "precond": "An admin cancelled a disposable multi-sub registration; user authorisation.",
+          "steps": "1. Cancel a disposable registration via Section 6.\n2. Open each sub-registration's record.",
+          "testData": "[TEST_DATA_REQUIRED] disposable reg with subs",
+          "expected": "Every sub-registration shows status Cancelled and its unit is released (cascading impact, BRD §6 rule 6)."
+        },
+        {
+          "id": "ADM_CFG_062",
+          "scenario": "To verify Update=0 rows are skipped",
+          "description": "Verify that Section 6 rows with Update=0 are not cancelled.",
+          "precond": "An admin has a file mixing Update=1 and Update=0; user authorisation.",
+          "steps": "1. Set some rows Update=1 and others Update=0.\n2. Upload and Submit.\n3. Inspect which registrations cancelled.",
+          "testData": "[TEST_DATA_REQUIRED] mixed Update 1/0 rows",
+          "expected": "Only Update=1 registrations cancel; Update=0 rows are skipped."
+        },
+        {
+          "id": "ADM_CFG_061",
+          "scenario": "To verify registration cancellation is blocked during an active campaign",
+          "description": "Verify the submit-time re-check blocking Section 6 while a campaign is active.",
+          "precond": "An active campaign exists; an admin uploads a cancellation; user authorisation.",
+          "steps": "1. With a campaign active, upload a registration cancellation and Submit.\n2. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] active campaign + registration",
+          "expected": "The upload is rejected while the campaign is active (HTTP 400, mirroring §11.4/§11.7 campaign guards). [VERIFY WITH DEV] exact message string for Section 6."
+        },
+        {
+          "id": "ADM_CFG_032",
+          "scenario": "To verify registration cancellation does not auto-refund",
+          "description": "Verify that cancelling a registration does NOT auto-trigger a refund for paid registrations.",
+          "precond": "An admin cancelled a paid disposable registration; user authorisation.",
+          "steps": "1. Cancel a paid disposable registration via Section 6.\n2. Check the payment/refund state.",
+          "testData": "[TEST_DATA_REQUIRED] paid disposable registration",
+          "expected": "No automatic refund is initiated (BRD §5; refund is separate)."
+        },
+        {
+          "id": "ADM_CFG_065",
+          "scenario": "To verify the cancellation is irreversible",
+          "description": "Verify that a Section 6 cancellation cannot be undone from the UI.",
+          "precond": "An admin cancelled a disposable registration; user authorisation.",
+          "steps": "1. After cancellation, attempt to restore the registration via the UI.\n2. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] disposable registration",
+          "expected": "There is no UI un-cancel path; the operation is irreversible (BRD §6 rule 6, FS Feature 6 §6)."
+        },
+        {
+          "id": "ADM_CFG_064",
+          "scenario": "To verify an invalid registration number returns a row error",
+          "description": "Verify that an unknown registration number in Section 6 is flagged as an error in the result file.",
+          "precond": "An admin has a file with a fake registration number; user authorisation.",
+          "steps": "1. Add a non-existent registration number (Update=1).\n2. Upload, Submit, inspect the result file.",
+          "testData": "[TEST_DATA_REQUIRED] fake registration number",
+          "expected": "That row is flagged as an error in the result file; no real registration is affected."
+        },
+        {
+          "id": "ADM_CFG_095",
+          "scenario": "To verify registration cancellation sends zero notifications",
+          "description": "Verify that refundBulk dispatches no notification (FS Feature 6 §8, FSD-correction 2026-05-25).",
+          "precond": "An admin cancelled a disposable registration; user authorisation.",
+          "steps": "1. Cancel a disposable registration via Section 6.\n2. Verify no notification is dispatched.",
+          "testData": "[TEST_DATA_REQUIRED] disposable registration; notification-sink visibility",
+          "expected": "Zero notifications dispatched (FS Feature 6 §8 — refundBulk sends none)."
+        },
+        {
+          "id": "ADM_CFG_096",
+          "scenario": "To verify cancellation releases units and notifies Python (integration)",
+          "description": "Verify that Section 6 cancellation releases all associated units to inventory and notifies the Python service (FS Feature 6 §7).",
+          "precond": "An admin cancelled a disposable multi-sub registration; downstream visibility; user authorisation.",
+          "steps": "1. Cancel a disposable registration via Section 6.\n2. Check the released units in the Towers grid and the Python notification.",
+          "testData": "[TEST_DATA_REQUIRED] disposable multi-sub registration",
+          "expected": "All RegistrationUnit records become cancelled, their units release to inventory, and the Python service is notified (FS Feature 6 §7)."
+        },
+        {
+          "id": "ADM_CFG_FSD_062",
+          "scenario": "[DATA] To verify the bulk-refund sample typo and result key mismatch",
+          "description": "Verify the Section 6 sample template column typo and the result-file header/key mismatch (§11.10) so QA reconciles when validating files.",
+          "precond": "An admin downloaded the Section 6 sample and processed a small file. NO-VISUAL-EVIDENCE — file-content layer.",
+          "steps": "1. Inspect the downloaded sample's column header.\n2. Process a small file and inspect the result-file header vs its data key.",
+          "testData": "[TEST_DATA_REQUIRED] disposable registration",
+          "expected": "Sample column is misspelled 'upadte' (should be 'update'); the result file header reads 'Registration Number' but the underlying data key is 'unitNumber' (BRD §11.10). DOC_DRIFT-006 — flagged to Dev Agent for a source fix."
+        }
+      ]
+    },
+    {
+      "name": "Section 7 — Sales Managers (Bulk Upload)",
+      "tcs": [
+        {
+          "id": "ADM_CFG_033",
+          "scenario": "To verify the Sales Managers sample download",
+          "description": "Verify Section 7 Sample File Download returns the SM template with the 7 columns.",
+          "precond": "An admin is on the Sales Managers section.",
+          "steps": "1. Click 'Sample File Download' in Section 7.\n2. Open the file.",
+          "testData": "(no input)",
+          "expected": "An XLSX downloads with columns Role, First Name, Last Name, Email, Phone, IS_AVAILABLE (1/0), IS_ACTIVE (1/0)."
+        },
+        {
+          "id": "ADM_CFG_097",
+          "scenario": "To verify the full control inventory of Sales Managers",
+          "description": "Verify Section 7 has exactly Sample File Download, Upload File, Submit, and that the template exposes all 7 columns.",
+          "precond": "An admin is on the Sales Managers section.",
+          "steps": "1. Enumerate every control in Section 7.\n2. Confirm the 7-column template.",
+          "testData": "(no input)",
+          "expected": "One Sample File Download, one Upload File input (.xlsx), one Submit button; template has the 7 documented columns."
+        },
+        {
+          "id": "ADM_CFG_034",
+          "scenario": "To verify bulk upload creates new SMs",
+          "description": "Verify that uploading rows with new phone numbers creates new Sales Manager accounts.",
+          "precond": "An admin has a file with new (non-existent) phone numbers; user authorisation.",
+          "steps": "1. Fill the template with disposable SMs using new phones.\n2. Upload and Submit (Section 7).\n3. Inspect the result file and the SM list.",
+          "testData": "[TEST_DATA_REQUIRED] disposable SM rows with new phones",
+          "expected": "New SM accounts are created (merge key = phone, no match -> create) and appear in the result file as Created (BRD §6 rule 7)."
+        },
+        {
+          "id": "ADM_CFG_035",
+          "scenario": "To verify an existing phone triggers an update (merge key routing)",
+          "description": "Verify that a row whose phone matches an existing SM updates that record instead of creating a new one.",
+          "precond": "An admin has a file with a phone matching an existing disposable SM; user authorisation.",
+          "steps": "1. Use the phone of an existing disposable SM with changed details.\n2. Upload and Submit.\n3. Inspect the result file and the SM record.",
+          "testData": "[TEST_DATA_REQUIRED] existing disposable SM phone",
+          "expected": "The matching SM is Updated (not duplicated); merge key = phone (BRD §6 rule 7)."
+        },
+        {
+          "id": "ADM_CFG_037",
+          "scenario": "To verify the result XLSX shows per-row status",
+          "description": "Verify that the SM bulk upload returns a downloadable result file with Created/Updated/Unchanged/Error per row.",
+          "precond": "An admin submitted a mixed SM file; user authorisation.",
+          "steps": "1. Submit a file mixing new, existing, and invalid rows.\n2. Download and open the result file.",
+          "testData": "[TEST_DATA_REQUIRED] mixed-outcome SM rows",
+          "expected": "The result XLSX shows Created / Updated / Unchanged / Error per row (BRD §5 Section 7)."
+        },
+        {
+          "id": "ADM_CFG_066",
+          "scenario": "[DB] To verify IS_AVAILABLE force-override for roleId=4",
+          "description": "Verify the server force-overrides IS_AVAILABLE for the relevant role (roleId=4) regardless of upload value.",
+          "precond": "An admin uploads an SM row with IS_AVAILABLE=1 for the affected role; user authorisation. NO-VISUAL-EVIDENCE — DB layer.",
+          "steps": "1. Upload an SM row with IS_AVAILABLE=1 for roleId=4.\n2. Inspect the persisted record.",
+          "testData": "[TEST_DATA_REQUIRED] disposable SM row, roleId=4",
+          "expected": "The server overrides IS_AVAILABLE to the enforced value for roleId=4 even though the upload set 1. [VERIFY WITH DEV] precise override rule."
+        },
+        {
+          "id": "ADM_CFG_098",
+          "scenario": "To verify a phone shorter than 10 digits is a row error",
+          "description": "Verify that an SM row with a phone shorter than 10 digits is flagged as an error in the result file (§7 validations).",
+          "precond": "An admin has a file with a short phone; user authorisation.",
+          "steps": "1. Put a 9-digit phone on a row.\n2. Upload, Submit, inspect the result file.",
+          "testData": "[TEST_DATA_REQUIRED] SM row with 9-digit phone",
+          "expected": "That row is flagged as an error in the result file; the SM is not created (BRD §7 validations)."
+        },
+        {
+          "id": "ADM_CFG_067",
+          "scenario": "To verify empty mandatory fields flag a row Error",
+          "description": "Verify that an SM row missing mandatory fields is flagged as an error.",
+          "precond": "An admin has a file with rows missing mandatory fields; user authorisation.",
+          "steps": "1. Leave mandatory fields blank on a row.\n2. Upload, Submit, inspect the result file.",
+          "testData": "[TEST_DATA_REQUIRED] SM row missing mandatory fields",
+          "expected": "That row is flagged Error in the result file."
+        },
+        {
+          "id": "ADM_CFG_068",
+          "scenario": "To verify an invalid email format flags a row Error",
+          "description": "Verify that an SM row with a malformed email is flagged.",
+          "precond": "An admin has a file with a malformed email; user authorisation.",
+          "steps": "1. Put a malformed email (e.g. 'foo@') on a row.\n2. Upload, Submit, inspect the result.",
+          "testData": "[TEST_DATA_REQUIRED] SM row with malformed email",
+          "expected": "That row is flagged as an error. [VERIFY WITH DEV] whether email-format is validated (note: duplicate email is allowed — see ADM_CFG_099)."
+        },
+        {
+          "id": "ADM_CFG_099",
+          "scenario": "To verify a duplicate email is allowed",
+          "description": "Verify that a duplicate email does NOT cause a uniqueness error (email is not a uniqueness constraint, §7 validations).",
+          "precond": "An admin has a file reusing an existing SM email on a new phone; user authorisation.",
+          "steps": "1. Use an email already on another SM, with a new phone.\n2. Upload, Submit, inspect the result.",
+          "testData": "[TEST_DATA_REQUIRED] duplicate email + new phone",
+          "expected": "The row is accepted (Created/Updated) — duplicate email is allowed; only phone is the uniqueness/merge key (BRD §7 validations)."
+        },
+        {
+          "id": "ADM_CFG_036",
+          "scenario": "To verify Section 7 rejects .csv format",
+          "description": "Verify Section 7 accepts .xlsx only and rejects a .csv upload.",
+          "precond": "An admin has a .csv SM file.",
+          "steps": "1. Attempt to upload a .csv into Section 7.\n2. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] a .csv SM file",
+          "expected": "The .csv is rejected; only .xlsx is accepted (BRD §6 rule 8)."
+        },
+        {
+          "id": "ADM_CFG_100",
+          "scenario": "To verify SM bulk upload sends no notification",
+          "description": "Verify that the SM bulk upload dispatches zero notifications (FS Feature 7 §8, FSD-correction 2026-05-25).",
+          "precond": "An admin created disposable SMs via upload; user authorisation.",
+          "steps": "1. Create disposable SMs via Section 7.\n2. Verify no SMS/email is dispatched to the new SMs.",
+          "testData": "[TEST_DATA_REQUIRED] disposable SM rows; notification-sink visibility",
+          "expected": "Zero notifications dispatched (FS Feature 7 §8 — verified no mailer call). Corrects the older 'New SMs receive an SMS with login instructions' How-to wording."
+        },
+        {
+          "id": "ADM_CFG_101",
+          "scenario": "To verify a created SM appears on the Sales Managers list page (integration)",
+          "description": "Verify that an SM created via Section 7 appears in the Sales Managers module list.",
+          "precond": "An admin created a disposable SM via Section 7; user authorisation.",
+          "steps": "1. Create a disposable SM via upload.\n2. Open the Sales Managers list page and search for it.",
+          "testData": "[TEST_DATA_REQUIRED] disposable SM",
+          "expected": "The new SM appears in the Sales Managers list with the uploaded details (BRD §8 Sales Managers dependency)."
+        }
+      ]
+    },
+    {
+      "name": "Section 8 — Customer Actions Card",
+      "tcs": [
+        {
+          "id": "ADM_CFG_038",
+          "scenario": "To verify the Customer Actions Card controls render",
+          "description": "Verify Section 8 shows the master toggle, three typology checkboxes with count selects, and a Submit button.",
+          "precond": "An admin is on the Customer Actions Card section.",
+          "steps": "1. Scroll to 'Customer Actions Card'.\n2. Note the master toggle, checkboxes and count selects.",
+          "testData": "(no input)",
+          "expected": "Section shows 'Allow Additional Registrations' master toggle, checkboxes '1 Bed Growth Home' / '2 Bed Growth Home' / '2 Bed Rise Home' each with a count select, and a Submit button."
+        },
+        {
+          "id": "ADM_CFG_102",
+          "scenario": "To verify the full control inventory of Customer Actions Card",
+          "description": "Verify Section 8 contains exactly the master toggle, 3 checkboxes, 3 count selects and one Submit button.",
+          "precond": "An admin is on the Customer Actions Card section.",
+          "steps": "1. Enumerate every control without changing or submitting.",
+          "testData": "(no input)",
+          "expected": "One master toggle, 3 typology checkboxes, 3 count selects, one Submit button. No '2 Bed Peak Home' row is shown in the UI (server force-disables it — see ADM_CFG_FSD_052)."
+        },
+        {
+          "id": "ADM_CFG_039",
+          "scenario": "To verify the default UAT typology limits",
+          "description": "Verify the read-only default state of the three typology limits on UAT.",
+          "precond": "An admin is on the Customer Actions Card section; nothing changed.",
+          "steps": "1. Read the master toggle state and each typology checkbox + count select.",
+          "testData": "(no input)",
+          "expected": "Master toggle ON; 1 Bed Growth Home = 15, 2 Bed Growth Home = 17, 2 Bed Rise Home = 20 (all enabled)."
+        },
+        {
+          "id": "ADM_CFG_041",
+          "scenario": "To verify changing a typology count",
+          "description": "Verify that changing a typology count select and submitting persists the new limit.",
+          "precond": "An admin has user authorisation for a Config write.",
+          "steps": "1. Change 1 Bed Growth Home count from 15 to 5.\n2. Click Submit (Section 8).\n3. Reload and re-read.",
+          "testData": "[TEST_DATA_REQUIRED] user authorisation (restore to 15 after)",
+          "expected": "The new count (5) persists after reload; the Customer Portal enforces the new limit (FS Feature 8 §7)."
+        },
+        {
+          "id": "ADM_CFG_040",
+          "scenario": "To verify master OFF overrides individual checkboxes",
+          "description": "Verify that turning the master toggle OFF blocks all typologies regardless of individual checkbox state (context routing).",
+          "precond": "Individual checkboxes are ticked; user authorisation.",
+          "steps": "1. With checkboxes ticked, turn 'Allow Additional Registrations' OFF.\n2. Submit.\n3. Check the Customer Portal additional-registration behaviour.",
+          "testData": "[TEST_DATA_REQUIRED] user authorisation (restore ON after)",
+          "expected": "No additional registrations are possible for any typology while the master toggle is OFF, even though checkboxes are ticked (BRD §6 rule 9)."
+        },
+        {
+          "id": "ADM_CFG_042",
+          "scenario": "To verify unchecking one typology blocks only that type",
+          "description": "Verify that unchecking one typology (master ON) blocks only that type while others remain available.",
+          "precond": "Master toggle ON; user authorisation.",
+          "steps": "1. With master ON, uncheck '2 Bed Rise Home' only.\n2. Submit.\n3. Check each typology's availability on the Customer Portal.",
+          "testData": "[TEST_DATA_REQUIRED] user authorisation (restore after)",
+          "expected": "Only 2 Bed Rise Home registrations are blocked; 1 Bed Growth and 2 Bed Growth remain available."
+        },
+        {
+          "id": "ADM_CFG_103",
+          "scenario": "To verify the count-select bounds",
+          "description": "Verify the available values / bounds of a typology count select.",
+          "precond": "An admin is on the Customer Actions Card section.",
+          "steps": "1. Open a count select and note the available values (min and max).",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] — the min/max count is not documented in BRD/FRD/FS. Record the observed select options and confirm the intended bound with dev."
+        },
+        {
+          "id": "ADM_CFG_FSD_052",
+          "scenario": "[BUG-REF: BUG-CFG-001] To verify '2 Bed Peak Home' is force-disabled",
+          "description": "Verify the server silently coerces typology '2 Bed Peak Home' to isAllowed=false/countAllowed=0 regardless of admin input (§11.2).",
+          "precond": "A valid admin JWT / Config write. NO-VISUAL-EVIDENCE — backend coercion.",
+          "steps": "1. Submit a Customer Actions payload attempting to enable '2 Bed Peak Home' with a count.\n2. Re-fetch the config.",
+          "testData": "[TEST_DATA_REQUIRED] payload enabling 2 Bed Peak Home; admin JWT",
+          "expected": "The submit appears to succeed but '2 Bed Peak Home' persists as isAllowed=false, countAllowed=0 (BRD §11.2, admin.controller.js:1591-1594)."
+        },
+        {
+          "id": "ADM_CFG_FSD_053",
+          "scenario": "[API] [FSD-CORRECTION] To verify a byte-equal payload returns 400 'No Change Detected'",
+          "description": "Verify that submitting a configuration identical to current state returns HTTP 400, not 200 (§11.3).",
+          "precond": "A valid admin JWT and the current config known. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. Submit the Customer Actions payload identical to the current persisted state.\n2. Observe the HTTP status.",
+          "testData": "[TEST_DATA_REQUIRED] current-state payload; admin JWT",
+          "expected": "HTTP 400 'No Change Detected' (BRD §11.3), not HTTP 200."
+        },
+        {
+          "id": "ADM_CFG_FSD_063",
+          "scenario": "[API] To verify the master-config dataType enum (8 values)",
+          "description": "Verify storeMasterConfigs accepts only the 8 documented dataType values (§11.1).",
+          "precond": "A valid admin JWT. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. POST master-config entries using each valid dataType and one invalid value.\n2. Observe acceptance/rejection.",
+          "testData": "[TEST_DATA_REQUIRED] admin JWT; valid + invalid dataType",
+          "expected": "Only string, number, boolean, json, date, datetime, array, object are accepted; any other dataType is rejected (BRD §11.1, GAP-TL-033)."
+        },
+        {
+          "id": "ADM_CFG_FSD_051",
+          "scenario": "[API] [FSD-CORRECTION] To verify req.body.projectId is silently ignored",
+          "description": "Verify the master-config endpoints resolve projectId server-side and ignore any client-supplied projectId (§11.1).",
+          "precond": "A valid admin JWT. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. POST a master-config payload including a bogus req.body.projectId.\n2. Inspect which project the change applied to.",
+          "testData": "[TEST_DATA_REQUIRED] admin JWT; payload with bogus projectId",
+          "expected": "The client projectId is ignored; the env-resolved projectId is used (BRD §11.1, formerly-accepted req.body.projectId now commented out)."
+        },
+        {
+          "id": "ADM_CFG_FSD_054",
+          "scenario": "[DB] [BUG-REF: BUG-CFG-002] To verify updateCustomerActions has no wrapping transaction",
+          "description": "Verify the partial-commit risk: updateCustomerActions writes without a wrapping DB transaction.",
+          "precond": "A valid admin JWT; ability to force a mid-write failure (dev). NO-VISUAL-EVIDENCE — DB layer.",
+          "steps": "1. Trigger a Customer Actions update that fails part-way through (forced).\n2. Inspect which fields persisted.",
+          "testData": "[TEST_DATA_REQUIRED] admin JWT; forced mid-write failure",
+          "expected": "[VERIFY WITH DEV] — without a wrapping transaction, a mid-write failure can leave a partial commit. Record actual persisted state and confirm intended atomicity with dev."
+        },
+        {
+          "id": "ADM_CFG_FSD_055",
+          "scenario": "[API] [FSD-CORRECTION] To verify /master-config/fetch is not admin-only",
+          "description": "Verify the auth gap that /master-config/fetch is reachable by any authenticated user, not admin-only.",
+          "precond": "A non-admin authenticated token is available. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. Call /master-config/fetch with a non-admin authenticated token.\n2. Observe the response.",
+          "testData": "[TEST_DATA_REQUIRED] non-admin authenticated token",
+          "expected": "The endpoint returns config data to any authenticated user (auth gap). [VERIFY WITH DEV] whether this is intended; flag as a security finding."
+        },
+        {
+          "id": "ADM_CFG_104",
+          "scenario": "To verify Customer Actions save sends no notification",
+          "description": "Verify the Customer Actions update is silent (FS Feature 8 §8).",
+          "precond": "An admin saved a Customer Actions change; user authorisation.",
+          "steps": "1. Save a Customer Actions change.\n2. Verify no notification is dispatched.",
+          "testData": "[TEST_DATA_REQUIRED] user authorisation; notification-sink visibility",
+          "expected": "No SMS / WhatsApp / email is sent (silent by design, FS Feature 8 §8)."
+        },
+        {
+          "id": "ADM_CFG_105",
+          "scenario": "To verify Customer Portal enforces new settings (integration)",
+          "description": "Verify that a saved Customer Actions configuration is enforced immediately on the Customer Portal.",
+          "precond": "An admin saved a Customer Actions change; user authorisation.",
+          "steps": "1. Save a typology/master change in Section 8.\n2. On the Customer Portal, attempt an additional registration for the affected typology.",
+          "testData": "[TEST_DATA_REQUIRED] user authorisation; buyer test account",
+          "expected": "The Customer Portal immediately reflects the new allow/block + count limits (FS Feature 8 §7, BRD §8 Customers dependency)."
+        }
+      ]
+    },
+    {
+      "name": "Section 9 — Max Preferences Per Unit",
+      "tcs": [
+        {
+          "id": "ADM_CFG_043",
+          "scenario": "To verify Section 9 shows the current Max Preferences value",
+          "description": "Verify the read-only current value of the Max Preferences Per Unit select.",
+          "precond": "An admin is on the Max Preferences Per Unit section.",
+          "steps": "1. Scroll to 'Max Preferences Per Unit'.\n2. Read the current select value and helper text.",
+          "testData": "(no input)",
+          "expected": "The select shows the current value (6 on UAT) with helper 'Set the maximum number of preferences a user can select for each unit' and an Update button."
+        },
+        {
+          "id": "ADM_CFG_106",
+          "scenario": "To verify the full control inventory of Max Preferences",
+          "description": "Verify Section 9 has exactly the value select and one Update button.",
+          "precond": "An admin is on the Max Preferences Per Unit section.",
+          "steps": "1. Enumerate every control without changing or saving.",
+          "testData": "(no input)",
+          "expected": "One value select and one 'Update' button (note: Update, not Submit). No other controls."
+        },
+        {
+          "id": "ADM_CFG_044",
+          "scenario": "To verify changing Max Preferences via Update",
+          "description": "Verify that selecting a new value and clicking Update persists the change.",
+          "precond": "An admin has user authorisation for a Config write.",
+          "steps": "1. Change the select from 6 to 10.\n2. Click 'Update'.\n3. Reload and re-read.",
+          "testData": "[TEST_DATA_REQUIRED] user authorisation (restore to 6 after)",
+          "expected": "The new value (10) persists after reload (FS Feature 9 §7)."
+        },
+        {
+          "id": "ADM_CFG_045",
+          "scenario": "To verify the valid range 0-255",
+          "description": "Verify the boundary that Max Preferences accepts values from 0 to 255 (BRD §6 rule 10).",
+          "precond": "An admin is on the Max Preferences Per Unit section.",
+          "steps": "1. Open the value select and note its range.\n2. (If editable) test the 0 and 255 boundaries.",
+          "testData": "(no input)",
+          "expected": "Valid range is 0 to 255 (BRD §6 rule 10). Boundary values 0 and 255 are accepted."
+        },
+        {
+          "id": "ADM_CFG_108",
+          "scenario": "To verify an out-of-range value (>255) is rejected",
+          "description": "Verify behaviour when a value above 255 is attempted (if the control allows it).",
+          "precond": "An admin can attempt an out-of-range value (UI or API); user authorisation.",
+          "steps": "1. Attempt to set the value to 256 (or higher) via the UI/API.\n2. Click Update / submit and observe.",
+          "testData": "[TEST_DATA_REQUIRED] out-of-range value attempt",
+          "expected": "[VERIFY WITH DEV] — if the select caps at 255 the UI prevents it; confirm the API also rejects >255 (BRD §6 rule 10 implies a 0-255 cap)."
+        },
+        {
+          "id": "ADM_CFG_107",
+          "scenario": "To verify a no-change Update",
+          "description": "Verify the behaviour of clicking Update without changing the value.",
+          "precond": "An admin is on Section 9; user authorisation.",
+          "steps": "1. Without changing the value, click 'Update'.\n2. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] user authorisation (no change)",
+          "expected": "[VERIFY WITH DEV] — record whether the no-op Update succeeds silently or returns a 'No Change' response (parallel to S8 §11.3)."
+        },
+        {
+          "id": "ADM_CFG_046",
+          "scenario": "To verify reducing the limit does not invalidate existing preferences",
+          "description": "Verify that lowering Max Preferences does not retroactively remove preferences already submitted (BRD §6 rule 10).",
+          "precond": "A buyer already has more preferences than the new lower cap; user authorisation.",
+          "steps": "1. Lower the Max Preferences value below an existing buyer's preference count.\n2. Update.\n3. Inspect that buyer's existing preferences.",
+          "testData": "[TEST_DATA_REQUIRED] buyer with prefs above the new cap",
+          "expected": "Existing preferences are preserved; only NEW preference additions are capped (BRD §6 rule 10)."
+        },
+        {
+          "id": "ADM_CFG_109",
+          "scenario": "To verify Max Preferences save sends no notification",
+          "description": "Verify the Max Preferences update is silent (FS Feature 9 §8).",
+          "precond": "An admin updated the value; user authorisation.",
+          "steps": "1. Update the Max Preferences value.\n2. Verify no notification is dispatched.",
+          "testData": "[TEST_DATA_REQUIRED] user authorisation; notification-sink visibility",
+          "expected": "No notification is dispatched (silent by design, FS Feature 9 §8)."
+        },
+        {
+          "id": "ADM_CFG_110",
+          "scenario": "[API] To verify the Max Preferences update endpoint",
+          "description": "Verify that PUT /api/v1/admin/max-preferences-per-unit/:projectId persists the value (API path behind Section 9).",
+          "precond": "A valid admin JWT and a project id. NO-VISUAL-EVIDENCE — API layer; user authorisation.",
+          "steps": "1. PUT the max-preferences endpoint with a new value.\n2. GET to confirm persistence.",
+          "testData": "[TEST_DATA_REQUIRED] admin JWT; projectId",
+          "expected": "The new value persists and is returned by the GET (FRD §10 API)."
+        },
+        {
+          "id": "ADM_CFG_111",
+          "scenario": "To verify the cap is enforced in Allocation selection (integration)",
+          "description": "Verify that the Max Preferences value caps how many unit preferences a buyer can select during a campaign.",
+          "precond": "A buyer in an allocation session; the cap is set to a low value; user authorisation.",
+          "steps": "1. Set Max Preferences to a low value (e.g. 2).\n2. In an allocation session, attempt to select more than the cap.",
+          "testData": "[TEST_DATA_REQUIRED] buyer + active campaign; low cap",
+          "expected": "The buyer is blocked from selecting more preferences than the cap (BRD §8 Allocation dependency)."
+        }
+      ]
+    },
+    {
+      "name": "Cross-section — Downloads & API",
+      "tcs": [
+        {
+          "id": "ADM_CFG_047",
+          "scenario": "To verify each section has its own Upload and Submit buttons",
+          "description": "Verify that the six upload sections each have their own scoped Upload File and Submit buttons (no shared button).",
+          "precond": "An admin is on the Configurations page.",
+          "steps": "1. Scroll through sections 2-7.\n2. Confirm each has its own Upload File and Submit button.",
+          "testData": "(no input)",
+          "expected": "Sections 2,3,4,5,6,7 each expose their own Upload File + Submit; section 8 has Submit; section 9 has Update. Clicking the wrong section's button processes the wrong upload (BRD §5 warning)."
+        },
+        {
+          "id": "ADM_CFG_112",
+          "scenario": "To verify a download when no eligible rows exist",
+          "description": "Verify behaviour of a Sample/Inventory download when the underlying eligible set is empty.",
+          "precond": "A section whose eligible export set could be empty (e.g. all units BOOKED).",
+          "steps": "1. In a section with an empty eligible set, click its download.\n2. Open the file.",
+          "testData": "[TEST_DATA_REQUIRED] empty eligible export state",
+          "expected": "[VERIFY WITH DEV] — record whether a header-only file downloads or an empty-state message is shown. Not documented in BRD/FRD/FS."
+        },
+        {
+          "id": "ADM_CFG_048",
+          "scenario": "[API] To verify a bulk upload error returns an Excel error file with HTTP 400",
+          "description": "Verify that when a bulk upload has errors the system returns a per-row error Excel with HTTP 400, not a generic toast (BRD §6 rule 11).",
+          "precond": "A valid admin JWT and a file with mixed valid/invalid rows. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. Submit a bulk upload (e.g. Unit Cost / SM) containing invalid rows.\n2. Inspect the HTTP status and the returned file.",
+          "testData": "[TEST_DATA_REQUIRED] mixed valid/invalid rows; admin JWT",
+          "expected": "HTTP 400 with a downloadable Excel file showing per-row error detail (BRD §6 rule 11)."
+        }
+      ]
+    }
+  ]
+}

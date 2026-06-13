@@ -1,0 +1,996 @@
+{
+  "portal": "Admin",
+  "module": "JBP",
+  "sheetName": "JBP - Master",
+  "replaceSheets": [
+    "JBP",
+    "JBP (Exec)"
+  ],
+  "notes": [
+    "Some points to remember of testcases",
+    "1. JBP = Job Board Plan — a commitment-tracking module (NOT financial). Admin creates/closes cycles; Channel Partners (CP) submit commitment forms in the CP Portal; admin reviews edit requests.",
+    "2. Admin master OTP = 258369; UAT admin mobile = 8888888888. Admin URL = https://uat-web.xrportal.in/admin/jbp-management.",
+    "3. [TEST_DATA_REQUIRED] = a disposable UAT record/state (e.g. an OPEN cycle, a CP submission, a PENDING edit request, an editableUntil-expired request) must be supplied before executing this test.",
+    "4. [VERIFY WITH DEV] = behaviour not confirmed in BRD/FRD/FS or contradicted across docs; confirm before treating Pass/Fail as authoritative.",
+    "5. Destructive tests (Create Cycle / Close Cycle / Approve / Reject) mutate stateful UAT data and the single-OPEN-cycle constraint — require user authorisation before running on UAT (CLAUDE.md Pipeline Discipline #7).",
+    "6. Only ONE OPEN cycle is allowed at a time. Creating a cycle while one is OPEN raises an \"Active Cycle Detected\" popup. Closing a cycle is irreversible. Creating a new cycle cascade-CLOSES the previous OPEN cycle and EXPIRES its PENDING/APPROVED edit requests.",
+    "7. DOC_DRIFT (observed/FSD-corrected values win over BRD/FRD): (a) DOC_DRIFT-JBP-001 — APPROVE requires `editWindow` (hours, integer >=1); `adminComment` is OPTIONAL on approve, REQUIRED on reject (BRD/FRD \"reason required on approve\" is stale). (b) DOC_DRIFT-JBP-002 — edit-request statuses are Pending -> APPROVED/REJECTED -> EXPIRED (timeout) / CONSUMED (CP resubmit); submissions are ACTIVE/EXPIRED. (c) DOC_DRIFT-JBP-003 — NO CP notification is sent on admin approve/reject (BRD \"CP receives notification\" is stale); the ONLY JBP notification is the CP-submit WhatsApp template `jbplaunchtwo_new`. (d) DOC_DRIFT-JBP-005 — create-cycle modal submit button is labelled \"Create Cycle\" (per visual-memory), not \"Submit\". (e) DOC_DRIFT-JBP-006 — cycles have no PUT/DELETE route (return 404); Create-or-Close only.",
+    "8. Auto-sweep is triggered by the LIST GET calls themselves: GET /jbp-cycles auto-CLOSEs OPEN cycles whose endDate is past; GET /jbp-edit-requests auto-EXPIREs requests whose editableUntil is past. `editableUntil` on approve is clamped to the cycle endDate 23:59:59.999.",
+    "9. CP Portal side (form submission) is out of the Admin module's primary scope; CP-touching steps are flagged and use https://uat-web.xrportal.in/ login (CLAUDE.md), OTP 147258. Admin reviews the result via the Submissions tab.",
+    "10. Notifications glossary: WhatsApp dispatch is fire-and-forget (submission still succeeds if WhatsApp fails); LSQ createActivity (event 270) + captureLead (CustomObject 14-28) run BEFORE the DB write, so an LSQ 500 BLOCKS the whole submission. LSQ is excluded from credentialed automation (CLAUDE.md) — verify its availability effect manually / [VERIFY WITH DEV]."
+  ],
+  "subModules": [
+    {
+      "name": "Page Load & Navigation",
+      "tcs": [
+        {
+          "id": "ADM_JBP_001",
+          "scenario": "To verify the JBP Management page loads",
+          "description": "Verify that the JBP Management page opens at /admin/jbp-management when an admin clicks the JBP menu item.",
+          "precond": "An admin is logged in (mobile 8888888888 / OTP 258369).",
+          "steps": "1. Open the Admin portal.\n2. Click \"JBP Management\" in the left sidebar.\n3. Watch the URL and the page content load.",
+          "testData": "Mobile: 8888888888, OTP: 258369",
+          "expected": "The browser lands on /admin/jbp-management. The page shows the \"JBP Management\" heading and three tabs. The page finishes loading within ~5 seconds.\nSource: visual-memory jbp-full.png + BRD §3 + FRD §2."
+        },
+        {
+          "id": "TC_JBP_NEG_001",
+          "scenario": "To verify JBP page is protected without a session",
+          "description": "Verify that opening /admin/jbp-management with no active admin session redirects to the login page.",
+          "precond": "Browser has no active admin session (logged out or cleared cookies).",
+          "steps": "1. Open https://uat-web.xrportal.in/admin/jbp-management directly with no session.\n2. Observe where the browser lands.",
+          "testData": "(no session)",
+          "expected": "The browser is redirected to the Admin login page; the JBP page does not render its data.\nSource: FRD §3 (Admin session required) + FS Feat1 §3."
+        }
+      ]
+    },
+    {
+      "name": "Tabs Navigation",
+      "tcs": [
+        {
+          "id": "ADM_JBP_002",
+          "scenario": "To verify the three JBP tabs are present",
+          "description": "Verify that the JBP Management page shows exactly three tabs: Cycle Management, Submissions, and Edit Requests.",
+          "precond": "An admin is on the JBP Management page.",
+          "steps": "1. Look at the tab bar across the top of the JBP page.\n2. Read each tab label left to right.",
+          "testData": "(no input)",
+          "expected": "Three tabs are shown, labelled \"Cycle Management\", \"Submissions\", and \"Edit Requests\".\nSource: visual-memory INDEX.md (3 Tabs) + BRD §3."
+        },
+        {
+          "id": "ADM_JBP_003",
+          "scenario": "To verify Cycle Management is the default tab",
+          "description": "Verify that the Cycle Management tab is the active (selected) tab when the JBP page first loads.",
+          "precond": "An admin has just navigated to the JBP Management page.",
+          "steps": "1. Note which tab is highlighted/active immediately after the page loads.",
+          "testData": "(no input)",
+          "expected": "The \"Cycle Management\" tab is active by default; its cycles table is shown.\nSource: BRD §3 (default) + FRD §3 + visual-memory jbp-loaded.png."
+        },
+        {
+          "id": "TC_JBP_FUNC_001",
+          "scenario": "To verify tab switching keeps the right tab active",
+          "description": "Verify that clicking each tab activates it and shows only that tab's content (routing between the three tabs).",
+          "precond": "An admin is on the JBP Management page.",
+          "steps": "1. Click \"Submissions\" — confirm it becomes active.\n2. Click \"Edit Requests\" — confirm it becomes active.\n3. Click \"Cycle Management\" — confirm it becomes active again.",
+          "testData": "(no input)",
+          "expected": "Each clicked tab becomes the active tab and only its content is shown; the other tabs' content is hidden. No content from two tabs is shown at once.\nSource: visual-memory tab screenshots + FRD §3."
+        },
+        {
+          "id": "ADM_JBP_004",
+          "scenario": "To verify switching to the Submissions tab",
+          "description": "Verify that clicking the Submissions tab loads the submissions list and makes the tab active.",
+          "precond": "An admin is on the JBP Management page.",
+          "steps": "1. Click the \"Submissions\" tab.\n2. Wait for the table to load.",
+          "testData": "(no input)",
+          "expected": "The Submissions table loads and the \"Submissions\" tab becomes active. Columns shown: CP Name, HV Code, CP Email, CP Phone, Cycle, Submitted, Version, Action.\nSource: visual-memory jbp-tab-submissions.png + FS Feat5."
+        },
+        {
+          "id": "ADM_JBP_005",
+          "scenario": "To verify switching to the Edit Requests tab",
+          "description": "Verify that clicking the Edit Requests tab loads the edit-request list and makes the tab active.",
+          "precond": "An admin is on the JBP Management page.",
+          "steps": "1. Click the \"Edit Requests\" tab.\n2. Wait for the list to load.",
+          "testData": "(no input)",
+          "expected": "The Edit Requests list loads and the \"Edit Requests\" tab becomes active. Columns shown: CP Name, HV Code, CP Phone, Cycle, Reason, Requested, Status, Action.\nSource: visual-memory jbp-tab-edit-requests.png + FS Feat6."
+        },
+        {
+          "id": "TC_JBP_NEG_002",
+          "scenario": "To verify a tab with no data shows a clean empty state",
+          "description": "Verify that opening a tab whose underlying list has no records shows an empty state rather than an error.",
+          "precond": "A tab (Submissions or Edit Requests) currently has zero records. [TEST_DATA_REQUIRED] a cycle/state with no submissions or no edit requests.",
+          "steps": "1. Open the tab that has no records.\n2. Observe the table area.",
+          "testData": "[TEST_DATA_REQUIRED] a cycle with no submissions / no edit requests",
+          "expected": "The table shows an empty-state message or zero rows and no error banner. [VERIFY WITH DEV] exact empty-state text — not captured in visual-memory.\nSource: visual-memory tab screenshots (no empty-state captured) + FS Feat5/6."
+        }
+      ]
+    },
+    {
+      "name": "Cycle Management — Table & List",
+      "tcs": [
+        {
+          "id": "ADM_JBP_006",
+          "scenario": "To verify the cycle table columns",
+          "description": "Verify that the Cycle Management table shows the five expected columns in order.",
+          "precond": "An admin is on the Cycle Management tab.",
+          "steps": "1. Read the column headers of the cycles table left to right.",
+          "testData": "(no input)",
+          "expected": "Columns are: Cycle Name, Start Date, End Date, Status, Action.\nSource: visual-memory INDEX.md (Cycle Management columns) + FRD §3 + FS Feat1 §5."
+        },
+        {
+          "id": "ADM_JBP_007",
+          "scenario": "To verify the Status column values and rendering",
+          "description": "Verify that the Status column shows only OPEN or CLOSED and that the value drives the Action cell.",
+          "precond": "An admin is on the Cycle Management tab with at least one OPEN and one CLOSED cycle in the list.",
+          "steps": "1. Read the distinct values in the Status column.\n2. For an OPEN row, note the Action cell.\n3. For a CLOSED row, note the Action cell.",
+          "testData": "[TEST_DATA_REQUIRED] a list containing both an OPEN and a CLOSED cycle",
+          "expected": "Status values are only OPEN or CLOSED. OPEN rows show a \"Close Cycle\" action; CLOSED rows show the \"Closed\" label and no button.\nSource: visual-memory jbp-tab-cycle-management.png + FS Feat1 §6."
+        },
+        {
+          "id": "TC_JBP_BND_001",
+          "scenario": "To verify cycles are listed most-recent-first",
+          "description": "Verify that the cycle list is ordered in reverse chronological order (most recent cycle at the top) and paginates if the list is long.",
+          "precond": "An admin is on the Cycle Management tab with several cycles.",
+          "steps": "1. Read the cycle rows from top to bottom and note their dates.\n2. If a pager is present, move to the next page.",
+          "testData": "[TEST_DATA_REQUIRED] more than one page of cycles to exercise paging",
+          "expected": "Cycles appear most-recent-first (reverse chronological). If paging exists, the next page loads without losing the ordering. [VERIFY WITH DEV] page size — not stated in spec.\nSource: FS Feat1 §6 rule 1 (reverse chronological) + visual-memory."
+        },
+        {
+          "id": "TC_JBP_NEG_003",
+          "scenario": "To verify the empty cycle-list state",
+          "description": "Verify that when no cycles exist the table shows an empty state and the Create Cycle button is still available.",
+          "precond": "No cycles exist for the current project. [TEST_DATA_REQUIRED] a project/state with zero cycles.",
+          "steps": "1. Open the Cycle Management tab.\n2. Observe the table area and the Create Cycle button.",
+          "testData": "[TEST_DATA_REQUIRED] a project with zero JBP cycles",
+          "expected": "The table shows an empty state (no rows) without error; the \"+ Create Cycle\" button remains visible and usable. [VERIFY WITH DEV] empty-state text.\nSource: FS Feat1 + visual-memory (no empty-state captured)."
+        }
+      ]
+    },
+    {
+      "name": "Cycle Management — Date Range Filter",
+      "tcs": [
+        {
+          "id": "TC_JBP_FUNC_002",
+          "scenario": "To verify the date-range filter narrows the cycle list",
+          "description": "Verify that setting both Start Date and End Date filters the cycle table to cycles within that range.",
+          "precond": "An admin is on the Cycle Management tab with cycles spanning multiple date ranges.",
+          "steps": "1. Click the Start Date picker and choose a date.\n2. Click the End Date picker and choose a later date.\n3. Observe the table.",
+          "testData": "[TEST_DATA_REQUIRED] cycles inside and outside a chosen range",
+          "expected": "Only cycles whose dates fall within the chosen range are shown.\nSource: FRD §\"Filtering Cycles by Date Range\" + FS Feat2 + visual-memory (Start Date/End Date inputs)."
+        },
+        {
+          "id": "TC_JBP_VAL_001",
+          "scenario": "To verify the filter requires both dates",
+          "description": "Verify that setting only one of the two date pickers does not apply the filter (both Start and End must be set).",
+          "precond": "An admin is on the Cycle Management tab.",
+          "steps": "1. Set only the Start Date (leave End Date empty).\n2. Observe whether the table filters.\n3. Repeat setting only the End Date.",
+          "testData": "Start Date only / End Date only",
+          "expected": "The table is not filtered until BOTH dates are set. [VERIFY WITH DEV] whether the UI blocks the partial state or simply ignores it.\nSource: FS Feat2 §6 rule 1 (both dates required)."
+        },
+        {
+          "id": "TC_JBP_NEG_005",
+          "scenario": "To verify a date range with no matching cycles",
+          "description": "Verify that choosing a date range containing no cycles shows an empty result without error.",
+          "precond": "An admin is on the Cycle Management tab.",
+          "steps": "1. Set a Start/End range known to contain no cycles.\n2. Observe the table.",
+          "testData": "A range (e.g. far-future) with no cycles",
+          "expected": "The table shows zero rows / empty state; no error banner. Clearing the filter restores the full list.\nSource: FS Feat2 + dimension 5 (empty-state)."
+        },
+        {
+          "id": "TC_JBP_BND_002",
+          "scenario": "To verify clearing the filter restores all cycles",
+          "description": "Verify that clearing both date inputs re-fetches and shows the full cycle list.",
+          "precond": "An admin has an active date-range filter applied.",
+          "steps": "1. Clear the Start Date input.\n2. Clear the End Date input.\n3. Wait for the table to reload.",
+          "testData": "(clear both pickers)",
+          "expected": "The full cycle list is restored after the table reloads.\nSource: FRD §\"Filtering…\" step 4 + FS Feat2 §6 rule 2."
+        },
+        {
+          "id": "TC_JBP_API_001",
+          "scenario": "To verify the cycle-list API honours date params",
+          "description": "Verify that GET /api/v1/admin/jbp-cycles with startDate and endDate query params returns only cycles in range.",
+          "precond": "Valid admin bearer token. [TEST_DATA_REQUIRED] admin API token.",
+          "steps": "1. Call GET /api/v1/admin/jbp-cycles?startDate=<d1>&endDate=<d2>.\n2. Inspect the returned cycles.",
+          "testData": "[TEST_DATA_REQUIRED] admin bearer token; a known in-range cycle",
+          "expected": "Response contains only cycles within [d1,d2]. Note: this GET also auto-CLOSEs any OPEN cycle whose endDate is past (see ADM_JBP_FSD_044).\nSource: FRD §11 API + FS Feat2 §7."
+        }
+      ]
+    },
+    {
+      "name": "Create Cycle",
+      "tcs": [
+        {
+          "id": "ADM_JBP_008",
+          "scenario": "To verify the Create Cycle button is present",
+          "description": "Verify that the \"+ Create Cycle\" button is shown at the top of the Cycle Management tab.",
+          "precond": "An admin is on the Cycle Management tab.",
+          "steps": "1. Locate the Create Cycle button at the top of the tab.",
+          "testData": "(no input)",
+          "expected": "A \"+ Create Cycle\" button is visible at the top of the Cycle Management tab.\nSource: visual-memory INDEX.md (Create Cycle button) + FS Feat3 §4."
+        },
+        {
+          "id": "ADM_JBP_009",
+          "scenario": "To verify the Create Cycle modal opens",
+          "description": "Verify that clicking Create Cycle opens the \"Create New Cycle\" modal with the expected fields.",
+          "precond": "An admin is on the Cycle Management tab; no OPEN cycle exists (so the modal opens rather than the Active-Cycle popup).",
+          "steps": "1. Click \"+ Create Cycle\".\n2. Read the modal title and fields.",
+          "testData": "(no input)",
+          "expected": "A modal titled \"Create New Cycle\" opens with: Cycle Name (placeholder \"e.g., September 2026\"), Start Date (\"Select Start Date\"), End Date (\"Select End Date\"), and a \"Create Cycle\" submit button.\nSource: visual-memory jbp-create-cycle-modal.png + FS Feat3 §5."
+        },
+        {
+          "id": "TC_JBP_FORM_001",
+          "scenario": "To verify every control in the Create New Cycle modal",
+          "description": "Verify each field and button in the Create New Cycle modal is present and operable: Cycle Name, Start Date, End Date, Create Cycle (submit), Cancel.",
+          "precond": "The Create New Cycle modal is open.",
+          "steps": "1. Type into the Cycle Name field.\n2. Open the Start Date picker and pick a date.\n3. Open the End Date picker and pick a date.\n4. Locate the submit (\"Create Cycle\") and Cancel buttons.",
+          "testData": "Name: \"Coverage Probe\"; Start/End: any valid future dates",
+          "expected": "All four inputs accept input; both buttons are present. The submit button reads \"Create Cycle\" (visual-memory). [VERIFY WITH DEV] presence/label of an explicit Cancel button — visual-memory captured only the inputs and submit.\nSource: visual-memory jbp-create-cycle-modal.png + FS Feat3 §5 (Submit + Cancel)."
+        },
+        {
+          "id": "ADM_JBP_010",
+          "scenario": "To verify creating a cycle with valid data",
+          "description": "Verify that submitting the modal with a valid name and date range creates a new cycle with status OPEN.",
+          "precond": "The Create New Cycle modal is open; no OPEN cycle currently exists. [TEST_DATA_REQUIRED] confirm no OPEN cycle, user authorisation to mutate UAT.",
+          "steps": "1. Enter Cycle Name (e.g. \"Q3-2026\").\n2. Set Start Date = today.\n3. Set End Date = today + 30 days.\n4. Click \"Create Cycle\".",
+          "testData": "[TEST_DATA_REQUIRED] Name \"Q3-2026\"; Start=today; End=today+30",
+          "expected": "Toast \"Cycle created successfully\"; the new cycle appears in the table with Status = OPEN.\nSource: FRD §\"Creating a New JBP Cycle\" + FS Feat3 §7 + visual-memory."
+        },
+        {
+          "id": "ADM_JBP_012",
+          "scenario": "To verify Create Cycle blocks an empty name",
+          "description": "Verify that submitting the modal with an empty Cycle Name is rejected with a validation error.",
+          "precond": "The Create New Cycle modal is open; no OPEN cycle exists.",
+          "steps": "1. Leave Cycle Name empty.\n2. Set valid Start and End dates.\n3. Click \"Create Cycle\".",
+          "testData": "Name: (empty); valid dates",
+          "expected": "A validation error is shown on the Cycle Name field and the cycle is not created.\nSource: FS Feat3 §6 rule 1 (Cycle Name mandatory)."
+        },
+        {
+          "id": "ADM_JBP_013",
+          "scenario": "To verify End Date must be on/after Start Date",
+          "description": "Verify that submitting with an End Date earlier than the Start Date is rejected.",
+          "precond": "The Create New Cycle modal is open.",
+          "steps": "1. Set Start Date = 2026-06-01.\n2. Set End Date = 2026-05-15.\n3. Click \"Create Cycle\".",
+          "testData": "Start: 2026-06-01; End: 2026-05-15",
+          "expected": "A validation error indicates the End Date must be on or after the Start Date; the cycle is not created.\nSource: FS Feat3 §6 rule 2 (End >= Start)."
+        },
+        {
+          "id": "TC_JBP_VAL_002",
+          "scenario": "To verify Cancel discards the Create Cycle modal",
+          "description": "Verify that closing/cancelling the modal discards any entered input and creates no cycle.",
+          "precond": "The Create New Cycle modal is open with some input entered.",
+          "steps": "1. Enter a name and dates.\n2. Click Cancel (or close the modal).\n3. Reopen the modal.",
+          "testData": "Name: \"Discarded\"; any dates",
+          "expected": "The modal closes, no cycle is created, and reopening shows empty fields (input discarded). [VERIFY WITH DEV] exact Cancel/close control — not captured in visual-memory.\nSource: FS Feat3 §5 (Cancel closes modal, discards input)."
+        },
+        {
+          "id": "ADM_JBP_011",
+          "scenario": "To verify the single-OPEN-cycle constraint at create",
+          "description": "Verify that attempting to create a second cycle while one is already OPEN shows the \"Active Cycle Detected\" popup and creates no cycle.",
+          "precond": "Exactly one OPEN cycle exists. [TEST_DATA_REQUIRED] an existing OPEN cycle.",
+          "steps": "1. Click \"+ Create Cycle\".\n2. Fill the form with a valid name and dates.\n3. Submit.",
+          "testData": "[TEST_DATA_REQUIRED] one OPEN cycle already present",
+          "expected": "An \"Active Cycle Detected\" popup is shown and the new cycle is NOT created. The existing OPEN cycle must be closed first.\nSource: BRD §7.1 + FS Feat3 §6 rule 3."
+        },
+        {
+          "id": "TC_JBP_API_002",
+          "scenario": "To verify the create API vs UI validation split",
+          "description": "Verify whether POST /api/v1/admin/jbp-cycles enforces the same rules as the UI (mandatory name, End>=Start, single-OPEN).",
+          "precond": "Valid admin token. [TEST_DATA_REQUIRED] admin bearer token; no OPEN cycle.",
+          "steps": "1. POST /api/v1/admin/jbp-cycles with an empty cycleName.\n2. POST with endDate < startDate.\n3. POST a second cycle while one is OPEN.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; payloads as above",
+          "expected": "[VERIFY WITH DEV] whether the API rejects empty name / inverted dates / second-OPEN the same way the UI does, or is more permissive. Document the actual responses.\nSource: FRD §11 (POST) + dimension 8 (UI-vs-backend)."
+        }
+      ]
+    },
+    {
+      "name": "Close Cycle",
+      "tcs": [
+        {
+          "id": "ADM_JBP_014",
+          "scenario": "To verify the Close Cycle button on OPEN rows",
+          "description": "Verify that an OPEN cycle row shows a \"Close Cycle\" action button.",
+          "precond": "An OPEN cycle exists in the list. [TEST_DATA_REQUIRED] an OPEN cycle.",
+          "steps": "1. Find the OPEN cycle row.\n2. Inspect its Action cell.",
+          "testData": "[TEST_DATA_REQUIRED] an OPEN cycle",
+          "expected": "The OPEN row's Action cell shows a \"Close Cycle\" button.\nSource: FRD §3 + FS Feat4 §4 + visual-memory (inferred Close action on open cycles)."
+        },
+        {
+          "id": "ADM_JBP_015",
+          "scenario": "To verify Close Cycle asks for confirmation",
+          "description": "Verify that clicking Close Cycle opens a confirmation dialog before any change.",
+          "precond": "An OPEN cycle exists.",
+          "steps": "1. Click \"Close Cycle\" on the OPEN row.",
+          "testData": "[TEST_DATA_REQUIRED] an OPEN cycle",
+          "expected": "A confirmation dialog opens (with \"Yes, Close\" and \"Cancel\" buttons), warning about irreversibility. No status change yet.\nSource: FS Feat4 §5 + FRD §\"Closing a Cycle\"."
+        },
+        {
+          "id": "TC_JBP_FORM_002",
+          "scenario": "To verify the Close-Cycle confirmation dialog controls",
+          "description": "Verify the confirmation dialog presents the documented buttons: \"Yes, Close\" (confirm) and \"Cancel\".",
+          "precond": "The Close Cycle confirmation dialog is open.",
+          "steps": "1. Read the dialog text.\n2. Note the two buttons and their labels.",
+          "testData": "[TEST_DATA_REQUIRED] an OPEN cycle",
+          "expected": "The dialog shows a confirm button labelled \"Yes, Close\" and a \"Cancel\" button.\nSource: FRD §3 (\"Yes, Close\") + FS Feat4 §5."
+        },
+        {
+          "id": "ADM_JBP_016",
+          "scenario": "To verify confirming Close changes status to CLOSED",
+          "description": "Verify that confirming the dialog closes the cycle (status OPEN -> CLOSED) with a success toast.",
+          "precond": "The Close Cycle confirmation dialog is open. User authorisation to mutate UAT.",
+          "steps": "1. Click \"Yes, Close\" in the dialog.",
+          "testData": "[TEST_DATA_REQUIRED] an OPEN cycle; user authorisation",
+          "expected": "Toast \"Cycle closed successfully\"; the cycle Status changes from OPEN to CLOSED and the Action cell now shows only \"Closed\" (no button).\nSource: FRD §3/§\"Closing a Cycle\" + FS Feat4 §7."
+        },
+        {
+          "id": "ADM_JBP_017",
+          "scenario": "To verify cancelling Close keeps the cycle OPEN",
+          "description": "Verify that cancelling the confirmation dialog leaves the cycle OPEN and unchanged.",
+          "precond": "The Close Cycle confirmation dialog is open.",
+          "steps": "1. Click \"Cancel\" in the dialog.",
+          "testData": "[TEST_DATA_REQUIRED] an OPEN cycle",
+          "expected": "The dialog closes and the cycle remains OPEN; its Action cell still shows \"Close Cycle\".\nSource: FS Feat4 §5/§6."
+        },
+        {
+          "id": "ADM_JBP_018",
+          "scenario": "To verify CLOSED rows have no action",
+          "description": "Verify that a CLOSED cycle row shows only the \"Closed\" label and no action button.",
+          "precond": "A CLOSED cycle exists in the list.",
+          "steps": "1. Find a CLOSED cycle row.\n2. Inspect its Action cell.",
+          "testData": "[TEST_DATA_REQUIRED] a CLOSED cycle",
+          "expected": "The CLOSED row's Action cell shows the \"Closed\" label only — no Close button, no reopen option.\nSource: visual-memory INDEX.md (\"Closed\" text for CLOSED cycles) + FS Feat1 §6 rule 2."
+        },
+        {
+          "id": "TC_JBP_RACE_001",
+          "scenario": "To verify closing an already-closed cycle is rejected",
+          "description": "Verify that if a cycle is closed by another action between opening and confirming the dialog, the confirm is safely rejected.",
+          "precond": "An OPEN cycle's Close dialog is open, but the cycle has since been CLOSED (e.g. by auto-sweep or another admin). [TEST_DATA_REQUIRED].",
+          "steps": "1. Open the Close dialog on an OPEN cycle.\n2. Cause the cycle to be CLOSED in the background (auto-sweep / another session).\n3. Click \"Yes, Close\".",
+          "testData": "[TEST_DATA_REQUIRED] a cycle that becomes CLOSED mid-flow",
+          "expected": "[VERIFY WITH DEV] The confirm should be safely rejected / no-op (cycle already CLOSED) rather than erroring. FS Feat4 §6 rule 1: only OPEN cycles can be closed.\nSource: FS Feat4 §6 + dimension 4 (race)."
+        },
+        {
+          "id": "TC_JBP_API_003",
+          "scenario": "To verify the close-cycle API endpoint",
+          "description": "Verify PUT /api/v1/admin/jbp-cycles/:id/close transitions an OPEN cycle to CLOSED and rejects an already-CLOSED cycle.",
+          "precond": "Valid admin token; one OPEN and one CLOSED cycle id. [TEST_DATA_REQUIRED].",
+          "steps": "1. PUT /jbp-cycles/<openId>/close.\n2. PUT /jbp-cycles/<closedId>/close again.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; open + closed cycle ids",
+          "expected": "The OPEN cycle becomes CLOSED. Re-closing a CLOSED cycle is rejected. [VERIFY WITH DEV] exact error/status for the second call.\nSource: FRD §11 (PUT /close) + FSD §\"Auto-Close Cascade\"."
+        }
+      ]
+    },
+    {
+      "name": "Closed-Cycle Irreversibility",
+      "tcs": [
+        {
+          "id": "ADM_JBP_037",
+          "scenario": "To verify a CLOSED cycle cannot be reopened",
+          "description": "Verify that there is no UI mechanism to reopen a CLOSED cycle.",
+          "precond": "A CLOSED cycle exists.",
+          "steps": "1. Inspect the CLOSED cycle row and any menus for a reopen action.",
+          "testData": "[TEST_DATA_REQUIRED] a CLOSED cycle",
+          "expected": "No reopen control exists anywhere; the CLOSED status is irreversible.\nSource: BRD §7.2 + FS Feat4 §6 rule 3."
+        },
+        {
+          "id": "TC_JBP_NEG_006",
+          "scenario": "To verify reopen cannot be forced via the API",
+          "description": "Verify that there is no API route to reopen a CLOSED cycle (no status flip back to OPEN).",
+          "precond": "Valid admin token; a CLOSED cycle id. [TEST_DATA_REQUIRED].",
+          "steps": "1. Attempt any call intended to set a CLOSED cycle back to OPEN (e.g. PUT on the cycle).",
+          "testData": "[TEST_DATA_REQUIRED] admin token; closed cycle id",
+          "expected": "No route reopens the cycle. Per ADM_JBP_FSD_048, PUT/DELETE on cycles return 404 — reopen is impossible by design.\nSource: FSD ADM_JBP_FSD_048 + BRD §7.2."
+        },
+        {
+          "id": "ADM_JBP_FSD_048",
+          "scenario": "[FSD-CORRECTION][DOC_DRIFT-JBP-006] No PUT or DELETE on cycles",
+          "description": "Verify that admins cannot edit or delete a created cycle — there is no PUT or DELETE route for cycles; both return 404.",
+          "precond": "A cycle exists. Valid admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. PUT /api/v1/admin/jbp-cycles/:id with new dates.\n2. DELETE /api/v1/admin/jbp-cycles/:id.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; a cycle id",
+          "expected": "Both calls return 404 (route not registered). Cycles can only be Created or Closed. Document as a known limitation (DOC_DRIFT-JBP-006 — docs implied editability).\nSource: FSD-CORRECTION (workbook) + FRD §11."
+        }
+      ]
+    },
+    {
+      "name": "Submissions Tab",
+      "tcs": [
+        {
+          "id": "ADM_JBP_019",
+          "scenario": "To verify the Submissions table content",
+          "description": "Verify that the Submissions table lists CP submissions with the documented columns.",
+          "precond": "An admin is on the Submissions tab; at least one CP has submitted. [TEST_DATA_REQUIRED] a submission.",
+          "steps": "1. Inspect the Submissions table headers and a data row.",
+          "testData": "[TEST_DATA_REQUIRED] at least one CP submission",
+          "expected": "Columns: CP Name, HV Code, CP Email, CP Phone, Cycle, Submitted, Version, Action. Each row is one CP's submission for a cycle.\nSource: visual-memory jbp-tab-submissions.png + FS Feat5 §5."
+        },
+        {
+          "id": "ADM_JBP_053",
+          "scenario": "To verify the empty Submissions state",
+          "description": "Verify that a cycle with zero submissions shows an empty state and no error.",
+          "precond": "A newly created OPEN cycle with zero submissions exists. [TEST_DATA_REQUIRED].",
+          "steps": "1. Switch to the Submissions tab.\n2. Filter by the new cycle.",
+          "testData": "[TEST_DATA_REQUIRED] an OPEN cycle with no submissions",
+          "expected": "The table shows an empty state (e.g. \"No submissions yet\") or zero rows with no error.\nSource: FS Feat5 + dimension 5 (empty-state)."
+        },
+        {
+          "id": "ADM_JBP_029",
+          "scenario": "To verify filtering Submissions by cycle",
+          "description": "Verify that applying the cycle filter narrows the Submissions table to one cycle's entries.",
+          "precond": "An admin is on the Submissions tab with submissions across multiple cycles. [TEST_DATA_REQUIRED].",
+          "steps": "1. Open the Filters control on the Submissions tab.\n2. Select a specific cycle.\n3. Observe the table.",
+          "testData": "[TEST_DATA_REQUIRED] submissions in at least two cycles",
+          "expected": "The Submissions table shows only the selected cycle's entries.\nSource: visual-memory (Filters button on Submissions) + FRD §11 (cycleId query) + FS Feat5 §7."
+        },
+        {
+          "id": "ADM_JBP_039",
+          "scenario": "To verify one submission per CP per cycle",
+          "description": "Verify that a CP who has already submitted for the current cycle cannot submit again (the Add New JBP Entry button is hidden in the CP Portal).",
+          "precond": "A CP has already submitted for the current OPEN cycle. CP-side check. [TEST_DATA_REQUIRED].",
+          "steps": "1. Have the same CP log into the CP Portal.\n2. Open the JBP section for the current cycle.\n3. Look for the \"Add New JBP Entry\" button.",
+          "testData": "[TEST_DATA_REQUIRED] a CP with an existing submission; CP login (mobile 8888888888 / OTP 147258). CP Portal URL [VERIFY WITH DEV] — DOC_DRIFT-JBP-004.",
+          "expected": "The \"Add New JBP Entry\" button is hidden; the CP cannot submit a second time. Status shows \"Submitted\".\nSource: BRD §7.3 + FS Feat7 §6 rule 1. CP-side — out of primary Admin scope; verify via Submissions tab count."
+        },
+        {
+          "id": "ADM_JBP_040",
+          "scenario": "To verify pagination on the Submissions table",
+          "description": "Verify that the Submissions table paginates when there are more than one page of submissions.",
+          "precond": "An admin is on the Submissions tab with more than one page of submissions. [TEST_DATA_REQUIRED].",
+          "steps": "1. Click the next-page control in the pager.",
+          "testData": "[TEST_DATA_REQUIRED] enough submissions for >1 page",
+          "expected": "The next page of submissions loads; any active filter is preserved. [VERIFY WITH DEV] page size.\nSource: dimension 11 (pagination) + FS Feat5."
+        },
+        {
+          "id": "TC_JBP_API_004",
+          "scenario": "To verify the submissions list API",
+          "description": "Verify GET /api/v1/admin/jbp-submissions returns submissions filtered by cycleId/projectId.",
+          "precond": "Valid admin token; a cycle with submissions. [TEST_DATA_REQUIRED].",
+          "steps": "1. Call GET /api/v1/admin/jbp-submissions?cycleId=<id>.\n2. Inspect the returned rows.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; cycle id with submissions",
+          "expected": "Only ACTIVE submissions for that cycle are returned. Note each row's `updatedAt` is undefined (see ADM_JBP_FSD_051).\nSource: FRD §11 (GET submissions) + FSD."
+        }
+      ]
+    },
+    {
+      "name": "Submission Detail (14 Fields)",
+      "tcs": [
+        {
+          "id": "ADM_JBP_020",
+          "scenario": "To verify the submission detail shows all 14 fields",
+          "description": "Verify that clicking View on a submission opens a detail view showing all 14 JBP form fields with the CP's submitted values.",
+          "precond": "An admin is on the Submissions tab; at least one submission exists. [TEST_DATA_REQUIRED].",
+          "steps": "1. Click \"View\" on a submission row.\n2. Inspect the detail view.",
+          "testData": "[TEST_DATA_REQUIRED] at least one submission",
+          "expected": "A detail view opens showing all 14 fields (Brokerage, Net Booking Commitment, Manpower, List of activities, Go live on digital, Total investment, Inserts, Standees, Kiosk, Tele Callers, SMS Blast, WhatsApp Blast, Growth Hub, Registration Commitment) populated with the CP's values.\nSource: visual-memory (View action) + FS Feat7 §5 (14 fields) + FRD §3."
+        },
+        {
+          "id": "ADM_JBP_021",
+          "scenario": "To verify the Brokerage to be Earned value",
+          "description": "Verify the submission detail shows the CP's selected Brokerage to be Earned dropdown value.",
+          "precond": "Viewing a submission detail.",
+          "steps": "1. Locate the \"Brokerage to be Earned\" field in the detail view.",
+          "testData": "[TEST_DATA_REQUIRED] a submission",
+          "expected": "Shows one of: 10,00,000 / 25,00,000 / 50,00,000 / 75,00,000 / 1,00,00,000+ as selected by the CP.\nSource: FS Feat7 §5 field 1 + FRD §3."
+        },
+        {
+          "id": "ADM_JBP_022",
+          "scenario": "To verify the Net Booking Commitment value",
+          "description": "Verify the submission detail shows the CP's Net Booking Commitment (Units) value.",
+          "precond": "Viewing a submission detail.",
+          "steps": "1. Locate the \"Net Booking Commitment (Units)\" field.",
+          "testData": "[TEST_DATA_REQUIRED] a submission",
+          "expected": "Shows the units value selected by the CP. [VERIFY WITH DEV] exact dropdown option set — FRD/FS say \"values not fully confirmed\".\nSource: FS Feat7 §5 field 2 + FRD §3."
+        },
+        {
+          "id": "ADM_JBP_023",
+          "scenario": "To verify the Manpower number",
+          "description": "Verify the submission detail shows the CP's Manpower-to-deploy numeric value.",
+          "precond": "Viewing a submission detail.",
+          "steps": "1. Locate the \"Manpower to deploy\" field.",
+          "testData": "[TEST_DATA_REQUIRED] a submission",
+          "expected": "Shows the numeric value from the CP's slider/number input (default 1).\nSource: FS Feat7 §5 field 3 + FRD §3."
+        },
+        {
+          "id": "ADM_JBP_024",
+          "scenario": "To verify the List of activities values",
+          "description": "Verify the submission detail shows which of the 14 activity options the CP checked.",
+          "precond": "Viewing a submission detail.",
+          "steps": "1. Locate the \"List of activities\" section.",
+          "testData": "[TEST_DATA_REQUIRED] a submission",
+          "expected": "Shows the checked activities from the 14 options (Tele-calling / WhatsApp Blast / Email Blast / SMS Blast / Personal Connect Calling / Digital / Portal Listing / Expo / Society / Corporate / Newspaper Insert / Club / Mall / Association / Others).\nSource: FS Feat7 §5 field 4 + FRD §3."
+        },
+        {
+          "id": "ADM_JBP_025",
+          "scenario": "To verify the Go-live-on-digital channels (Google budget context)",
+          "description": "Verify the submission detail shows selected digital channels, and that when Google is selected the Google Budget value is also shown.",
+          "precond": "Viewing a submission detail where the CP selected Google. [TEST_DATA_REQUIRED].",
+          "steps": "1. Locate the \"Go live on digital\" section.\n2. Check whether Google is selected and a Google Budget value appears.",
+          "testData": "[TEST_DATA_REQUIRED] a submission with Google selected + a budget",
+          "expected": "Shows selected channels (Google/Meta/Webpage/Portal Listing/Others). When Google is selected, the Google Budget value the CP entered is shown.\nSource: FS Feat7 §5 field 5 + §6 rule 4 (Google reveals budget)."
+        },
+        {
+          "id": "ADM_JBP_026",
+          "scenario": "To verify the Total Investment radio choice",
+          "description": "Verify the submission detail shows the CP's selected Total Investment range.",
+          "precond": "Viewing a submission detail.",
+          "steps": "1. Locate the \"Total investment\" field.",
+          "testData": "[TEST_DATA_REQUIRED] a submission",
+          "expected": "Shows one of the 5 ranges (Upto 1 lakh / 1-3 / 3-5 / 5-7 / 7+ lakhs) as selected.\nSource: FS Feat7 §5 field 6 + FRD §3."
+        },
+        {
+          "id": "ADM_JBP_027",
+          "scenario": "To verify the seven Yes/No fields",
+          "description": "Verify the submission detail shows the Yes/No value for each of the seven boolean fields.",
+          "precond": "Viewing a submission detail.",
+          "steps": "1. Locate Inserts Required, Standees Required, Kiosk Required, Tele Callers Required, SMS Blast, WhatsApp Blast, Growth Hub.",
+          "testData": "[TEST_DATA_REQUIRED] a submission",
+          "expected": "Each of the seven fields shows Yes or No exactly as selected by the CP (default No).\nSource: FS Feat7 §5 fields 7-13 + FRD §3."
+        },
+        {
+          "id": "ADM_JBP_028",
+          "scenario": "To verify the Registration Commitment count",
+          "description": "Verify the submission detail shows the CP's Registration Commitment numeric count.",
+          "precond": "Viewing a submission detail.",
+          "steps": "1. Locate the \"Registration Commitment (Count)\" field.",
+          "testData": "[TEST_DATA_REQUIRED] a submission",
+          "expected": "Shows the numeric count entered by the CP.\nSource: FS Feat7 §5 field 14 + FRD §3."
+        },
+        {
+          "id": "TC_JBP_NEG_007",
+          "scenario": "To verify the detail view with optional fields left default",
+          "description": "Verify that a submission where only mandatory fields were filled (all Yes/No left at default No) renders cleanly in the detail view.",
+          "precond": "A submission exists with all Yes/No fields left at their default. [TEST_DATA_REQUIRED].",
+          "steps": "1. Open the View detail for that submission.\n2. Inspect the Yes/No fields and any unfilled optional fields.",
+          "testData": "[TEST_DATA_REQUIRED] a minimally-filled submission",
+          "expected": "All seven Yes/No fields show \"No\"; no field is blank/broken; the view renders without error.\nSource: FS Feat7 §5 (defaults No) + dimension 5."
+        },
+        {
+          "id": "ADM_JBP_FSD_051",
+          "scenario": "[FSD-CORRECTION] submission.updatedAt is always undefined",
+          "description": "Verify that the admin submissions response never carries an updatedAt value (the model sets updatedAt:false).",
+          "precond": "Any ACTIVE submission exists. Valid admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. GET /api/v1/admin/jbp-submissions.\n2. Inspect the `updatedAt` field on any row.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; an active submission",
+          "expected": "`updatedAt` is undefined / not present (the column does not exist). The UI must not depend on it.\nSource: FSD-CORRECTION (workbook) + FRD §10 data model."
+        }
+      ]
+    },
+    {
+      "name": "Edit Requests Tab & Review",
+      "tcs": [
+        {
+          "id": "ADM_JBP_030",
+          "scenario": "To verify the Edit Requests table content",
+          "description": "Verify that the Edit Requests table lists CP requests with the documented columns.",
+          "precond": "An admin is on the Edit Requests tab with at least one request. [TEST_DATA_REQUIRED].",
+          "steps": "1. Inspect the Edit Requests table headers and a row.",
+          "testData": "[TEST_DATA_REQUIRED] at least one edit request",
+          "expected": "Columns: CP Name, HV Code, CP Phone, Cycle, Reason, Requested, Status, Action. Status values include Pending / Approved / Rejected / Expired / Consumed (DOC_DRIFT-JBP-002).\nSource: visual-memory jbp-tab-edit-requests.png + FS Feat6."
+        },
+        {
+          "id": "ADM_JBP_031",
+          "scenario": "To verify reviewing an edit request (original vs revised)",
+          "description": "Verify that clicking View on an edit request shows the original submission values alongside the CP's revised values.",
+          "precond": "At least one Pending edit request exists. [TEST_DATA_REQUIRED].",
+          "steps": "1. Click \"View\" on an edit-request row.\n2. Inspect the detail view.",
+          "testData": "[TEST_DATA_REQUIRED] a Pending edit request",
+          "expected": "The detail view shows original vs revised values per field, plus the CP's stated Reason.\nSource: visual-memory (View action) + FS Feat6 §5 + FRD §3."
+        },
+        {
+          "id": "ADM_JBP_036",
+          "scenario": "To verify filtering Edit Requests by status",
+          "description": "Verify that filtering the Edit Requests list by status narrows the list to that status.",
+          "precond": "An admin is on the Edit Requests tab with requests of mixed statuses. [TEST_DATA_REQUIRED].",
+          "steps": "1. Apply the Status filter = Pending, then Approved, then Rejected.\n2. Observe the list each time.",
+          "testData": "[TEST_DATA_REQUIRED] requests of mixed statuses",
+          "expected": "The table filters to only the selected status each time. Available statuses include Pending/Approved/Rejected/Expired/Consumed (DOC_DRIFT-JBP-002).\nSource: FS Feat6 §6 + dimension 6 (context)."
+        },
+        {
+          "id": "ADM_JBP_054",
+          "scenario": "To verify EXPIRED edit requests appear and are not actionable",
+          "description": "Verify that an APPROVED edit request whose editableUntil has passed is shown as EXPIRED after the list auto-sweep, and cannot be re-approved/re-rejected.",
+          "precond": "At least one APPROVED edit request whose editableUntil is in the past. [TEST_DATA_REQUIRED].",
+          "steps": "1. Open the Edit Requests tab (this GET triggers the auto-sweep).\n2. Apply Status filter = EXPIRED.\n3. Inspect the previously-APPROVED request and its available actions.",
+          "testData": "[TEST_DATA_REQUIRED] an APPROVED request with editableUntil in the past",
+          "expected": "The previously-APPROVED request now shows status EXPIRED; admin cannot re-approve or re-reject it. (Auto-sweep on GET — see ADM_JBP_FSD_045.)\nSource: FSD-CORRECTION (workbook) + DOC_DRIFT-JBP-002."
+        },
+        {
+          "id": "ADM_JBP_055",
+          "scenario": "To verify pagination on the Edit Requests table",
+          "description": "Verify that the Edit Requests table paginates when there is more than one page of requests.",
+          "precond": "More than one page of edit requests exists. [TEST_DATA_REQUIRED].",
+          "steps": "1. Click the next-page control in the pager.",
+          "testData": "[TEST_DATA_REQUIRED] enough requests for >1 page",
+          "expected": "The next page of edit requests loads; any active filter is preserved.\nSource: dimension 11 + FS Feat6."
+        },
+        {
+          "id": "TC_JBP_NEG_008",
+          "scenario": "To verify the empty Edit Requests state",
+          "description": "Verify that when there are no edit requests the tab shows an empty state, not an error.",
+          "precond": "No edit requests exist. [TEST_DATA_REQUIRED] a state with zero edit requests.",
+          "steps": "1. Open the Edit Requests tab.\n2. Observe the table area.",
+          "testData": "[TEST_DATA_REQUIRED] zero edit requests",
+          "expected": "Empty state / zero rows with no error. [VERIFY WITH DEV] exact empty-state text.\nSource: FS Feat6 + dimension 5."
+        },
+        {
+          "id": "TC_JBP_NEG_009",
+          "scenario": "To verify opening an EXPIRED/CONSUMED request hides actions",
+          "description": "Verify that opening an EXPIRED or CONSUMED edit request shows it read-only with no approve/reject actions.",
+          "precond": "An EXPIRED or CONSUMED edit request exists. [TEST_DATA_REQUIRED].",
+          "steps": "1. Open an EXPIRED (or CONSUMED) edit request from the list.\n2. Inspect the available actions.",
+          "testData": "[TEST_DATA_REQUIRED] an EXPIRED or CONSUMED request",
+          "expected": "The request is read-only; no Approve/Reject controls are offered. [VERIFY WITH DEV] exact UI treatment.\nSource: DOC_DRIFT-JBP-002 + FSD ADM_JBP_FSD_046/045 + dimension 6."
+        },
+        {
+          "id": "TC_JBP_API_005",
+          "scenario": "To verify the edit-requests list API and its auto-sweep",
+          "description": "Verify GET /api/v1/admin/jbp-edit-requests returns requests and triggers the EXPIRE auto-sweep.",
+          "precond": "Valid admin token; a PENDING/APPROVED request with editableUntil in the past. [TEST_DATA_REQUIRED].",
+          "steps": "1. Confirm the request status in DB.\n2. Call GET /api/v1/admin/jbp-edit-requests.\n3. Re-check the request status.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; an editableUntil-expired request",
+          "expected": "The list returns the requests; the expired request's status is now EXPIRED after the GET (auto-sweep). See ADM_JBP_FSD_045.\nSource: FRD §11 + FSD-CORRECTION."
+        }
+      ]
+    },
+    {
+      "name": "Approve Edit Request",
+      "tcs": [
+        {
+          "id": "ADM_JBP_033",
+          "scenario": "[FSD-CORRECTION][DOC_DRIFT-JBP-001/003] Approve sets editableUntil, does NOT update submission, sends NO CP notification",
+          "description": "Verify that approving an edit request requires editWindow (hours), sets editableUntil and reviewer fields, does NOT immediately update the submission, and dispatches NO notification to the CP.",
+          "precond": "A Pending edit request detail is open. Valid admin. [TEST_DATA_REQUIRED]. User authorisation to mutate UAT.",
+          "steps": "1. Click Approve.\n2. Enter editWindow = 24 (hours); optional adminComment.\n3. Submit.\n4. Check the CP's phone/email/WhatsApp for any notification.\n5. Inspect the original JbpSubmission row — is it changed?",
+          "testData": "[TEST_DATA_REQUIRED] a Pending edit request; editWindow=24",
+          "expected": "Edit request status -> APPROVED; editableUntil = now + 24h (clamped to cycle endDate 23:59:59.999); reviewedBy = admin.id, reviewedAt = now. The ORIGINAL submission is NOT updated yet — it changes only when the CP resubmits (then old row -> EXPIRED, new ACTIVE row version+1). NO notification is dispatched to the CP (DOC_DRIFT-JBP-003 — verified by source).\nSource: FSD-CORRECTION (workbook) + FS Feat6 §7/§8."
+        },
+        {
+          "id": "TC_JBP_FORM_003",
+          "scenario": "To verify the Approve dialog fields",
+          "description": "Verify the Approve action presents an editWindow input (hours) and an optional adminComment field.",
+          "precond": "A Pending edit request detail is open; Approve clicked.",
+          "steps": "1. Click Approve.\n2. Read the input fields offered.",
+          "testData": "[TEST_DATA_REQUIRED] a Pending edit request",
+          "expected": "An editWindow field (hours, integer >=1, required) and an adminComment field (optional, max 550 chars) are shown. [VERIFY WITH DEV] exact on-screen labels — FSD names the payload fields; visual-memory did not capture the approve dialog.\nSource: FSD-CORRECTION (workbook) + DOC_DRIFT-JBP-001."
+        },
+        {
+          "id": "ADM_JBP_032",
+          "scenario": "[FSD-CORRECTION][DOC_DRIFT-JBP-001] Approve requires editWindow, not a reason",
+          "description": "Verify that approving without editWindow is rejected with a validation error, and that adminComment is optional.",
+          "precond": "A Pending edit request detail is open; Approve clicked.",
+          "steps": "1. Click Approve.\n2. Submit without entering editWindow.",
+          "testData": "[TEST_DATA_REQUIRED] a Pending edit request; editWindow omitted",
+          "expected": "Validation error on editWindow — required integer min 1. adminComment is OPTIONAL (nullable, max 550 chars). The prior BRD/FRD claim \"reason required for approve\" is WRONG (DOC_DRIFT-JBP-001).\nSource: FSD-CORRECTION (workbook)."
+        },
+        {
+          "id": "TC_JBP_VAL_003",
+          "scenario": "To verify editWindow numeric boundaries",
+          "description": "Verify editWindow rejects 0, negative, and decimal values and accepts the minimum integer 1.",
+          "precond": "A Pending edit request; Approve clicked.",
+          "steps": "1. Try editWindow = 0 -> submit.\n2. Try editWindow = -5 -> submit.\n3. Try editWindow = 2.5 -> submit.\n4. Try editWindow = 1 -> submit.",
+          "testData": "editWindow: 0 / -5 / 2.5 / 1",
+          "expected": "0, negative, and decimal are rejected (required integer min 1); editWindow = 1 is accepted. [VERIFY WITH DEV] documented upper bound (if any).\nSource: FSD-CORRECTION (integer min 1) + dimension 3 (boundary)."
+        },
+        {
+          "id": "ADM_JBP_FSD_047",
+          "scenario": "[BUG-REF: BUG-JBP-002] editableUntil is clamped to cycle endDate",
+          "description": "Verify that approving with an editWindow longer than the time remaining in the cycle clamps editableUntil to the cycle endDate, not now+editWindow.",
+          "precond": "A cycle whose endDate is 3 days away; a Pending edit request on a submission in that cycle. [TEST_DATA_REQUIRED].",
+          "steps": "1. Approve with editWindow = 240 (10 days).\n2. Inspect editableUntil in the DB or the CP \"latest cycle\" view.",
+          "testData": "[TEST_DATA_REQUIRED] cycle endDate in 3 days; editWindow=240",
+          "expected": "editableUntil = cycle endDate 23:59:59.999 (NOT now + 240h). The cycle endDate caps the window.\nSource: FSD-CORRECTION (workbook) BUG-JBP-002."
+        },
+        {
+          "id": "TC_JBP_RACE_002",
+          "scenario": "To verify approving an already-EXPIRED request is rejected",
+          "description": "Verify that if a request auto-EXPIRES (via the list sweep) before approve is confirmed, the approve is rejected.",
+          "precond": "A request whose editableUntil/state causes it to be swept to EXPIRED between opening and confirming. [TEST_DATA_REQUIRED].",
+          "steps": "1. Open Approve on a request.\n2. Trigger the auto-sweep (e.g. reload list) so the request becomes EXPIRED.\n3. Confirm the approve.",
+          "testData": "[TEST_DATA_REQUIRED] a request that expires mid-flow",
+          "expected": "[VERIFY WITH DEV] The approve should be rejected because the request is no longer PENDING. Document the actual response.\nSource: DOC_DRIFT-JBP-002 + dimension 4 (race)."
+        },
+        {
+          "id": "TC_JBP_NEG_010",
+          "scenario": "To verify approve is blocked on a non-Pending request",
+          "description": "Verify that approving a request that is already APPROVED, REJECTED, EXPIRED, or CONSUMED is blocked.",
+          "precond": "A request in a non-Pending state. [TEST_DATA_REQUIRED].",
+          "steps": "1. Attempt to approve a non-Pending request (via UI if shown, or API).",
+          "testData": "[TEST_DATA_REQUIRED] a non-Pending request id",
+          "expected": "Approve is blocked / not offered for non-Pending requests. [VERIFY WITH DEV] exact error.\nSource: FS Feat6 §5 status flow + dimension 5."
+        },
+        {
+          "id": "TC_JBP_API_006",
+          "scenario": "To verify the approve API endpoint body",
+          "description": "Verify PUT /api/v1/admin/jbp-edit-requests/:id/approve enforces editWindow and accepts optional adminComment.",
+          "precond": "Valid admin token; a Pending edit request id. [TEST_DATA_REQUIRED].",
+          "steps": "1. PUT /approve with no editWindow.\n2. PUT /approve with editWindow=24 and adminComment.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; pending request id",
+          "expected": "Call 1 rejected (editWindow required). Call 2 succeeds; status -> APPROVED, editableUntil set (clamped), reviewedBy/reviewedAt set. [VERIFY WITH DEV] whether API rejects without editWindow exactly like the UI.\nSource: FRD §11 (PUT /approve) + FSD-CORRECTION + dimension 8."
+        },
+        {
+          "id": "ADM_JBP_FSD_046",
+          "scenario": "[FSD-CORRECTION] CP resubmit consumes APPROVED edit request -> CONSUMED",
+          "description": "Verify that when a CP resubmits within editableUntil, the old submission is EXPIRED, a new ACTIVE submission (version+1) is inserted, and the APPROVED edit request becomes CONSUMED.",
+          "precond": "A CP has an APPROVED edit request still within editableUntil and an existing ACTIVE submission for the cycle. [TEST_DATA_REQUIRED].",
+          "steps": "1. CP POST /api/v1/cp/jbp with new values.\n2. Inspect the DB rows for that CP+cycle.",
+          "testData": "[TEST_DATA_REQUIRED] CP token; APPROVED request within editableUntil; CP Portal [VERIFY WITH DEV] URL — DOC_DRIFT-JBP-004",
+          "expected": "Old JbpSubmission -> EXPIRED. New JbpSubmission inserted with version = previous.version + 1, status ACTIVE. The APPROVED edit-request row -> CONSUMED.\nSource: FSD-CORRECTION (workbook) + DOC_DRIFT-JBP-002."
+        }
+      ]
+    },
+    {
+      "name": "Reject Edit Request",
+      "tcs": [
+        {
+          "id": "ADM_JBP_035",
+          "scenario": "[FSD-CORRECTION][DOC_DRIFT-JBP-003] Reject preserves original submission, sends NO CP notification",
+          "description": "Verify that rejecting an edit request with an adminComment sets the request to REJECTED, preserves the original submission, and dispatches NO CP notification.",
+          "precond": "A Pending edit request detail is open. Valid admin. [TEST_DATA_REQUIRED]. User authorisation.",
+          "steps": "1. Click Reject.\n2. Enter adminComment = \"Insufficient detail\" (required, max 550).\n3. Submit.\n4. Check the CP's notifications.\n5. Inspect the original submission.",
+          "testData": "[TEST_DATA_REQUIRED] a Pending edit request; adminComment text",
+          "expected": "Edit request status -> REJECTED; original submission unchanged; reviewedBy = admin.id, reviewedAt = now. NO notification is dispatched to the CP (DOC_DRIFT-JBP-003 — FS Feat6 §8, no email/SMS/WhatsApp on reject).\nSource: FSD-CORRECTION (workbook) + FS Feat6 §7b/§8."
+        },
+        {
+          "id": "TC_JBP_FORM_004",
+          "scenario": "To verify the Reject dialog field",
+          "description": "Verify the Reject action presents a required adminComment field (max 550 chars).",
+          "precond": "A Pending edit request detail is open; Reject clicked.",
+          "steps": "1. Click Reject.\n2. Read the input field offered.",
+          "testData": "[TEST_DATA_REQUIRED] a Pending edit request",
+          "expected": "A required adminComment field (max 550 chars) is shown. [VERIFY WITH DEV] exact on-screen label.\nSource: FSD-CORRECTION (workbook) + FS Feat6 §6 rule 4."
+        },
+        {
+          "id": "ADM_JBP_034",
+          "scenario": "To verify Reject requires a written reason (adminComment)",
+          "description": "Verify that rejecting without an adminComment is blocked by a required-field validation.",
+          "precond": "A Pending edit request detail is open; Reject clicked.",
+          "steps": "1. Click Reject.\n2. Submit without entering an adminComment.",
+          "testData": "adminComment: (empty)",
+          "expected": "A required-field validation appears; the request cannot be rejected without a reason. (Note: unlike approve, reject's reason IS required — DOC_DRIFT-JBP-001.)\nSource: FS Feat6 §6 rule 4 + FSD-CORRECTION."
+        },
+        {
+          "id": "TC_JBP_VAL_004",
+          "scenario": "To verify the adminComment 550-character boundary",
+          "description": "Verify adminComment accepts up to 550 characters and rejects/truncates beyond that.",
+          "precond": "A Pending edit request; Reject clicked.",
+          "steps": "1. Enter exactly 550 characters -> submit.\n2. Enter 551 characters -> submit.",
+          "testData": "550-char string; 551-char string",
+          "expected": "550 chars is accepted; 551 chars is rejected or capped at 550. [VERIFY WITH DEV] whether the limit blocks or truncates.\nSource: FSD-CORRECTION (max 550) + dimension 3 (boundary)."
+        },
+        {
+          "id": "TC_JBP_NEG_011",
+          "scenario": "To verify reject is blocked on an already-decided request",
+          "description": "Verify that rejecting a request already APPROVED/REJECTED/EXPIRED/CONSUMED is blocked.",
+          "precond": "A request in a non-Pending state. [TEST_DATA_REQUIRED].",
+          "steps": "1. Attempt to reject a non-Pending request.",
+          "testData": "[TEST_DATA_REQUIRED] a non-Pending request id",
+          "expected": "Reject is blocked / not offered for non-Pending requests. [VERIFY WITH DEV] exact error.\nSource: FS Feat6 §5 status flow + dimension 5."
+        },
+        {
+          "id": "TC_JBP_API_007",
+          "scenario": "To verify the reject API endpoint body",
+          "description": "Verify PUT /api/v1/admin/jbp-edit-requests/:id/reject requires adminComment and preserves the original submission.",
+          "precond": "Valid admin token; a Pending edit request id. [TEST_DATA_REQUIRED].",
+          "steps": "1. PUT /reject with no adminComment.\n2. PUT /reject with adminComment.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; pending request id",
+          "expected": "Call 1 rejected (adminComment required). Call 2 succeeds; status -> REJECTED, original submission unchanged. [VERIFY WITH DEV] whether API enforces the required reason like the UI.\nSource: FRD §11 (PUT /reject) + FSD-CORRECTION + dimension 8."
+        }
+      ]
+    },
+    {
+      "name": "Lifecycle & Business Rules",
+      "tcs": [
+        {
+          "id": "ADM_JBP_038",
+          "scenario": "To verify JBP has no financial impact",
+          "description": "Verify that closing a cycle or rejecting an edit request generates no payment/refund transaction.",
+          "precond": "A cycle was just closed and an edit request just rejected. [TEST_DATA_REQUIRED].",
+          "steps": "1. Open the Payment Transactions module.\n2. Look for any transaction tied to the JBP cycle close or edit-request reject.",
+          "testData": "[TEST_DATA_REQUIRED] a just-closed cycle; a just-rejected request",
+          "expected": "No transactions are generated; JBP is a commitment-tracking module with no financial side effects.\nSource: BRD §7.5 + FS Feat4 §6 rule 5 + FRD §11 (no financial impact)."
+        },
+        {
+          "id": "ADM_JBP_052",
+          "scenario": "To verify creating a cycle with a far-past Start Date",
+          "description": "Verify the behaviour when a cycle is created with a Start Date a long time in the past (e.g. 1 year ago) and an End Date also in the past.",
+          "precond": "The Create New Cycle modal is open; no OPEN cycle exists.",
+          "steps": "1. Enter Name \"Backdated\".\n2. Set Start Date = 1 year ago.\n3. Set End Date = today (or past).\n4. Submit.\n5. Reload the cycle list.",
+          "testData": "Name \"Backdated\"; Start = 1 year ago; End = past",
+          "expected": "Either a validation error (Start Date must be >= today) OR the cycle is created and immediately auto-CLOSED on the next list GET because its endDate is past. Document the observed behaviour. [VERIFY WITH DEV] whether the UI blocks past dates.\nSource: FS Feat3 + FSD ADM_JBP_FSD_044 (auto-close on GET)."
+        },
+        {
+          "id": "ADM_JBP_FSD_049",
+          "scenario": "[FSD-CORRECTION] Creating a new cycle EXPIRES PENDING/APPROVED requests of the closed cycle",
+          "description": "Verify that creating a new cycle (which cascade-CLOSEs the previous OPEN cycle) also sets all PENDING and APPROVED edit requests of that now-CLOSED cycle to EXPIRED in the same transaction.",
+          "precond": "One OPEN cycle whose submissions have PENDING and APPROVED edit requests. [TEST_DATA_REQUIRED].",
+          "steps": "1. Create a new OPEN cycle (cascades CLOSE on the old cycle).\n2. Inspect the edit-request rows of submissions tied to the now-CLOSED cycle.",
+          "testData": "[TEST_DATA_REQUIRED] OPEN cycle with PENDING + APPROVED requests",
+          "expected": "All PENDING and APPROVED edit-requests become EXPIRED inside the same transaction. CONSUMED/REJECTED rows are unaffected.\nSource: FSD-CORRECTION (workbook) + DOC_DRIFT-JBP-002."
+        }
+      ]
+    },
+    {
+      "name": "Auto-Sweep (Close & Expire on GET)",
+      "tcs": [
+        {
+          "id": "ADM_JBP_FSD_044",
+          "scenario": "[FSD-CORRECTION] Cycle auto-CLOSE happens on getAllJbpCycles",
+          "description": "Verify that an OPEN cycle whose endDate is in the past is auto-CLOSED by the very act of calling the cycle-list GET.",
+          "precond": "An OPEN cycle with endDate in the past exists. Valid admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. Confirm the cycle is OPEN in the DB.\n2. GET /api/v1/admin/jbp-cycles.\n3. Re-query the DB.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; an OPEN cycle with past endDate",
+          "expected": "After the GET, the cycle's status is CLOSED. The auto-sweep is triggered by the list call itself.\nSource: FSD-CORRECTION (workbook)."
+        },
+        {
+          "id": "ADM_JBP_FSD_045",
+          "scenario": "[FSD-CORRECTION] Edit-request auto-EXPIRE happens on getJbpEditRequests",
+          "description": "Verify that a PENDING/APPROVED edit request whose editableUntil is past is auto-EXPIRED by calling the edit-requests list GET.",
+          "precond": "A PENDING or APPROVED edit request with editableUntil < now exists. Valid admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. Confirm the DB state.\n2. GET /api/v1/admin/jbp-edit-requests.\n3. Re-query the edit-request row.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; an editableUntil-expired request",
+          "expected": "After the GET, the row's status is EXPIRED. The auto-sweep is triggered by the list call itself.\nSource: FSD-CORRECTION (workbook)."
+        },
+        {
+          "id": "TC_JBP_RACE_003",
+          "scenario": "To verify concurrent list GETs sweep idempotently",
+          "description": "Verify that two near-simultaneous list GETs that both qualify a cycle/request for auto-sweep do not double-transition or error.",
+          "precond": "An OPEN cycle with past endDate (or an editableUntil-expired request). [TEST_DATA_REQUIRED].",
+          "steps": "1. Fire two GET /jbp-cycles (or /jbp-edit-requests) calls concurrently.\n2. Inspect the final DB state.",
+          "testData": "[TEST_DATA_REQUIRED] a sweep-eligible cycle/request",
+          "expected": "[VERIFY WITH DEV] The final state is CLOSED/EXPIRED exactly once; no duplicate transition or 500 from the concurrent sweep.\nSource: FSD-CORRECTION (auto-sweep on GET) + dimension 4 (race)."
+        }
+      ]
+    },
+    {
+      "name": "Notifications (CP-submit channel & silence-by-design)",
+      "tcs": [
+        {
+          "id": "ADM_JBP_NOTIF_001",
+          "scenario": "To verify creating a cycle sends NO notification (silent by design)",
+          "description": "Verify that creating a JBP cycle dispatches no SMS/WhatsApp/email to anyone.",
+          "precond": "The Create New Cycle modal is open; no OPEN cycle. [TEST_DATA_REQUIRED]. User authorisation.",
+          "steps": "1. Create a valid cycle.\n2. Check for any outbound SMS/WhatsApp/email tied to the create action.",
+          "testData": "[TEST_DATA_REQUIRED] a valid create",
+          "expected": "No notification is dispatched on cycle creation (silence-by-design). Only the success toast is shown.\nSource: FS Feat3 §8 (NONE — confirmed via source, FSD-CORRECTION 2026-05-25)."
+        },
+        {
+          "id": "ADM_JBP_NOTIF_002",
+          "scenario": "To verify closing a cycle sends NO CP notification (silent by design)",
+          "description": "Verify that closing a JBP cycle dispatches no notification to CPs.",
+          "precond": "An OPEN cycle exists. [TEST_DATA_REQUIRED]. User authorisation.",
+          "steps": "1. Close the OPEN cycle (confirm \"Yes, Close\").\n2. Check for any CP SMS/WhatsApp/email tied to the close.",
+          "testData": "[TEST_DATA_REQUIRED] an OPEN cycle",
+          "expected": "No CP notification is dispatched on cycle close (silence-by-design). Only the success toast is shown.\nSource: FS Feat4 §8 (None — no CP notification on close)."
+        },
+        {
+          "id": "ADM_JBP_NOTIF_003",
+          "scenario": "To verify CP submit fires the WhatsApp template (the ONLY JBP notification)",
+          "description": "Verify that a successful CP JBP submission dispatches the WhatsApp template jbplaunchtwo_new — the only notification in the whole JBP flow.",
+          "precond": "An OPEN cycle exists; a CP submits successfully. [TEST_DATA_REQUIRED] CP submission.",
+          "steps": "1. CP submits a JBP form successfully.\n2. Capture the outbound notification channel and template name.",
+          "testData": "[TEST_DATA_REQUIRED] a CP submission; CP Portal [VERIFY WITH DEV] URL — DOC_DRIFT-JBP-004",
+          "expected": "A WhatsApp message using template jbplaunchtwo_new is dispatched. No admin-side action (create/close/approve/reject) sends any notification (DOC_DRIFT-JBP-003).\nSource: FS Feat6 §8 (FSD-CORRECTION) + ADM_JBP_FSD_041."
+        },
+        {
+          "id": "ADM_JBP_FSD_041",
+          "scenario": "[BUG-REF: BUG-JBP-001] WhatsApp template ${+91} emits \"91\" (template-string bug)",
+          "description": "Verify the phone-number placeholder in the jbplaunchtwo_new WhatsApp dispatch resolves to \"91<phone>\" (missing the literal +) due to a JS template-literal bug.",
+          "precond": "A CP submits a JBP successfully. [TEST_DATA_REQUIRED].",
+          "steps": "1. Capture the WhatsApp dispatch payload to template jbplaunchtwo_new.\n2. Inspect the phone-number placeholder.",
+          "testData": "[TEST_DATA_REQUIRED] a CP submission",
+          "expected": "The placeholder containing ${+91}<phone> resolves to \"91<phone>\" — missing the literal + sign (JS evaluates +91 as numeric 91). Document as a template bug.\nSource: FSD-CORRECTION (workbook) BUG-JBP-001."
+        },
+        {
+          "id": "ADM_JBP_FSD_042",
+          "scenario": "[FSD-CORRECTION] CP submit WhatsApp is fire-and-forget",
+          "description": "Verify that a WhatsApp dispatch failure does not fail the CP submission — the DB row is still created and the CP sees success.",
+          "precond": "Backend outbound to botspice WhatsApp is blocked/failing. [TEST_DATA_REQUIRED].",
+          "steps": "1. CP submits a JBP.\n2. Verify a new ACTIVE submission row exists in the DB.\n3. Verify no error is returned to the CP.",
+          "testData": "[TEST_DATA_REQUIRED] blocked WhatsApp outbound; a CP submission",
+          "expected": "The DB row is created and the CP sees a success response; the WhatsApp call fails silently in the background. Audit log captures success regardless.\nSource: FSD-CORRECTION (workbook)."
+        }
+      ]
+    },
+    {
+      "name": "Integration (LSQ / downstream)",
+      "tcs": [
+        {
+          "id": "ADM_JBP_FSD_043",
+          "scenario": "[FSD-CORRECTION] LSQ outage blocks the entire JBP submission",
+          "description": "Verify that an LSQ failure (called before the DB write) blocks the whole CP submission with HTTP 500 and no DB row.",
+          "precond": "LSQ is mocked/forced to return 500. [TEST_DATA_REQUIRED]. LSQ is excluded from credentialed automation (CLAUDE.md) — verify the availability effect manually.",
+          "steps": "1. CP attempts submitJbp while LSQ returns 500.\n2. Observe the HTTP response and the DB state.",
+          "testData": "[TEST_DATA_REQUIRED] LSQ forced to 500",
+          "expected": "LSQ createActivity (event 270) AND captureLead (CustomObject 14-28) are called BEFORE the DB write. If either fails -> HTTP 500 to the CP and NO DB row is inserted. Document as an availability risk. [VERIFY WITH DEV] (LSQ excluded from automation).\nSource: FSD-CORRECTION (workbook) + CLAUDE.md LSQ exclusion."
+        },
+        {
+          "id": "TC_JBP_INT_001",
+          "scenario": "To verify the OPEN cycle appears as the active cycle in the CP banner",
+          "description": "Verify that the cycle currently OPEN in the Admin Cycle Management tab is the one shown as the active cycle in the CP Portal JBP banner.",
+          "precond": "Exactly one OPEN cycle exists. CP login available. [TEST_DATA_REQUIRED].",
+          "steps": "1. Note the OPEN cycle name in the Admin Cycle Management tab.\n2. Log into the CP Portal and open JBP.\n3. Read the \"Current Cycle - <name>\" banner.",
+          "testData": "[TEST_DATA_REQUIRED] one OPEN cycle; CP login (8888888888 / 147258); CP Portal [VERIFY WITH DEV] URL — DOC_DRIFT-JBP-004",
+          "expected": "The CP banner shows \"Current Cycle - <name>\" with an ACTIVE badge and \"Closes on: <End Date>\" matching the OPEN admin cycle.\nSource: FRD §3 (CP Portal banner) + FS Feat7 §4. CP-side — flagged, verify cross-module reflection."
+        },
+        {
+          "id": "TC_JBP_INT_002",
+          "scenario": "To verify a closed cycle disappears from the CP active banner",
+          "description": "Verify that after an admin closes the OPEN cycle, the CP Portal no longer shows it as active and the \"Add New JBP Entry\" button disappears.",
+          "precond": "One OPEN cycle exists; a CP has not yet submitted. [TEST_DATA_REQUIRED]. User authorisation to close.",
+          "steps": "1. Close the OPEN cycle in the Admin tab.\n2. Refresh the CP Portal JBP page.\n3. Look for the active banner and the Add New JBP Entry button.",
+          "testData": "[TEST_DATA_REQUIRED] one OPEN cycle; CP login; CP Portal [VERIFY WITH DEV] URL",
+          "expected": "After the close, the CP Portal stops showing the cycle as active and the \"Add New JBP Entry\" button disappears.\nSource: FS Feat4 §7 (CP Portal stops showing active) + FS Feat7 §6."
+        }
+      ]
+    },
+    {
+      "name": "Role / Auth / Security",
+      "tcs": [
+        {
+          "id": "TC_JBP_NEG_012",
+          "scenario": "To verify an invalid/expired token is rejected (401/403)",
+          "description": "Verify that JBP admin API calls with an invalid or expired bearer token are rejected with 401/403.",
+          "precond": "An invalid or expired admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. Call GET /api/v1/admin/jbp-cycles with an invalid/expired token.\n2. Observe the response status.",
+          "testData": "[TEST_DATA_REQUIRED] an invalid/expired bearer token",
+          "expected": "The call is rejected with 401 (or 403); no cycle data is returned. [VERIFY WITH DEV] exact status code.\nSource: FRD §3 (admin session required) + dimension 9.\nNote: per Login-master notes, logout is a server-side no-op (JWT stays valid ~1 day) — do not treat post-logout calls as 401."
+        },
+        {
+          "id": "TC_JBP_NEG_013",
+          "scenario": "To verify JBP data is isolated per project/tenant",
+          "description": "Verify that an admin scoped to one project cannot see another project's JBP cycles/submissions.",
+          "precond": "Cycles/submissions exist under at least two projects. [TEST_DATA_REQUIRED].",
+          "steps": "1. As an admin for project A, list cycles and submissions.\n2. Confirm no project-B records appear.",
+          "testData": "[TEST_DATA_REQUIRED] JBP data under two projects; admin scoped to project A",
+          "expected": "Only the current project's JBP cycles/submissions are returned (projectId scoping). [VERIFY WITH DEV] multi-tenant scoping — not detailed in BRD/FRD.\nSource: FRD §10 (projectId FK) + dimension 9 (data isolation)."
+        },
+        {
+          "id": "TC_JBP_API_008",
+          "scenario": "To verify approve/reject require an admin token",
+          "description": "Verify that the approve and reject endpoints reject calls without a valid admin token.",
+          "precond": "A Pending edit request id. No / non-admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. PUT /jbp-edit-requests/:id/approve with no token.\n2. PUT /jbp-edit-requests/:id/reject with no token.",
+          "testData": "[TEST_DATA_REQUIRED] pending request id; no admin token",
+          "expected": "Both calls are rejected (401/403); no status change occurs. [VERIFY WITH DEV] exact status.\nSource: FRD §3 + §11 + dimension 9."
+        }
+      ]
+    },
+    {
+      "name": "Error Handling & Edge",
+      "tcs": [
+        {
+          "id": "ADM_JBP_FSD_050",
+          "scenario": "[BUG-REF: BUG-JBP-003] submitJbp NPE on null cycle",
+          "description": "Verify that submitting with a jbpCycleId not present in the DB throws a TypeError (jbpCycle.endDate read before the null check) instead of a clean 400.",
+          "precond": "A CP supplies an invalid jbpCycleId. [TEST_DATA_REQUIRED].",
+          "steps": "1. POST /api/v1/cp/jbp with jbpCycleId = 999999 (not in DB).\n2. Observe the response.",
+          "testData": "[TEST_DATA_REQUIRED] CP token; jbpCycleId=999999",
+          "expected": "The backend throws a TypeError on jbpCycle.endDate instead of returning HTTP 400 \"Cycle not found\". Document as a bug (BUG-JBP-003).\nSource: FSD-CORRECTION (workbook) BUG-JBP-003."
+        },
+        {
+          "id": "TC_JBP_NEG_014",
+          "scenario": "To verify a server 500 on the cycle list is handled gracefully",
+          "description": "Verify that if the cycle-list call returns a 500, the JBP page shows an error state rather than a blank/broken page.",
+          "precond": "The cycle-list endpoint is forced to 500. [TEST_DATA_REQUIRED].",
+          "steps": "1. Force GET /api/v1/admin/jbp-cycles to 500.\n2. Open the Cycle Management tab.",
+          "testData": "[TEST_DATA_REQUIRED] a forced 500 on the list endpoint",
+          "expected": "The page shows an error message / retry affordance and does not crash. [VERIFY WITH DEV] exact error text.\nSource: dimension 5 (server 500)."
+        },
+        {
+          "id": "TC_JBP_NEG_015",
+          "scenario": "To verify a network drop mid-create is handled",
+          "description": "Verify that losing connectivity while submitting Create Cycle surfaces an error and does not create a duplicate/partial cycle.",
+          "precond": "The Create New Cycle modal is open with valid data; no OPEN cycle. [TEST_DATA_REQUIRED].",
+          "steps": "1. Fill the create form.\n2. Drop the network just as Create Cycle is clicked.\n3. Restore the network and reload the list.",
+          "testData": "[TEST_DATA_REQUIRED] simulated network drop on submit",
+          "expected": "An error is surfaced; no duplicate or partial cycle is created. [VERIFY WITH DEV] exact behaviour and any retry.\nSource: dimension 5 (network failure)."
+        },
+        {
+          "id": "TC_JBP_NEG_016",
+          "scenario": "To verify a very long cycle name is handled",
+          "description": "Verify the Cycle Name field handles an extremely long value (boundary) without breaking layout or the create call.",
+          "precond": "The Create New Cycle modal is open; no OPEN cycle.",
+          "steps": "1. Enter a 256+ character Cycle Name.\n2. Set valid dates and submit.",
+          "testData": "256+ character name string",
+          "expected": "[VERIFY WITH DEV] The field either enforces a max length or accepts and stores/truncates it without breaking layout. Document the max length.\nSource: dimension 11 (input boundary) — no documented max in BRD/FRD/FS."
+        }
+      ]
+    }
+  ]
+}

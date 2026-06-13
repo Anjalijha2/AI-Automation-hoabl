@@ -1,0 +1,776 @@
+{
+  "portal": "Admin",
+  "module": "Offers",
+  "sheetName": "Offers - Master",
+  "replaceSheets": ["Offers", "Offers (Exec)"],
+  "notes": [
+    "1. Offers is a single-page module at /admin/offers (heading 'Offers Management'). No tabs, NO search/filter input — only Refresh + Add New Offer in the header (see DOC_DRIFT-004).",
+    "2. [TEST_DATA_REQUIRED] = a disposable UAT offer/record must be supplied before executing this destructive test (a throwaway offer to edit/toggle/delete, a buyer with a completed booking, a future/expired-dated offer).",
+    "3. [VERIFY WITH DEV] = behaviour not confirmed in BRD/FRD/FS or contradicted across sources; confirm before treating Pass/Fail as authoritative.",
+    "4. Offer Type is a radio group (AMOUNT default | PERCENTAGE) — mutually exclusive. Selecting one swaps the value field label/control (Amount with '₹ ' prefix  <->  Percentage). Amount-Based rows show Amount=₹X,XXX & Percentage='-'; Percentage-Based rows show Amount='-' & Percentage='X%'.",
+    "5. Destructive tests (Create / Edit-save / Toggle / Delete) MUST be authorised by the user before running on UAT and use a disposable offer — UAT offers are live and toggling/deleting affects real allocation pricing instantly (BRD §8 CRITICAL). Per pipeline discipline, destructive UI cases here are authored as OPEN-modal/drawer -> assert -> CLOSE (Cancel) only; actual submit/delete requires explicit user OK + disposable data.",
+    "6. Add and Edit both use an Ant DRAWER (.ant-drawer-content), NOT a centered modal. Delete uses an Ant MODAL (.ant-modal-content) with exact buttons 'Cancel' and 'Yes, delete' (NOT 'OK'/'Delete'/'Yes').",
+    "7. Toggle Active/Inactive has NO confirmation dialog — state flips instantly and persists to server (BRD §5.2, FS Feature 4).",
+    "8. Typology is a SINGLE-select Ant dropdown (one unitTypologyId scalar), NOT multi-select; empty = applies to all typologies. To target multiple typologies admin must create multiple offers (BRD §10.1, latest correction — see DOC_DRIFT-002). FRD/FS 'Multi-select' wording is stale.",
+    "9. Delete persistence is CONTESTED across sources: BRD §10.4 (2026-05-21, latest) = HARD destroy (offer.destroy(), no soft-delete, no FK guard, Sr.No gaps permanent). FRD §10 / FS Feature 5 §6.4 = soft-delete (paranoid, deletedAt). TCs assert the OBSERVED UI effect (offer disappears, Sr.No gap remains) and flag the DB-layer claim [VERIFY WITH DEV] (see DOC_DRIFT-001).",
+    "10. offerCode whitelist is CONTESTED: FS Feature 2 §6.8 + §Create claim admin offers always have offerCode=NULL (HOME_LOAN/VC_REQUEST system-only). BRD §10.2 (latest) says offerCode is read straight from req.body with NO whitelist — an admin CAN set offerCode='HOME_LOAN'. Negative API TCs assert the current permissive behaviour and flag for whitelist verification (see DOC_DRIFT-003).",
+    "11. No buyer/SM notification (SMS/WhatsApp/email) is dispatched for ANY offer action (create/edit/toggle/delete) — silence is by design (FS Features 2-5 §8). Silence-by-design is a REQUIRED assertion, not an omission.",
+    "12. System-generated offers HOME_LOAN (home-loan approval) and VC_REQUEST (SM video-call outcome) appear in the list but are NOT created via the Add New Offer drawer (BRD §4)."
+  ],
+  "subModules": [
+    {
+      "name": "Login & Landing",
+      "tcs": [
+        {
+          "id": "ADM_OFR_001",
+          "scenario": "To verify the Offers page loads at /admin/offers",
+          "description": "Verify that the Offers page opens with its list and header controls when an admin clicks Offers in the sidebar.",
+          "precond": "An admin is logged in (mobile 8888888888 / OTP 258369).",
+          "steps": "1. Log in to the Admin portal.\n2. In the left sidebar, click the gift icon labelled 'Offers'.\n3. Observe the address bar and the page content.",
+          "testData": "Mobile: 8888888888, OTP: 258369",
+          "expected": "The URL ends in /admin/offers. The page shows the 'Offers Management' heading, the offers table, and the 'Refresh' and 'Add New Offer' buttons in the header."
+        },
+        {
+          "id": "TC_OFR_FUNC_048",
+          "scenario": "To verify the offer count badge",
+          "description": "Verify that the header count badge reflects the total number of offers including both active and inactive ones.",
+          "precond": "An admin is on the Offers page; the number of rows in the table is known.",
+          "steps": "1. Read the count shown in the header count badge (text matches a pattern like 'N Offers').\n2. Count the rows in the offers table (active + inactive together).",
+          "testData": "(no input)",
+          "expected": "The badge number equals the total table rows, counting active AND inactive offers (BRD: badge counts all statuses)."
+        },
+        {
+          "id": "TC_OFR_NEG_049",
+          "scenario": "To verify unauthenticated access is blocked",
+          "description": "Verify that opening /admin/offers with no active admin session redirects to the login page.",
+          "precond": "Browser has no active admin session (logged out / cleared cookies).",
+          "steps": "1. With no session, navigate directly to https://uat-web.xrportal.in/admin/offers.\n2. Observe where the browser lands.",
+          "testData": "(no input)",
+          "expected": "The browser is redirected to the Admin login screen; the Offers page is not shown without authentication."
+        }
+      ]
+    },
+    {
+      "name": "Table - Structure & Content",
+      "tcs": [
+        {
+          "id": "ADM_OFR_002",
+          "scenario": "To verify the offers table column headers",
+          "description": "Verify that the offers table shows the documented columns in the correct order.",
+          "precond": "An admin is on the Offers page with at least one offer present.",
+          "steps": "1. Read the table column headers from left to right.",
+          "testData": "(no input)",
+          "expected": "Columns appear in this order: Sr.no, Offer Name, Description, Amount, Percentage, Start Date, End Date, Created By, Action. (Sr.no is the sticky-left column.)"
+        },
+        {
+          "id": "ADM_OFR_004",
+          "scenario": "To verify the Amount/Percentage display pattern per offer type",
+          "description": "Verify that each row shows Amount or Percentage according to its offer type, with a dash in the unused column.",
+          "precond": "The list contains at least one Amount-Based and (if available) one Percentage-Based offer.",
+          "steps": "1. Read the Amount and Percentage cells for an Amount-Based offer row.\n2. Read the Amount and Percentage cells for a Percentage-Based offer row (if present).",
+          "testData": "(no input)",
+          "expected": "Amount-Based row: Amount shows '₹ X,XXX', Percentage shows '-'. Percentage-Based row: Amount shows '-', Percentage shows 'X%'."
+        },
+        {
+          "id": "ADM_OFR_009",
+          "scenario": "To verify Amount-Based offer currency formatting",
+          "description": "Verify that an Amount-Based offer's Amount column is shown with the rupee symbol and thousands grouping.",
+          "precond": "An Amount-Based offer exists in the list.",
+          "steps": "1. Locate an Amount-Based offer row.\n2. Read the value in the Amount column.",
+          "testData": "(no input)",
+          "expected": "The Amount column shows a rupee-formatted value such as '₹ 27,000' (₹ prefix, comma grouping). The Percentage column shows '-'."
+        },
+        {
+          "id": "ADM_OFR_015",
+          "scenario": "To verify Percentage-Based offer percent formatting",
+          "description": "Verify that a Percentage-Based offer's Percentage column shows the value with a percent sign.",
+          "precond": "A Percentage-Based offer exists in the list. [TEST_DATA_REQUIRED] — no Percentage-Based offer observed on UAT yet.",
+          "steps": "1. Locate a Percentage-Based offer row.\n2. Read the value in the Percentage column.",
+          "testData": "[TEST_DATA_REQUIRED] a Percentage-Based offer (e.g. 5%)",
+          "expected": "The Percentage column shows the value with a percent suffix (e.g. '5%'). The Amount column shows '-'."
+        },
+        {
+          "id": "TC_OFR_FUNC_050",
+          "scenario": "To verify the Created By column",
+          "description": "Verify that the Created By column shows the display name of the admin who created each offer.",
+          "precond": "An admin is on the Offers page.",
+          "steps": "1. Read the Created By cell on any admin-created offer row.",
+          "testData": "(no input)",
+          "expected": "The Created By column shows the display name of the creating admin (non-empty text)."
+        },
+        {
+          "id": "TC_OFR_FUNC_051",
+          "scenario": "To verify Sr.no values are non-contiguous primary keys",
+          "description": "Verify that the Sr.no column may contain gaps because IDs are database primary keys not re-used after deletions.",
+          "precond": "The list contains offers whose Sr.no values include a gap (e.g. 1,3,7,8,9,10).",
+          "steps": "1. Read the Sr.no values down the table.",
+          "testData": "(no input)",
+          "expected": "Sr.no values are the offers' DB primary keys and may be non-contiguous; gaps correspond to previously deleted offers. (See DOC_DRIFT-001 on delete persistence.)"
+        },
+        {
+          "id": "TC_OFR_NEG_052",
+          "scenario": "To verify the empty / no-data state",
+          "description": "Verify the table's behaviour when no offers exist for the project.",
+          "precond": "[VERIFY WITH DEV] A project state with zero offers; no documented empty-state string. [TEST_DATA_REQUIRED] a project with no offers.",
+          "steps": "1. Open Offers for a project that has no offers configured.\n2. Observe the table body.",
+          "testData": "[TEST_DATA_REQUIRED] project with 0 offers",
+          "expected": "[To verify] The table shows an empty/no-data state and the count badge reads 0. Exact empty-state text not documented in BRD/FRD/FS — confirm with dev."
+        }
+      ]
+    },
+    {
+      "name": "Refresh",
+      "tcs": [
+        {
+          "id": "ADM_OFR_003",
+          "scenario": "To verify the Add New Offer button is present",
+          "description": "Verify that the 'Add New Offer' button is visible in the page header.",
+          "precond": "An admin is on the Offers page.",
+          "steps": "1. Look at the top-right of the Offers page header.",
+          "testData": "(no input)",
+          "expected": "An 'Add New Offer' button (primary style) is visible in the header alongside the 'Refresh' button."
+        },
+        {
+          "id": "TC_OFR_FUNC_076",
+          "scenario": "To verify the Refresh button reloads the list",
+          "description": "Verify that clicking Refresh reloads the offers from the server without changing the count.",
+          "precond": "An admin is on the Offers page; the current count is noted.",
+          "steps": "1. Note the count badge value.\n2. Click the 'Refresh' button.\n3. Observe the table and count after reload.",
+          "testData": "(no input)",
+          "expected": "The table reloads from the server. With no concurrent change, the same offers and the same count are shown."
+        }
+      ]
+    },
+    {
+      "name": "Pagination",
+      "tcs": [
+        {
+          "id": "ADM_OFR_034",
+          "scenario": "To verify pagination control on the offers list",
+          "description": "Verify the pagination behaviour on the offers list; on UAT the small offer count fits on a single page.",
+          "precond": "An admin is on the Offers page.",
+          "steps": "1. Scroll to the bottom of the offers table.\n2. Look for an Ant pagination control.\n3. If present, note whether Previous/Next are disabled at the extremes.",
+          "testData": "(no input)",
+          "expected": "If a pagination control renders, Previous is disabled on the first page and Next is disabled on the last page. On current UAT (~6 offers) all offers fit on one page and Next is disabled. (Multi-page behaviour is [VERIFY WITH DEV] — no >10-offer dataset available.)"
+        }
+      ]
+    },
+    {
+      "name": "Search / Filter (not present)",
+      "tcs": [
+        {
+          "id": "ADM_OFR_035",
+          "scenario": "To verify NO search/filter input exists on the list page",
+          "description": "Verify that the Offers list page has no search box or filter control — the only header controls are Refresh and Add New Offer.",
+          "precond": "An admin is on the Offers page.",
+          "steps": "1. Scan the Offers page header and table area top to bottom.\n2. Look for any search input, filter dropdown or column-filter control.",
+          "testData": "(no input)",
+          "expected": "No search box or filter control is present anywhere on the Offers list page. Only 'Refresh' and 'Add New Offer' buttons exist in the header. (TC_ID re-purposed from a former 'search by name' assumption that no longer matches the UI — see DOC_DRIFT-004; FRD Q-OFFERS-001 'is search planned?' remains Open.)"
+        }
+      ]
+    },
+    {
+      "name": "Add New Offer Drawer - Structure",
+      "tcs": [
+        {
+          "id": "ADM_OFR_007",
+          "scenario": "To verify the Add New Offer drawer opens with all fields",
+          "description": "Verify that clicking Add New Offer opens a right-side drawer titled 'Add New Offer' showing every documented field.",
+          "precond": "An admin is on the Offers page.",
+          "steps": "1. Click 'Add New Offer'.\n2. Observe the panel that opens and read its title and fields.",
+          "testData": "(no input)",
+          "expected": "A right-side Ant drawer opens with title 'Add New Offer' and these fields in order: Offer Name, Offer Type (radio AMOUNT/PERCENTAGE), Amount (or Percentage), Description, Offer Validity (Start - End date range), Select Typology. Footer shows 'Cancel' and 'Create Offer' buttons and a top-right Close (X) icon. NON-DESTRUCTIVE: close with Cancel."
+        },
+        {
+          "id": "TC_OFR_UI_053",
+          "scenario": "To verify the Offer Name placeholder",
+          "description": "Verify the Offer Name field shows its placeholder text.",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. Look at the Offer Name input.\n2. Read its placeholder text.",
+          "testData": "(no input)",
+          "expected": "The Offer Name field shows the placeholder 'Please enter offer name'."
+        },
+        {
+          "id": "TC_OFR_UI_054",
+          "scenario": "To verify the default Offer Type selection",
+          "description": "Verify that Offer Type defaults to Amount Based when the Add drawer first opens.",
+          "precond": "The Add New Offer drawer is freshly open.",
+          "steps": "1. Observe the Offer Type radio group on first open.",
+          "testData": "(no input)",
+          "expected": "Offer Type defaults to 'Amount Based' (AMOUNT). The value field is labelled 'Amount' with a '₹ ' prefix."
+        },
+        {
+          "id": "TC_OFR_UI_055",
+          "scenario": "To verify the Description placeholder and textarea",
+          "description": "Verify the Description field is an optional textarea with its placeholder.",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. Look at the Description field.\n2. Read its placeholder.",
+          "testData": "(no input)",
+          "expected": "The Description field is a textarea showing placeholder 'Please enter description' and is optional (max 500 characters per FRD)."
+        },
+        {
+          "id": "TC_OFR_UI_056",
+          "scenario": "To verify the Offer Validity range picker",
+          "description": "Verify the Offer Validity field is a date-range picker with Start date and End date inputs.",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. Look at the Offer Validity field.\n2. Read the two date input placeholders.",
+          "testData": "(no input)",
+          "expected": "Offer Validity is an Ant range date picker with two inputs showing placeholders 'Start date' and 'End date'."
+        },
+        {
+          "id": "ADM_OFR_043",
+          "scenario": "To verify the value field swaps when Offer Type changes",
+          "description": "Verify that switching Offer Type between Amount Based and Percentage Based swaps the value field label/control and does not carry an invalid value across.",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. With Type = Amount Based, the value field is labelled 'Amount' with a '₹ ' prefix.\n2. Select Offer Type = Percentage Based.\n3. Observe the value field label/control.\n4. Switch back to Amount Based and observe again.",
+          "testData": "Type sequence: Amount -> Percentage -> Amount",
+          "expected": "When Percentage Based is selected the field becomes 'Percentage' (percent input, no ₹ prefix). Switching back to Amount Based restores the 'Amount' field with the ₹ prefix. The two types are mutually exclusive. (Whether a previously entered value is cleared on swap is [VERIFY WITH DEV].)"
+        }
+      ]
+    },
+    {
+      "name": "Create Offer",
+      "tcs": [
+        {
+          "id": "ADM_OFR_008",
+          "scenario": "To verify creating an Amount-Based offer with valid data",
+          "description": "Verify that a valid Amount-Based offer can be created and appears in the list active by default.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation to create a disposable offer on UAT. The Add New Offer drawer is open.",
+          "steps": "1. Enter Offer Name (disposable, e.g. 'QA Early Bird 27K').\n2. Select Offer Type = Amount Based.\n3. Enter Amount = 27000.\n4. Pick Start Date = today and End Date = today + 30 days.\n5. (Optional) leave Typology empty.\n6. Click 'Create Offer'.",
+          "testData": "[TEST_DATA_REQUIRED] Name 'QA Early Bird 27K', Amount 27000, dates today..+30d",
+          "expected": "The drawer closes and the new offer appears in the table with Amount '₹ 27,000', Percentage '-', the chosen dates, and the Active toggle ON by default. AUTHORISED-CREATE ONLY: requires user OK + disposable data; otherwise author as open-drawer -> assert fields -> Cancel."
+        },
+        {
+          "id": "ADM_OFR_013",
+          "scenario": "To verify creating a Percentage-Based offer",
+          "description": "Verify that a valid Percentage-Based offer can be created and renders with a percent value.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + disposable offer. The Add New Offer drawer is open.",
+          "steps": "1. Enter Offer Name (disposable, e.g. 'QA Festive 5%').\n2. Select Offer Type = Percentage Based.\n3. Enter Percentage = 5.\n4. Pick Start and End dates.\n5. Click 'Create Offer'.",
+          "testData": "[TEST_DATA_REQUIRED] Name 'QA Festive 5%', Percentage 5, valid dates",
+          "expected": "The offer is created and appears with Percentage '5%' and Amount '-'. Active toggle ON by default."
+        },
+        {
+          "id": "ADM_OFR_017",
+          "scenario": "To verify creating an offer with a past Start Date",
+          "description": "Verify that an offer with a Start Date in the past but End Date in the future is accepted and active immediately.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + disposable offer. The Add New Offer drawer is open.",
+          "steps": "1. Set Start Date = yesterday.\n2. Set End Date = today + 7 days.\n3. Fill the other required fields.\n4. Click 'Create Offer'.",
+          "testData": "[TEST_DATA_REQUIRED] Start = yesterday, End = today+7d",
+          "expected": "The offer is created and is valid/active immediately because Start Date <= today <= End Date (BRD §5.4)."
+        },
+        {
+          "id": "ADM_OFR_018",
+          "scenario": "To verify restricting an offer to a single typology",
+          "description": "Verify that an offer can be scoped to one selected unit typology via the single-select Typology dropdown.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + disposable offer. The Add New Offer drawer is open.",
+          "steps": "1. Open the 'Select Typology' dropdown.\n2. Select one typology (e.g. '2 Bed Growth Home').\n3. Fill the other required fields.\n4. Click 'Create Offer'.",
+          "testData": "[TEST_DATA_REQUIRED] Typology '2 Bed Growth Home'",
+          "expected": "Only ONE typology can be chosen (single-select scalar — see DOC_DRIFT-002). The created offer is scoped to that typology only; to cover more typologies the admin must create additional offers (BRD §10.1)."
+        },
+        {
+          "id": "ADM_OFR_019",
+          "scenario": "To verify an offer with no typology applies to all typologies",
+          "description": "Verify that leaving the Typology field empty makes the offer apply to all unit typologies.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + disposable offer. The Add New Offer drawer is open.",
+          "steps": "1. Leave the 'Select Typology' dropdown empty.\n2. Fill the other required fields.\n3. Click 'Create Offer'.",
+          "testData": "[TEST_DATA_REQUIRED] Typology = empty",
+          "expected": "The offer is created with no typology restriction and applies across all unit typologies (BRD §5.3 / FRD: empty = all)."
+        },
+        {
+          "id": "ADM_OFR_022",
+          "scenario": "To verify a new offer starts Active = ON",
+          "description": "Verify that a freshly created offer has its Active toggle ON by default.",
+          "precond": "An offer was just created (depends on ADM_OFR_008).",
+          "steps": "1. Locate the newly created offer row.\n2. Inspect the toggle in the Action column.",
+          "testData": "(no input)",
+          "expected": "The Active toggle on the new offer row is ON (ant-switch-checked) by default (FRD: isActive = true on create)."
+        },
+        {
+          "id": "TC_OFR_FUNC_057",
+          "scenario": "To verify Cancel discards drawer input",
+          "description": "Verify that clicking Cancel in the Add drawer closes it and discards all entered values without creating an offer.",
+          "precond": "The Add New Offer drawer is open with some values typed.",
+          "steps": "1. Type an Offer Name and an Amount.\n2. Click 'Cancel'.\n3. Re-open the Add New Offer drawer.",
+          "testData": "Name 'QA discard', Amount 1234 (not submitted)",
+          "expected": "The drawer closes, no new offer is added to the table, and re-opening the drawer shows empty fields (input discarded)."
+        },
+        {
+          "id": "TC_OFR_FUNC_058",
+          "scenario": "To verify the drawer Close (X) icon dismisses without saving",
+          "description": "Verify that the top-right Close (X) icon behaves like Cancel — closes the drawer and discards input.",
+          "precond": "The Add New Offer drawer is open with some values typed.",
+          "steps": "1. Type an Offer Name.\n2. Click the Close (X) icon at the top-right of the drawer.\n3. Re-open the drawer.",
+          "testData": "Name 'QA close-x' (not submitted)",
+          "expected": "The drawer closes, no offer is created, and re-opening shows empty fields."
+        }
+      ]
+    },
+    {
+      "name": "Create - Validation & Boundary",
+      "tcs": [
+        {
+          "id": "ADM_OFR_012",
+          "scenario": "To verify empty Offer Name is rejected",
+          "description": "Verify that submitting the Add drawer with an empty Offer Name is blocked with a required-field error.",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. Leave Offer Name empty.\n2. Fill the remaining fields.\n3. Click 'Create Offer'.",
+          "testData": "Name = empty",
+          "expected": "Submission is blocked and a required-field validation error is shown on the Offer Name field. No offer is created."
+        },
+        {
+          "id": "ADM_OFR_010",
+          "scenario": "To verify negative Amount is rejected",
+          "description": "Verify that an Amount-Based offer with a negative amount cannot be created.",
+          "precond": "The Add New Offer drawer is open; Offer Type = Amount Based.",
+          "steps": "1. Enter Amount = -500.\n2. Fill the other fields.\n3. Click 'Create Offer'.",
+          "testData": "Amount = -500",
+          "expected": "Submission is blocked with a validation error; Amount must be a positive integer (FRD §5.4). No offer is created."
+        },
+        {
+          "id": "ADM_OFR_011",
+          "scenario": "To verify Amount = 0 is rejected",
+          "description": "Verify that an Amount-Based offer with amount zero cannot be created.",
+          "precond": "The Add New Offer drawer is open; Offer Type = Amount Based.",
+          "steps": "1. Enter Amount = 0.\n2. Fill the other fields.\n3. Click 'Create Offer'.",
+          "testData": "Amount = 0",
+          "expected": "Submission is blocked with a validation error; Amount must be greater than 0. No offer is created."
+        },
+        {
+          "id": "TC_OFR_VAL_059",
+          "scenario": "To verify a decimal Amount behaviour",
+          "description": "Verify how the Amount field handles a decimal value for an Amount-Based offer.",
+          "precond": "The Add New Offer drawer is open; Offer Type = Amount Based.",
+          "steps": "1. Enter Amount = 27000.50.\n2. Attempt to submit.",
+          "testData": "Amount = 27000.50",
+          "expected": "[To verify] FRD/FS state Amount is a 'positive integer' but the data model stores DECIMAL(10,2). Confirm whether the UI rejects/rounds the decimal or accepts it. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_039",
+          "scenario": "To verify Percentage = 0 is rejected",
+          "description": "Verify that a Percentage-Based offer with percentage zero cannot be created.",
+          "precond": "The Add New Offer drawer is open; Offer Type = Percentage Based.",
+          "steps": "1. Enter Percentage = 0.\n2. Fill the other fields.\n3. Click 'Create Offer'.",
+          "testData": "Percentage = 0",
+          "expected": "Submission is blocked with a validation error; Percentage must be greater than 0. No offer is created."
+        },
+        {
+          "id": "ADM_OFR_042",
+          "scenario": "To verify negative Percentage is rejected",
+          "description": "Verify that a Percentage-Based offer with a negative percentage cannot be created.",
+          "precond": "The Add New Offer drawer is open; Offer Type = Percentage Based.",
+          "steps": "1. Enter Percentage = -10.\n2. Fill the other fields.\n3. Click 'Create Offer'.",
+          "testData": "Percentage = -10",
+          "expected": "Submission is blocked with a validation error; Percentage must be positive. No offer is created."
+        },
+        {
+          "id": "ADM_OFR_014",
+          "scenario": "To verify Percentage greater than 100 is rejected",
+          "description": "Verify that a Percentage-Based offer above 100 cannot be created.",
+          "precond": "The Add New Offer drawer is open; Offer Type = Percentage Based.",
+          "steps": "1. Enter Percentage = 150.\n2. Fill the other fields.\n3. Click 'Create Offer'.",
+          "testData": "Percentage = 150",
+          "expected": "Submission is blocked with a validation error; Percentage cannot exceed 100 (FRD §5.5: range 0-100). No offer is created."
+        },
+        {
+          "id": "ADM_OFR_040",
+          "scenario": "To verify Percentage = 100 boundary is accepted",
+          "description": "Verify that the upper boundary value of 100 percent is accepted.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + disposable offer. The Add New Offer drawer is open; Offer Type = Percentage Based.",
+          "steps": "1. Enter Percentage = 100.\n2. Fill the other fields with valid dates.\n3. Click 'Create Offer'.",
+          "testData": "[TEST_DATA_REQUIRED] Percentage = 100",
+          "expected": "The offer is created at the 100% boundary. (Business intent of a 100% discount — All Inclusive Price drops to zero — is [VERIFY WITH DEV].)"
+        },
+        {
+          "id": "ADM_OFR_041",
+          "scenario": "To verify a decimal Percentage is accepted",
+          "description": "Verify that a fractional percentage value is accepted for a Percentage-Based offer.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + disposable offer. The Add New Offer drawer is open; Offer Type = Percentage Based.",
+          "steps": "1. Enter Percentage = 5.5.\n2. Fill the other fields.\n3. Click 'Create Offer'.",
+          "testData": "[TEST_DATA_REQUIRED] Percentage = 5.5",
+          "expected": "The offer is created with a fractional percentage; the Percentage column shows '5.5%' (data model is DECIMAL(10,2))."
+        },
+        {
+          "id": "ADM_OFR_016",
+          "scenario": "To verify End Date before Start Date is rejected",
+          "description": "Verify that an offer whose End Date precedes its Start Date cannot be created.",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. In Offer Validity, attempt to set Start Date = 01 Jun 2026 and End Date = 15 May 2026.\n2. Click 'Create Offer'.",
+          "testData": "Start = 01 Jun 2026, End = 15 May 2026",
+          "expected": "The range picker prevents/blocks an end-before-start selection, or submission is blocked with a validation error. Start Date must be <= End Date (BRD §5 / FRD §5.6)."
+        },
+        {
+          "id": "TC_OFR_VAL_060",
+          "scenario": "To verify Offer Name max-length boundary (100 chars)",
+          "description": "Verify the Offer Name field enforces its 100-character maximum.",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. Type a 100-character name and note the counter.\n2. Attempt to type a 101st character.",
+          "testData": "100-char string, then +1 char",
+          "expected": "The field accepts up to 100 characters (counter shows '100 / 100') and blocks/truncates beyond 100 (FRD §5.3, max 100). [VERIFY WITH DEV] whether the live UI shows the 'X / 100' counter."
+        },
+        {
+          "id": "TC_OFR_VAL_061",
+          "scenario": "To verify Description max-length boundary (500 chars)",
+          "description": "Verify the Description field enforces its 500-character maximum.",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. Type a 500-character description.\n2. Attempt to type a 501st character.",
+          "testData": "500-char string, then +1 char",
+          "expected": "The Description field accepts up to 500 characters and blocks/truncates beyond 500 (FRD §5: max 500). Description is optional."
+        },
+        {
+          "id": "TC_OFR_VAL_062",
+          "scenario": "To verify missing Offer Type submission",
+          "description": "Verify behaviour when Offer Type would be unset (mandatory radio).",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. Observe that Offer Type always defaults to Amount Based.\n2. Confirm there is no neutral/unset state for the radio group.",
+          "testData": "(no input)",
+          "expected": "Offer Type is mandatory and always has a selection (defaults to Amount Based); there is no unset state, so an offer can never be created without a type (FRD §5.3). [VERIFY WITH DEV] — confirmed via UI default, not an explicit error path."
+        },
+        {
+          "id": "TC_OFR_VAL_063",
+          "scenario": "To verify missing Offer Validity dates are rejected",
+          "description": "Verify that submitting without selecting validity dates is blocked.",
+          "precond": "The Add New Offer drawer is open.",
+          "steps": "1. Fill Offer Name and Amount.\n2. Leave Offer Validity (Start/End) empty.\n3. Click 'Create Offer'.",
+          "testData": "Validity = empty",
+          "expected": "Submission is blocked with a required-field error on Offer Validity; Start and End dates are mandatory (FRD §5). No offer is created."
+        }
+      ]
+    },
+    {
+      "name": "Edit Offer",
+      "tcs": [
+        {
+          "id": "TC_OFR_FUNC_075",
+          "scenario": "To verify the Edit drawer opens pre-filled",
+          "description": "Verify that clicking the edit icon on a row opens a drawer titled 'Edit Offer' with all fields pre-populated from that offer.",
+          "precond": "An admin is on the Offers page with at least one offer.",
+          "steps": "1. In an offer row's Action column, click the edit (first icon-only) button.\n2. Observe the drawer title and field values.",
+          "testData": "(no input)",
+          "expected": "A right-side drawer titled 'Edit Offer' opens with Offer Name, Offer Type, Amount/Percentage, Description, Offer Validity (e.g. '06 May 2026' / '30 May 2026') and Select Typology (e.g. '2 Bed Growth Home') pre-populated from the offer. Footer shows 'Cancel' and 'Update Offer'. NON-DESTRUCTIVE: close with Cancel."
+        },
+        {
+          "id": "TC_OFR_FUNC_064",
+          "scenario": "To verify editing an offer and saving",
+          "description": "Verify that changing a field in the Edit drawer and clicking Update Offer persists the change to the list.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + a disposable offer to edit. The Edit drawer is open for that offer.",
+          "steps": "1. Change the Amount (e.g. from 27000 to 30000).\n2. Click 'Update Offer'.\n3. Observe the offer row.",
+          "testData": "[TEST_DATA_REQUIRED] disposable offer; Amount 27000 -> 30000",
+          "expected": "The drawer closes and the offer row shows the updated value ('₹ 30,000'). AUTHORISED-SAVE ONLY: requires user OK + disposable offer; otherwise author as open-drawer -> change field -> Cancel (assert no change)."
+        },
+        {
+          "id": "TC_OFR_FUNC_065",
+          "scenario": "To verify Cancel on Edit discards changes",
+          "description": "Verify that editing a field then clicking Cancel leaves the offer unchanged.",
+          "precond": "The Edit drawer is open for an offer.",
+          "steps": "1. Change the Offer Name in the field.\n2. Click 'Cancel'.\n3. Observe the offer row.",
+          "testData": "(name changed but not submitted)",
+          "expected": "The drawer closes and the offer row retains its original values; the edit was discarded."
+        },
+        {
+          "id": "TC_OFR_VAL_066",
+          "scenario": "To verify Edit re-validates required fields",
+          "description": "Verify that clearing a required field in the Edit drawer and saving is blocked just like Create.",
+          "precond": "The Edit drawer is open for an offer.",
+          "steps": "1. Clear the Offer Name field.\n2. Click 'Update Offer'.",
+          "testData": "Name cleared",
+          "expected": "Saving is blocked with a required-field error on Offer Name (Edit uses the same validations as Create — FS Feature 3 §6). The offer is not changed."
+        },
+        {
+          "id": "TC_OFR_RACE_067",
+          "scenario": "To verify editing an active offer re-prices live sessions",
+          "description": "Verify that editing the amount/dates of an active offer takes effect immediately for active allocation sessions.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] an active offer applied in a live allocation session; a buyer session mid-selection.",
+          "steps": "1. Edit an active offer's Amount and save.\n2. In a buyer allocation session, reload the unit price.",
+          "testData": "[TEST_DATA_REQUIRED] active offer + live buyer session",
+          "expected": "[To verify] On the buyer's next price calculation/page load, the updated amount is reflected (FS Feature 3 §7 — live re-query). Cross-module/live-campaign; confirm on a controlled UAT session. [VERIFY WITH DEV]."
+        }
+      ]
+    },
+    {
+      "name": "Toggle Active / Inactive",
+      "tcs": [
+        {
+          "id": "ADM_OFR_023",
+          "scenario": "To verify toggling an offer OFF has no confirmation and flips instantly",
+          "description": "Verify that clicking the Active toggle on an offer flips its state immediately with no confirmation dialog.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + a disposable active offer. An active offer row is visible.",
+          "steps": "1. In an active offer's Action column, click the toggle switch.\n2. Observe the toggle and confirm no dialog appears.",
+          "testData": "[TEST_DATA_REQUIRED] disposable active offer",
+          "expected": "The toggle flips to OFF instantly with NO confirmation dialog (BRD §5.2 / FS Feature 4). AUTHORISED-ONLY on UAT: toggling a real offer changes live pricing — requires user OK and a disposable offer."
+        },
+        {
+          "id": "ADM_OFR_025",
+          "scenario": "To verify re-activating an offer via the toggle",
+          "description": "Verify that an inactive offer can be switched back ON via the toggle.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + a disposable inactive offer.",
+          "steps": "1. In an inactive offer's Action column, click the toggle switch.\n2. Observe the toggle state.",
+          "testData": "[TEST_DATA_REQUIRED] disposable inactive offer",
+          "expected": "The toggle flips to ON instantly with no confirmation; the offer becomes active again (ant-switch-checked)."
+        },
+        {
+          "id": "TC_OFR_FUNC_068",
+          "scenario": "To verify toggle state persists after refresh",
+          "description": "Verify that a toggled state is saved to the server and survives a page refresh.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + a disposable offer just toggled.",
+          "steps": "1. Toggle a disposable offer OFF.\n2. Click 'Refresh' (or reload the page).\n3. Observe the offer's toggle state.",
+          "testData": "[TEST_DATA_REQUIRED] disposable offer",
+          "expected": "After refresh the offer still shows OFF — the toggle persisted to the server (FS Feature 4 §5)."
+        },
+        {
+          "id": "TC_OFR_DC_069",
+          "scenario": "To verify the toggle control is distinct from the edit/delete icons",
+          "description": "Verify that the Action cell contains three distinct controls and that the toggle is not an icon-only button.",
+          "precond": "An admin is on the Offers page with at least one offer.",
+          "steps": "1. Inspect the Action cell of an offer row.\n2. Identify the toggle switch, the edit icon and the delete icon.",
+          "testData": "(no input)",
+          "expected": "The Action cell shows three controls in a row: an Active/Inactive toggle switch, an Edit icon (opens the Edit drawer) and a Delete icon (opens the delete confirmation). The toggle is a switch, not an icon-only button."
+        }
+      ]
+    },
+    {
+      "name": "Delete Offer (Confirmation Modal)",
+      "tcs": [
+        {
+          "id": "ADM_OFR_027",
+          "scenario": "To verify the delete (trash) icon is present per row",
+          "description": "Verify that each offer row shows a delete icon in the Action column.",
+          "precond": "An admin is on the Offers page with at least one offer.",
+          "steps": "1. Inspect the Action column of any offer row.\n2. Identify the delete (trash) icon (the second icon-only button).",
+          "testData": "(no input)",
+          "expected": "A delete (trash) icon is visible in the Action column of every offer row (second icon-only button, after the Edit icon)."
+        },
+        {
+          "id": "ADM_OFR_028",
+          "scenario": "To verify the delete icon opens the confirmation modal",
+          "description": "Verify that clicking the delete icon opens an Ant modal asking to confirm deletion.",
+          "precond": "An admin is on the Offers page with at least one offer.",
+          "steps": "1. In an offer row's Action column, click the delete (second icon-only) button.\n2. Observe the dialog that appears.",
+          "testData": "(no input)",
+          "expected": "An Ant modal opens with title 'Are you sure you want to delete this offer?', body 'This action cannot be undone.', and two buttons: 'Cancel' and 'Yes, delete'. NON-DESTRUCTIVE: dismiss with Cancel/Escape."
+        },
+        {
+          "id": "ADM_OFR_045",
+          "scenario": "To verify the exact delete confirmation text and buttons",
+          "description": "Verify the precise title, body and button labels of the delete confirmation modal.",
+          "precond": "The delete confirmation modal is open for an offer.",
+          "steps": "1. Read the modal title.\n2. Read the modal body text.\n3. Read the two button labels.",
+          "testData": "(no input)",
+          "expected": "Title reads exactly 'Are you sure you want to delete this offer?'; body reads exactly 'This action cannot be undone.'; buttons are labelled 'Cancel' and 'Yes, delete' (the confirm button is danger-styled). Note: the modal does NOT echo the offer's name (former ADM_OFR_045 'shows offer name' claim corrected — see DOC_DRIFT-005)."
+        },
+        {
+          "id": "ADM_OFR_030",
+          "scenario": "To verify Cancel on the delete modal keeps the offer",
+          "description": "Verify that clicking Cancel in the delete modal closes it without deleting the offer.",
+          "precond": "The delete confirmation modal is open for an offer.",
+          "steps": "1. Click 'Cancel' in the modal.\n2. Observe the offer list.",
+          "testData": "(no input)",
+          "expected": "The modal closes and the offer remains in the list unchanged (no deletion)."
+        },
+        {
+          "id": "TC_OFR_FUNC_070",
+          "scenario": "To verify Escape key dismisses the delete modal without deleting",
+          "description": "Verify that pressing Escape closes the delete confirmation modal and the offer is not deleted.",
+          "precond": "The delete confirmation modal is open for an offer.",
+          "steps": "1. Press the Escape key.\n2. Observe the offer list.",
+          "testData": "(no input)",
+          "expected": "The modal closes via Escape and the offer remains in the list (INDEX.md: dismissal by Escape or Cancel does NOT delete)."
+        },
+        {
+          "id": "ADM_OFR_029",
+          "scenario": "To verify confirming delete removes the offer",
+          "description": "Verify that clicking 'Yes, delete' removes the offer from the list and the count decrements.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + a disposable offer. The delete confirmation modal is open for that offer.",
+          "steps": "1. Click 'Yes, delete'.\n2. Observe the offer list and the count badge.",
+          "testData": "[TEST_DATA_REQUIRED] disposable offer to delete",
+          "expected": "The offer is removed from the list and the count badge decrements. The Sr.no of the deleted offer leaves a permanent gap. AUTHORISED-DELETE ONLY: requires user OK + disposable offer; otherwise author as open-modal -> assert text/buttons -> Cancel. (Whether removal is hard or soft delete at the DB layer is contested — see DOC_DRIFT-001 / ADM_OFR_044.)"
+        },
+        {
+          "id": "ADM_OFR_046",
+          "scenario": "To verify an Active offer can be deleted directly",
+          "description": "Verify that deleting an offer does not require deactivating it first.",
+          "precond": "[TEST_DATA_REQUIRED] user authorisation + a disposable Active offer. The delete confirmation modal is open.",
+          "steps": "1. With an Active (ON) offer, open its delete confirmation and click 'Yes, delete'.\n2. Observe the list.",
+          "testData": "[TEST_DATA_REQUIRED] disposable Active offer",
+          "expected": "An Active offer is deleted directly without first toggling it OFF; it is removed from the list (no deactivation pre-requisite, no server-side guard — FS Feature 5 §3)."
+        },
+        {
+          "id": "TC_OFR_NEG_071",
+          "scenario": "To verify there is no FK guard preventing deletion of a referenced offer",
+          "description": "Verify the documented behaviour that deleting an offer referenced by bookings is not blocked.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] a disposable offer referenced by a RegistrationUnitOffer row.",
+          "steps": "1. Open the delete confirmation for an offer that is referenced by an existing booking.\n2. Click 'Yes, delete' (only if authorised).",
+          "testData": "[TEST_DATA_REQUIRED] referenced offer",
+          "expected": "[To verify] Per BRD §10.4 the delete has NO FK guard — the offer is removed even when referenced by bookings, which may orphan downstream pricing rows. Confirm whether a guard exists. [VERIFY WITH DEV]."
+        }
+      ]
+    },
+    {
+      "name": "Notifications (Silent by design)",
+      "tcs": [
+        {
+          "id": "ADM_OFR_FSD_037",
+          "scenario": "To verify NO buyer notification on any offer action",
+          "description": "Verify that creating, editing, toggling or deleting an offer dispatches no SMS, WhatsApp or email to buyers or SMs.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] access to dispatch/notification logs (Kaleyra/epinet/email).",
+          "steps": "1. Perform each offer action in turn (create, edit, toggle, delete) on a disposable offer.\n2. Inspect the notification/dispatch logs for each.",
+          "testData": "[TEST_DATA_REQUIRED] disposable offer + log access",
+          "expected": "NO buyer- or SM-facing notification (SMS/WhatsApp/email) is dispatched for ANY offer action — silence is by design (FS Features 2-5 §8). This is a required silent-by-design assertion. [VERIFY WITH DEV] log access."
+        }
+      ]
+    },
+    {
+      "name": "API & Security",
+      "tcs": [
+        {
+          "id": "ADM_OFR_036",
+          "scenario": "To verify whether admin can set a system offerCode via API",
+          "description": "Verify the contested behaviour of whether the create/update API accepts an admin-supplied offerCode such as HOME_LOAN.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] a valid admin API bearer token.",
+          "steps": "1. Call the create-offer endpoint with a body that includes offerCode='HOME_LOAN' (plus valid offer fields).\n2. Inspect the created record's offerCode.\n3. Repeat with offerCode='VC_REQUEST'.",
+          "testData": "[TEST_DATA_REQUIRED] admin bearer token; offerCode HOME_LOAN / VC_REQUEST",
+          "expected": "[To verify] CONTESTED: BRD §10.2 (latest) says offerCode is read from req.body with NO whitelist, so the admin-set value persists (HOME_LOAN/VC_REQUEST accepted). FS Feature 2 §6.8 claims it is stripped to NULL. Assert the OBSERVED result and flag for whitelist confirmation (DOC_DRIFT-003). [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_FSD_038",
+          "scenario": "To verify projectId query-parameter handling on list API",
+          "description": "Verify how the list-offers endpoint resolves the projectId query parameter.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] admin bearer token and a known project id form.",
+          "steps": "1. Call the list-offers endpoint with projectId as a numeric PK.\n2. Call it with projectId as the public business id.",
+          "testData": "[TEST_DATA_REQUIRED] admin bearer token; both projectId forms",
+          "expected": "[To verify] Endpoint accepts page, limit and projectId params (BRD §10.3). Confirm which projectId form resolves (numeric PK vs public id) and the error for an unknown project. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_044",
+          "scenario": "To verify the DB-layer delete persistence (soft vs hard)",
+          "description": "Verify whether a deleted offer is soft-deleted (deletedAt set) or hard-destroyed at the database layer.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] DB read access and a disposable offer just deleted via UI.",
+          "steps": "1. Note the deleted offer's id.\n2. Query the offers row for that id (including soft-deleted rows).",
+          "testData": "[TEST_DATA_REQUIRED] deleted offer id + DB access",
+          "expected": "[To verify] CONTESTED: BRD §10.4 (latest, 2026-05-21) says delete is a HARD destroy (offer.destroy(), no deletedAt, no audit). FRD §10 / FS Feature 5 §6.4 say soft-delete (paranoid, deletedAt set). Assert the OBSERVED DB state and flag the conflict (DOC_DRIFT-001). [VERIFY WITH DEV]."
+        },
+        {
+          "id": "TC_OFR_API_072",
+          "scenario": "To verify UI-vs-backend date-order validation split",
+          "description": "Verify whether the backend enforces Start<=End when the UI picker is bypassed via the API.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] admin bearer token.",
+          "steps": "1. Call the create-offer endpoint directly with startDate later than endDate.\n2. Observe the response.",
+          "testData": "[TEST_DATA_REQUIRED] admin bearer token; startDate > endDate",
+          "expected": "[To verify] BRD §10.6 says the service layer has NO startDate<=endDate check — validation lives in controller/validator middleware. Confirm whether the HTTP layer rejects the out-of-order range (it should) and that the service is not callable to bypass it. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "TC_OFR_NEG_073",
+          "scenario": "To verify offers API rejects an invalid/expired token",
+          "description": "Verify that the offers endpoints reject unauthenticated or invalid-token requests.",
+          "precond": "[VERIFY WITH DEV] No bearer token, and a tampered/expired token.",
+          "steps": "1. Call the list-offers endpoint with no Authorization header.\n2. Call it with a tampered/expired bearer token.",
+          "testData": "no token; tampered token",
+          "expected": "[To verify] Both calls are rejected with 401/403 and no offer data is returned. Exact status/error body not documented — confirm. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "TC_OFR_INT_074",
+          "scenario": "To verify offer toggle/edit emits no audit log",
+          "description": "Verify the documented gap that toggle and create/edit operations emit no service-level audit entry.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] audit-log read access and a disposable offer.",
+          "steps": "1. Toggle a disposable offer and inspect the audit log.\n2. Edit the same offer and inspect the audit log.",
+          "testData": "[TEST_DATA_REQUIRED] disposable offer + audit access",
+          "expected": "[To verify] BRD §10.5/§10.6 state toggleOfferStatus and createOffer/editOffer emit NO service-level audit, contradicting FRD §Feature 4 §9 / FS §9 which claim audit logging. Assert the OBSERVED audit behaviour and flag the conflict. [VERIFY WITH DEV]."
+        }
+      ]
+    },
+    {
+      "name": "Integration / Allocation Pricing",
+      "tcs": [
+        {
+          "id": "ADM_OFR_005",
+          "scenario": "To verify a system HOME_LOAN offer appears in the list",
+          "description": "Verify that a HOME_LOAN offer auto-created on home-loan approval is shown in the offers list.",
+          "precond": "[TEST_DATA_REQUIRED] a buyer whose home loan was approved in Customers (so a HOME_LOAN offer exists).",
+          "steps": "1. Open the Offers list.\n2. Locate the offer corresponding to HOME_LOAN (e.g. 'Home Loan Discount').",
+          "testData": "[TEST_DATA_REQUIRED] approved home-loan buyer",
+          "expected": "A system-generated HOME_LOAN offer appears in the list; it was created by the system on home-loan approval, not via the Add New Offer drawer (BRD §4)."
+        },
+        {
+          "id": "ADM_OFR_006",
+          "scenario": "To verify a system VC_REQUEST offer appears in the list",
+          "description": "Verify that a VC_REQUEST offer auto-created on an SM video-call outcome is shown in the list.",
+          "precond": "[TEST_DATA_REQUIRED] an SM having recorded VC_DONE_PREFERENCE or VC_2_DONE (so a VC_REQUEST offer exists).",
+          "steps": "1. Open the Offers list.\n2. Locate the offer corresponding to VC_REQUEST (e.g. 'VC request').",
+          "testData": "[TEST_DATA_REQUIRED] recorded VC outcome",
+          "expected": "A system-generated VC_REQUEST offer appears in the list; it was auto-created by the system, not via the Add drawer (BRD §4)."
+        },
+        {
+          "id": "ADM_OFR_020",
+          "scenario": "To verify a future-dated offer does not apply to pricing yet",
+          "description": "Verify that an offer whose Start Date is in the future is not deducted from buyer pricing.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] an offer with Start Date = tomorrow applicable to a known unit typology.",
+          "steps": "1. With a future-dated offer present, open an eligible unit in Towers/allocation.\n2. Inspect the All Inclusive Price breakdown.",
+          "testData": "[TEST_DATA_REQUIRED] offer Start Date = tomorrow",
+          "expected": "[To verify] The All Inclusive Price does NOT include the future offer (eligibility requires Start Date <= today, BRD §5.4/§7). Cross-module; confirm on a controlled session. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_021",
+          "scenario": "To verify an expired offer does not apply to pricing",
+          "description": "Verify that an offer whose End Date has passed is not deducted from buyer pricing.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] an offer with End Date = yesterday applicable to a known unit.",
+          "steps": "1. With an expired offer present, open an eligible unit in Towers/allocation.\n2. Inspect the All Inclusive Price breakdown.",
+          "testData": "[TEST_DATA_REQUIRED] offer End Date = yesterday",
+          "expected": "[To verify] The expired offer is NOT deducted (eligibility requires today <= End Date, BRD §5.4/§7). Cross-module; confirm on a controlled session. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_024",
+          "scenario": "To verify a deactivated offer is not applied to new buyer pricing",
+          "description": "Verify that an offer just toggled OFF stops being deducted from new buyer pricing.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] an offer just toggled OFF and a buyer session opening an eligible unit.",
+          "steps": "1. Toggle a disposable offer OFF.\n2. In a buyer session, open a unit that previously carried that discount.\n3. Inspect the All Inclusive Price.",
+          "testData": "[TEST_DATA_REQUIRED] deactivated offer + buyer session",
+          "expected": "[To verify] The All Inclusive Price no longer includes the deactivated offer's discount (BRD §5.1 immediate effect). Cross-module live-campaign; confirm carefully. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_026",
+          "scenario": "To verify toggling an offer during a live campaign re-prices immediately",
+          "description": "Verify that toggling an active offer OFF during a live campaign changes buyer pricing on next price calculation.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] a live campaign with an active offer and a buyer mid-selection.",
+          "steps": "1. With a buyer viewing a discounted unit, toggle the offer OFF in admin.\n2. Refresh the buyer's unit view.",
+          "testData": "[TEST_DATA_REQUIRED] live campaign + buyer session",
+          "expected": "[To verify] The buyer sees the price WITHOUT that discount on next calculation (BRD §6 race; FS Feature 4 §6). HIGH-risk live-campaign behaviour — confirm only on a controlled UAT session. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_031",
+          "scenario": "To verify multiple active offers stack on the Agreement Value",
+          "description": "Verify that two applicable active offers are summed and deducted together from the Agreement Value.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] two active offers both applicable to the same unit typology.",
+          "steps": "1. With two applicable active offers present, open an eligible unit.\n2. Inspect the All Inclusive Price breakdown.",
+          "testData": "[TEST_DATA_REQUIRED] two stacking offers",
+          "expected": "[To verify] All Inclusive Price = Agreement Value - sum of both offer discounts (BRD §5.5). Cross-module; confirm on a controlled session. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_032",
+          "scenario": "To verify the race when an offer is toggled OFF mid-payment",
+          "description": "Verify that an offer toggled OFF between viewing pricing and submitting payment disappears from the final amount.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] a buyer viewing pricing with an offer applied; admin able to toggle it OFF mid-flow.",
+          "steps": "1. Buyer views a unit with the offer applied.\n2. Admin toggles the offer OFF.\n3. Buyer clicks 'Proceed to Pay'.",
+          "testData": "[TEST_DATA_REQUIRED] buyer mid-payment + offer",
+          "expected": "[To verify] The discount disappears from the final booking amount because eligibility is re-queried live at submit (BRD §6 / FRD §10 processOffers). Confirm on a controlled session. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_033",
+          "scenario": "To verify locked bookings are not affected by offer changes",
+          "description": "Verify that a completed booking's amount does not change when the offer it used is later toggled OFF or edited.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] a buyer with a completed booking that used Offer X.",
+          "steps": "1. Confirm a completed booking that used Offer X.\n2. Toggle Offer X OFF (or edit it).\n3. Re-open the buyer's completed booking in Customers.",
+          "testData": "[TEST_DATA_REQUIRED] completed booking using Offer X",
+          "expected": "[To verify] The completed booking's amount is unchanged; offer changes apply only to future/in-progress sessions (BRD §5.7 / FS Feature 4 §6.3). [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_OFR_047",
+          "scenario": "To verify deleting an offer does not refund existing bookings",
+          "description": "Verify that deleting an offer leaves completed bookings that used it unchanged.",
+          "precond": "[VERIFY WITH DEV][TEST_DATA_REQUIRED] a completed booking that used Offer X, plus authorisation to delete Offer X.",
+          "steps": "1. Delete Offer X (only if authorised).\n2. Open the buyer's completed booking in Customers.",
+          "testData": "[TEST_DATA_REQUIRED] booking using Offer X",
+          "expected": "[To verify] The booking amount and existing transactions/registrations are unchanged by the deletion; only future pricing is affected. [VERIFY WITH DEV]."
+        }
+      ]
+    }
+  ]
+}
