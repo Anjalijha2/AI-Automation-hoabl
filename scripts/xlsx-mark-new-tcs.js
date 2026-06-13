@@ -46,7 +46,7 @@ let tcIds;
 if (tcArgs.length > 0) {
   tcIds = tcArgs;
 } else if (fs.existsSync(NEW_TCS_FILE)) {
-  tcIds = fs.readFileSync(NEW_TCS_FILE, 'utf8').split('\n').map((s) => s.trim()).filter(Boolean);
+  tcIds = fs.readFileSync(NEW_TCS_FILE, 'utf8').split('\n').map((s) => s.trim()).filter((s) => s && !s.startsWith('#'));
 } else {
   console.log('No TC_IDs provided and _new-tcs-since-last-review.txt not found — nothing to do.');
   process.exit(0);
@@ -68,13 +68,15 @@ if (tcIds.length === 0) {
 
   const tcSet = new Set(tcIds);
   let touched = 0;
+  // Column span depends on format: "- Master" sheets are 12 cols, legacy 15.
+  const lastCol = / - Master$/.test(sheetName) ? 12 : 15;
 
-  for (let r = 3; r <= sheet.rowCount; r++) {
+  // Scan ALL rows (TC rows can start after a notes block + banners in the new format).
+  for (let r = 1; r <= sheet.rowCount; r++) {
     const id = (sheet.getRow(r).getCell(1).value || '').toString().trim();
     if (!tcSet.has(id)) continue;
     const row = sheet.getRow(r);
-    // Apply to columns 1..15 (the TC data range)
-    for (let col = 1; col <= 15; col++) {
+    for (let col = 1; col <= lastCol; col++) {
       const cell = row.getCell(col);
       if (clearMode) {
         // Remove fill (set to no-fill)
