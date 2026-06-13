@@ -81,7 +81,8 @@ const SPEC_TO_XLSX_ALIAS = {
   TC_CUST_FUNC_008b:['ADM_CUST_036'],
   TC_CUST_FUNC_009: ['ADM_CUST_008'],
   TC_CUST_NEG_002:  ['ADM_CUST_036'],
-  TC_CUST_REG_002:  ['ADM_CUST_038'],
+  TC_CUST_REG_002:  ['ADM_CUST_038', 'ADM_CUST_003', 'ADM_CUST_005', 'ADM_CUST_040'],  // KPI numeric reads + stability
+  TC_CUST_BIZ_004:  ['ADM_CUST_004'],  // dedicated cross-module Active Towers
   TC_CUST_API_003:  ['ADM_CUST_FSD_001'],
   TC_CUST_API_003b: ['ADM_CUST_FSD_002'],
   // ── Admin Customers — Goal 2 (read/filter/pagination, implemented) ──────
@@ -277,22 +278,34 @@ function findScreenshot(tcid, results, sheetName, portalArg) {
 }
 
 // ─── Update xlsx ──────────────────────────────────────────────────────────────
+// New readable format (v3): execution results live in a companion "<Module> (Exec)"
+// sheet with columns 1 TCID | 2 Status | 3 Automation Status | 4 Last Run Status
+// | 5 Execution Details | 6 Actual Result (Run) | 7 Screenshot Link.
+// Falls back to legacy single-sheet (cols 9/11/12/13/14/15) if no (Exec) sheet.
 async function updateXlsx(results) {
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.readFile(XLSX_PATH);
-  const sheet = wb.getWorksheet(sheetName);
+
+  const execName = `${sheetName} (Exec)`.slice(0, 31);
+  const execSheet = wb.getWorksheet(execName);
+  const legacy = !execSheet;
+  const sheet = execSheet || wb.getWorksheet(sheetName);
   if (!sheet) {
-    console.error('Sheet not found:', sheetName);
+    console.error('Sheet not found:', execName, 'or', sheetName);
     process.exit(1);
   }
 
-  // Column indices (per audit): 1=TCID 2=Feature 3=Type 4=Scenario 5=Pre 6=Steps 7=Expected 8=Actual 9=Status 10=Priority 11=AutomationStatus 12=LastRunStatus 13=ExecDetails 14=ActualResultRun 15=ScreenshotLink
+  // Column map differs between new exec sheet and legacy combined sheet.
+  const COL = legacy
+    ? { status: 9, auto: 11, lastRun: 12, details: 13, actual: 14, screenshot: 15 }
+    : { status: 2, auto: 3, lastRun: 4, details: 5, actual: 6, screenshot: 7 };
+  const startRow = legacy ? 3 : 2; // legacy has title+header (2 rows); exec has header only (1 row)
 
   const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' IST';
   let updated = 0;
   let unmatched = [];
 
-  for (let r = 3; r <= sheet.rowCount; r++) {
+  for (let r = startRow; r <= sheet.rowCount; r++) {
     const id = (sheet.getRow(r).getCell(1).value || '').toString().trim();
     if (!id) continue;
 
@@ -309,23 +322,17 @@ async function updateXlsx(results) {
     const isFail = result.status === 'Fail';
     const isSkip = result.status === 'Skip';
 
-    // col 9 — Status
-    row.getCell(9).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
-    // col 11 — Automation Status
-    row.getCell(11).value = 'Automated';
-    // col 12 — Last Run Status
-    row.getCell(12).value = result.status + (result.isRetry ? ' (retry)' : '');
-    // col 13 — Execution Details
+    row.getCell(COL.status).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
+    row.getCell(COL.auto).value = 'Automated';
+    row.getCell(COL.lastRun).value = result.status + (result.isRetry ? ' (retry)' : '');
     const details = isFail ? `${timestamp} — failed in ${result.duration || 'n/a'}` : `${timestamp} — ${result.status.toLowerCase()} in ${result.duration || 'n/a'}`;
-    row.getCell(13).value = details;
-    // col 14 — Actual Result (Run)
-    row.getCell(14).value = isPass ? 'Matches expected' : isFail ? 'See screenshot + error context' : 'Not executed';
-    // col 15 — Screenshot Link
+    row.getCell(COL.details).value = details;
+    row.getCell(COL.actual).value = isPass ? 'Matches expected' : isFail ? 'See screenshot + error context' : 'Not executed';
     if (isFail) {
       const link = findScreenshot(id, results, sheetName, portalArg);
-      row.getCell(15).value = link || '';
+      row.getCell(COL.screenshot).value = link || '';
     } else {
-      row.getCell(15).value = '';
+      row.getCell(COL.screenshot).value = '';
     }
 
     updated++;
@@ -333,7 +340,7 @@ async function updateXlsx(results) {
 
   // log unmatched results (spec ran but no xlsx row)
   const sheetIds = new Set();
-  for (let r = 3; r <= sheet.rowCount; r++) {
+  for (let r = startRow; r <= sheet.rowCount; r++) {
     const id = (sheet.getRow(r).getCell(1).value || '').toString().trim();
     if (id) sheetIds.add(id);
   }

@@ -246,18 +246,42 @@ test.describe('Customers — Admin Portal E2E', () => {
     await customersPage.applyStatusFilter('Cancelled');
     await customersPage.resetFilters();
 
-    // Snapshot all 6 KPI values AFTER the filter cycle
-    const kpiAfter = {
+    // Poll for KPI cards to settle to pre-filter state — reset triggers async
+    // re-fetch and brief flicker. expect.poll retries up to 15s.
+    await expect.poll(async () => ({
       registered:   await customersPage.getKpiValue(customersPage.kpiRegistered),
       inactive:     await customersPage.getKpiValue(customersPage.kpiInactive),
       cancelled:    await customersPage.getKpiValue(customersPage.kpiCancelled),
       kycPending:   await customersPage.getKpiValue(customersPage.kpiKycPending),
       confirmed:    await customersPage.getKpiValue(customersPage.kpiConfirmed),
       activeTowers: await customersPage.getKpiValue(customersPage.kpiActiveTowers),
-    };
+    }), { timeout: 15_000, intervals: [500, 1000, 2000] }).toEqual(kpiBefore);
+  });
 
-    // toEqual does a deep comparison of both objects — all 6 values must match
-    expect(kpiAfter).toEqual(kpiBefore);
+  // ════════════════════════════════════════════════════════════════════════════
+  // BIZ: Cross-module — Active Towers KPI must equal Config tower toggles ON
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test('TC_CUST_BIZ_004 — ADM_CUST_004 — Active Towers KPI equals Config toggle-ON count', async ({ page }) => {
+    const activeTowersKpi = await customersPage.getKpiValue(customersPage.kpiActiveTowers);
+    expect(activeTowersKpi).toBeGreaterThan(0);
+    await page.goto('https://uat-web.xrportal.in/admin/cms');
+    await page.waitForLoadState('domcontentloaded');
+    // Tower Configuration is first section. Scope switch count to that block by
+    // finding heading's parent container and counting only ON switches inside.
+    const heading = page.getByText('Tower Configuration', { exact: false }).first();
+    await heading.waitFor({ state: 'visible', timeout: 15_000 });
+    const togglesOn = await heading.evaluate((h) => {
+      // Walk up to the nearest container holding both heading + switches
+      let node = h;
+      while (node && node.querySelectorAll('.ant-switch, button[role="switch"]').length === 0) {
+        node = node.parentElement;
+      }
+      if (!node) return 0;
+      const switches = node.querySelectorAll('button[role="switch"][aria-checked="true"], .ant-switch-checked');
+      return switches.length;
+    });
+    expect(togglesOn).toBe(activeTowersKpi);
   });
 
   // ════════════════════════════════════════════════════════════════════════════

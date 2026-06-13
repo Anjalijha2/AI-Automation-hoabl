@@ -39,12 +39,19 @@ module.exports = defineConfig({
   },
 
   projects: [
-    // ── Auth setup ──────────────────────────────────────────────────────────
+    // ── Auth setup (split per portal so dependents auth ONLY their portal) ─
+    // Each setup() in auth.setup.js has a distinct title — we grep to scope.
     {
       name: 'auth-setup',
       testDir: FIXTURES,
       testMatch: /.*auth\.setup\.js/,
+      // Default: run ALL portals when invoked explicitly (npm run auth:setup)
     },
+    { name: 'auth-setup-admin',           testDir: FIXTURES, testMatch: /.*auth\.setup\.js/, grep: /authenticate as admin$/ },
+    { name: 'auth-setup-sales-manager',   testDir: FIXTURES, testMatch: /.*auth\.setup\.js/, grep: /authenticate as sales manager/ },
+    { name: 'auth-setup-channel-partner', testDir: FIXTURES, testMatch: /.*auth\.setup\.js/, grep: /authenticate as channel partner \(/ },
+    { name: 'auth-setup-cp-incomplete',   testDir: FIXTURES, testMatch: /.*auth\.setup\.js/, grep: /channel partner.*incomplete/i },
+    { name: 'auth-setup-buyer',           testDir: FIXTURES, testMatch: /.*auth\.setup\.js/, grep: /authenticate as buyer/ },
 
     // ── Login tests (no auth needed) ────────────────────────────────────────
     {
@@ -53,11 +60,37 @@ module.exports = defineConfig({
     },
 
     // ── E2E — per portal ────────────────────────────────────────────────────
+    // 'e2e' is the legacy catch-all. Use portal-scoped projects below for
+    // faster runs (only the relevant portal auth runs).
     {
       name: 'e2e',
       testDir: path.join(ROOT, 'tests/e2e'),
       dependencies: ['auth-setup'],
       use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('admin') },
+    },
+    {
+      name: 'e2e-admin',
+      testDir: path.join(ROOT, 'tests/e2e/admin'),
+      dependencies: ['auth-setup-admin'],
+      use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('admin') },
+    },
+    {
+      name: 'e2e-sales-manager',
+      testDir: path.join(ROOT, 'tests/e2e/sales-manager'),
+      dependencies: ['auth-setup-sales-manager'],
+      use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('sales-manager') },
+    },
+    {
+      name: 'e2e-cp',
+      testDir: path.join(ROOT, 'tests/e2e/cp'),
+      dependencies: ['auth-setup-channel-partner'],
+      use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('channel-partner') },
+    },
+    {
+      name: 'e2e-buyer',
+      testDir: path.join(ROOT, 'tests/e2e/buyer'),
+      dependencies: ['auth-setup-buyer'],
+      use: { ...devices['Desktop Chrome'], viewport: null, deviceScaleFactor: undefined, storageState: AUTH('buyer') },
     },
 
     // ── UI/UX ───────────────────────────────────────────────────────────────

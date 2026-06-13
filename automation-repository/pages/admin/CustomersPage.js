@@ -299,9 +299,21 @@ class CustomersPage extends BasePage {
    */
   async waitForLoad() {
     await this.tableRecordsHeading.waitFor({ state: 'visible', timeout: 15_000 });
-    // networkidle can hang on /admin/customers due to background polling — use
-    // domcontentloaded + table heading visibility as readiness signal instead.
     await this.page.waitForLoadState('domcontentloaded');
+    // KPI cards have their own async API — wait for Registered value to become
+    // numeric > 0 (avoids race where snapshot captures zeros before API responds).
+    await this.page.waitForFunction(
+      () => {
+        const cards = document.querySelectorAll('[class*="kpi"], [class*="KPI"], [class*="summary"]');
+        for (const c of cards) {
+          const t = (c.textContent || '').replace(/[,\s]/g, '');
+          const m = t.match(/(\d+)/);
+          if (m && parseInt(m[1], 10) > 0) return true;
+        }
+        return false;
+      },
+      { timeout: 15_000 }
+    ).catch(() => null);
   }
 
   // ── Search & Filter ──────────────────────────────────────────────────────────
@@ -383,10 +395,17 @@ class CustomersPage extends BasePage {
    */
   async resetFilters() {
     await this.openFilterPanel();
+    // Wait for the KPI / list refetch that the reset triggers — wraps click so
+    // the response resolves before we move on. Avoids a flaky race where the
+    // KPI cards still show filtered values after networkidle fires.
+    const kpiRequest = this.page.waitForResponse(
+      (resp) => /\/api\/v1\/admin\/.*(buyer|kpi|registration)/i.test(resp.url()) && resp.status() === 200,
+      { timeout: 15_000 }
+    ).catch(() => null);
     await this.click(this.resetFiltersButton);
     await this.filterButton.waitFor({ state: 'visible', timeout: 5_000 });
-    await this.page.waitForLoadState('networkidle');
-    await this.page.waitForLoadState('networkidle');
+    await kpiRequest;
+    await this.page.waitForLoadState('networkidle').catch(() => {});
     await this.tableRecordsHeading.waitFor({ state: 'visible', timeout: 10_000 });
   }
 
