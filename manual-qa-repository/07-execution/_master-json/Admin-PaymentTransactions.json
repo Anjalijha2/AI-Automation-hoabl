@@ -1,0 +1,794 @@
+{
+  "portal": "Admin",
+  "module": "Payment Transactions",
+  "sheetName": "Payment Transactions - Master",
+  "replaceSheets": ["Payment Transactions", "Payment Transactions (Exec)"],
+  "notes": [
+    "1. GHNG = registration number prefix used across the platform (e.g., GHNG-1000008563). Transaction IDs are gateway-issued (e.g., S260508075F9CF); internal reference is PT-NNNNNNN (e.g., PT-0015304).",
+    "2. [TEST_DATA_REQUIRED] = a disposable UAT record/state (e.g. a known registration number, a transaction in a given status, a buyer with an open payment session) must be supplied before executing this test.",
+    "3. [VERIFY WITH DEV] = behaviour not confirmed in BRD/FRD/FS; confirm before treating Pass/Fail as authoritative.",
+    "4. This module is READ-ONLY for transactions — there is no Create / Edit / Delete on a transaction record. The only write operation is Payment Gateway settings (Update). Status changes happen via gateway webhooks and cron, never by an admin editing a row.",
+    "5. Webhook is the source of truth: a transaction's status is set by the gateway webhook (validated hash/signature), NOT by what the buyer's browser reports. A buyer who closes the browser mid-payment may still end 'completed'.",
+    "6. At-least-one-gateway guard is SERVER-SIDE only (payment-gateway.service.js): attempting to leave zero active gateways is rejected with 'At least one payment gateway must remain active'. There is NO UI confirmation dialog before the Update is sent. Changing gateway state takes effect system-wide immediately — never change during an active allocation campaign without authorisation.",
+    "7. DOC_DRIFT-001: BRD §8 / FRD §3-4 / FS Feature 4 describe Gateway Settings as a MODAL with two checkboxes (Easebuzz, Razorpay). The live UI (visual-memory INDEX.md, captured 2026-06-03) shows an INLINE settings panel toggled by the Settings button (no URL change) containing PER-TOWER Active/Inactive toggle switches plus 'View Tower' links and an 'Update' button. The live UI wins; checkbox-model expectations are flagged [VERIFY WITH DEV].",
+    "8. DOC_DRIFT-002: BRD/FRD state the total transaction count as 10,226; the live UI (INDEX.md, newer) shows 'Total 10302 Payment Transactions'. The count is dynamic — TCs assert the count label format and that it updates with filters, not a fixed number. Observed value 10,302 is used where an example is needed.",
+    "9. DOC_DRIFT-003: FRD §11 lists gateway config as bulk PUT /api/v1/admin/payment-gateways. Existing API TCs (ADM_PAY_063 / ADM_PAY_FSD_038) record that per-id PUT /payment-gateways/:id returns 404 (route commented out) and the working save route is the bulk settings endpoint. Per-id toggling is disabled at routes level; use the bulk save. Flagged [VERIFY WITH DEV] for exact route path.",
+    "10. The Transaction Detail view (eye icon) is NOT implemented — it shows 'Detail view coming soon'. No detail-endpoint network call should fire on click.",
+    "11. [DOC_GAP] BRD/FRD/FS do not document a per-tower gateway settings model, an Export file format/scope, page-size dropdown options, or whether the 20-min hold / refund states are visible in this ledger. Such TCs are flagged [VERIFY WITH DEV] or [TEST_DATA_REQUIRED] and were ASKED rather than assumed."
+  ],
+  "subModules": [
+    {
+      "name": "Login & Landing",
+      "tcs": [
+        {
+          "id": "ADM_PAY_001",
+          "scenario": "To verify the Payment Transactions page opens from the sidebar",
+          "description": "Verify that clicking 'Transactions' in the left sidebar opens the Payment Transactions ledger at /admin/payment-transactions.",
+          "precond": "An admin is logged in (mobile 8888888888 / OTP 258369).",
+          "steps": "1. Look at the left sidebar.\n2. Click 'Transactions'.\n3. Watch the URL and the page content.",
+          "testData": "Mobile: 8888888888, OTP: 258369",
+          "expected": "The browser opens /admin/payment-transactions. The heading 'Transactions' and the ledger table both load within about 5 seconds."
+        },
+        {
+          "id": "ADM_PAY_064",
+          "scenario": "To verify the page loads in acceptable time for the full data set",
+          "description": "Verify that the ledger renders within about 5 seconds even though the data set is large (10,000+ records).",
+          "precond": "An admin is logged in; full UAT data present (~10,302 records).",
+          "steps": "1. Open /admin/payment-transactions.\n2. Note how long until the first page of rows and the total count appear.",
+          "testData": "(no input)",
+          "expected": "The first page of rows and the 'Total ... Payment Transactions' count appear within about 5 seconds; the page does not hang or freeze."
+        }
+      ]
+    },
+    {
+      "name": "Page Header & Total Count",
+      "tcs": [
+        {
+          "id": "ADM_PAY_002",
+          "scenario": "To verify the page header controls",
+          "description": "Verify that the page header shows the heading, the live total count, and the Refresh, Export and Settings buttons.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Look at the top of the page.\n2. Read the heading and the count text.\n3. Note the buttons on the right of the header.",
+          "testData": "(no input)",
+          "expected": "Header shows the heading 'Transactions', a count like 'Total 10302 Payment Transactions', and three buttons: Refresh, Export, and Settings (Settings is the primary blue button)."
+        },
+        {
+          "id": "ADM_PAY_065",
+          "scenario": "To verify the total count is dynamic and updates with filters",
+          "description": "Verify that the 'Total ... Payment Transactions' count recomputes to the filtered result count when a filter is applied.",
+          "precond": "An admin is on the Payment Transactions page; the unfiltered count is shown.",
+          "steps": "1. Read the total count with no filters.\n2. Apply any column filter (e.g. Status = completed).\n3. Read the total count again.",
+          "testData": "(no input)",
+          "expected": "After filtering, the header count changes to reflect the number of matching transactions (it is not a fixed value)."
+        }
+      ]
+    },
+    {
+      "name": "Table - Structure & Content",
+      "tcs": [
+        {
+          "id": "ADM_PAY_003",
+          "scenario": "To verify the transactions table columns",
+          "description": "Verify that the ledger table shows the documented set of columns in order.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Read the table column headers from left to right.",
+          "testData": "(no input)",
+          "expected": "Columns shown: Sr. No., Registration No., Transaction ID, Source, Status, Unit Reg No., Customer Name, Phone, Payment Type, Amount Paid, Payment Date, Method, Created By, Actions (eye icon)."
+        },
+        {
+          "id": "ADM_PAY_004",
+          "scenario": "To verify the module is read-only for transactions",
+          "description": "Verify that no Create / Edit / Delete control exists for transaction rows — only the gateway Settings is editable.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Inspect the header and each row for Add / Edit / Delete buttons.",
+          "testData": "(no input)",
+          "expected": "There is no Add, Edit, or Delete button for transactions. The only write control on the page is the Settings (gateway configuration) button."
+        },
+        {
+          "id": "ADM_PAY_005",
+          "scenario": "To verify the Source column values",
+          "description": "Verify that the Source column shows only the documented source values.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Read the distinct values appearing in the Source column across several pages.",
+          "testData": "(no input)",
+          "expected": "Source shows one of: 'Online easebuzz', 'Online razorpay', or 'Offline'."
+        },
+        {
+          "id": "ADM_PAY_006",
+          "scenario": "To verify the Payment Type column values",
+          "description": "Verify that the Payment Type column shows only the documented transaction types.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Read the distinct values appearing in the Payment Type column.",
+          "testData": "(no input)",
+          "expected": "Payment Type shows one of: Allocation, Milestone, Registration, Offline."
+        },
+        {
+          "id": "ADM_PAY_007",
+          "scenario": "To verify the Status column values",
+          "description": "Verify that the Status column uses only the eight documented status values.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Inspect the distinct Status values across multiple pages and filters.",
+          "testData": "(no input)",
+          "expected": "Status is one of: initiated, pending, completed, failed, cancelled, dropped, bounced, refunded. No other value appears."
+        },
+        {
+          "id": "ADM_PAY_008",
+          "scenario": "To verify the Amount Paid column formatting",
+          "description": "Verify that amounts are shown with the rupee symbol and comma grouping.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Read several values in the Amount Paid column.",
+          "testData": "(no input)",
+          "expected": "Amounts show a rupee prefix and comma-grouped digits (e.g. '₹27,000', '₹6,97,961')."
+        },
+        {
+          "id": "ADM_PAY_066",
+          "scenario": "To verify offline transaction rows render correctly",
+          "description": "Verify that an offline transaction shows Source = Offline and a non-gateway Method, confirming the offline source/method mapping.",
+          "precond": "At least one offline transaction (cheque / RTGS / bank transfer) exists in the ledger.",
+          "testData": "[TEST_DATA_REQUIRED] a known offline transaction registration number",
+          "steps": "1. Search for or locate an offline transaction.\n2. Read its Source, Payment Type, and Method.",
+          "expected": "Source = Offline, Payment Type = Offline, and Method is a non-gateway value (e.g. Cheque / RTGS / NA). Transaction ID may be blank/internal rather than gateway-issued."
+        }
+      ]
+    },
+    {
+      "name": "Sorting",
+      "tcs": [
+        {
+          "id": "ADM_PAY_033",
+          "scenario": "To verify sorting by Payment Date descending",
+          "description": "Verify that clicking the Payment Date header sorts the ledger newest-first.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Click the Payment Date column header until the descending indicator shows.",
+          "testData": "(no input)",
+          "expected": "Rows reorder so the most recent Payment Date is at the top; the sort arrow points down."
+        },
+        {
+          "id": "ADM_PAY_067",
+          "scenario": "To verify default sort order is most-recent-first",
+          "description": "Verify that on first load the ledger is already sorted by most recent Payment Date (per FRD §3 / FS §7).",
+          "precond": "An admin opens the Payment Transactions page fresh (no manual sort applied).",
+          "steps": "1. Open the page.\n2. Read the Payment Date of the first few rows without clicking any header.",
+          "testData": "(no input)",
+          "expected": "The newest transactions appear first by default."
+        },
+        {
+          "id": "ADM_PAY_068",
+          "scenario": "To verify sorting by Amount Paid toggles asc/desc",
+          "description": "Verify that clicking the Amount Paid header cycles ascending then descending.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Click the Amount Paid header once.\n2. Note the order.\n3. Click again.\n4. Note the order.",
+          "testData": "(no input)",
+          "expected": "First click sorts amounts ascending (smallest first); second click sorts descending (largest first)."
+        },
+        {
+          "id": "ADM_PAY_069",
+          "scenario": "To verify Sr. No. is sortable",
+          "description": "Verify that the Sr. No. column header can be clicked to sort (per FRD sortable columns).",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Click the Sr. No. column header.\n2. Observe the row order.",
+          "testData": "(no input)",
+          "expected": "Rows reorder by Sr. No.; the sort indicator appears on the header."
+        }
+      ]
+    },
+    {
+      "name": "Date & Search Filters",
+      "tcs": [
+        {
+          "id": "ADM_PAY_009",
+          "scenario": "To verify the date range filter",
+          "description": "Verify that selecting a Start Date and End Date narrows the ledger to that range.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Click the Start Date picker and choose a date.\n2. Click the End Date picker and choose a later date.\n3. Wait for the table to update.",
+          "testData": "Start/End dates spanning a known busy period",
+          "expected": "Only transactions whose Payment Date falls within the selected range (inclusive) are shown; the total count updates."
+        },
+        {
+          "id": "ADM_PAY_016",
+          "scenario": "To verify search by Registration Number",
+          "description": "Verify that typing a registration number in the search box filters the ledger to that registration.",
+          "precond": "An admin is on the page; a known registration number is available.",
+          "steps": "1. Type the registration number into the 'Search by Name, Phone, Registration No.' box.\n2. Press Enter / wait.",
+          "testData": "[TEST_DATA_REQUIRED] a known registration number (e.g. GHNG-1000008563)",
+          "expected": "Only transactions linked to that registration number are shown."
+        },
+        {
+          "id": "ADM_PAY_070",
+          "scenario": "To verify search by Customer Name (partial match)",
+          "description": "Verify that the search box matches partial customer names per FS §5 (partial match).",
+          "precond": "An admin is on the page; a known customer name exists.",
+          "steps": "1. Type a partial customer name into the search box.\n2. Wait for results.",
+          "testData": "[TEST_DATA_REQUIRED] a partial customer name (e.g. 'Anjali')",
+          "expected": "Transactions whose Customer Name contains the typed text are shown (partial match works)."
+        },
+        {
+          "id": "ADM_PAY_071",
+          "scenario": "To verify search by Phone number",
+          "description": "Verify that the search box matches on customer Phone number.",
+          "precond": "An admin is on the page; a known customer phone exists.",
+          "steps": "1. Type a customer phone number into the search box.\n2. Wait for results.",
+          "testData": "[TEST_DATA_REQUIRED] a known customer phone number",
+          "expected": "Transactions for that phone number are shown."
+        }
+      ]
+    },
+    {
+      "name": "Column Filters",
+      "tcs": [
+        {
+          "id": "ADM_PAY_010",
+          "scenario": "To verify filter by Source = Online easebuzz",
+          "description": "Verify that the Source column filter restricts the ledger to easebuzz transactions.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Open the Source column filter.\n2. Select 'Online easebuzz'.\n3. Apply.",
+          "testData": "(no input)",
+          "expected": "Only rows with Source = 'Online easebuzz' are shown."
+        },
+        {
+          "id": "ADM_PAY_011",
+          "scenario": "To verify filter by Status = completed",
+          "description": "Verify that filtering Status to completed shows only completed transactions.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Open the Status column filter.\n2. Select 'completed'.\n3. Apply.",
+          "testData": "(no input)",
+          "expected": "Only rows with Status = completed are shown."
+        },
+        {
+          "id": "ADM_PAY_012",
+          "scenario": "To verify filter by Status = failed",
+          "description": "Verify that filtering Status to failed shows only failed transactions.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Open the Status column filter.\n2. Select 'failed'.\n3. Apply.",
+          "testData": "(no input)",
+          "expected": "Only rows with Status = failed are shown."
+        },
+        {
+          "id": "ADM_PAY_013",
+          "scenario": "To verify filter by Payment Type = Allocation",
+          "description": "Verify that filtering Payment Type to Allocation shows only allocation transactions.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Open the Payment Type column filter.\n2. Select 'Allocation'.\n3. Apply.",
+          "testData": "(no input)",
+          "expected": "Only rows with Payment Type = Allocation are shown."
+        },
+        {
+          "id": "ADM_PAY_072",
+          "scenario": "To verify filter by Source = Offline",
+          "description": "Verify that the Source filter can isolate offline (non-gateway) transactions.",
+          "precond": "An admin is on the page; offline transactions exist.",
+          "steps": "1. Open the Source column filter.\n2. Select 'Offline'.\n3. Apply.",
+          "testData": "(no input)",
+          "expected": "Only rows with Source = Offline are shown."
+        },
+        {
+          "id": "ADM_PAY_073",
+          "scenario": "To verify filter by Method",
+          "description": "Verify that the Method column filter restricts to the chosen payment method.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Open the Method column filter.\n2. Select a value (e.g. RTGS).\n3. Apply.",
+          "testData": "(no input)",
+          "expected": "Only rows whose Method matches the selected value are shown."
+        },
+        {
+          "id": "ADM_PAY_014",
+          "scenario": "To verify combining date and status filters",
+          "description": "Verify that a date range and a status filter applied together intersect correctly.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Apply a date range (e.g. last 30 days).\n2. Apply Status = refunded.\n3. View results.",
+          "testData": "(no input)",
+          "expected": "Only refunded transactions whose Payment Date is inside the date range are shown."
+        },
+        {
+          "id": "ADM_PAY_015",
+          "scenario": "To verify clearing filters restores the full list",
+          "description": "Verify that clearing applied filters returns the ledger to the unfiltered view.",
+          "precond": "Several filters are currently applied.",
+          "steps": "1. Clear / reset the applied filters.\n2. Observe the table and the count.",
+          "testData": "(no input)",
+          "expected": "All filters clear; the full ledger and the unfiltered total count are shown again."
+        }
+      ]
+    },
+    {
+      "name": "Pagination",
+      "tcs": [
+        {
+          "id": "ADM_PAY_031",
+          "scenario": "To verify pagination next/previous",
+          "description": "Verify that the pagination control loads the next set of transactions.",
+          "precond": "An admin is on the Payment Transactions page with more than one page of results.",
+          "steps": "1. Note the rows on page 1.\n2. Click the Next page control.\n3. Observe the rows.",
+          "testData": "(no input)",
+          "expected": "The next set of transactions loads; the page indicator advances; rows differ from page 1."
+        },
+        {
+          "id": "ADM_PAY_032",
+          "scenario": "To verify changing the page size",
+          "description": "Verify that the page-size selector changes how many rows show per page.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Open the page-size dropdown.\n2. Select a larger size (e.g. 50).\n3. Observe the table.",
+          "testData": "(no input)",
+          "expected": "The table shows the chosen number of rows per page. [VERIFY WITH DEV] exact page-size options beyond default 10 (Q-TXN-006, not in docs)."
+        },
+        {
+          "id": "ADM_PAY_074",
+          "scenario": "To verify the pagination label format",
+          "description": "Verify that the pagination label reports range and total (e.g. '1-10 of N records').",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Read the pagination label below the table.",
+          "testData": "(no input)",
+          "expected": "Label shows the current row range and the total (e.g. '1-10 of 10302 records'); default page size is 10."
+        },
+        {
+          "id": "ADM_PAY_075",
+          "scenario": "To verify navigation to the last partial page",
+          "description": "Verify that the last page shows the remaining partial set without error.",
+          "precond": "An admin is on the Payment Transactions page; total is not an exact multiple of page size.",
+          "steps": "1. Jump to the last page using the pagination control.\n2. Observe the rows and the label.",
+          "testData": "(no input)",
+          "expected": "The last page shows the remaining rows (fewer than a full page); the label range matches; no error or blank page."
+        }
+      ]
+    },
+    {
+      "name": "Refresh",
+      "tcs": [
+        {
+          "id": "ADM_PAY_035",
+          "scenario": "To verify the Refresh button reloads data",
+          "description": "Verify that Refresh reloads the latest transactions from the server.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Click the Refresh button.\n2. Observe the table.",
+          "testData": "(no input)",
+          "expected": "The table reloads with the latest data from the server."
+        },
+        {
+          "id": "ADM_PAY_076",
+          "scenario": "To verify Refresh preserves applied filters",
+          "description": "Verify that clicking Refresh reloads data without clearing the current filters (per FS §How-to-Use: 'reload without clearing your filters').",
+          "precond": "An admin has one or more filters applied.",
+          "steps": "1. Apply a filter (e.g. Status = completed).\n2. Click Refresh.\n3. Observe the filter state and rows.",
+          "testData": "(no input)",
+          "expected": "The data reloads but the previously applied filter is still in effect. [VERIFY WITH DEV] confirm Refresh does not silently reset filters."
+        }
+      ]
+    },
+    {
+      "name": "Export",
+      "tcs": [
+        {
+          "id": "ADM_PAY_017",
+          "scenario": "To verify Export downloads a transactions file",
+          "description": "Verify that the Export button triggers a file download of transaction data.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Click the Export button.\n2. Wait for the download to complete.",
+          "testData": "(no input)",
+          "expected": "A file downloads. [VERIFY WITH DEV] exact format CSV vs XLSX (Q-TXN-001, not confirmed in docs)."
+        },
+        {
+          "id": "ADM_PAY_019",
+          "scenario": "To verify exported file columns",
+          "description": "Verify that the exported file contains the columns needed for reconciliation.",
+          "precond": "A transactions file has been exported and opened.",
+          "steps": "1. Open the downloaded file.\n2. Read its column headers.",
+          "testData": "(no input)",
+          "expected": "File includes at least Transaction ID, Payment Date, Source, Payment Type, Method, Amount, Status, Registration Number. [VERIFY WITH DEV] exact column set."
+        },
+        {
+          "id": "ADM_PAY_018",
+          "scenario": "To verify Export respects an active date filter",
+          "description": "Verify that exporting after a date filter is applied exports only the filtered range.",
+          "precond": "A date filter (e.g. last 7 days) is applied.",
+          "steps": "1. Click Export.\n2. Open the file.\n3. Inspect the Payment Date values.",
+          "testData": "(no input)",
+          "expected": "The file contains only transactions inside the filtered date range. [VERIFY WITH DEV] filtered-vs-all export scope (Q-TXN-001)."
+        },
+        {
+          "id": "ADM_PAY_050",
+          "scenario": "To verify Export respects a Status filter",
+          "description": "Verify that exporting after a Status filter exports only the matching rows.",
+          "precond": "Status = refunded filter applied; the table shows the refunded rows.",
+          "steps": "1. Click Export.\n2. Open the file.\n3. Inspect the Status column.",
+          "testData": "(no input)",
+          "expected": "Every row in the file has Status = refunded; the file row count matches the filtered table count."
+        },
+        {
+          "id": "ADM_PAY_051",
+          "scenario": "To verify Export respects combined Source + Payment Type filters",
+          "description": "Verify that exporting after two combined filters exports only the intersection.",
+          "precond": "Source = Online easebuzz AND Payment Type = Allocation filters applied.",
+          "steps": "1. Click Export.\n2. Open the file.\n3. Inspect the Source and Payment Type columns.",
+          "testData": "(no input)",
+          "expected": "Every row has Source = Online easebuzz AND Payment Type = Allocation."
+        },
+        {
+          "id": "ADM_PAY_053",
+          "scenario": "To verify exported amounts preserve precision",
+          "description": "Verify that amount values in the export are not rounded (decimals preserved).",
+          "precond": "A transaction with a decimal amount (e.g. 3299000.50) exists.",
+          "testData": "[TEST_DATA_REQUIRED] a transaction with a known decimal amount",
+          "steps": "1. Apply a filter that includes that transaction.\n2. Export.\n3. Inspect the Amount column for that row in the file.",
+          "expected": "The amount shows full precision (e.g. 3299000.50) with no rounding loss."
+        },
+        {
+          "id": "ADM_PAY_054",
+          "scenario": "To verify the export filename carries a date stamp",
+          "description": "Verify that the exported filename includes a date so repeated exports do not overwrite each other.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Click Export.\n2. Note the downloaded filename.",
+          "testData": "(no input)",
+          "expected": "The filename contains a date (e.g. 'payment-transactions-2026-05-26.xlsx'). [VERIFY WITH DEV] exact filename pattern."
+        },
+        {
+          "id": "ADM_PAY_052",
+          "scenario": "To verify Export of a zero-result filter",
+          "description": "Verify that exporting when no rows match produces a header-only file, not an error.",
+          "precond": "A filter combination producing zero results is applied (e.g. Status=bounced AND today only).",
+          "steps": "1. Click Export.\n2. Open the downloaded file.",
+          "testData": "(no input)",
+          "expected": "The file downloads and contains only the header row (zero data rows); no error is thrown."
+        }
+      ]
+    },
+    {
+      "name": "Transaction Detail (Eye Icon) — Not Implemented",
+      "tcs": [
+        {
+          "id": "ADM_PAY_055",
+          "scenario": "To verify the eye icon appears on every row",
+          "description": "Verify that the Actions eye icon is present on rows of every status.",
+          "precond": "The ledger shows rows of mixed status (initiated, completed, failed, refunded, bounced).",
+          "steps": "1. Inspect the Actions column on rows of different statuses.",
+          "testData": "(no input)",
+          "expected": "The eye icon appears on every row; no status hides it."
+        },
+        {
+          "id": "ADM_PAY_058",
+          "scenario": "To verify the eye icon tooltip",
+          "description": "Verify that hovering the eye icon shows a tooltip.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Hover over the eye icon in the Actions column.",
+          "testData": "(no input)",
+          "expected": "A tooltip appears. [VERIFY WITH DEV] exact tooltip text ('View Details' vs other)."
+        },
+        {
+          "id": "ADM_PAY_020",
+          "scenario": "To verify the eye icon shows 'Detail view coming soon'",
+          "description": "Verify that clicking the eye icon shows the not-yet-implemented message rather than a detail page.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Click the eye icon on any row.",
+          "testData": "(no input)",
+          "expected": "A message reading 'Detail view coming soon' is shown; no detail page opens (feature not implemented)."
+        },
+        {
+          "id": "ADM_PAY_059",
+          "scenario": "To verify the eye icon does not navigate away",
+          "description": "Verify that clicking the eye icon keeps the user on the list with filters/pagination intact.",
+          "precond": "An admin is on the page with filters applied and on a specific page.",
+          "steps": "1. Click the eye icon on a row.\n2. Dismiss the 'coming soon' message.\n3. Observe the URL and current filter/page state.",
+          "testData": "(no input)",
+          "expected": "URL stays /admin/payment-transactions; the applied filters and current page are preserved."
+        },
+        {
+          "id": "ADM_PAY_060",
+          "scenario": "To verify the 'coming soon' message can be dismissed",
+          "description": "Verify that the not-implemented message can be closed and returns to the list.",
+          "precond": "The 'coming soon' message is shown.",
+          "steps": "1. Close the message (X / OK / click outside).",
+          "testData": "(no input)",
+          "expected": "The message dismisses and the user remains on the list view."
+        },
+        {
+          "id": "ADM_PAY_061",
+          "scenario": "To verify the eye icon on an offline row also shows 'coming soon'",
+          "description": "Verify that the detail view is unimplemented for offline transactions too.",
+          "precond": "An offline transaction exists in the list.",
+          "steps": "1. Click the eye icon on the offline row.",
+          "testData": "[TEST_DATA_REQUIRED] a known offline transaction",
+          "expected": "The same 'Detail view coming soon' message appears; no source type has a working detail view."
+        }
+      ]
+    },
+    {
+      "name": "Payment Gateway Settings",
+      "tcs": [
+        {
+          "id": "ADM_PAY_021",
+          "scenario": "To verify the Settings button opens the gateway settings",
+          "description": "Verify that clicking Settings reveals the gateway configuration section inline on the same page (DOC_DRIFT-001: live UI is an inline panel, not a modal).",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Click the 'Settings' button in the header.\n2. Observe the page and the URL.",
+          "testData": "(no input)",
+          "expected": "The gateway settings section opens inline on the same page (URL unchanged). It shows per-tower rows with an Active/Inactive toggle and a 'View Tower' link per row, plus an 'Update' button. [VERIFY WITH DEV] docs describe a 2-checkbox modal (Easebuzz/Razorpay) — UI shows per-tower toggles (DOC_DRIFT-001)."
+        },
+        {
+          "id": "ADM_PAY_022",
+          "scenario": "To verify gateway settings reflect current state",
+          "description": "Verify that the settings section shows the current enabled/disabled state of each gateway/tower toggle.",
+          "precond": "The gateway settings section is open.",
+          "steps": "1. Read the state of each toggle (checked = Active, unchecked = Inactive).",
+          "testData": "(no input)",
+          "expected": "Each toggle reflects the current state. A checked (green) switch = Active; an unchecked switch = Inactive. [VERIFY WITH DEV] whether the model is per-tower toggles (UI) or per-gateway checkboxes (docs) — DOC_DRIFT-001."
+        },
+        {
+          "id": "ADM_PAY_077",
+          "scenario": "To verify the per-tower 'View Tower' link",
+          "description": "Verify that the 'View Tower' link in a gateway settings row navigates to the related tower in the Towers module.",
+          "precond": "The gateway settings section is open with at least one tower row.",
+          "steps": "1. Click 'View Tower' on a row.\n2. Observe where it navigates.",
+          "testData": "(no input)",
+          "expected": "The browser opens the corresponding tower in the Towers module. [VERIFY WITH DEV] exact destination (not documented in BRD/FRD — DOC_DRIFT-001 / DOC_GAP)."
+        },
+        {
+          "id": "ADM_PAY_025",
+          "scenario": "To verify Update takes effect with no confirmation dialog",
+          "description": "Verify that clicking Update saves the change immediately without an 'Are you sure?' prompt (BR §6.4).",
+          "precond": "The gateway settings section is open; an authorised destructive change is permitted.",
+          "steps": "1. Toggle a gateway/tower state.\n2. Click 'Update'.",
+          "testData": "[TEST_DATA_REQUIRED] authorisation to change UAT gateway state",
+          "expected": "The change saves immediately with no confirmation dialog; a success indication appears. Silence-by-design: no 'Are you sure?' prompt is shown (this is a documented HIGH risk, not a bug)."
+        },
+        {
+          "id": "ADM_PAY_062",
+          "scenario": "To verify closing settings without Update discards changes",
+          "description": "Verify that toggling a state then closing without Update does not persist the change.",
+          "precond": "The gateway settings section is open with a known starting state.",
+          "steps": "1. Toggle a gateway/tower to a new state.\n2. Close/leave the settings without clicking Update.\n3. Reopen Settings.",
+          "testData": "(no input)",
+          "expected": "The toggle is back to its original state — the unsaved change was not persisted."
+        },
+        {
+          "id": "ADM_PAY_023",
+          "scenario": "To verify disabling one gateway saves system-wide",
+          "description": "Verify that disabling a single gateway (with another remaining active) saves and takes effect immediately.",
+          "precond": "Both gateways currently active; authorisation to change UAT state.",
+          "steps": "1. Set one gateway (e.g. Razorpay) to Inactive.\n2. Click Update.",
+          "testData": "[TEST_DATA_REQUIRED] authorisation to disable a gateway on UAT",
+          "expected": "The setting saves immediately without a confirmation prompt; that gateway becomes unavailable system-wide for new payments."
+        },
+        {
+          "id": "ADM_PAY_026",
+          "scenario": "To verify re-enabling a disabled gateway",
+          "description": "Verify that an inactive gateway can be re-activated via Update.",
+          "precond": "One gateway is currently disabled; authorisation to change UAT state.",
+          "steps": "1. Set the disabled gateway back to Active.\n2. Click Update.",
+          "testData": "[TEST_DATA_REQUIRED] authorisation to re-enable a gateway on UAT",
+          "expected": "The gateway is re-enabled and immediately available for new buyer payments."
+        },
+        {
+          "id": "ADM_PAY_024",
+          "scenario": "To verify disabling the last active gateway is blocked",
+          "description": "Verify that attempting to leave zero gateways active is blocked with the at-least-one-active error (BR §6.3, negative).",
+          "precond": "Only one gateway is currently active (e.g. Razorpay already disabled); authorisation to attempt the change.",
+          "testData": "[TEST_DATA_REQUIRED] state with exactly one active gateway + authorisation",
+          "steps": "1. Set the last remaining active gateway (e.g. Easebuzz) to Inactive.\n2. Click Update.",
+          "expected": "The change is blocked and an error is shown: 'At least one payment gateway must remain active' (server-side guard). The configuration is not saved. [VERIFY WITH DEV] whether the block surfaces in the UI as a toast or only via the API error (no UI guard documented)."
+        }
+      ]
+    },
+    {
+      "name": "Transaction Lifecycle & Status",
+      "tcs": [
+        {
+          "id": "ADM_PAY_027",
+          "scenario": "To verify webhook-driven 'completed' after browser close",
+          "description": "Verify that a transaction reflects the gateway webhook status even when the buyer closed the browser mid-payment (BR §6.1 webhook is truth).",
+          "precond": "A buyer initiated a payment then closed the browser; the gateway webhook has since arrived.",
+          "testData": "[TEST_DATA_REQUIRED] a transaction where buyer closed browser but gateway confirmed",
+          "steps": "1. Locate that transaction in the ledger.\n2. Read its Status.",
+          "expected": "Status reflects the webhook outcome (e.g. completed), not what the buyer's browser reported."
+        },
+        {
+          "id": "ADM_PAY_028",
+          "scenario": "To verify the 20-minute hold expiry status",
+          "description": "Verify that a payment not completed within 20 minutes ends in a non-completed status and the unit is released (BR §6.2).",
+          "precond": "A payment was initiated more than 20 minutes ago without completion; the release cron has run.",
+          "testData": "[TEST_DATA_REQUIRED] a transaction stuck >20 min without completion",
+          "steps": "1. Locate that transaction.\n2. Read its Status.\n3. Check the unit's status in Towers.",
+          "expected": "Transaction Status is a non-completed value (e.g. dropped / cancelled) and the unit has returned to available. [VERIFY WITH DEV] exact end-status the cron sets."
+        },
+        {
+          "id": "ADM_PAY_030",
+          "scenario": "To verify refunded status appears after admin refund",
+          "description": "Verify that a transaction tied to an admin-cancelled paid registration shows Status = refunded.",
+          "precond": "An admin has cancelled a paid registration that triggered a refund.",
+          "testData": "[TEST_DATA_REQUIRED] a registration cancelled with refund",
+          "steps": "1. Locate the transaction for the cancelled registration.\n2. Read its Status.",
+          "expected": "Status = refunded."
+        },
+        {
+          "id": "ADM_PAY_078",
+          "scenario": "To verify 'completed' locks the associated booking",
+          "description": "Verify the documented side-effect that a completed transaction locks its registration unit as booked (FRD BR §6 / data model).",
+          "precond": "A transaction with Status = completed exists with a known registration unit.",
+          "testData": "[TEST_DATA_REQUIRED] a completed transaction and its registration unit",
+          "steps": "1. Note the registration unit of a completed transaction.\n2. Open Customers / Towers and check that unit's booking state.",
+          "expected": "The associated unit shows as booked/confirmed (allocationStatus = confirmed). [VERIFY WITH DEV] cross-module assertion."
+        }
+      ]
+    },
+    {
+      "name": "Offline Payments (cross-module)",
+      "tcs": [
+        {
+          "id": "ADM_PAY_029",
+          "scenario": "To verify an offline payment appears after Assign Unit",
+          "description": "Verify that recording an offline payment via Customers → Assign Unit creates a matching offline transaction here (Integration: Customers).",
+          "precond": "An admin records an offline payment for a buyer via Customers → Assign Unit.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable buyer + unit for an offline booking",
+          "steps": "1. In Customers, record an offline payment for a buyer (Assign Unit).\n2. Open Payment Transactions.\n3. Locate the new transaction.",
+          "expected": "A new transaction appears with Source = Offline and Payment Type = Offline, linked to that buyer's registration."
+        },
+        {
+          "id": "ADM_PAY_079",
+          "scenario": "To verify an allocation payment appears from the Allocation flow",
+          "description": "Verify that a completed allocation booking payment surfaces here as an Allocation-type transaction (Integration: Allocation).",
+          "precond": "An allocation booking payment has been completed for a known registration.",
+          "testData": "[TEST_DATA_REQUIRED] a known allocation booking registration number",
+          "steps": "1. Note the registration number of a recent allocation booking.\n2. Search for it in Payment Transactions.",
+          "expected": "A transaction with Payment Type = Allocation and the matching Source (Online easebuzz / razorpay) is present. [VERIFY WITH DEV] cross-module assertion."
+        },
+        {
+          "id": "ADM_PAY_080",
+          "scenario": "To verify a milestone payment appears from the Milestone flow",
+          "description": "Verify that a milestone instalment payment surfaces here as a Milestone-type transaction (Integration: Milestone Payments).",
+          "precond": "A milestone payment has been completed for a known registration.",
+          "testData": "[TEST_DATA_REQUIRED] a known registration with a paid milestone",
+          "steps": "1. Note the registration number with a paid milestone.\n2. Search for it in Payment Transactions.",
+          "expected": "A transaction with Payment Type = Milestone is present for that registration. [VERIFY WITH DEV] cross-module assertion."
+        }
+      ]
+    },
+    {
+      "name": "Notifications (silent-by-design)",
+      "tcs": [
+        {
+          "id": "ADM_PAY_081",
+          "scenario": "To verify no buyer notification on gateway config change",
+          "description": "Verify that changing gateway configuration sends NO buyer notification (FS Feature 4 §8: none).",
+          "precond": "Gateway settings open; authorisation to change a gateway state.",
+          "testData": "[TEST_DATA_REQUIRED] authorisation + a monitorable buyer/channel",
+          "steps": "1. Toggle a gateway state and click Update.\n2. Check for any SMS / WhatsApp / email dispatched to buyers as a result.",
+          "expected": "No SMS, WhatsApp, or email is sent to buyers when gateway configuration changes. Silence is by design (FS Feature 4 §8)."
+        },
+        {
+          "id": "ADM_PAY_082",
+          "scenario": "To verify viewing/filtering/exporting sends no notification",
+          "description": "Verify that read-only actions (view, filter, sort, export) on this ledger dispatch no notifications.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. View, filter, sort, and export transactions.\n2. Check that no notification is dispatched by these actions.",
+          "testData": "(no input)",
+          "expected": "No SMS / WhatsApp / email is sent — these are read-only operations with no notification side-effect."
+        }
+      ]
+    },
+    {
+      "name": "API & Backend",
+      "tcs": [
+        {
+          "id": "ADM_PAY_083",
+          "scenario": "To verify the list endpoint honours filter query params",
+          "description": "Verify that GET /api/v1/admin/payment-transactions returns paginated, filtered results matching the UI filters.",
+          "precond": "A valid admin bearer token is available.",
+          "testData": "[TEST_DATA_REQUIRED] a valid admin JWT",
+          "steps": "1. Call GET /api/v1/admin/payment-transactions with page, limit, status, source, paymentType, method, startDate, endDate params.\n2. Inspect the response.",
+          "expected": "Response is a paginated list whose rows match the supplied filters; total reflects the filtered count."
+        },
+        {
+          "id": "ADM_PAY_084",
+          "scenario": "To verify UI-vs-backend filter parity",
+          "description": "Verify that a filter applied in the UI produces the same result set the API returns for the equivalent params (UI-vs-backend split).",
+          "precond": "A valid admin token; the UI is open.",
+          "testData": "[TEST_DATA_REQUIRED] a valid admin JWT",
+          "steps": "1. Apply Source = Online easebuzz + Status = completed in the UI and note the count.\n2. Call the API with source=easebuzz&status=completed.\n3. Compare counts.",
+          "expected": "The API filtered count equals the UI filtered count for the same criteria. [VERIFY WITH DEV] exact param values (easebuzz vs 'Online easebuzz')."
+        },
+        {
+          "id": "ADM_PAY_056",
+          "scenario": "To verify the detail endpoint is unimplemented",
+          "description": "Verify that GET /payment-transactions/:id is not a working detail endpoint, matching the 'coming soon' UI.",
+          "precond": "A valid admin token; a valid transaction id.",
+          "testData": "[TEST_DATA_REQUIRED] a valid admin JWT + valid transaction id",
+          "steps": "1. Call GET /api/v1/admin/payment-transactions/<valid-id>.\n2. Inspect the response.",
+          "expected": "The endpoint returns a not-implemented / TODO placeholder (501 or a TODO body), not a populated detail record — the UI is correct to show 'coming soon'."
+        },
+        {
+          "id": "ADM_PAY_057",
+          "scenario": "To verify clicking the eye icon fires no detail network call",
+          "description": "Verify that the eye icon's 'coming soon' is purely client-side and triggers no detail-endpoint request.",
+          "precond": "The page is open with the browser network panel visible.",
+          "testData": "(no input)",
+          "steps": "1. Open the network panel.\n2. Click the eye icon on a row.\n3. Watch for any request to a detail endpoint.",
+          "expected": "No GET request to /payment-transactions/:id fires; the 'coming soon' message is shown purely client-side."
+        },
+        {
+          "id": "ADM_PAY_063",
+          "scenario": "To verify per-gateway-id PUT is disabled",
+          "description": "Verify that toggling a single gateway by id is not exposed (route commented out) — bulk save must be used (DOC_DRIFT-003).",
+          "precond": "A valid admin token.",
+          "testData": "[TEST_DATA_REQUIRED] a valid admin JWT",
+          "steps": "1. Call PUT /api/v1/admin/payment-gateways/1 with body {isActive:false}.\n2. Inspect the response.",
+          "expected": "HTTP 404 — per-gateway-id toggling is disabled at routes level; the bulk settings save endpoint must be used instead. [VERIFY WITH DEV] exact bulk route path (DOC_DRIFT-003)."
+        },
+        {
+          "id": "ADM_PAY_085",
+          "scenario": "To verify the server-side at-least-one-gateway guard",
+          "description": "Verify that the backend rejects an attempt to leave zero active gateways (BR §6.3; server guard).",
+          "precond": "A valid admin token; exactly one gateway currently active.",
+          "testData": "[TEST_DATA_REQUIRED] a valid admin JWT + authorisation to attempt disabling the last gateway",
+          "steps": "1. Call the gateway settings save endpoint with a body that would disable the last remaining active gateway.\n2. Inspect the response.",
+          "expected": "The request is rejected with a 400 and message 'At least one payment gateway must remain active'; the configuration is not changed."
+        },
+        {
+          "id": "ADM_PAY_FSD_036",
+          "scenario": "To verify no admin create/update/refund/delete transaction endpoints",
+          "description": "Verify that individual transactions cannot be created, updated, or deleted via admin API (read-only at admin level).",
+          "precond": "A valid admin token.",
+          "testData": "[TEST_DATA_REQUIRED] a valid admin JWT",
+          "steps": "1. POST /api/v1/admin/payment-transactions.\n2. PUT /api/v1/admin/payment-transactions/:id.\n3. DELETE /api/v1/admin/payment-transactions/:id.",
+          "expected": "All three return 404. The module is read-only at admin level; mutations occur via cancel/refund/offline-milestone flows in other modules."
+        },
+        {
+          "id": "ADM_PAY_FSD_037",
+          "scenario": "To verify the detail endpoint route exists but is unimplemented",
+          "description": "Verify that GET /payment-transactions/:id exists in the route file but its controller returns a TODO placeholder (route-level companion to ADM_PAY_056).",
+          "precond": "A valid admin token; a valid transaction id.",
+          "testData": "[TEST_DATA_REQUIRED] a valid admin JWT + valid transaction id",
+          "steps": "1. Call GET /api/v1/admin/payment-transactions/123.\n2. Inspect the response body and the route registration.",
+          "expected": "The route is registered but the controller returns a TODO placeholder (not a populated record). The UI should not render a per-transaction detail page. Related: ADM_PAY_056."
+        },
+        {
+          "id": "ADM_PAY_FSD_038",
+          "scenario": "To verify the per-id gateway PUT route is commented out",
+          "description": "Verify that PUT /payment-gateways/:id is disabled at the routes level so a single gateway cannot be toggled by id (route-level companion to ADM_PAY_063; DOC_DRIFT-003).",
+          "precond": "A valid admin token.",
+          "testData": "[TEST_DATA_REQUIRED] a valid admin JWT",
+          "steps": "1. Call PUT /api/v1/admin/payment-gateways/<id>.\n2. Inspect the response.",
+          "expected": "HTTP 404 — the per-id route is commented out. The bulk settings save endpoint must be used instead. Related: ADM_PAY_063. [VERIFY WITH DEV] exact bulk route path (DOC_DRIFT-003)."
+        },
+        {
+          "id": "ADM_PAY_086",
+          "scenario": "To verify unauthenticated access is blocked",
+          "description": "Verify that hitting the page or the list API with no session is rejected/redirected (auth).",
+          "precond": "No active admin session / no bearer token.",
+          "steps": "1. Open /admin/payment-transactions with no session.\n2. Separately, call GET /api/v1/admin/payment-transactions with no Authorization header.",
+          "testData": "(no input)",
+          "expected": "The page redirects to the Admin login; the API returns 401 Unauthorized."
+        },
+        {
+          "id": "ADM_PAY_087",
+          "scenario": "To verify an invalid/expired token is rejected",
+          "description": "Verify that a tampered or expired bearer token is rejected on the list endpoint (auth/security).",
+          "precond": "A tampered or expired token is available.",
+          "testData": "[TEST_DATA_REQUIRED] an expired or tampered admin JWT",
+          "steps": "1. Call GET /api/v1/admin/payment-transactions with the invalid token.\n2. Inspect the response.",
+          "expected": "The API returns 401/403 and no transaction data. [VERIFY WITH DEV] exact code."
+        }
+      ]
+    },
+    {
+      "name": "Error Handling & Empty States",
+      "tcs": [
+        {
+          "id": "ADM_PAY_034",
+          "scenario": "To verify the no-results empty state",
+          "description": "Verify that a filter combination matching nothing shows an empty-state message, not a broken table.",
+          "precond": "An admin is on the Payment Transactions page.",
+          "steps": "1. Apply Status = bounced and date = today only (or any zero-match combo).\n2. Observe the table.",
+          "testData": "(no input)",
+          "expected": "The table shows a 'No transactions found' (or equivalent) empty state; no error. [VERIFY WITH DEV] exact empty-state text."
+        },
+        {
+          "id": "ADM_PAY_088",
+          "scenario": "To verify behaviour on a server error",
+          "description": "Verify that a backend failure (e.g. 500) while loading the ledger surfaces a graceful error, not a blank/broken page.",
+          "precond": "The list API can be made to fail (simulated 500 / network failure).",
+          "testData": "[TEST_DATA_REQUIRED] a way to force the list API to return 500 / fail",
+          "steps": "1. Trigger a server failure on the list request (or block the network).\n2. Reload the page.",
+          "expected": "A clear error / retry state is shown; the app does not crash or show a blank screen. [VERIFY WITH DEV] exact error UI."
+        }
+      ]
+    }
+  ]
+}

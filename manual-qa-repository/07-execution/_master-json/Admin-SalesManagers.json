@@ -1,0 +1,859 @@
+{
+  "portal": "Admin",
+  "module": "Sales Managers",
+  "sheetName": "Sales Managers - Master",
+  "replaceSheets": [
+    "Sales Managers",
+    "Sales Managers (Exec)"
+  ],
+  "notes": [
+    "1. SM = Sales Manager. SM Admin = a higher-role manager (roleId 4); plain Sales Manager = roleId 5. Admin master OTP = 258369; UAT admin mobile = 8888888888 (master OTP bypasses real SMS on UAT).",
+    "2. [TEST_DATA_REQUIRED] = a disposable UAT SM record/phone/state (e.g. a brand-new 10-digit phone not yet in the system, or an existing SM id) must be supplied before executing this test.",
+    "3. [VERIFY WITH DEV] = behaviour not confirmed in BRD/FRD/FS; confirm before treating Pass/Fail as authoritative.",
+    "4. SM flags: Assignable (IS_AVAILABLE) controls whether the SM appears in customer assignment dropdowns system-wide; Is Active (IS_ACTIVE) controls whether the SM can log in to the Sales Manager portal. Both take effect immediately across all active sessions.",
+    "5. There is NO delete for Sales Managers — they are only deactivated (Is Active = OFF). No DELETE API route exists; deactivation is done via PUT update with isActive=false.",
+    "6. Privacy masking (Email / Phone / Cost) is SYSTEM-WIDE — one toggle hides that data from EVERY Sales Manager at once. There is no per-SM masking granularity.",
+    "7. SM Admin (roleId 4) is force-set to isAvailable=0 by the backend regardless of the value sent — SM Admins never appear in customer assignment dropdowns / ticket-allocation rotation.",
+    "8. Notifications: creating, editing, deactivating an SM, and bulk upload all send NO notification (no email / SMS / push) per FSD-CORRECTION 2026-05-25. Silence is by design — assert that no message is sent. (DOC_DRIFT-005: FRD Feature 7 How-to-Use prose still says \"New SMs receive an SMS with login instructions\" — this is stale; the corrected behaviour is NONE.)",
+    "9. Bulk SM upload lives on a different surface: Config page /admin/cms Section 7 \"Sales Managers\". The merge key is the phone number — a matching phone UPDATES the existing SM, a new phone CREATES one. Upload accepts .xlsx only.",
+    "10. The single Add Sales Manager control opens an Ant Design DRAWER (slide-in panel), not a centred modal — observed in visual-memory (no .ant-modal-content rendered). BRD/FRD/FS call it a \"modal\"; treat the words modal/drawer as the same Add/Edit panel (DOC_DRIFT-006). Steps below say \"Add/Edit panel\".",
+    "11. The total SM count badge in the header shows the GLOBAL system total and does NOT recompute when the list is searched, column-filtered, or paginated.",
+    "12. Destructive / state-changing tests (toggling Assignable / Is Active, creating SMs, masking changes, bulk upload) require user authorisation before running on UAT, and a disposable record where marked."
+  ],
+  "subModules": [
+    {
+      "name": "List & Landing",
+      "tcs": [
+        {
+          "id": "ADM_SM_001",
+          "scenario": "To verify the Sales Managers page loads",
+          "description": "Verify that the Sales Managers list page opens at /admin/sales-managers when the menu item is selected.",
+          "precond": "An admin is logged in (mobile 8888888888 / OTP 258369).",
+          "steps": "1. Click \"Managers\" / \"Sales Managers\" in the left sidebar.\n2. Watch the URL and the page content.",
+          "testData": "(no input)",
+          "expected": "The browser lands on /admin/sales-managers, the heading \"Sales Managers\" is shown, and the list table finishes loading."
+        },
+        {
+          "id": "ADM_SM_002",
+          "scenario": "To verify the page header controls",
+          "description": "Verify that the page header shows the total SM count badge and the Settings and Add Sales Manager buttons.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Look at the top header area of the page.\n2. Note the count text and the buttons on the right.",
+          "testData": "(no input)",
+          "expected": "The header shows a total count (e.g. \"26 Sales Managers\"), a \"Settings\" button, an \"Add Sales Manager\" button, and a search box with placeholder \"Search by name, email, or phone\"."
+        },
+        {
+          "id": "ADM_SM_003",
+          "scenario": "To verify the table columns",
+          "description": "Verify that the Sales Managers table shows all nine columns in order.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Read the column headers of the table from left to right.",
+          "testData": "(no input)",
+          "expected": "Columns appear in this order: First Name, Last Name, Email, Phone, Role, Assignable, Is Active, Created At, Actions."
+        },
+        {
+          "id": "ADM_SM_004",
+          "scenario": "To verify the Assignable toggle display",
+          "description": "Verify that each row shows an Assignable toggle reflecting the SM’s IS_AVAILABLE flag.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Look at the Assignable column on any row.",
+          "testData": "(no input)",
+          "expected": "The Assignable column shows a switch that is ON (coloured/green) or OFF (grey) matching that SM’s availability state."
+        },
+        {
+          "id": "ADM_SM_005",
+          "scenario": "To verify the Is Active toggle display",
+          "description": "Verify that each row shows an Is Active toggle reflecting the SM’s IS_ACTIVE flag.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Look at the Is Active column on any row.",
+          "testData": "(no input)",
+          "expected": "The Is Active column shows a switch that is ON or OFF matching whether that SM can log in."
+        },
+        {
+          "id": "ADM_SM_021",
+          "scenario": "To verify there is no Delete action",
+          "description": "Verify that the Actions column offers only Edit and no delete control (SMs are deactivated, never deleted).",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Look at the Actions column on any row.\n2. Look for any delete / bin / remove control.",
+          "testData": "(no input)",
+          "expected": "Only an \"Edit\" button is present in Actions. There is no Delete option anywhere on the row — SMs are removed only by setting Is Active = OFF."
+        },
+        {
+          "id": "TC_SM_UI_059",
+          "scenario": "To verify the Created At column content",
+          "description": "Verify that the Created At column shows a readable account-creation date for each SM.",
+          "precond": "An admin is on the Sales Managers page with at least one SM listed.",
+          "steps": "1. Look at the Created At column on any row.",
+          "testData": "(no input)",
+          "expected": "Each row shows a date (account creation date) in the Created At column. [VERIFY WITH DEV] exact date format not specified in BRD/FRD — [To verify] confirm the displayed format with the team."
+        },
+        {
+          "id": "TC_SM_UI_060",
+          "scenario": "To verify the count badge ignores search and filters",
+          "description": "Verify that the header total-count badge keeps showing the global system total and does NOT change when the list is searched or filtered.",
+          "precond": "An admin is on the Sales Managers page; note the count badge value.",
+          "steps": "1. Read the count badge value (e.g. \"26 Sales Managers\").\n2. Type a name into the search box and press Enter.\n3. Re-read the count badge.",
+          "testData": "A name that matches only a few SMs",
+          "expected": "The table narrows to the matching rows, but the header count badge still shows the full system total (e.g. still \"26 Sales Managers\"), not the number of matched rows."
+        },
+        {
+          "id": "TC_SM_NEG_061",
+          "scenario": "To verify the empty list state",
+          "description": "Verify how the page renders when no SM records exist or are returned.",
+          "precond": "An admin is on the Sales Managers page. [TEST_DATA_REQUIRED] a state/filter that returns zero SMs.",
+          "steps": "1. Apply a search or filter combination that matches no SM.\n2. Observe the table area.",
+          "testData": "[TEST_DATA_REQUIRED] search/filter that returns 0 rows",
+          "expected": "[VERIFY WITH DEV] [To verify] the table shows an empty / \"No data\" state (Ant Design default) and the count badge still shows the global total. Confirm the exact empty-state text with the team — not specified in BRD/FRD."
+        },
+        {
+          "id": "TC_SM_NEG_062",
+          "scenario": "To verify list-load failure handling",
+          "description": "Verify the page behaviour when the GET sales-managers list request fails (server 500 / network error).",
+          "precond": "An admin is on the Sales Managers page. [TEST_DATA_REQUIRED] ability to force the list API to error (dev/throttled environment).",
+          "steps": "1. Trigger the Sales Managers list load while the list API returns 500 or the network is offline.\n2. Observe the page.",
+          "testData": "[TEST_DATA_REQUIRED] forced API 500 / offline",
+          "expected": "[VERIFY WITH DEV] [To verify] the page shows an error / retry state rather than a blank crash. Exact error message not specified in BRD/FRD — confirm with the team."
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "tcs": [
+        {
+          "id": "ADM_SM_006",
+          "scenario": "To verify search by phone",
+          "description": "Verify that typing a phone number in the search box filters the list to the matching SM.",
+          "precond": "An admin is on the Sales Managers page; an SM with a known phone exists.",
+          "steps": "1. Type the SM’s phone number into the search box.\n2. Press Enter (or wait).",
+          "testData": "A known SM phone number",
+          "expected": "The table updates to show only the SM(s) whose phone matches."
+        },
+        {
+          "id": "ADM_SM_007",
+          "scenario": "To verify search by email",
+          "description": "Verify that typing an email in the search box filters the list to the matching SM(s).",
+          "precond": "An admin is on the Sales Managers page; an SM with a known email exists.",
+          "steps": "1. Type the SM’s email into the search box.\n2. Press Enter.",
+          "testData": "A known SM email",
+          "expected": "The table updates to show only SM rows whose email matches."
+        },
+        {
+          "id": "TC_SM_FUNC_063",
+          "scenario": "To verify search by name (partial)",
+          "description": "Verify that a partial name typed into search returns matching SMs (server-side partial match against First/Last Name).",
+          "precond": "An admin is on the Sales Managers page; an SM whose name contains a known fragment exists.",
+          "steps": "1. Type a partial name fragment (e.g. \"Raj\") into the search box.\n2. Press Enter.",
+          "testData": "A partial name fragment matching an SM",
+          "expected": "The table shows every SM whose First Name or Last Name contains the typed fragment (partial, server-side match)."
+        },
+        {
+          "id": "TC_SM_FUNC_064",
+          "scenario": "To verify clearing search restores the list",
+          "description": "Verify that deleting the search text restores the full SM list.",
+          "precond": "An admin has an active search applied that has narrowed the table.",
+          "steps": "1. With a search applied, clear all text from the search box.\n2. Press Enter / wait.",
+          "testData": "(clear the box)",
+          "expected": "The table returns to showing the full, unfiltered SM list (first page of all records)."
+        },
+        {
+          "id": "TC_SM_NEG_065",
+          "scenario": "To verify no-match search state",
+          "description": "Verify the result when a search term matches no Sales Manager.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Type a string that matches no SM (e.g. \"zzzznomatch\").\n2. Press Enter.",
+          "testData": "A non-matching search string",
+          "expected": "[VERIFY WITH DEV] [To verify] the table shows an empty / \"No data\" state and zero rows; the count badge still shows the global total. Confirm exact empty-state text with the team."
+        }
+      ]
+    },
+    {
+      "name": "Column Filters",
+      "tcs": [
+        {
+          "id": "TC_SM_FUNC_066",
+          "scenario": "To verify the Role column filter",
+          "description": "Verify that the Role column offers a filter and narrows the list to the chosen role.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Click the filter icon (funnel) on the Role column header.\n2. Select a role value (e.g. \"Sales Manager\").\n3. Apply the filter.",
+          "testData": "Role = Sales Manager",
+          "expected": "The table shows only SMs whose Role matches the selected value. [VERIFY WITH DEV] full list of available role values not confirmed (Q-SM-003) — [To verify] only \"Sales Manager\" observed; confirm whether \"SM Admin\" or others appear."
+        },
+        {
+          "id": "TC_SM_FUNC_067",
+          "scenario": "To verify the Assignable column filter",
+          "description": "Verify that the Assignable column filter narrows the list by IS_AVAILABLE (Yes/No).",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Click the filter icon on the Assignable column header.\n2. Select \"Yes\" (or \"No\").\n3. Apply.",
+          "testData": "Assignable = Yes, then No",
+          "expected": "When \"Yes\" is chosen, only SMs with the Assignable toggle ON are shown; when \"No\" is chosen, only SMs with it OFF are shown."
+        },
+        {
+          "id": "TC_SM_FUNC_068",
+          "scenario": "To verify the Is Active column filter",
+          "description": "Verify that the Is Active column filter narrows the list by IS_ACTIVE (Yes/No).",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Click the filter icon on the Is Active column header.\n2. Select \"Yes\" (or \"No\").\n3. Apply.",
+          "testData": "Is Active = Yes, then No",
+          "expected": "When \"Yes\" is chosen, only SMs with Is Active ON are shown; when \"No\" is chosen, only deactivated SMs are shown."
+        },
+        {
+          "id": "TC_SM_FUNC_069",
+          "scenario": "To verify combining filters with search",
+          "description": "Verify that a column filter and free-text search can be applied together.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Apply the Assignable = Yes column filter.\n2. Also type a name fragment into the search box and press Enter.",
+          "testData": "Assignable = Yes + a name fragment",
+          "expected": "The table shows only SMs that are BOTH Assignable = Yes AND match the search term (filters combine, server-side)."
+        },
+        {
+          "id": "TC_SM_FUNC_070",
+          "scenario": "To verify clearing a filter restores the view",
+          "description": "Verify that clearing a column filter restores the unfiltered list.",
+          "precond": "An admin has a column filter applied.",
+          "steps": "1. Re-open the active column filter.\n2. Clear / reset the selection.",
+          "testData": "(clear filter)",
+          "expected": "The filter is removed and the table returns to the full unfiltered list."
+        }
+      ]
+    },
+    {
+      "name": "Pagination",
+      "tcs": [
+        {
+          "id": "ADM_SM_008",
+          "scenario": "To verify next-page navigation",
+          "description": "Verify that the pagination control loads the next page of SMs.",
+          "precond": "An admin is on the Sales Managers page with more than one page of SMs (e.g. 26 records / 3 pages, 10 per page).",
+          "steps": "1. Note the rows on page 1.\n2. Click the Next arrow / page 2 in the pagination control.",
+          "testData": "(no input)",
+          "expected": "The table loads the next set of up to 10 SMs (page 2); the rows differ from page 1."
+        },
+        {
+          "id": "TC_SM_BOUND_071",
+          "scenario": "To verify the last partial page",
+          "description": "Verify the final page shows only the remaining records (partial page) for a 26-record / 3-page set.",
+          "precond": "An admin is on the Sales Managers page; total is 26 records across 3 pages at 10/page.",
+          "steps": "1. Navigate to the last page (page 3) using the pagination control.\n2. Count the rows shown.",
+          "testData": "(no input) — 26 records observed in FRD",
+          "expected": "The last page shows the remaining 6 rows (26 − 20), not a full 10. [VERIFY WITH DEV] exact total may differ on UAT — [To verify] the count reflects whatever the live total is at run time."
+        },
+        {
+          "id": "TC_SM_BOUND_072",
+          "scenario": "To verify changing page size",
+          "description": "Verify that changing the page-size control shows more rows per page.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Open the page-size selector in the pagination control.\n2. Choose a larger size (e.g. 50).",
+          "testData": "Page size 50",
+          "expected": "[VERIFY WITH DEV] [To verify] the table shows up to the selected number of rows per page (e.g. all 26 on one page when 50 is chosen). Confirm available page-size options with the team — not specified in BRD/FRD."
+        }
+      ]
+    },
+    {
+      "name": "Refresh",
+      "tcs": [
+        {
+          "id": "ADM_SM_040",
+          "scenario": "To verify refresh reflects external changes",
+          "description": "Verify that refreshing the list shows SMs created/updated elsewhere (e.g. via bulk upload).",
+          "precond": "An admin is on the Sales Managers page; a bulk upload was just performed on the Config surface.",
+          "steps": "1. Trigger a refresh of the Sales Managers list (reload the page or click any refresh control).\n2. Look for the newly uploaded SMs.",
+          "testData": "Phones from a just-completed bulk upload",
+          "expected": "The SMs created/updated by the bulk upload now appear in the list."
+        }
+      ]
+    },
+    {
+      "name": "Add Sales Manager (Add/Edit panel)",
+      "tcs": [
+        {
+          "id": "ADM_SM_009",
+          "scenario": "To verify the Add panel opens with all fields",
+          "description": "Verify that clicking \"Add Sales Manager\" opens the Add panel with every documented field.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Click the \"Add Sales Manager\" button in the header.\n2. Look at the panel that slides in.",
+          "testData": "(no input)",
+          "expected": "An Add panel opens (Ant Design drawer/slide-in, titled \"Add Sales Manager\") showing: First Name, Last Name, Email, Phone, Role, an Assignable toggle, and an Is Active toggle, plus Submit and Cancel."
+        },
+        {
+          "id": "ADM_SM_010",
+          "scenario": "To verify creating an SM with valid data",
+          "description": "Verify that submitting the Add panel with valid data creates a new Sales Manager.",
+          "precond": "The Add Sales Manager panel is open. [TEST_DATA_REQUIRED] a fresh 10-digit phone not already in the system.",
+          "steps": "1. Enter First Name \"Test\".\n2. Enter Last Name \"SM\".\n3. Enter a valid Email.\n4. Enter a fresh 10-digit Phone.\n5. Select Role \"Sales Manager\".\n6. Set Assignable ON and Is Active ON.\n7. Click Submit.",
+          "testData": "[TEST_DATA_REQUIRED] First \"Test\", Last \"SM\", valid email, fresh 10-digit phone, Role \"Sales Manager\"",
+          "expected": "A success message is shown, the panel closes, and the new SM appears in the list. The count badge increments."
+        },
+        {
+          "id": "ADM_SM_014",
+          "scenario": "To verify a new SM can log in",
+          "description": "Verify that a newly created SM with Is Active = ON can log in to the SM portal.",
+          "precond": "An SM was just created with Is Active = ON. [TEST_DATA_REQUIRED] that SM’s phone.",
+          "steps": "1. Open the Sales Manager portal in a new window.\n2. Enter the new SM’s phone and request OTP.\n3. Complete OTP login (master OTP 258369).",
+          "testData": "[TEST_DATA_REQUIRED] new SM phone",
+          "expected": "The new SM successfully logs in to the Sales Manager portal."
+        },
+        {
+          "id": "ADM_SM_015",
+          "scenario": "To verify Cancel discards Add input",
+          "description": "Verify that Cancel on the Add panel closes it without creating an SM.",
+          "precond": "The Add Sales Manager panel is open with some fields filled.",
+          "steps": "1. Fill a few fields.\n2. Click Cancel / Close.",
+          "testData": "(partial input)",
+          "expected": "The panel closes, no SM is created, and the list is unchanged."
+        },
+        {
+          "id": "ADM_SM_011",
+          "scenario": "To verify First Name is mandatory",
+          "description": "Verify that submitting with First Name empty is blocked.",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Leave First Name empty.\n2. Fill the other fields.\n3. Click Submit.",
+          "testData": "First Name blank, others valid",
+          "expected": "A validation error is shown on First Name and the SM is not created."
+        },
+        {
+          "id": "ADM_SM_012",
+          "scenario": "To verify email format validation",
+          "description": "Verify that an invalid email format is rejected.",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Enter Email \"notanemail\".\n2. Fill the other fields.\n3. Click Submit.",
+          "testData": "Email \"notanemail\"",
+          "expected": "An email-format validation error is shown and the SM is not created."
+        },
+        {
+          "id": "ADM_SM_013",
+          "scenario": "To verify 9-digit phone is rejected",
+          "description": "Verify that a phone with fewer than 10 digits is rejected.",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Enter Phone \"987654321\" (9 digits).\n2. Fill the other fields.\n3. Click Submit.",
+          "testData": "Phone \"987654321\"",
+          "expected": "A phone validation error is shown (must be 10 digits) and the SM is not created."
+        },
+        {
+          "id": "ADM_SM_039",
+          "scenario": "To verify duplicate phone is rejected",
+          "description": "Verify that creating an SM with a phone already in the system is rejected (phone is the unique merge key).",
+          "precond": "The Add Sales Manager panel is open; the phone of an existing SM is known.",
+          "steps": "1. Enter the phone of an existing SM.\n2. Fill the other fields.\n3. Click Submit.",
+          "testData": "An existing SM phone",
+          "expected": "An error is shown and no duplicate SM is created — phone is the unique merge key."
+        },
+        {
+          "id": "ADM_SM_054",
+          "scenario": "To verify whitespace-only email is rejected",
+          "description": "Verify that an email containing only spaces is rejected.",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Enter Email \"   \" (spaces only).\n2. Fill the other fields.\n3. Click Submit.",
+          "testData": "Email \"   \"",
+          "expected": "A validation error is shown (Email required + valid format) and the SM is not created."
+        },
+        {
+          "id": "ADM_SM_055",
+          "scenario": "To verify mobile starting with 5 is rejected",
+          "description": "Verify that an Indian mobile not starting with 6–9 is rejected.",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Enter Phone \"5123456789\".\n2. Fill the other fields.\n3. Click Submit.",
+          "testData": "Phone \"5123456789\"",
+          "expected": "A validation error is shown (Indian mobile must start with 6–9) and the SM is not created."
+        },
+        {
+          "id": "ADM_SM_056",
+          "scenario": "To verify non-digits blocked in phone",
+          "description": "Verify that letters cannot be typed into the Phone field.",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Try typing \"98abcd1234\" into the Phone field.",
+          "testData": "Keystrokes \"98abcd1234\"",
+          "expected": "Only the digits are accepted (field holds \"981234\"); letter keystrokes are blocked."
+        },
+        {
+          "id": "TC_SM_VAL_073",
+          "scenario": "To verify Last Name is mandatory",
+          "description": "Verify that submitting with Last Name empty is blocked (FRD marks Last Name mandatory).",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Leave Last Name empty.\n2. Fill the other fields.\n3. Click Submit.",
+          "testData": "Last Name blank, others valid",
+          "expected": "A validation error is shown on Last Name and the SM is not created. [VERIFY WITH DEV] FS shows Last Name \"may be blank in test data\" — [To verify] whether Last Name is truly enforced as mandatory."
+        },
+        {
+          "id": "TC_SM_VAL_074",
+          "scenario": "To verify Email is mandatory",
+          "description": "Verify that submitting with Email empty is blocked.",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Leave Email empty.\n2. Fill the other fields.\n3. Click Submit.",
+          "testData": "Email blank, others valid",
+          "expected": "A validation error is shown on Email and the SM is not created."
+        },
+        {
+          "id": "TC_SM_VAL_075",
+          "scenario": "To verify Phone is mandatory",
+          "description": "Verify that submitting with Phone empty is blocked.",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Leave Phone empty.\n2. Fill the other fields.\n3. Click Submit.",
+          "testData": "Phone blank, others valid",
+          "expected": "A validation error is shown on Phone and the SM is not created."
+        },
+        {
+          "id": "TC_SM_VAL_076",
+          "scenario": "To verify Role is mandatory / selectable",
+          "description": "Verify the Role dropdown is required and lists its available values.",
+          "precond": "The Add Sales Manager panel is open.",
+          "steps": "1. Open the Role dropdown.\n2. Note the available values.\n3. Try to submit without selecting a Role.",
+          "testData": "(no Role selected)",
+          "expected": "[VERIFY WITH DEV] [To verify] Role is required (submit blocked when empty) and the dropdown lists the available roles. Only \"Sales Manager\" observed (Q-SM-003) — confirm the full value list with the team."
+        },
+        {
+          "id": "TC_SM_NOTIF_077",
+          "scenario": "To verify no notification on SM create",
+          "description": "Verify that creating an SM sends NO notification to the SM (silent by design per FSD-CORRECTION).",
+          "precond": "An SM was just created via the Add panel. [TEST_DATA_REQUIRED] a phone/inbox you can monitor.",
+          "steps": "1. Create a new SM with a monitored phone/email.\n2. Check that phone/inbox for any SMS/email after creation.",
+          "testData": "[TEST_DATA_REQUIRED] monitored phone/email",
+          "expected": "No SMS, email, or push notification is sent to the new SM — creation is silent by design (FSD-CORRECTION 2026-05-25). (DOC_DRIFT-005: stale FRD prose claims an SMS is sent.)"
+        }
+      ]
+    },
+    {
+      "name": "Edit Sales Manager",
+      "tcs": [
+        {
+          "id": "ADM_SM_020",
+          "scenario": "To verify editing SM details",
+          "description": "Verify that an SM’s details can be updated via the Edit panel.",
+          "precond": "An SM exists in the list. [TEST_DATA_REQUIRED] a disposable SM row.",
+          "steps": "1. Click the Edit button on the SM row.\n2. Change the Last Name.\n3. Save.",
+          "testData": "[TEST_DATA_REQUIRED] disposable SM row; new Last Name",
+          "expected": "The SM record updates and the new Last Name shows in the list."
+        },
+        {
+          "id": "ADM_SM_050",
+          "scenario": "To verify Edit panel pre-fills fields",
+          "description": "Verify that the Edit panel opens pre-filled with the SM’s current values.",
+          "precond": "An SM with known field values exists.",
+          "steps": "1. Click Edit on that SM row.\n2. Inspect the form fields.",
+          "testData": "A known SM (First, Last, Email, Phone)",
+          "expected": "The Edit panel opens with First Name, Last Name, Email, Phone pre-filled to current values; the Assignable and Is Active toggles reflect the current DB state. [VERIFY WITH DEV] whether Role is read-only on Edit — [To verify]."
+        },
+        {
+          "id": "ADM_SM_058",
+          "scenario": "To verify Cancel discards edits",
+          "description": "Verify that Cancel on the Edit panel discards unsaved changes.",
+          "precond": "The Edit panel is open with a change made.",
+          "steps": "1. Change the Last Name to \"Changed\".\n2. Click Cancel (do not save).\n3. Re-locate the SM in the list.",
+          "testData": "New Last Name \"Changed\" (discarded)",
+          "expected": "The panel closes and the list still shows the original Last Name; no update is saved."
+        },
+        {
+          "id": "TC_SM_NOTIF_078",
+          "scenario": "To verify no notification on SM edit",
+          "description": "Verify that editing an SM sends no notification to the SM (silent by design).",
+          "precond": "An SM was just edited. [TEST_DATA_REQUIRED] a monitored phone/inbox.",
+          "steps": "1. Edit a monitored SM (e.g. change Last Name) and save.\n2. Check that phone/inbox.",
+          "testData": "[TEST_DATA_REQUIRED] monitored phone/email",
+          "expected": "No SMS, email, or push is sent to the SM on edit — account changes are silent by design (FRD Feature 5 §8)."
+        }
+      ]
+    },
+    {
+      "name": "Row Toggles (Assignable / Is Active)",
+      "tcs": [
+        {
+          "id": "ADM_SM_016",
+          "scenario": "To verify toggling Assignable OFF",
+          "description": "Verify that turning Assignable OFF immediately removes the SM from customer assignment dropdowns.",
+          "precond": "An SM with Assignable = ON. [TEST_DATA_REQUIRED] a disposable SM row + user authorisation.",
+          "steps": "1. Click the Assignable toggle on the SM row to OFF.\n2. Open a customer record’s SM assignment dropdown.",
+          "testData": "[TEST_DATA_REQUIRED] disposable SM row",
+          "expected": "The toggle switches OFF and the SM no longer appears in customer assignment dropdowns system-wide (immediate effect)."
+        },
+        {
+          "id": "ADM_SM_017",
+          "scenario": "To verify toggling Is Active OFF",
+          "description": "Verify that turning Is Active OFF immediately disables the SM’s portal login.",
+          "precond": "An SM with Is Active = ON. [TEST_DATA_REQUIRED] a disposable SM row + user authorisation.",
+          "steps": "1. Click the Is Active toggle on the SM row to OFF.",
+          "testData": "[TEST_DATA_REQUIRED] disposable SM row",
+          "expected": "The toggle switches OFF and that SM can no longer log in to the SM portal (immediate effect)."
+        },
+        {
+          "id": "ADM_SM_018",
+          "scenario": "To verify re-enabling Assignable",
+          "description": "Verify that turning Assignable back ON restores dropdown visibility.",
+          "precond": "An SM with Assignable = OFF.",
+          "steps": "1. Click the Assignable toggle to ON.\n2. Open a customer SM assignment dropdown.",
+          "testData": "[TEST_DATA_REQUIRED] disposable SM row",
+          "expected": "The SM reappears in customer assignment dropdowns."
+        },
+        {
+          "id": "ADM_SM_019",
+          "scenario": "To verify re-enabling Is Active",
+          "description": "Verify that turning Is Active back ON restores login capability.",
+          "precond": "An SM with Is Active = OFF.",
+          "steps": "1. Click the Is Active toggle to ON.\n2. Have the SM attempt OTP login.",
+          "testData": "[TEST_DATA_REQUIRED] disposable SM phone",
+          "expected": "The SM can log in to the SM portal again."
+        },
+        {
+          "id": "ADM_SM_038",
+          "scenario": "To verify Assignable OFF does not auto-reassign",
+          "description": "Verify that turning Assignable OFF does NOT auto-reassign that SM’s existing customers.",
+          "precond": "An SM that has assigned customers. [TEST_DATA_REQUIRED] an SM with active customer assignments.",
+          "steps": "1. Turn Assignable OFF for that SM.\n2. Open the customers previously assigned to that SM.",
+          "testData": "[TEST_DATA_REQUIRED] SM with active assignments",
+          "expected": "Existing customer-SM relationships remain unchanged; only future dropdown visibility is removed. Manual reassignment is required."
+        },
+        {
+          "id": "ADM_SM_051",
+          "scenario": "To verify SM Admin Assignable is force-OFF",
+          "description": "Verify that an SM Admin (roleId 4) row cannot be made Assignable — the backend force-sets isAvailable=0.",
+          "precond": "An SM Admin row (Role = SM Admin / roleId 4) exists.",
+          "steps": "1. Toggle Assignable to ON on that SM Admin row.\n2. Refresh the page.\n3. Re-read the toggle.",
+          "testData": "An SM Admin (roleId 4) row",
+          "expected": "After refresh, Assignable shows OFF — the backend force-sets isAvailable=0 for roleId 4 regardless of input, so SM Admins never appear in customer assignment dropdowns."
+        },
+        {
+          "id": "TC_SM_NOTIF_079",
+          "scenario": "To verify no notification on deactivation",
+          "description": "Verify that toggling Is Active OFF (deactivation) sends no notification to the SM.",
+          "precond": "An SM with Is Active = ON. [TEST_DATA_REQUIRED] a monitored disposable SM phone.",
+          "steps": "1. Toggle Is Active OFF on a monitored SM row.\n2. Check that SM’s phone/inbox.",
+          "testData": "[TEST_DATA_REQUIRED] monitored disposable SM",
+          "expected": "No SMS, email, or push is sent to the SM when deactivated — silent by design (FRD §8 / FSD-CORRECTION)."
+        }
+      ]
+    },
+    {
+      "name": "Privacy Masking Settings",
+      "tcs": [
+        {
+          "id": "ADM_SM_022",
+          "scenario": "To verify the masking settings panel",
+          "description": "Verify that the Settings button opens a panel with the three masking toggles.",
+          "precond": "An admin is on the Sales Managers page.",
+          "steps": "1. Click the \"Settings\" button in the header.\n2. Look at the panel.",
+          "testData": "(no input)",
+          "expected": "A Settings panel opens showing three toggles: Email Masking, Phone Masking, and Cost Masking. [VERIFY WITH DEV] exact panel UI not captured in visual-memory — [To verify] modal vs drawer layout."
+        },
+        {
+          "id": "ADM_SM_023",
+          "scenario": "To verify Email Masking ON",
+          "description": "Verify that turning Email Masking ON hides customer emails from all SMs.",
+          "precond": "Masking settings open; Email Masking OFF. [TEST_DATA_REQUIRED] an SM login to verify in the SM portal.",
+          "steps": "1. Turn Email Masking ON.\n2. Save (if a save is required).\n3. Log in as an SM in another window and open a customer.",
+          "testData": "[TEST_DATA_REQUIRED] an SM login",
+          "expected": "Customer email addresses appear masked/hidden in the SM portal for every SM."
+        },
+        {
+          "id": "ADM_SM_024",
+          "scenario": "To verify Phone Masking ON",
+          "description": "Verify that turning Phone Masking ON hides customer phones from all SMs.",
+          "precond": "Phone Masking OFF. [TEST_DATA_REQUIRED] an SM login.",
+          "steps": "1. Turn Phone Masking ON.\n2. Save.\n3. Verify in the SM portal.",
+          "testData": "[TEST_DATA_REQUIRED] an SM login",
+          "expected": "Customer phone numbers are hidden from every SM simultaneously."
+        },
+        {
+          "id": "ADM_SM_025",
+          "scenario": "To verify Cost Masking ON",
+          "description": "Verify that turning Cost Masking ON hides unit pricing from all SMs.",
+          "precond": "Cost Masking OFF. [TEST_DATA_REQUIRED] an SM login.",
+          "steps": "1. Turn Cost Masking ON.\n2. Save.\n3. Verify in the SM portal.",
+          "testData": "[TEST_DATA_REQUIRED] an SM login",
+          "expected": "Unit pricing is hidden from all SMs."
+        },
+        {
+          "id": "ADM_SM_026",
+          "scenario": "To verify masking is system-wide only",
+          "description": "Verify that masking has no per-SM granularity — only system-wide toggles.",
+          "precond": "The Settings panel is open.",
+          "steps": "1. Inspect the panel for any per-SM masking option.",
+          "testData": "(no input)",
+          "expected": "Only system-wide Email/Phone/Cost toggles exist; there is no per-SM masking configuration."
+        },
+        {
+          "id": "ADM_SM_027",
+          "scenario": "To verify masking OFF reveals data immediately",
+          "description": "Verify that turning Cost Masking OFF reveals pricing to all SMs immediately.",
+          "precond": "Cost Masking ON. [TEST_DATA_REQUIRED] an SM login + user authorisation.",
+          "steps": "1. Turn Cost Masking OFF.\n2. Save.\n3. Verify in the SM portal.",
+          "testData": "[TEST_DATA_REQUIRED] an SM login",
+          "expected": "Pricing becomes visible to every SM immediately on next data load."
+        },
+        {
+          "id": "ADM_SM_052",
+          "scenario": "To verify masking save mechanism",
+          "description": "Verify how masking changes are saved — auto-save on toggle or explicit Save.",
+          "precond": "The Settings panel is open; Phone Masking OFF.",
+          "steps": "1. Click the Phone Masking toggle to ON.\n2. Observe whether a save happens automatically or a Save button is needed.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] [To verify] the toggle either saves immediately (auto-save) or requires an explicit Save/Update click (Q-SM-002). Confirm the save mechanism with the team before changing masking on a live environment."
+        },
+        {
+          "id": "ADM_SM_053",
+          "scenario": "To verify masking state persists",
+          "description": "Verify that a masking change persists across an admin logout/login.",
+          "precond": "Email Masking just toggled ON.",
+          "steps": "1. Log the admin out.\n2. Log back in.\n3. Reopen the Settings masking panel.",
+          "testData": "(no input)",
+          "expected": "Email Masking is still ON — the state persists (stored in the master_configs table)."
+        },
+        {
+          "id": "TC_SM_NOTIF_080",
+          "scenario": "To verify no notification on masking change",
+          "description": "Verify that changing a masking toggle sends no notification to SMs.",
+          "precond": "The Settings panel is open. [TEST_DATA_REQUIRED] a monitored SM login.",
+          "steps": "1. Change a masking toggle and save.\n2. Check the monitored SM for any notification.",
+          "testData": "[TEST_DATA_REQUIRED] monitored SM",
+          "expected": "No notification is sent to any SM when masking settings change — the new state simply takes effect on next data load (FRD Feature 6 §8)."
+        },
+        {
+          "id": "TC_SM_VAL_081",
+          "scenario": "To verify masking change is audited",
+          "description": "Verify that a masking change is recorded in an audit log (admin id, which toggle, new state, timestamp).",
+          "precond": "A masking toggle was changed. [TEST_DATA_REQUIRED] access to the audit log / DB.",
+          "steps": "1. Change a masking toggle and save.\n2. Inspect the audit log / configuration history.",
+          "testData": "[TEST_DATA_REQUIRED] audit-log access",
+          "expected": "[VERIFY WITH DEV] [To verify] an audit entry records the admin user id, which toggle changed, the new state, and timestamp (Q-SM-005). FRD Feature 6 §9 claims logging — confirm with the team."
+        }
+      ]
+    },
+    {
+      "name": "Bulk Upload (Config Section 7)",
+      "tcs": [
+        {
+          "id": "ADM_SM_028",
+          "scenario": "To verify navigating to bulk upload",
+          "description": "Verify that the Sales Managers bulk-upload section is reachable in Config Section 7.",
+          "precond": "An admin is logged in.",
+          "steps": "1. Open /admin/cms.\n2. Scroll to Section 7 \"Sales Managers\".",
+          "testData": "(no input)",
+          "expected": "Section 7 \"Sales Managers\" is shown with Sample File Download, Upload File, and Submit controls."
+        },
+        {
+          "id": "ADM_SM_029",
+          "scenario": "To verify sample file download",
+          "description": "Verify that the sample XLSX downloads with the correct column headers.",
+          "precond": "Section 7 is visible.",
+          "steps": "1. Click \"Sample File Download\" in Section 7.\n2. Open the downloaded file.",
+          "testData": "(no input)",
+          "expected": "An XLSX template downloads with columns: Role, First Name, Last Name, Email, Phone, IS_AVAILABLE, IS_ACTIVE."
+        },
+        {
+          "id": "ADM_SM_030",
+          "scenario": "To verify bulk upload creates SMs",
+          "description": "Verify that uploading a file with new phones creates new SMs.",
+          "precond": "A filled sample XLSX with new SMs (phones not in system). [TEST_DATA_REQUIRED] fresh phones + user authorisation.",
+          "steps": "1. Click Upload File and select the XLSX.\n2. Click Submit.",
+          "testData": "[TEST_DATA_REQUIRED] XLSX with 3 fresh-phone rows",
+          "expected": "A success result shows the new SMs as Created; they appear in the SM list."
+        },
+        {
+          "id": "ADM_SM_031",
+          "scenario": "To verify bulk upload updates by phone",
+          "description": "Verify that a row whose phone matches an existing SM updates that SM (merge key = phone).",
+          "precond": "XLSX has a row with an existing SM phone but a changed Last Name. [TEST_DATA_REQUIRED] an existing SM phone.",
+          "steps": "1. Upload the XLSX.\n2. Submit.",
+          "testData": "[TEST_DATA_REQUIRED] existing SM phone + new Last Name",
+          "expected": "The result shows that row as Updated; the SM’s Last Name changes in the list (phone is the merge key)."
+        },
+        {
+          "id": "ADM_SM_032",
+          "scenario": "To verify IS_AVAILABLE=0 on upload",
+          "description": "Verify that an uploaded row with IS_AVAILABLE=0 sets Assignable OFF.",
+          "precond": "XLSX has a row with IS_AVAILABLE=0. [TEST_DATA_REQUIRED] a disposable phone.",
+          "steps": "1. Upload and submit.",
+          "testData": "[TEST_DATA_REQUIRED] row IS_AVAILABLE=0",
+          "expected": "The SM is created/updated with the Assignable toggle OFF."
+        },
+        {
+          "id": "ADM_SM_033",
+          "scenario": "To verify IS_ACTIVE=0 on upload",
+          "description": "Verify that an uploaded row with IS_ACTIVE=0 sets Is Active OFF.",
+          "precond": "XLSX has a row with IS_ACTIVE=0. [TEST_DATA_REQUIRED] a disposable phone.",
+          "steps": "1. Upload and submit.",
+          "testData": "[TEST_DATA_REQUIRED] row IS_ACTIVE=0",
+          "expected": "The SM is created/updated with the Is Active toggle OFF (login disabled)."
+        },
+        {
+          "id": "ADM_SM_036",
+          "scenario": "To verify per-row upload result",
+          "description": "Verify that the upload result reports a per-row outcome.",
+          "precond": "A bulk upload with mixed rows was submitted.",
+          "steps": "1. Open the downloaded result file / read the on-screen result.",
+          "testData": "Mixed-row XLSX",
+          "expected": "Each row is marked Created / Updated / Unchanged / Error with a message. [VERIFY WITH DEV] exact result format (file vs on-screen toast) — [To verify]."
+        },
+        {
+          "id": "ADM_SM_037",
+          "scenario": "To verify duplicate email allowed in upload",
+          "description": "Verify that two rows with the same email but different phones both process (email is not unique).",
+          "precond": "XLSX has 2 rows, same email, different phones. [TEST_DATA_REQUIRED] disposable phones.",
+          "steps": "1. Upload and submit.",
+          "testData": "[TEST_DATA_REQUIRED] 2 rows same email, diff phones",
+          "expected": "Both rows process successfully; email is not enforced as unique (Q-SM-001 — duplicate emails observed on UAT seed data)."
+        },
+        {
+          "id": "ADM_SM_034",
+          "scenario": "To verify 9-digit phone row errors",
+          "description": "Verify that an upload row with a 9-digit phone is flagged as an error.",
+          "precond": "XLSX has a row with a 9-digit phone.",
+          "steps": "1. Upload and submit.",
+          "testData": "Row with phone \"987654321\"",
+          "expected": "The result flags that row as Error with a phone-validation message; the row is not created."
+        },
+        {
+          "id": "ADM_SM_035",
+          "scenario": "To verify only XLSX accepted",
+          "description": "Verify that a non-XLSX file (e.g. .csv) is rejected.",
+          "precond": "Section 7 is visible.",
+          "steps": "1. Try to upload a .csv file.\n2. Click Submit.",
+          "testData": "A .csv file",
+          "expected": "The upload is rejected with a format error — only .xlsx is accepted."
+        },
+        {
+          "id": "TC_SM_NEG_082",
+          "scenario": "To verify missing-column upload errors",
+          "description": "Verify that an XLSX missing a required column is rejected or flagged.",
+          "precond": "Section 7 is visible; an XLSX missing the Phone column is prepared.",
+          "steps": "1. Upload an XLSX that omits the Phone (merge-key) column.\n2. Submit.",
+          "testData": "XLSX missing the Phone column",
+          "expected": "[VERIFY WITH DEV] [To verify] the upload is rejected or the rows are flagged as Error because the merge-key column is missing. Confirm exact handling with the team — not specified in BRD/FRD."
+        },
+        {
+          "id": "TC_SM_NEG_083",
+          "scenario": "To verify empty-file upload",
+          "description": "Verify behaviour when an XLSX with headers but zero data rows is uploaded.",
+          "precond": "Section 7 is visible; an XLSX with only headers is prepared.",
+          "steps": "1. Upload the header-only XLSX.\n2. Submit.",
+          "testData": "XLSX with headers, 0 rows",
+          "expected": "[VERIFY WITH DEV] [To verify] the upload completes with zero records processed (or shows a \"no rows\" message) and no SMs are created. Confirm with the team."
+        },
+        {
+          "id": "TC_SM_NOTIF_084",
+          "scenario": "To verify no notification on bulk upload",
+          "description": "Verify that a bulk upload dispatches zero notifications to created/updated SMs.",
+          "precond": "A bulk upload was just submitted. [TEST_DATA_REQUIRED] a monitored phone/inbox among the rows.",
+          "steps": "1. Bulk-upload a row with a monitored phone/email.\n2. Check that phone/inbox after Submit.",
+          "testData": "[TEST_DATA_REQUIRED] monitored row",
+          "expected": "No SMS, email, or push is sent to any created/updated SM — bulk import is silent by design (FSD-CORRECTION 2026-05-25). (DOC_DRIFT-005: stale FRD prose claims an SMS is sent.)"
+        }
+      ]
+    },
+    {
+      "name": "Integration (Customers)",
+      "tcs": [
+        {
+          "id": "TC_SM_INT_085",
+          "scenario": "To verify Assignable SM appears in Customer dropdown",
+          "description": "Verify that an SM with Assignable = ON appears in the Customers SM-assignment dropdown (cross-module).",
+          "precond": "An SM with Assignable = ON exists. [TEST_DATA_REQUIRED] a customer record whose SM-assignment dropdown can be opened.",
+          "steps": "1. Note an SM with Assignable ON.\n2. Open a customer record and open its Sales Manager assignment dropdown.",
+          "testData": "[TEST_DATA_REQUIRED] customer record + Assignable SM",
+          "expected": "The Assignable SM appears as a selectable option in the customer’s SM-assignment dropdown."
+        },
+        {
+          "id": "TC_SM_INT_086",
+          "scenario": "To verify non-assignable SM absent from dropdown",
+          "description": "Verify that an SM with Assignable = OFF does NOT appear in the Customers SM-assignment dropdown.",
+          "precond": "An SM with Assignable = OFF exists. [TEST_DATA_REQUIRED] a customer record dropdown.",
+          "steps": "1. Note an SM with Assignable OFF.\n2. Open a customer’s SM-assignment dropdown.",
+          "testData": "[TEST_DATA_REQUIRED] customer record + non-assignable SM",
+          "expected": "The non-assignable SM does NOT appear as an option in the dropdown."
+        }
+      ]
+    },
+    {
+      "name": "API & Security",
+      "tcs": [
+        {
+          "id": "ADM_SM_FSD_041",
+          "scenario": "To verify SM Admin force-set isAvailable=0 (API/DB)",
+          "description": "Verify that creating an SM with roleId 4 and isAvailable=true still stores isAvailable=0.",
+          "precond": "A valid admin bearer token. [TEST_DATA_REQUIRED] admin API token.",
+          "steps": "1. POST /api/v1/admin/sales-managers/create with {roleId:4, isAvailable:true, ...}.\n2. Query the DB / GET the new SM.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; roleId:4 body",
+          "expected": "The stored row has isAvailable=0 regardless of input — SM Admins are excluded from ticket-allocation rotation."
+        },
+        {
+          "id": "ADM_SM_FSD_042",
+          "scenario": "To verify no DELETE endpoint",
+          "description": "Verify that there is no DELETE route for SMs — deactivation is via PUT update.",
+          "precond": "A valid admin bearer token; an existing SM id. [TEST_DATA_REQUIRED] admin token + SM id.",
+          "steps": "1. Call DELETE /api/v1/admin/sales-managers/<id>.",
+          "testData": "[TEST_DATA_REQUIRED] admin token + SM id",
+          "expected": "HTTP 404 (route not found). To deactivate, PUT /update/:id with {isActive:false}. This is an expected limitation, not a defect."
+        },
+        {
+          "id": "ADM_SM_FSD_043",
+          "scenario": "To verify SM role cannot manage SMs",
+          "description": "Verify that an SM-role token cannot call the SM management endpoints.",
+          "precond": "A valid SM JWT (roleId 5). [TEST_DATA_REQUIRED] SM token.",
+          "steps": "1. As an SM, call GET /api/v1/admin/sales-managers.",
+          "testData": "[TEST_DATA_REQUIRED] SM (roleId 5) token",
+          "expected": "HTTP 403 Forbidden — only the admin role is allowed. SM Admin (roleId 4) is also denied."
+        },
+        {
+          "id": "ADM_SM_057",
+          "scenario": "To verify inactive SM cannot log in",
+          "description": "Verify that a newly created SM with Is Active = OFF is blocked at SM-portal OTP verification.",
+          "precond": "A new SM created with Is Active = OFF. [TEST_DATA_REQUIRED] that SM phone.",
+          "steps": "1. Open the SM portal in incognito.\n2. Enter the new SM’s phone, Send OTP.\n3. Verify with master OTP 258369.",
+          "testData": "[TEST_DATA_REQUIRED] inactive SM phone",
+          "expected": "Verify-OTP returns HTTP 400 \"Your access to the portal has been revoked\"; the SM cannot enter the portal."
+        },
+        {
+          "id": "TC_SM_API_087",
+          "scenario": "To verify create SM via API",
+          "description": "Verify the create-SM endpoint creates a record with the posted fields (happy path, API layer).",
+          "precond": "A valid admin bearer token. [TEST_DATA_REQUIRED] admin token + fresh phone.",
+          "steps": "1. POST /api/v1/admin/sales-managers/create with valid SM fields and a fresh phone.\n2. GET the SM list / by id.",
+          "testData": "[TEST_DATA_REQUIRED] admin token + fresh-phone body",
+          "expected": "A new SM record is created and returned/listed with the posted First/Last/Email/Phone/Role and the requested isAvailable/isActive flags (for roleId 5)."
+        },
+        {
+          "id": "TC_SM_API_088",
+          "scenario": "To verify update SM via API",
+          "description": "Verify the update-SM endpoint updates an existing record.",
+          "precond": "A valid admin token; an existing SM id. [TEST_DATA_REQUIRED] admin token + disposable SM id.",
+          "steps": "1. PUT /api/v1/admin/sales-managers/update/:id with changed fields.\n2. GET the SM by id.",
+          "testData": "[TEST_DATA_REQUIRED] admin token + SM id",
+          "expected": "The SM record reflects the updated fields immediately."
+        },
+        {
+          "id": "TC_SM_API_089",
+          "scenario": "To verify unauthenticated list call blocked",
+          "description": "Verify that the SM list endpoint rejects a request with no token.",
+          "precond": "No authentication token.",
+          "steps": "1. Call GET /api/v1/admin/sales-managers with no Authorization header.",
+          "testData": "(no token)",
+          "expected": "HTTP 401 Unauthorized — the endpoint requires a valid admin session/token."
+        },
+        {
+          "id": "TC_SM_API_090",
+          "scenario": "To verify expired/invalid token blocked",
+          "description": "Verify that an invalid or expired bearer token is rejected by the SM list endpoint.",
+          "precond": "An invalid/expired token string. [TEST_DATA_REQUIRED] a tampered/expired token.",
+          "steps": "1. Call GET /api/v1/admin/sales-managers with an invalid/expired Authorization header.",
+          "testData": "[TEST_DATA_REQUIRED] invalid/expired token",
+          "expected": "HTTP 401/403 — the request is rejected."
+        },
+        {
+          "id": "TC_SM_NEG_091",
+          "scenario": "To verify no-session page redirect",
+          "description": "Verify that opening the Sales Managers page with no active admin session redirects to login.",
+          "precond": "No active admin session (logged out / fresh browser).",
+          "steps": "1. Open https://uat-web.xrportal.in/admin/sales-managers with no session.",
+          "testData": "(no session)",
+          "expected": "The browser is redirected to the Admin login page rather than showing the SM list."
+        },
+        {
+          "id": "TC_SM_API_092",
+          "scenario": "To verify backend phone-validation parity (UI vs API)",
+          "description": "Verify whether the create API rejects a malformed phone the UI form blocks (UI-vs-backend split).",
+          "precond": "A valid admin token. [TEST_DATA_REQUIRED] admin token.",
+          "steps": "1. POST /api/v1/admin/sales-managers/create with phone \"987654321\" (9 digits) bypassing the UI form.",
+          "testData": "[TEST_DATA_REQUIRED] admin token; phone \"987654321\"",
+          "expected": "[VERIFY WITH DEV] [To verify] whether the backend rejects the 9-digit phone (parity with the UI) or accepts it (UI-only validation). Confirm with the team — not specified in BRD/FRD."
+        }
+      ]
+    }
+  ]
+}

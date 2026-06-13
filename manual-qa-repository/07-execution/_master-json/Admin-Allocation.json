@@ -1,0 +1,1125 @@
+{
+  "portal": "Admin",
+  "module": "Allocation",
+  "sheetName": "Allocation - Master",
+  "replaceSheets": ["Allocation", "Allocation (Exec)"],
+  "notes": [
+    "1. Campaign types = STATIC (all buyers see all units at once), DYNAMIC (round-based; only the active round selects), PHYSICAL_EVENT (walk-in; admin/SM assigns units offline). Type drives the detail page: Static = 3 KPI cards, Physical Event = 6 KPI cards + Notify + Download Pending, Dynamic = a 'Round-Wise Data' section.",
+    "2. Campaign lifecycle = Upcoming -> Active -> Completed (auto at end time). Upcoming -> Cancelled (manual, before start). Active -> Stopped (manual, before end). Active -> Failed (system error). Row actions are status-driven: Active row = View + Stop; Upcoming row = View + Cancel; Completed/Stopped/Cancelled/Failed = View only.",
+    "3. [TEST_DATA_REQUIRED] = a disposable UAT campaign/registration/unit in the right state (e.g. an Active campaign for Stop, an Upcoming campaign for Cancel, a Physical Event Completed campaign for Notify) must be supplied before executing this test. Ask the user for the exact project + campaign + registration to use.",
+    "4. [VERIFY WITH DEV] = behaviour not confirmed in BRD/FRD/FS or contradicted by a documented backend gap; confirm before treating Pass/Fail as authoritative.",
+    "5. DESTRUCTIVE-OPEN-ONLY: per Pipeline Discipline rule #7, Stop / Cancel / Notify and Create-Save are NEVER confirmed on UAT in this batch. The test OPENS the modal/form, ASSERTS the title/body/buttons, then CLOSES (Close/Cancel/Reset) without firing the mutation. The expected result states this explicitly. A real end-to-end mutation requires explicit user authorisation and [TEST_DATA_REQUIRED].",
+    "6. The Stop button label to DISMISS the Stop modal is 'Close' (not 'Cancel'); the confirm button is 'Yes, Stop Now' (red). The Cancel modal uses 'Close' + 'Yes, Cancel' (red). The Notify modal uses 'Cancel' + 'Yes, Notify All' (blue).",
+    "7. Status flip on Stop/Cancel is ASYNC via a Python callback (BRD/FS gap GAP-DEV-010, §10.18) — do NOT assert status==Stopped synchronously right after clicking confirm; poll/refresh.",
+    "8. 'Approved' is NOT a campaign-list status. The Status filter offers: All Status / Active / Upcoming / Completed / Stopped / Cancelled / Failed. Any TC mentioning 'Approved' refers to a buyer/registrant state in the Customers module, not Allocation.",
+    "9. DOCUMENTED BACKEND GAPS (do NOT write pass/fail against these): (a) FAILED status is never observable in the list — markAllocationCampaignFailed DESTROYS the row instead of setting status='FAILED' (§10/GAP-DEV-011); a FAILED filter returns empty. (b) cancelUserAllocation ownership check is broken — any authenticated user can cancel any registrationUnit by ID; do NOT write a 403 cross-user test (§10/GAP-TL-008). (c) No DB uniqueness on assigned unit_id -> double-booking race is OUT OF SCOPE for functional regression (§10/GAP-DEV-034). (d) createPaymentIntent has no validation — not tested (§10.15).",
+    "10. projectId is env-defaulted (1 prod / 2 UAT) when omitted; the 'Project ID is required' server check is dead code (§10.1). PHYSICAL_EVENT requires commonPoolExcel; STATIC/DYNAMIC accept allotmentExcel; missing -> HTTP 400 (§10.2). Excel validation errors return an XLSX binary body, not JSON (§10.3). Stop/Cancel likely route through one updateAllocationCampaign PUT with an 'action' field, not separate /stop and /cancel routes (§10.7, DOC_DRIFT-ALLOC-001).",
+    "11. Notifications are SILENT by design on campaign create, activate, stop, and cancel — asserting 'no SMS/WhatsApp/email is dispatched' is a REQUIRED test, not an omission (FS Feature 1/3/4 §8). The only campaign-launch notification path is the explicit admin Notify action (PHYSICAL_EVENT only): generates unique QR codes + notifies registrants via SMS/WhatsApp (Kaleyra). Buyer payment success/failure separately fires WhatsApp + SMS (no email), +91 phones only (FS Feature 5 §8).",
+    "12. Admin master OTP = 258369; UAT admin mobile = 8888888888. UAT recommendation: only one Active campaign at a time; Start Time must be at least 3 minutes in the future."
+  ],
+  "docDrift": [
+    "DOC_DRIFT-ALLOC-001: FRD §11 and FS Feature 3 §7 / Feature 4 §7 document SEPARATE routes PUT /campaigns/:id/stop and PUT /campaigns/:id/cancel. BRD §10.7 (GAP-TL-007) and the live behaviour reconcile to a SINGLE updateAllocationCampaign PUT taking an 'action' field. Live implementation (action-field) is authoritative. RESOLUTION: BRD/FS already carry the §10.7 correction; FRD §11 route table is the stale copy. Recommend FRD §11 be annotated to point at the single action-field endpoint. TCs use the action-field model (TC_ALLOC_API_008). No separate-route pass/fail asserted.",
+    "DOC_DRIFT-ALLOC-002: FRD §3 / FS Feature 1 describe an 'Export' capability and FRD §11 lists an allotments/export endpoint, but the live Admin build has NO button labelled 'Export'. The equivalent live controls are 'Download Bookings' (all types) and 'Download Pending' (Physical Event only) inside the 'Campaign Actions' card on the detail page (INDEX.md Export-UI section). Live UI labels are authoritative. RESOLUTION: TCs use the live 'Download Bookings' / 'Download Pending' labels (TC_ALLOC_FUNC_020/021); recommend FRD/FS wording be updated from 'Export' to the two Download buttons. No 'Export button' pass/fail asserted.",
+    "DOC_DRIFT-ALLOC-003: FRD §3 (Page Layout) instructs 'Allocation Type ... Default: Static - DO NOT change' as an automation convenience note, while BRD §3 and FS Feature 1 define all three types (Static/Dynamic/Physical Event) as first-class. The three-type model is authoritative for coverage; the 'DO NOT change' note is an old automation shortcut, not a product rule. TCs cover all three types. No drift to BRD/FS; FRD note is non-binding."
+  ],
+  "subModules": [
+    {
+      "name": "Page Load & Landing",
+      "tcs": [
+        {
+          "id": "ADM_ALLOC_001",
+          "scenario": "To verify the Allocation page loads",
+          "description": "Verify that the Allocation page opens at /admin/allocation and shows the create form and campaign list.",
+          "precond": "An admin is logged in (mobile 8888888888 / OTP 258369).",
+          "steps": "1. Open the Admin portal and log in.\n2. From the left sidebar click 'Allocation'.\n3. Wait for the page to finish loading.",
+          "testData": "(no input)",
+          "expected": "The URL is https://uat-web.xrportal.in/admin/allocation. The page shows the 'New Allocation Campaign' form at the top and the campaign list section below (the list shows 'Please select a project to view campaigns' until a project is chosen).\nSource: INDEX.md Page Layout + ADMIN-FS-Allocation Feature 1/2."
+        },
+        {
+          "id": "TC_ALLOC_UI_001",
+          "scenario": "To verify the page headings render",
+          "description": "Verify that both the page title 'Allocation' and the form section title 'New Allocation Campaign' are shown.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. Read the heading at the top of the page.\n2. Read the heading above the create form.",
+          "testData": "(no input)",
+          "expected": "The page shows a heading 'Allocation' and, above the create form, a section heading 'New Allocation Campaign'.\nSource: INDEX.md Page Headings."
+        }
+      ]
+    },
+    {
+      "name": "Campaign List Table (Read)",
+      "tcs": [
+        {
+          "id": "ADM_ALLOC_002",
+          "scenario": "To verify the campaign list table structure",
+          "description": "Verify that the campaign list shows the six expected columns once a project is selected.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. In the filter bar, open the 'Select Project' dropdown and pick a project that has campaigns.\n2. Look at the column headers of the campaign table.",
+          "testData": "A project that has at least one campaign (ask user — e.g. 'Xanadu Test Project').",
+          "expected": "The table shows six columns in this order: Campaign Name, Allocation Type, Start Time, End Time, Status, Actions.\nSource: INDEX.md Campaign Table + ADMIN-FS-Allocation Feature 2 §5."
+        },
+        {
+          "id": "TC_ALLOC_UI_004",
+          "scenario": "To verify the table renders all 6 column headers",
+          "description": "Verify that, after a project is picked, the campaign table renders all six header cells (no missing column).",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. Pick a project in the filter bar.\n2. Count the column header cells in the campaign table.",
+          "testData": "A project with campaigns (ask user).",
+          "expected": "Six header cells are present: Campaign Name | Allocation Type | Start Time | End Time | Status | Actions.\nSource: INDEX.md Campaign Table."
+        },
+        {
+          "id": "ADM_ALLOC_003",
+          "scenario": "To verify Status column values",
+          "description": "Verify that every Status badge in the list is one of the six defined campaign states.",
+          "precond": "An admin has selected a project and the list shows campaigns.",
+          "steps": "1. Read the Status badge on each row.\n2. Confirm each value is one of the allowed states.",
+          "testData": "A project with campaigns across multiple statuses (ask user).",
+          "expected": "Each Status badge reads one of: Active, Upcoming, Completed, Stopped, Cancelled, Failed. No other value appears. (Note: 'Failed' may never appear in practice — see notes 9a; an empty Failed result is expected, not a bug.)\nSource: INDEX.md Status Filter options + ADMIN-FS-Allocation Feature 2."
+        },
+        {
+          "id": "ADM_ALLOC_004",
+          "scenario": "To verify Allocation Type column values",
+          "description": "Verify that the Allocation Type column shows only Static, Dynamic, or Physical Event.",
+          "precond": "An admin has selected a project and the list shows campaigns.",
+          "steps": "1. Read the Allocation Type value on each row.",
+          "testData": "A project with campaigns of mixed types (ask user).",
+          "expected": "Each row's Allocation Type reads Static, Dynamic, or Physical Event (rendered in table data as STATIC / DYNAMIC / PHYSICAL_EVENT).\nSource: INDEX.md Allocation Types observed + ADMIN-FS-Allocation §10 data model."
+        },
+        {
+          "id": "ADM_ALLOC_023",
+          "scenario": "To verify Cancelled campaigns display",
+          "description": "Verify that a Cancelled campaign appears in the list with a 'Cancelled' badge and only a View action.",
+          "precond": "At least one Cancelled campaign exists for the selected project.",
+          "steps": "1. Filter the list by Status = Cancelled.\n2. Read a Cancelled row's badge and Actions cell.",
+          "testData": "A project with a Cancelled campaign (ask user).",
+          "expected": "The row shows a 'Cancelled' status badge and the Actions cell exposes only 'View' (no Stop, no Cancel).\nSource: INDEX.md row-actions table + ADMIN-FS-Allocation Feature 2 status/actions."
+        },
+        {
+          "id": "ADM_ALLOC_035",
+          "scenario": "To verify Failed status display (documented gap)",
+          "description": "Verify the behaviour of the Failed status, noting the documented backend gap that Failed rows are not observable.",
+          "precond": "An admin has selected a project.",
+          "steps": "1. Filter the list by Status = Failed.\n2. Observe the result.",
+          "testData": "(no input)",
+          "expected": "The Failed-filtered list is empty. [VERIFY WITH DEV] Per backend gap GAP-DEV-011 (§10), markAllocationCampaignFailed DESTROYS the campaign row instead of setting status='FAILED', so no Failed row can render. An empty result here is the documented behaviour, NOT a defect.\nSource: BRD §10 GAP-DEV-011 + INDEX.md Status Filter."
+        },
+        {
+          "id": "ADM_ALLOC_034",
+          "scenario": "To verify the Refresh button reloads the list",
+          "description": "Verify that clicking Refresh reloads the campaign list without navigating away from the page.",
+          "precond": "An admin has selected a project (Refresh is disabled until a project is chosen).",
+          "steps": "1. Note the current URL.\n2. Click the 'Refresh' button (reload icon) in the filter bar.\n3. Note the URL again and that the table reloads.",
+          "testData": "A project with campaigns (ask user).",
+          "expected": "The list reloads in place; the URL stays /admin/allocation (no navigation). Any auto-status transitions that happened server-side are reflected.\nSource: INDEX.md Filter Bar (Refresh disabled until project) + ADMIN-FS-Allocation Feature 2 §6."
+        },
+        {
+          "id": "TC_ALLOC_UI_002",
+          "scenario": "To verify filters and Refresh are disabled before a project is picked",
+          "description": "Verify that the Status filter, Type filter, and Refresh button are disabled until a project is selected.",
+          "precond": "An admin is on the Allocation page and no project is selected in the filter bar.",
+          "steps": "1. Without selecting a project, look at the Status filter, Type filter, and Refresh button.",
+          "testData": "(no input)",
+          "expected": "Status filter shows 'All Status' and is disabled; Type filter shows 'All Types' and is disabled; Refresh is disabled. They enable only after a project is chosen.\nSource: INDEX.md Filter Bar."
+        },
+        {
+          "id": "TC_ALLOC_UI_003",
+          "scenario": "To verify pagination footer",
+          "description": "Verify that the campaign list shows a pagination footer with the total count and page size when populated.",
+          "precond": "An admin has selected a project with many campaigns.",
+          "steps": "1. Scroll to the bottom of the campaign list.\n2. Read the pagination footer.",
+          "testData": "A project with more than 10 campaigns (ask user — UAT seed showed 'Total 273 campaigns').",
+          "expected": "The footer shows a total campaign count (e.g. 'Total N campaigns') and a page-size selector defaulting to '10 / page'.\nSource: INDEX.md API/Network observations (Total 273 campaigns / 10 / page)."
+        },
+        {
+          "id": "ADM_ALLOC_028",
+          "scenario": "To verify Active campaign drives buyer unit grid (downstream)",
+          "description": "Verify that an Active campaign is the upstream signal for the buyer-side colour-coded unit grid (admin only confirms an Active campaign exists).",
+          "precond": "An admin has selected a project.",
+          "steps": "1. Filter the list by Status = Active.\n2. Confirm at least one Active campaign is present.",
+          "testData": "A project with an Active campaign (ask user).",
+          "expected": "At least one Active campaign is present. The buyer-side unit grid (White=available, Red=sold, Orange=being paid, Grey=reserved) is a Customer-Portal concern downstream of this Active campaign; it is not rendered on the Admin side. [VERIFY WITH DEV] for the buyer grid behaviour.\nSource: ADMIN-FS-Allocation Feature 5 §4 + BRD §7 (buyer experience)."
+        }
+      ]
+    },
+    {
+      "name": "Filters & Search",
+      "tcs": [
+        {
+          "id": "TC_ALLOC_FUNC_001",
+          "scenario": "To verify the Project filter opens with options",
+          "description": "Verify that the Project filter dropdown opens and lists at least one selectable project.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. Click the 'Select Project' dropdown in the filter bar.\n2. Look at the options listed.",
+          "testData": "(no input)",
+          "expected": "The dropdown opens and shows at least one project option.\nSource: INDEX.md Filter Bar."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_002",
+          "scenario": "To verify the Status filter enables and lists lifecycle options",
+          "description": "Verify that after a project is picked the Status filter enables and lists all campaign lifecycle states.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. Pick a project in the filter bar.\n2. Open the Status filter dropdown.\n3. Read the options.",
+          "testData": "Any project (ask user).",
+          "expected": "The Status filter enables and lists: All Status, Active, Upcoming, Completed, Stopped, Cancelled, Failed. (Note: 'Approved' is NOT an option — see note 8.)\nSource: INDEX.md Status Filter enumerated options."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_003",
+          "scenario": "To verify the Type filter enables and lists three types",
+          "description": "Verify that after a project is picked the Type filter enables and lists the three campaign types.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. Pick a project.\n2. Open the Type filter dropdown.\n3. Read the options.",
+          "testData": "Any project (ask user).",
+          "expected": "The Type filter enables, defaulting to 'All Types', and lists Static, Dynamic, and Physical Event.\nSource: INDEX.md Filter Bar + ADMIN-FS-Allocation Feature 2 §6."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_004",
+          "scenario": "To verify search with no match shows empty state",
+          "description": "Verify that searching a non-matching campaign name shows the 'No campaigns found' empty state.",
+          "precond": "An admin has selected a project.",
+          "steps": "1. In the 'Search by campaign name...' field type ZZZNOMATCH99999.\n2. Press Enter.",
+          "testData": "Search term: ZZZNOMATCH99999",
+          "expected": "The table body shows an empty placeholder reading 'No campaigns found' and the pagination footer is hidden.\nSource: INDEX.md Empty Search State (allocation-empty-state.png)."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_005",
+          "scenario": "To verify the search box clear (x) restores the list",
+          "description": "Verify that clearing the search field via the x icon restores the full campaign list.",
+          "precond": "An admin has typed a search term that filtered the list.",
+          "steps": "1. Type any term in the 'Search by campaign name...' field.\n2. Click the x (clear) icon inside the field.",
+          "testData": "Search term: XYZ",
+          "expected": "The search field clears and the campaign list returns to its unfiltered set.\nSource: INDEX.md Empty Search State (clear x icon in .ant-input-suffix)."
+        }
+      ]
+    },
+    {
+      "name": "Create Campaign — Form & Types",
+      "tcs": [
+        {
+          "id": "ADM_ALLOC_006",
+          "scenario": "To verify the Create Campaign form fields",
+          "description": "Verify that the New Allocation Campaign form exposes all required fields and the two action buttons.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. Look at the 'New Allocation Campaign' form at the top of the page.\n2. Note every field and button.",
+          "testData": "(no input)",
+          "expected": "The form shows: Project (Select Project), Campaign Name (placeholder 'Enter campaign name...'), Allocation Type (default 'Static'), Start Time (IST) date picker, End Time (IST) date picker (disabled until Start chosen), an optional Description/Notes textarea with a '0 / 255' counter, and two buttons 'Reset' and 'Save Campaign'.\nSource: INDEX.md Form: New Allocation Campaign + ADMIN-FS-Allocation Feature 1 §5."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_006",
+          "scenario": "To verify the Project field on the create form",
+          "description": "Verify that the create form Project dropdown opens and lists selectable projects.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. In the create form click the 'Select Project' dropdown.\n2. Read the options.",
+          "testData": "(no input)",
+          "expected": "The dropdown opens and lists at least one project. (Note: there are two project selectors on the page — the top one is the create form, the lower one is the list filter.)\nSource: INDEX.md Form fields + ADMIN-FRD-Allocation §9 technical note (two project selectors)."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_007",
+          "scenario": "To verify the Campaign Name field accepts input",
+          "description": "Verify that the Campaign Name text field accepts typed input.",
+          "precond": "An admin is on the Allocation create form.",
+          "steps": "1. Click the Campaign Name field.\n2. Type a sample name.",
+          "testData": "Campaign name: UI_QA_TEMP_NAME (not submitted)",
+          "expected": "The field shows the typed text and the placeholder 'Enter campaign name...' clears.\nSource: INDEX.md Form fields."
+        },
+        {
+          "id": "ADM_ALLOC_011",
+          "scenario": "To verify the Allocation Type dropdown lists three types",
+          "description": "Verify that the Allocation Type dropdown offers Static, Dynamic, and Physical Event.",
+          "precond": "An admin is on the Allocation create form.",
+          "steps": "1. Click the Allocation Type dropdown (default 'Static').\n2. Read the options.",
+          "testData": "(no input)",
+          "expected": "The dropdown lists Static, Dynamic, and Physical Event, with Static pre-selected by default.\nSource: INDEX.md Form Allocation Type + ADMIN-FS-Allocation Feature 1 §5."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_008",
+          "scenario": "To verify Static type can be selected",
+          "description": "Verify that selecting Static in the Allocation Type dropdown sets the field to Static (UI only, no submit).",
+          "precond": "An admin is on the Allocation create form.",
+          "steps": "1. Open the Allocation Type dropdown.\n2. Click 'Static'.\n3. Click 'Reset' to clear the form (do NOT Save).",
+          "testData": "(no input)",
+          "expected": "The Allocation Type field shows 'Static'. After Reset the form returns to defaults. No campaign is created.\nSource: INDEX.md Form + Pipeline Discipline rule #7."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_009",
+          "scenario": "To verify the Description textarea and char count",
+          "description": "Verify that the optional Description/Notes textarea accepts text and shows a character counter.",
+          "precond": "An admin is on the Allocation create form.",
+          "steps": "1. Type a short note in the Description/Notes textarea.\n2. Watch the character counter.\n3. Click 'Reset' to clear (do NOT Save).",
+          "testData": "Description: 'UI-only QA fill - no submit.'",
+          "expected": "The textarea shows the typed text and the counter updates from '0 / 255' toward the typed length. Description is optional (no required error on blank). No campaign is created.\nSource: INDEX.md Form (textarea with '0 / 255')."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_010",
+          "scenario": "To verify the Start Time picker",
+          "description": "Verify that the Start Time (IST) picker opens a calendar and accepts a future date/time.",
+          "precond": "An admin is on the Allocation create form.",
+          "steps": "1. Click the Start Time (IST) field / calendar icon.\n2. Pick a date and time at least 3 minutes in the future.",
+          "testData": "Start time: now + 10 minutes (do NOT Save)",
+          "expected": "The Start Time picker opens and accepts the chosen future date/time, which then enables the End Time picker.\nSource: INDEX.md Form (Ant DatePicker; End disabled until Start chosen) + ADMIN-FS-Allocation Feature 1 §5."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_011",
+          "scenario": "To verify End Time is disabled until Start chosen",
+          "description": "Verify that the End Time (IST) picker is disabled until a Start Time is selected (chronology guard).",
+          "precond": "An admin is on the Allocation create form with no Start Time chosen.",
+          "steps": "1. Try to click the End Time (IST) field before choosing a Start Time.\n2. Choose a Start Time, then check End Time again.",
+          "testData": "(no input)",
+          "expected": "End Time is disabled (greyed, aria-disabled) before a Start Time is chosen; after a Start Time is selected, End Time becomes enabled.\nSource: INDEX.md Form (End disabled until Start populated; chronology guard)."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_012",
+          "scenario": "To verify the Reset button clears the form",
+          "description": "Verify that the Reset button clears the Campaign Name (and other entered values) on the create form.",
+          "precond": "An admin is on the Allocation create form with a name typed in.",
+          "steps": "1. Type a value in Campaign Name.\n2. Click 'Reset'.",
+          "testData": "Campaign name: UI_QA_TEMP_NAME",
+          "expected": "The Campaign Name field clears back to its placeholder and the form returns to defaults. No campaign is created.\nSource: INDEX.md Form action buttons (Reset)."
+        },
+        {
+          "id": "ADM_ALLOC_007",
+          "scenario": "To verify Save creates a Static campaign (Upcoming)",
+          "description": "Verify that submitting a valid Static campaign with a future start time creates it with status Upcoming.",
+          "precond": "An admin is on the Allocation create form. [TEST_DATA_REQUIRED] user authorisation to create a real campaign on UAT.",
+          "steps": "1. Pick a project.\n2. Enter a unique Campaign Name.\n3. Leave Allocation Type = Static.\n4. Set Start Time to now + 4 minutes and End Time to Start + 5 minutes.\n5. Click 'Save Campaign'.",
+          "testData": "[TEST_DATA_REQUIRED] project + unique campaign name (e.g. 'Static Camp-Automation Test N'); start = now+4min, end = start+5min.",
+          "expected": "A toast 'Campaign created successfully' appears and the new campaign appears in the list below with status 'Upcoming'. (DESTRUCTIVE — run only with user authorisation; otherwise OPEN + assert form and Reset.)\nSource: ADMIN-FS-Allocation Feature 1 §7 + INDEX.md Form."
+        },
+        {
+          "id": "ADM_ALLOC_012",
+          "scenario": "To verify creating a Dynamic campaign",
+          "description": "Verify that a Dynamic-type campaign can be created (round-based) with status Upcoming.",
+          "precond": "An admin is on the create form. [TEST_DATA_REQUIRED] + user authorisation.",
+          "steps": "1. Pick a project.\n2. Enter a unique name.\n3. Set Allocation Type = Dynamic.\n4. Provide the required allotment Excel and valid times.\n5. Click 'Save Campaign'.",
+          "testData": "[TEST_DATA_REQUIRED] valid allotmentExcel for a Dynamic campaign; future times.",
+          "expected": "The Dynamic campaign is created with status 'Upcoming' and the detail page later exposes the 'Round-Wise Data' section. (DESTRUCTIVE — authorisation required; otherwise OPEN + assert + Reset.)\nSource: ADMIN-BRD-Allocation §3 + INDEX.md Rounds UI + ADMIN-FS-Allocation §10.25 (20/unit cap)."
+        },
+        {
+          "id": "ADM_ALLOC_040",
+          "scenario": "To verify Dynamic type exposes allotmentExcel upload",
+          "description": "Verify that selecting Dynamic exposes (or accepts) an allotment Excel upload control in the create flow.",
+          "precond": "An admin is on the create form.",
+          "steps": "1. Open the Allocation Type dropdown and select 'Dynamic'.\n2. Look for a file-upload control for the allotment Excel.",
+          "testData": "(no input — UI inspection only)",
+          "expected": "When type = Dynamic, an allotment-Excel upload affordance is present (the create POST is multipart with an 'allotmentExcel' field). [VERIFY WITH DEV] whether the control renders inline in this build vs. on submit. No campaign created.\nSource: ADMIN-FS-Allocation §10.2/§10.25 + INDEX.md Form."
+        },
+        {
+          "id": "ADM_ALLOC_013",
+          "scenario": "To verify creating a Physical Event campaign",
+          "description": "Verify that a Physical Event campaign can be created and supports offline unit assignment.",
+          "precond": "An admin is on the create form. [TEST_DATA_REQUIRED] + user authorisation.",
+          "steps": "1. Pick a project.\n2. Enter a unique name.\n3. Set Allocation Type = Physical Event.\n4. Provide the required common-pool Excel and valid times.\n5. Click 'Save Campaign'.",
+          "testData": "[TEST_DATA_REQUIRED] valid commonPoolExcel for a Physical Event campaign; future times.",
+          "expected": "The Physical Event campaign is created with status 'Upcoming'; its detail page later shows 6 KPI cards plus Notify Registrants and Download Pending. (DESTRUCTIVE — authorisation required; otherwise OPEN + assert + Reset.)\nSource: ADMIN-BRD-Allocation §3 + ADMIN-FS-Allocation §10.2 + INDEX.md Campaign Detail (Physical Event)."
+        },
+        {
+          "id": "ADM_ALLOC_041",
+          "scenario": "To verify Physical Event exposes commonPoolExcel upload",
+          "description": "Verify that selecting Physical Event exposes (or requires) a common-pool Excel upload.",
+          "precond": "An admin is on the create form.",
+          "steps": "1. Open the Allocation Type dropdown and select 'Physical Event'.\n2. Look for a common-pool Excel upload control.",
+          "testData": "(no input — UI inspection only)",
+          "expected": "When type = Physical Event, a common-pool Excel upload affordance is present and is mandatory (missing -> HTTP 400 'Common pool units Excel is required for PHYSICAL_EVENT allocation type'). [VERIFY WITH DEV] inline vs on-submit rendering. No campaign created.\nSource: ADMIN-FS-Allocation §10.2 + INDEX.md Form."
+        }
+      ]
+    },
+    {
+      "name": "Create Campaign — Validation",
+      "tcs": [
+        {
+          "id": "TC_ALLOC_VAL_001",
+          "scenario": "To verify a fully blank form shows required-field errors",
+          "description": "Verify that clicking Save Campaign with every field blank shows the four inline required-field errors.",
+          "precond": "An admin is on the Allocation create form with all fields blank.",
+          "steps": "1. Leave all fields blank.\n2. Click 'Save Campaign'.",
+          "testData": "(blank form)",
+          "expected": "Four inline red errors appear under their fields: 'Project is required', 'Campaign name is required', 'Start time is required', 'End time is required'. Description and Allocation Type do NOT error (optional / has default 'Static'). No campaign is created.\nSource: INDEX.md Form Validation (allocation-form-validation-errors.png)."
+        },
+        {
+          "id": "ADM_ALLOC_010",
+          "scenario": "To verify empty Campaign Name is rejected",
+          "description": "Verify that submitting the form with the Campaign Name blank is rejected with the name-required error.",
+          "precond": "An admin is on the create form.",
+          "steps": "1. Pick a project, set Type = Static, set valid future Start/End times.\n2. Leave Campaign Name blank.\n3. Click 'Save Campaign'.",
+          "testData": "Name: (blank); Start = now+10min, End = now+60min",
+          "expected": "An inline error 'Campaign name is required' shows under the Campaign Name field and no campaign is created.\nSource: INDEX.md Form Validation."
+        },
+        {
+          "id": "ADM_ALLOC_008",
+          "scenario": "To verify start time within 3 minutes is rejected",
+          "description": "Verify that a Start Time less than 3 minutes from now is rejected with the lead-time error.",
+          "precond": "An admin is on the create form.",
+          "steps": "1. Pick a project, enter a name, Type = Static.\n2. Set Start Time to about 1 minute from now and End Time later.\n3. Click 'Save Campaign'.",
+          "testData": "Start = now+1min, End = now+60min, name = NEG_NearStart",
+          "expected": "A red error/banner appears: 'Start time must be at least 3 minutes from now. Please select start and end time again.' No campaign is created.\nSource: ADMIN-FS-Allocation Feature 1 §6 + ADMIN-FRD-Allocation §3 (validation banner)."
+        },
+        {
+          "id": "TC_ALLOC_VAL_002",
+          "scenario": "To verify the 3-minute start-time boundary (exactly 3 min)",
+          "description": "Verify the boundary of the 3-minute lead-time rule at exactly 3 minutes and just over.",
+          "precond": "An admin is on the create form.",
+          "steps": "1. Enter project, name, Type = Static.\n2. Set Start Time to exactly now + 3 minutes; observe.\n3. Adjust to now + 4 minutes; observe.",
+          "testData": "Start = now+3min, then now+4min (do NOT Save unless authorised)",
+          "expected": "[VERIFY WITH DEV] At exactly +3 minutes the rule's inclusivity is unconfirmed; at +4 minutes the form accepts the value (no lead-time error). Confirm whether the boundary is inclusive (>= 3) or exclusive (> 3) with Dev.\nSource: ADMIN-BRD-Allocation §4 Rule 1 + ADMIN-FS-Allocation Feature 1 §6."
+        },
+        {
+          "id": "ADM_ALLOC_009",
+          "scenario": "To verify End Time before Start Time is rejected",
+          "description": "Verify that an End Time earlier than the Start Time is rejected.",
+          "precond": "An admin is on the create form.",
+          "steps": "1. Enter project, name, Type = Static.\n2. Set Start Time = now + 30 min and End Time = now + 10 min.\n3. Click 'Save Campaign'.",
+          "testData": "Start = now+30min, End = now+10min, name = NEG_EndBeforeStart",
+          "expected": "The form rejects the submission (End time must be after Start time); a validation message shows and no campaign is created.\nSource: ADMIN-FS-Allocation Feature 1 §6 rule 2."
+        },
+        {
+          "id": "TC_ALLOC_VAL_005",
+          "scenario": "To verify duplicate campaign name is rejected",
+          "description": "Verify that a campaign name already used for the same project is rejected (submit-time uniqueness).",
+          "precond": "An admin is on the create form; a campaign with a known name already exists for the project. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Pick the project that already has campaign 'X'.\n2. Enter Campaign Name = 'X' (the existing name).\n3. Set valid future times, Type = Static.\n4. Click 'Save Campaign'.",
+          "testData": "[TEST_DATA_REQUIRED] an existing campaign name for the chosen project.",
+          "expected": "The create is rejected for duplicate name (must be unique per project). [VERIFY WITH DEV] exact error string — not captured in INDEX.md. No second campaign created.\nSource: ADMIN-FS-Allocation Feature 1 §6 rule 3 + ADMIN-FRD-Allocation §3."
+        },
+        {
+          "id": "TC_ALLOC_VAL_006",
+          "scenario": "To verify the Description 255-char limit",
+          "description": "Verify the Description/Notes field enforces (or counts toward) the 255-character limit shown by the counter.",
+          "precond": "An admin is on the create form.",
+          "steps": "1. Type 255 characters into the Description/Notes textarea and watch the counter.\n2. Try to type a 256th character.\n3. Click 'Reset' (do NOT Save).",
+          "testData": "Description: 255 'X' characters, then one more",
+          "expected": "The counter reads '255 / 255' at 255 chars; the field either blocks the 256th character or [VERIFY WITH DEV] flags over-length. No campaign created.\nSource: INDEX.md Form ('0 / 255' counter)."
+        },
+        {
+          "id": "ADM_ALLOC_033",
+          "scenario": "To verify a very long campaign name (>100 chars)",
+          "description": "Verify behaviour when the Campaign Name exceeds 100 characters (truncate or reject).",
+          "precond": "An admin is on the create form.",
+          "steps": "1. Type 150 characters into the Campaign Name field.\n2. Observe whether the input truncates.\n3. Click 'Reset' (do NOT Save).",
+          "testData": "Name: 150 'X' characters",
+          "expected": "[VERIFY WITH DEV] The field either enforces a max length (truncates to the cap) or accepts the full string for a server-side rejection on submit. No documented max-length value in BRD/FRD/FS — confirm with Dev. No campaign created.\nSource: INDEX.md Form (no documented max length)."
+        },
+        {
+          "id": "ADM_ALLOC_039",
+          "scenario": "To verify Dynamic requires round configuration",
+          "description": "Verify that creating a Dynamic campaign without valid round/allotment data is rejected.",
+          "precond": "An admin is on the create form. [TEST_DATA_REQUIRED] for the failing case.",
+          "steps": "1. Set Allocation Type = Dynamic.\n2. Omit the required allotment Excel / round config.\n3. Click 'Save Campaign'.",
+          "testData": "[TEST_DATA_REQUIRED] a Dynamic create with missing/invalid allotment Excel.",
+          "expected": "The create is rejected. Excel-validation failures return HTTP 400 with an XLSX binary body (filename 'dynamic-allocation-errors.xlsx'), NOT a JSON error. [VERIFY WITH DEV] the exact UI surface. No campaign created.\nSource: ADMIN-FS-Allocation §10.3 + §10.25."
+        }
+      ]
+    },
+    {
+      "name": "Campaign Detail (Static / Dynamic / Physical)",
+      "tcs": [
+        {
+          "id": "TC_ALLOC_FUNC_017",
+          "scenario": "To verify View navigates to the detail page",
+          "description": "Verify that clicking 'View' on a campaign row navigates to /admin/allocation/campaigns/<id>.",
+          "precond": "An admin has selected a project with campaigns.",
+          "steps": "1. In a campaign row's Actions cell click 'View'.\n2. Note the URL and the page heading.",
+          "testData": "A project with at least one campaign (ask user).",
+          "expected": "The URL becomes /admin/allocation/campaigns/<numeric id> and the detail page heading (Static/Dynamic/Physical Campaign Details) and the campaign name render.\nSource: INDEX.md Campaign Detail Page (reached via 'View')."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_013",
+          "scenario": "To verify the Static campaign detail page",
+          "description": "Verify that a Static campaign detail page shows the Static heading, 3 KPI cards, and a Campaign Actions section.",
+          "precond": "A Static campaign exists for the project.",
+          "steps": "1. Open a Static campaign's detail via View.\n2. Read the heading, KPI cards, and Campaign Actions section.",
+          "testData": "A Static campaign (ask user — e.g. id 289 'PE QA : Camp Test 4').",
+          "expected": "Heading 'Static Campaign Details' + campaign name. KPI row shows 3 cards: Initial Pending Registrations, Total Units Sold, Pending Registrations. A 'Campaign Actions' section is present. No Notify, no Rounds.\nSource: INDEX.md Static Active campaign detail (id 289)."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_014",
+          "scenario": "To verify the Physical Event campaign detail page",
+          "description": "Verify that a Physical Event campaign detail page shows the Physical heading and 6 KPI cards.",
+          "precond": "A Physical Event campaign exists for the project.",
+          "steps": "1. Open a Physical Event campaign's detail via View.\n2. Read the heading and KPI cards.",
+          "testData": "A Physical Event campaign (ask user — e.g. id 288).",
+          "expected": "Heading 'Physical Campaign Details' + campaign name. KPI row shows 6 cards: Registrations Uploaded, Unique Assigned Units Uploaded, Common Pool Uploaded, Booked From Assigned Units, Booked From Common Pool Units, Registrations Pending To Book.\nSource: INDEX.md Campaign Detail Page (Physical Event, id 288)."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_015",
+          "scenario": "To verify the Dynamic campaign Rounds UI",
+          "description": "Verify that a Dynamic campaign detail page renders the 'Round-Wise Data' section (Dynamic-only).",
+          "precond": "A Dynamic campaign exists for the project.",
+          "steps": "1. Open a Dynamic campaign's detail via View.\n2. Look for the 'Round-Wise Data' section.",
+          "testData": "A Dynamic campaign (ask user — e.g. id 291 'Test dynamic campaign').",
+          "expected": "Heading 'Dynamic Campaign Details' + campaign name, and a 'Round-Wise Data' section heading. Static and Physical Event details do NOT render Rounds.\nSource: INDEX.md Rounds UI (allocation-rounds-view.png, id 291)."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_016",
+          "scenario": "To verify Back to Allocation Overview",
+          "description": "Verify that the 'Back to Allocation Overview' button returns from a detail page to the campaign list.",
+          "precond": "An admin is on a campaign detail page.",
+          "steps": "1. Click 'Back to Allocation Overview'.\n2. Note the URL.",
+          "testData": "(no input)",
+          "expected": "The URL returns to /admin/allocation (the campaign list), no longer /campaigns/<id>.\nSource: INDEX.md Campaign Detail Page (Back to Allocation Overview button)."
+        },
+        {
+          "id": "TC_ALLOC_DC_003",
+          "scenario": "To verify detail differs by campaign type (routing)",
+          "description": "Verify the context-sensitive detail page: Static=3 KPIs/no Notify/no Rounds; Physical=6 KPIs+Notify+Download Pending; Dynamic=Rounds section — confirming each type renders its own variant.",
+          "precond": "Static, Physical Event, and Dynamic campaigns all exist for the project.",
+          "steps": "1. Open a Static detail and note KPI count + absence of Notify/Rounds.\n2. Open a Physical Event detail and note 6 KPIs + Notify + Download Pending.\n3. Open a Dynamic detail and note the Round-Wise Data section.",
+          "testData": "One campaign of each type (ask user — ids 289/288/291).",
+          "expected": "Each detail page matches its type: Static = 3 KPI cards, Download Bookings only, no Notify, no Rounds. Physical Event = 6 KPI cards, Download Bookings + Download Pending + Notify Registrants. Dynamic = Round-Wise Data section. The page picks the correct variant by allocation type.\nSource: INDEX.md Campaign Detail tables + Export UI + Rounds UI."
+        }
+      ]
+    },
+    {
+      "name": "Stop Active Campaign",
+      "tcs": [
+        {
+          "id": "ADM_ALLOC_016",
+          "scenario": "To verify the Stop modal opens for an Active row",
+          "description": "Verify that clicking Stop on an Active campaign row opens the 'Stop Allocation Now?' modal with the correct copy and buttons.",
+          "precond": "An Active campaign exists for the selected project.",
+          "steps": "1. In an Active campaign row's Actions cell click 'Stop'.\n2. Read the modal title, body, and buttons.\n3. Click 'Close' to dismiss (do NOT confirm).",
+          "testData": "[TEST_DATA_REQUIRED] an Active campaign (ask user — e.g. id 289).",
+          "expected": "A modal opens titled 'Stop Allocation Now?' with body 'Campaign will move to Stopped.' and buttons 'Close' (outline) and 'Yes, Stop Now' (red). Clicking 'Close' dismisses it with no change. (OPEN + assert + close only — no mutation.)\nSource: INDEX.md Stop modal (allocation-stop-modal.png)."
+        },
+        {
+          "id": "ADM_ALLOC_020",
+          "scenario": "To verify Stop requires explicit confirmation",
+          "description": "Verify that dismissing the Stop modal via Close leaves the campaign Active (no mutation fired).",
+          "precond": "An Active campaign exists; the Stop modal is open.",
+          "steps": "1. Open the Stop modal on an Active row.\n2. Click 'Close'.\n3. Refresh and re-read the campaign status.",
+          "testData": "[TEST_DATA_REQUIRED] an Active campaign (ask user).",
+          "expected": "The modal closes and the campaign remains 'Active' — no stop request was sent. (Note: the dismiss button is 'Close', not 'Cancel'.)\nSource: INDEX.md Stop modal + ADMIN-FS-Allocation Feature 3 §5."
+        },
+        {
+          "id": "TC_ALLOC_UI_005",
+          "scenario": "To verify the Stop modal dismiss label is 'Close'",
+          "description": "Verify that the Stop modal's dismiss button reads 'Close' (not 'Cancel') and the confirm reads 'Yes, Stop Now'.",
+          "precond": "The Stop modal is open on an Active row.",
+          "steps": "1. Read both button labels on the Stop modal.",
+          "testData": "[TEST_DATA_REQUIRED] an Active campaign (ask user).",
+          "expected": "The two buttons read 'Close' (outline) and 'Yes, Stop Now' (red). Any step that says 'Cancel' here is wrong.\nSource: INDEX.md Stop modal 'Note on naming'."
+        },
+        {
+          "id": "TC_ALLOC_NEG_003",
+          "scenario": "To verify Close on Stop modal does not stop the campaign",
+          "description": "Verify that closing the Stop modal performs no server action and dispatches no notification.",
+          "precond": "An Active campaign exists; Stop modal opened then closed.",
+          "steps": "1. Open and Close the Stop modal.\n2. Verify the campaign status and that no buyer notification was sent.",
+          "testData": "[TEST_DATA_REQUIRED] an Active campaign (ask user).",
+          "expected": "Campaign stays Active and no SMS/WhatsApp/email is dispatched (Close fires nothing).\nSource: INDEX.md Stop modal + ADMIN-FS-Allocation Feature 3 §8 (silent)."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_019",
+          "scenario": "To verify Stop status flip is asynchronous",
+          "description": "Verify that confirming Stop does not flip the status synchronously (async Python callback).",
+          "precond": "An Active campaign exists. [TEST_DATA_REQUIRED] + user authorisation to actually Stop.",
+          "steps": "1. Open the Stop modal and click 'Yes, Stop Now'.\n2. Immediately re-read the status.\n3. Wait/poll and re-read.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable Active campaign + authorisation.",
+          "expected": "The status does NOT necessarily read 'Stopped' immediately after confirm — the flip is async via a Python callback (§10.18). Status settles to 'Stopped' after a short poll/refresh. Do not assert a synchronous flip. (DESTRUCTIVE — authorisation required.)\nSource: ADMIN-BRD-Allocation §10.18 (GAP-DEV-010)."
+        },
+        {
+          "id": "TC_ALLOC_NEG_004",
+          "scenario": "To verify Stop sends no buyer notification (silent)",
+          "description": "Verify that stopping a campaign dispatches no SMS/WhatsApp/email to buyers (silent by design).",
+          "precond": "An Active campaign was stopped. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Stop an Active campaign (with authorisation).\n2. Check the notification logs / Kaleyra for any campaign-stop message.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable Active campaign + authorisation.",
+          "expected": "No buyer notification is dispatched on Stop — terminateAllocationCampaign only calls Python /campaign/stop and writes an audit log. Zero SMS/WhatsApp/email. (Silence-by-design is the required assertion.)\nSource: ADMIN-FS-Allocation Feature 3 §8 (FSD-CORRECTION) + ADMIN-BRD-Allocation §8."
+        },
+        {
+          "id": "TC_ALLOC_INT_002",
+          "scenario": "To verify post-Stop buyer states (Waitlist / Confirmed)",
+          "description": "Verify that after a campaign Stops, unpaid registrations revert to Waitlisted and paid ones stay Confirmed.",
+          "precond": "A campaign with both paid and unpaid registrations was stopped. [TEST_DATA_REQUIRED].",
+          "steps": "1. Note the registrations that were 'available' but unpaid and those that paid.\n2. Stop the campaign (with authorisation).\n3. Open the Customers module and re-read those registrations.",
+          "testData": "[TEST_DATA_REQUIRED] a campaign with a mix of paid + unpaid registrations.",
+          "expected": "Unpaid 'available' registrations revert to Waitlisted (allocationStatus waiting); paid registrations remain Confirmed/Booked. Verified in the Customers module.\nSource: ADMIN-FS-Allocation Feature 3 §6 + ADMIN-BRD-Allocation §4 Rule 4."
+        },
+        {
+          "id": "ADM_ALLOC_021",
+          "scenario": "To verify unpaid buyers become Waitlisted post-Stop",
+          "description": "Verify that buyers who did not complete payment are Waitlisted after the campaign ends.",
+          "precond": "A campaign ended (Stop or auto-Complete) with unpaid registrations. [TEST_DATA_REQUIRED].",
+          "steps": "1. After the campaign ends, open Customers.\n2. Read the allocation status of the previously-available, unpaid registrations.",
+          "testData": "[TEST_DATA_REQUIRED] a registration that was available but did not pay.",
+          "expected": "Those registrations show Allocation Status = Waitlisted.\nSource: ADMIN-BRD-Allocation §4 Rule 4 + ADMIN-FS-Allocation Feature 3 §6."
+        },
+        {
+          "id": "ADM_ALLOC_022",
+          "scenario": "To verify paid buyers remain Confirmed post-Stop",
+          "description": "Verify that buyers who completed payment during the campaign remain Confirmed (Booked) after it ends.",
+          "precond": "A campaign ended with at least one paid registration. [TEST_DATA_REQUIRED].",
+          "steps": "1. After the campaign ends, open Customers.\n2. Read the allocation status / confirmation of the paid registration.",
+          "testData": "[TEST_DATA_REQUIRED] a registration that paid during the campaign.",
+          "expected": "The paid registration shows Allocation Status = Booked (Online/Offline) and Confirmation = Paid.\nSource: ADMIN-BRD-Allocation §4 Rule 4 + ADMIN-FS-Allocation Feature 3 §6."
+        }
+      ]
+    },
+    {
+      "name": "Cancel Upcoming Campaign",
+      "tcs": [
+        {
+          "id": "ADM_ALLOC_017",
+          "scenario": "To verify the Cancel modal opens for an Upcoming row",
+          "description": "Verify that clicking Cancel on an Upcoming campaign row opens the 'Cancel Allocation?' modal with the correct copy and buttons.",
+          "precond": "An Upcoming campaign exists for the selected project.",
+          "steps": "1. In an Upcoming campaign row's Actions cell click 'Cancel'.\n2. Read the modal title, body, and buttons.\n3. Click 'Close' to dismiss (do NOT confirm).",
+          "testData": "[TEST_DATA_REQUIRED] an Upcoming campaign (ask user — e.g. 'Test' STATIC Upcoming).",
+          "expected": "A modal opens titled 'Cancel Allocation?' with body 'This will cancel the upcoming campaign.' and buttons 'Close' (outline) and 'Yes, Cancel' (red). Clicking 'Close' dismisses it with no change. (OPEN + assert + close only — no mutation.)\nSource: INDEX.md Cancel modal (allocation-cancel-modal.png)."
+        },
+        {
+          "id": "TC_ALLOC_NEG_005",
+          "scenario": "To verify Close on Cancel modal does not cancel the campaign",
+          "description": "Verify that closing the Cancel modal performs no server action.",
+          "precond": "An Upcoming campaign exists; Cancel modal opened then closed.",
+          "steps": "1. Open the Cancel modal on an Upcoming row.\n2. Click 'Close'.\n3. Refresh and re-read the status.",
+          "testData": "[TEST_DATA_REQUIRED] an Upcoming campaign (ask user).",
+          "expected": "The modal closes and the campaign remains 'Upcoming' — no cancel request was sent.\nSource: INDEX.md Cancel modal + ADMIN-FS-Allocation Feature 4 §5."
+        },
+        {
+          "id": "TC_ALLOC_NEG_006",
+          "scenario": "To verify Cancel sends no notification (never went live)",
+          "description": "Verify that cancelling an Upcoming campaign dispatches no buyer notification.",
+          "precond": "An Upcoming campaign was cancelled. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Cancel an Upcoming campaign (with authorisation).\n2. Check notification logs for any buyer message.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable Upcoming campaign + authorisation.",
+          "expected": "No notification of any kind is dispatched — the campaign never went live, so there is no buyer impact. Zero SMS/WhatsApp/email.\nSource: ADMIN-FS-Allocation Feature 4 §8 + §6 rule 3."
+        }
+      ]
+    },
+    {
+      "name": "Row Action Routing (Status-Driven)",
+      "tcs": [
+        {
+          "id": "TC_ALLOC_DC_001",
+          "scenario": "To verify row actions match campaign status (routing)",
+          "description": "Verify the context-sensitive Actions cell: Active=View+Stop; Upcoming=View+Cancel; Completed/Stopped/Cancelled/Failed=View only — and that the right control appears per status.",
+          "precond": "The project has campaigns in multiple statuses.",
+          "steps": "1. For an Active row, read the Actions cell.\n2. For an Upcoming row, read the Actions cell.\n3. For a Completed (and Stopped/Cancelled) row, read the Actions cell.",
+          "testData": "A project with Active, Upcoming, and Completed campaigns (ask user).",
+          "expected": "Active row = View + Stop (no Cancel). Upcoming row = View + Cancel (no Stop). Completed/Stopped/Cancelled/Failed rows = View only. The Actions cell routes the correct control by status.\nSource: INDEX.md Active row + Upcoming row Actions tables + ADMIN-FS-Allocation Feature 2 status/actions."
+        },
+        {
+          "id": "ADM_ALLOC_018",
+          "scenario": "To verify Active row exposes Stop not Cancel",
+          "description": "Verify that an Active campaign row shows Stop and does not show Cancel.",
+          "precond": "An Active campaign exists.",
+          "steps": "1. Find the Active row.\n2. Read its Actions cell.",
+          "testData": "An Active campaign (ask user).",
+          "expected": "The Active row Actions cell shows 'View' and 'Stop'; there is no 'Cancel'.\nSource: INDEX.md Active row Actions column."
+        },
+        {
+          "id": "ADM_ALLOC_019",
+          "scenario": "To verify Upcoming row exposes Cancel not Stop",
+          "description": "Verify that an Upcoming campaign row shows Cancel and does not show Stop.",
+          "precond": "An Upcoming campaign exists.",
+          "steps": "1. Find the Upcoming row.\n2. Read its Actions cell.",
+          "testData": "An Upcoming campaign (ask user).",
+          "expected": "The Upcoming row Actions cell shows 'View' and 'Cancel'; there is no 'Stop'.\nSource: INDEX.md Upcoming row Actions column."
+        },
+        {
+          "id": "ADM_ALLOC_024",
+          "scenario": "To verify Completed rows have View only",
+          "description": "Verify that a Completed campaign row exposes no Stop or Cancel action.",
+          "precond": "A Completed campaign exists.",
+          "steps": "1. Find a Completed row.\n2. Read its Actions cell.",
+          "testData": "A Completed campaign (ask user).",
+          "expected": "The Completed row Actions cell shows 'View' only — no Stop, no Cancel.\nSource: INDEX.md row-actions (Stopped/Completed/Cancelled = View only)."
+        }
+      ]
+    },
+    {
+      "name": "Notify Registrants (Physical Event)",
+      "tcs": [
+        {
+          "id": "ADM_ALLOC_S_001",
+          "scenario": "To verify the Notify modal opens on a Physical Event detail",
+          "description": "Verify that clicking Notify Registrants on a Physical Event campaign detail opens the confirmation modal, and dismisses on Cancel.",
+          "precond": "A Physical Event campaign detail is open (e.g. Completed).",
+          "steps": "1. Open a Physical Event campaign detail.\n2. Click 'Notify Registrants'.\n3. Read the modal title and body.\n4. Click 'Cancel' to dismiss (NEVER confirm on UAT).",
+          "testData": "[TEST_DATA_REQUIRED] a Physical Event campaign (ask user — e.g. id 288, Completed).",
+          "expected": "A modal opens titled 'Notify Registrants?' with body 'This will generate unique QR codes and notify all registrants via SMS/WhatsApp.' and buttons 'Cancel' (outline) and 'Yes, Notify All' (blue). Clicking 'Cancel' dismisses it. (OPEN + assert + close only — confirming dispatches REAL SMS/WhatsApp.)\nSource: INDEX.md Notify modal (allocation-notify-ui.png)."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_018",
+          "scenario": "To verify Notify button visibility (Physical Event only)",
+          "description": "Verify that the Notify Registrants button appears on Physical Event campaign details (and is absent on Static).",
+          "precond": "Physical Event and Static campaigns both exist.",
+          "steps": "1. Open a Physical Event detail and look for 'Notify Registrants'.\n2. Open a Static detail and confirm there is no 'Notify Registrants'.",
+          "testData": "A Physical Event campaign and a Static campaign (ask user).",
+          "expected": "Physical Event detail shows a 'Notify Registrants' button (alongside Download Bookings / Download Pending); Static detail shows no Notify button.\nSource: INDEX.md Notify modal note (gated by Physical Event type) + Campaign Actions table."
+        },
+        {
+          "id": "ADM_ALLOC_053",
+          "scenario": "To verify Notify only on Physical Event rows/details",
+          "description": "Verify that the Notify action is exposed only for Physical Event campaigns, not Static or Dynamic.",
+          "precond": "Campaigns of all three types exist.",
+          "steps": "1. Open detail pages for a Static, a Dynamic, and a Physical Event campaign.\n2. Check which one exposes Notify Registrants.",
+          "testData": "One campaign of each type (ask user).",
+          "expected": "Only the Physical Event detail exposes 'Notify Registrants'. Static and Dynamic details do not.\nSource: INDEX.md Campaign Actions by type + ADMIN-FS-Allocation §10.6."
+        },
+        {
+          "id": "TC_ALLOC_DC_004",
+          "scenario": "To verify Static detail has no Notify (negative routing)",
+          "description": "Verify the routing negative: a Static campaign detail does NOT expose Notify Registrants.",
+          "precond": "A Static campaign exists.",
+          "steps": "1. Open a Static campaign detail.\n2. Confirm no Notify Registrants button is present.",
+          "testData": "A Static campaign (ask user — e.g. id 289).",
+          "expected": "The Static detail shows only Download Bookings under Campaign Actions; no Notify Registrants and no Download Pending.\nSource: INDEX.md Static-Active detail (id 289) + Campaign Actions table."
+        },
+        {
+          "id": "TC_ALLOC_NEG_008",
+          "scenario": "To verify Cancel on Notify modal dispatches nothing",
+          "description": "Verify that dismissing the Notify modal via Cancel sends no SMS/WhatsApp and generates no QR codes.",
+          "precond": "The Notify modal is open on a Physical Event detail.",
+          "steps": "1. Open the Notify modal.\n2. Click 'Cancel'.\n3. Confirm no notification was dispatched.",
+          "testData": "[TEST_DATA_REQUIRED] a Physical Event campaign (ask user).",
+          "expected": "The modal closes and no QR codes are generated and no SMS/WhatsApp is sent.\nSource: INDEX.md Notify modal + ADMIN-FS-Allocation §10.6."
+        },
+        {
+          "id": "ADM_ALLOC_042",
+          "scenario": "To verify confirming Notify dispatches QR + SMS/WhatsApp",
+          "description": "Verify that confirming Notify Registrants generates unique QR codes and notifies registrants via SMS/WhatsApp (Kaleyra).",
+          "precond": "A Physical Event campaign with registrants. [TEST_DATA_REQUIRED] + explicit user authorisation (sends real messages).",
+          "steps": "1. Open a Physical Event detail and click 'Notify Registrants'.\n2. Click 'Yes, Notify All' (only with authorisation).\n3. Verify QR generation + dispatch in logs.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable Physical Event campaign with test registrants + authorisation.",
+          "expected": "POST /api/v1/admin/allocation/campaigns/<id>/notify fires; unique QR codes are generated and SMS/WhatsApp (Kaleyra) is dispatched to the Physical Event registrants. (DESTRUCTIVE — authorisation required; otherwise OPEN + assert + Cancel.)\nSource: ADMIN-BRD-Allocation §10.6 + ADMIN-FS-Allocation §10.6 + INDEX.md Notify modal."
+        },
+        {
+          "id": "ADM_ALLOC_FSD_037",
+          "scenario": "To verify Notify targets PHYSICAL_EVENT registrants only",
+          "description": "Verify that the Notify QR/SMS/WhatsApp dispatch is scoped to PHYSICAL_EVENT campaigns only.",
+          "precond": "Campaigns of multiple types exist.",
+          "steps": "1. Confirm Notify is reachable only from a Physical Event campaign.\n2. Confirm the dispatch (if fired) targets that campaign's registrants only.",
+          "testData": "[TEST_DATA_REQUIRED] a Physical Event campaign (ask user).",
+          "expected": "Only PHYSICAL_EVENT campaigns trigger QR-code notification dispatch; STATIC and DYNAMIC campaigns have no Notify path.\nSource: ADMIN-FS-Allocation §10.6 (FSD-CORRECTION) + INDEX.md."
+        }
+      ]
+    },
+    {
+      "name": "Export / Downloads",
+      "tcs": [
+        {
+          "id": "TC_ALLOC_FUNC_020",
+          "scenario": "To verify Download Bookings on the detail page",
+          "description": "Verify that the 'Download Bookings' button is present on campaign detail pages (all types) and triggers a download.",
+          "precond": "A campaign detail page is open.",
+          "steps": "1. Open a campaign detail page.\n2. Locate 'Download Bookings' in the Campaign Actions card.\n3. Click it.",
+          "testData": "A campaign with bookings (ask user).",
+          "expected": "'Download Bookings' (green, with a download icon) is present on Static, Dynamic, and Physical Event details. Clicking it downloads a CSV/Excel of booked allocations for the campaign. (DOC_DRIFT-ALLOC-002: this is the live 'Export' — there is no button labelled 'Export'.)\nSource: INDEX.md Export UI (allocation-export-ui.png) + ADMIN-BRD-Allocation §10.5."
+        },
+        {
+          "id": "TC_ALLOC_FUNC_021",
+          "scenario": "To verify Download Pending on Physical Event only",
+          "description": "Verify that 'Download Pending' appears only on Physical Event details (not on Static).",
+          "precond": "Physical Event and Static campaign details available.",
+          "steps": "1. Open a Physical Event detail and look for 'Download Pending'.\n2. Open a Static detail and confirm 'Download Pending' is absent.",
+          "testData": "A Physical Event and a Static campaign (ask user).",
+          "expected": "Physical Event detail shows 'Download Pending' (outline) in addition to 'Download Bookings'. Static detail shows only 'Download Bookings'.\nSource: INDEX.md Export UI + Campaign Actions table (Static = Download Bookings only)."
+        },
+        {
+          "id": "TC_ALLOC_DC_005",
+          "scenario": "To verify download buttons differ by type (routing)",
+          "description": "Verify the context-sensitive download set: Static=Download Bookings only; Physical Event=Bookings + Pending.",
+          "precond": "Static and Physical Event campaigns exist.",
+          "steps": "1. Open a Static detail and list the download buttons.\n2. Open a Physical Event detail and list the download buttons.",
+          "testData": "A Static and a Physical Event campaign (ask user).",
+          "expected": "Static detail = 'Download Bookings' only. Physical Event detail = 'Download Bookings' + 'Download Pending'. The button set is chosen by allocation type.\nSource: INDEX.md Campaign Actions buttons by type/status table."
+        }
+      ]
+    },
+    {
+      "name": "Lifecycle & Auto-Transitions",
+      "tcs": [
+        {
+          "id": "ADM_ALLOC_014",
+          "scenario": "To verify Upcoming auto-transitions to Active",
+          "description": "Verify that at the scheduled start time an Upcoming campaign automatically becomes Active.",
+          "precond": "An Upcoming campaign exists with a start time minutes away. [TEST_DATA_REQUIRED].",
+          "steps": "1. Note an Upcoming campaign with start time = now + a few minutes.\n2. Wait until the start time passes.\n3. Refresh the list and read the status.",
+          "testData": "[TEST_DATA_REQUIRED] an Upcoming campaign with a near-future start.",
+          "expected": "After the start time passes (and the scheduler/cron runs), the campaign status changes from Upcoming to Active. (Async/cron timing — refresh, do not expect an instant flip.)\nSource: ADMIN-FS-Allocation Feature 1 §7 + ADMIN-BRD-Allocation §5."
+        },
+        {
+          "id": "ADM_ALLOC_015",
+          "scenario": "To verify Active auto-transitions to Completed",
+          "description": "Verify that at the scheduled end time an Active campaign automatically becomes Completed.",
+          "precond": "An Active campaign exists with an end time minutes away. [TEST_DATA_REQUIRED].",
+          "steps": "1. Note an Active campaign nearing its end time.\n2. Wait until the end time passes.\n3. Refresh and read the status.",
+          "testData": "[TEST_DATA_REQUIRED] an Active campaign with a near-future end.",
+          "expected": "After the end time passes (and the cron runs), the campaign status changes from Active to Completed.\nSource: ADMIN-BRD-Allocation §5 + ADMIN-FS-Allocation Feature 2 §7."
+        },
+        {
+          "id": "TC_ALLOC_NEG_007",
+          "scenario": "To verify the Failed transition is not observable (documented gap)",
+          "description": "Verify the documented backend gap that a campaign cannot leave a visible Failed row.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. Filter by Status = Failed and observe.\n2. Cross-reference the §10 note.",
+          "testData": "(no input)",
+          "expected": "The Failed-filtered list is empty. [VERIFY WITH DEV] Per GAP-DEV-011 (§10), markAllocationCampaignFailed destroys the row rather than setting status='FAILED'; the Active->Failed transition in §5 is aspirational, not observable. Do not treat an empty Failed filter as a defect.\nSource: ADMIN-BRD-Allocation §10 GAP-DEV-011 + §10.17."
+        },
+        {
+          "id": "ADM_ALLOC_026",
+          "scenario": "To verify only one Active campaign at a time",
+          "description": "Verify the single-active-campaign invariant on UAT and the 2-minute pre-start blackout.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. Confirm no more than one campaign is Active for the project at any time.\n2. Cross-reference the 2-minute pre-start blackout window.",
+          "testData": "(no input)",
+          "expected": "At most one Active campaign runs at a time. checkAnyActiveCampaignExists also reports true when a NOT_STARTED campaign has startTime <= now + 2 minutes (§10.16), blocking Customers mutations during that window.\nSource: ADMIN-BRD-Allocation §4 Rule 2 + §10.16."
+        },
+        {
+          "id": "ADM_ALLOC_043",
+          "scenario": "To verify campaign type is immutable post-create",
+          "description": "Verify that a campaign's allocation type cannot be changed after creation.",
+          "precond": "A campaign exists.",
+          "steps": "1. Open the campaign and look for any way to edit the Allocation Type.",
+          "testData": "An existing campaign (ask user).",
+          "expected": "There is no control to change the Allocation Type after creation; only Stop/Cancel/Notify actions exist. [VERIFY WITH DEV] no edit endpoint mutates type.\nSource: ADMIN-FS-Allocation §10 data model + INDEX.md (no edit-type control observed)."
+        },
+        {
+          "id": "ADM_ALLOC_025",
+          "scenario": "To verify campaign with zero active towers",
+          "description": "Verify behaviour when a campaign runs with no Active tower configured (Config prerequisite).",
+          "precond": "A project has no Active tower in Config. [TEST_DATA_REQUIRED].",
+          "steps": "1. Ensure no tower is Active in Config for the project.\n2. Create/observe a campaign.\n3. Observe the buyer-side unit availability (downstream).",
+          "testData": "[TEST_DATA_REQUIRED] a project with zero active towers.",
+          "expected": "[VERIFY WITH DEV] Either creation is allowed but buyers see an empty unit grid (no units to book), or creation is gated. BRD §4 Rule 3 states at least one tower must be Active for a campaign to be meaningful; exact enforcement not confirmed.\nSource: ADMIN-BRD-Allocation §4 Rule 3 + ADMIN-FS-Allocation Feature 1 §3."
+        }
+      ]
+    },
+    {
+      "name": "Notifications (Silent by Design)",
+      "tcs": [
+        {
+          "id": "TC_ALLOC_NEG_002",
+          "scenario": "To verify no notification on create or activate",
+          "description": "Verify that creating a campaign and its auto-activation dispatch no buyer notification (silent by design).",
+          "precond": "A campaign was created and later activated. [TEST_DATA_REQUIRED].",
+          "steps": "1. Create a campaign (with authorisation) and let it activate.\n2. Check the notification/Kaleyra logs for any create- or activate-time message.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable campaign + authorisation.",
+          "expected": "No automatic buyer notification fires on campaign create or on the transition to Active. Zero SMS/WhatsApp/email. (The only launch-notification path is the explicit admin Notify action for Physical Event.)\nSource: ADMIN-FS-Allocation Feature 1 §8 (FSD-CORRECTION) + ADMIN-BRD-Allocation §8."
+        },
+        {
+          "id": "ADM_ALLOC_031",
+          "scenario": "To verify no auto-notification when campaign becomes Active",
+          "description": "Verify the corrected behaviour that buyers receive NO automatic notification when a campaign becomes Active.",
+          "precond": "A campaign transitioned to Active. [TEST_DATA_REQUIRED].",
+          "steps": "1. Let an Upcoming campaign activate.\n2. Check for any buyer-facing 'campaign is live' message.",
+          "testData": "[TEST_DATA_REQUIRED] a campaign that activates.",
+          "expected": "No notification is sent on activation (corrected: source allocation-campaign.service.js shows NONE). Treat any prior 'buyers notified on Active' expectation as stale.\nSource: ADMIN-FS-Allocation Feature 1 §8 (FSD-CORRECTION 2026-05-25) + ADMIN-BRD-Allocation §8."
+        },
+        {
+          "id": "ADM_ALLOC_052",
+          "scenario": "To verify booking dispatches WhatsApp + SMS (no email)",
+          "description": "Verify that a successful buyer booking dispatches one WhatsApp and one SMS for +91 buyers, and zero emails.",
+          "precond": "A buyer completes a booking during a campaign. [TEST_DATA_REQUIRED] (payment cannot be automated on UAT — manual).",
+          "steps": "1. Complete a buyer booking (manual payment on UAT).\n2. Check the notification logs.",
+          "testData": "[TEST_DATA_REQUIRED] a +91 buyer who completes a booking.",
+          "expected": "On payment success: WhatsApp template congrates_payment_success_27sept + SMS ALLOTMENT_PAYMENT_SUCCESS dispatched (Indian +91 phones only). Zero emails. On failure: WhatsApp payment_unsuccessful_27sept + SMS ALLOTMENT_PAYMENT_FAILED.\nSource: ADMIN-FS-Allocation Feature 5 §8 (FSD-CORRECTION) + ADMIN-BRD-Allocation §8."
+        }
+      ]
+    },
+    {
+      "name": "Cross-Module / Integration",
+      "tcs": [
+        {
+          "id": "ADM_ALLOC_030",
+          "scenario": "To verify a successful booking shows in Customers",
+          "description": "Verify that a unit booked during a campaign appears in the Customers module with the right status.",
+          "precond": "A buyer booked a unit during a campaign. [TEST_DATA_REQUIRED].",
+          "steps": "1. After a booking, open the Customers module.\n2. Find the buyer's registration row.",
+          "testData": "[TEST_DATA_REQUIRED] a registration that booked during a campaign.",
+          "expected": "The buyer row shows an Allotted Unit, Allocation Status = Booked Online (or Offline for assign), and Confirmation = Paid.\nSource: ADMIN-FS-Allocation §6 Integration + ADMIN-BRD-Allocation §6 step 8."
+        },
+        {
+          "id": "ADM_ALLOC_029",
+          "scenario": "To verify Easebuzz payment reflects in Transactions",
+          "description": "Verify that a buyer's Easebuzz allocation payment creates a record in Payment Transactions.",
+          "precond": "A buyer paid via Easebuzz during a campaign. [TEST_DATA_REQUIRED].",
+          "steps": "1. After a successful payment, open Payment Transactions.\n2. Find the new transaction.",
+          "testData": "[TEST_DATA_REQUIRED] a completed Easebuzz allocation payment.",
+          "expected": "A new transaction shows Source = Online (Easebuzz), Type = Allocation, Status = completed.\nSource: ADMIN-FS-Allocation §6 Integration + Feature 5 §7."
+        },
+        {
+          "id": "ADM_ALLOC_027",
+          "scenario": "To verify Active campaign drives WebSocket unit grid",
+          "description": "Verify that an Active campaign establishes the Python WebSocket connection for real-time unit grid updates.",
+          "precond": "A campaign is Active. [TEST_DATA_REQUIRED].",
+          "steps": "1. With an Active campaign, observe the buyer-side unit grid real-time behaviour (downstream).",
+          "testData": "[TEST_DATA_REQUIRED] an Active campaign.",
+          "expected": "A WebSocket connection to the Python server is established for real-time unit updates while the campaign is Active. (Buyer-portal/integration concern — admin only confirms the Active campaign exists.)\nSource: ADMIN-BRD-Allocation §8 (Python WebSocket) + ADMIN-FS-Allocation Feature 1 §7."
+        },
+        {
+          "id": "ADM_ALLOC_049",
+          "scenario": "To verify tower toggle allowed during active campaign",
+          "description": "Verify that toggling a tower in Config is still allowed while a campaign is active (tower config vs Customers mutations).",
+          "precond": "A campaign is Active. [TEST_DATA_REQUIRED].",
+          "steps": "1. With an Active campaign, open Config and toggle a tower, then Update.",
+          "testData": "[TEST_DATA_REQUIRED] an Active campaign + a togglable tower.",
+          "expected": "The tower toggle update succeeds; the campaign continues. (Note: Customers-module mutations — cancel/swap/parking/refund — ARE blocked during active, but Config tower config is not.) [VERIFY WITH DEV] downstream grid effect.\nSource: ADMIN-FRD-Allocation §6 Integration + ADMIN-BRD-Allocation §10.16."
+        },
+        {
+          "id": "ADM_ALLOC_FSD_036",
+          "scenario": "To verify Active campaign blocks Customers mutations",
+          "description": "Verify the FSD-corrected rule that an active campaign blocks cancel/swap/assign/refund/parking from the Customers module.",
+          "precond": "A campaign is Active (or within the 2-min pre-start window).",
+          "steps": "1. With an Active campaign, attempt cancel-unit, unit-swap, assign-unit, refund, and update-parking from Customers.\n2. Observe each response.",
+          "testData": "[TEST_DATA_REQUIRED] a registration eligible for each operation.",
+          "expected": "Each operation returns HTTP 400 with the exact text 'Cannot ... when campaign is active'. The registration/unit/parking row is unchanged and no amount is refunded.\nSource: ADMIN-FS-Allocation §10.16 + ADMIN-BRD-Allocation §10.16."
+        },
+        {
+          "id": "ADM_ALLOC_044",
+          "scenario": "To verify Active campaign blocks single Cancel Unit",
+          "description": "Verify that the Cancel Unit action in Customers is blocked while a campaign is active.",
+          "precond": "A campaign is Active; a Booked unit exists in Customers.",
+          "steps": "1. With an Active campaign, open a Booked row in Customers and attempt Cancel Unit.",
+          "testData": "[TEST_DATA_REQUIRED] a Booked unit.",
+          "expected": "Backend returns HTTP 400 'Cannot cancel unit when campaign is active'; the row is unchanged.\nSource: ADMIN-BRD-Allocation §10.16."
+        },
+        {
+          "id": "ADM_ALLOC_045",
+          "scenario": "To verify Active campaign blocks Unit Swap",
+          "description": "Verify that Unit Swap in Customers is blocked while a campaign is active.",
+          "precond": "A campaign is Active; a swappable unit exists.",
+          "steps": "1. With an Active campaign, attempt a Unit Swap in Customers.",
+          "testData": "[TEST_DATA_REQUIRED] a swappable booked unit.",
+          "expected": "HTTP 400 'Cannot swap unit when campaign is active'; current unit unchanged.\nSource: ADMIN-BRD-Allocation §10.16."
+        },
+        {
+          "id": "ADM_ALLOC_046",
+          "scenario": "To verify Active campaign blocks Update Parking",
+          "description": "Verify that Update Parking in Customers is blocked while a campaign is active.",
+          "precond": "A campaign is Active; a parking-eligible unit exists.",
+          "steps": "1. With an Active campaign, attempt Update Parking in Customers.",
+          "testData": "[TEST_DATA_REQUIRED] a parking-eligible booked unit.",
+          "expected": "HTTP 400 'Cannot update parking when campaign is active'; parking row unchanged.\nSource: ADMIN-BRD-Allocation §10.16."
+        },
+        {
+          "id": "ADM_ALLOC_047",
+          "scenario": "To verify Active campaign blocks single refund",
+          "description": "Verify that single refund (Cancel Registration) in Customers is blocked while a campaign is active.",
+          "precond": "A campaign is Active; a refundable registration exists.",
+          "steps": "1. With an Active campaign, attempt a single refund / Cancel Registration in Customers.",
+          "testData": "[TEST_DATA_REQUIRED] a refundable registration.",
+          "expected": "HTTP 400 'Cannot refund registration when campaign is active'; row unchanged and no amount refunded.\nSource: ADMIN-BRD-Allocation §10.16."
+        },
+        {
+          "id": "ADM_ALLOC_048",
+          "scenario": "To verify Active campaign blocks bulk-cancel",
+          "description": "Verify that bulk-cancel via Config Section 5 is blocked while a campaign is active.",
+          "precond": "A campaign is Active; bulk-cancel input is ready.",
+          "steps": "1. With an Active campaign, attempt bulk-cancel via Config Section 5.",
+          "testData": "[TEST_DATA_REQUIRED] a bulk-cancel input set.",
+          "expected": "Bulk cancel is rejected with a campaign-active error; no rows are cancelled.\nSource: ADMIN-BRD-Allocation §10.16 + §10.24 (only the 2-min gate protects dynamic membership)."
+        },
+        {
+          "id": "TC_ALLOC_INT_001",
+          "scenario": "To verify detail KPI numbers reflect uploaded/booked data",
+          "description": "Verify that the detail-page KPI cards reflect the campaign's uploaded and booked counts (integration of upload + booking data).",
+          "precond": "A campaign with uploaded registrations/units and some bookings exists.",
+          "steps": "1. Open the campaign detail.\n2. Read the KPI card values and cross-check against the uploaded/booked source.",
+          "testData": "[TEST_DATA_REQUIRED] a campaign with known upload + booking counts.",
+          "expected": "[VERIFY WITH DEV] KPI cards (Registrations Uploaded / Booked From ... / Pending To Book for Physical; Initial Pending / Units Sold / Pending for Static) reflect the backend fields (registrationsUploaded, bookedFromAssignedUnits, etc.). Confirm exact field mapping with Dev.\nSource: INDEX.md API/Network observations (KPI backend fields)."
+        },
+        {
+          "id": "TC_ALLOC_INT_005",
+          "scenario": "To verify the sidebar links to all admin modules",
+          "description": "Verify that the Allocation page sidebar exposes navigation to the other admin modules.",
+          "precond": "An admin is on the Allocation page.",
+          "steps": "1. Read the left sidebar links.",
+          "testData": "(no input)",
+          "expected": "The sidebar shows Customers, Config, Allocation (active), Offers, Towers, JBP Mgmt, Channel Partners, Sales Managers, Transactions (and CMS -> external Strapi, out of scope).\nSource: INDEX.md Sidebar Navigation."
+        }
+      ]
+    },
+    {
+      "name": "API & Backend",
+      "tcs": [
+        {
+          "id": "TC_ALLOC_API_001",
+          "scenario": "To verify projectId env-default on create",
+          "description": "Verify that omitting projectId on campaign create silently defaults to the env project (1 prod / 2 UAT).",
+          "precond": "API access with a valid admin token. [TEST_DATA_REQUIRED] bearer token.",
+          "steps": "1. Call the create-campaign endpoint omitting projectId.\n2. Observe which project the campaign is created under.",
+          "testData": "[TEST_DATA_REQUIRED] admin bearer token; create body without projectId.",
+          "expected": "The campaign is created under the env-default project (2 on UAT); the 'Project ID is required' check is dead code and does NOT block. [VERIFY WITH DEV] confirm before treating as pass.\nSource: ADMIN-BRD-Allocation §10.1 (GAP-TL-001/GAP-DEV-001)."
+        },
+        {
+          "id": "TC_ALLOC_API_002",
+          "scenario": "To verify Dynamic create requires allotmentExcel + 20/unit cap",
+          "description": "Verify that Dynamic create accepts allotmentExcel and enforces the 20-registration-per-unit hard cap.",
+          "precond": "API access with admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. Submit a Dynamic create with an allotmentExcel that has >20 registrations for one unit.\n2. Observe the response.",
+          "testData": "[TEST_DATA_REQUIRED] a Dynamic allotmentExcel with a unit exceeding 20 registrations.",
+          "expected": "The over-cap unit is rejected with 'Max registrations per unit exceeded (20)'. This 20-cap is separate from the configurable allocationsPerUnit. [VERIFY WITH DEV] file type/size limits not documented.\nSource: ADMIN-BRD-Allocation §10.25 (GAP-DEV-012) + §10.2."
+        },
+        {
+          "id": "TC_ALLOC_API_003",
+          "scenario": "To verify Physical Event create requires commonPoolExcel",
+          "description": "Verify that a Physical Event create without commonPoolExcel is rejected with HTTP 400.",
+          "precond": "API access with admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. Submit a Physical Event create omitting commonPoolExcel.\n2. Observe the response.",
+          "testData": "[TEST_DATA_REQUIRED] a Physical Event create body without commonPoolExcel.",
+          "expected": "HTTP 400 'Common pool units Excel is required for PHYSICAL_EVENT allocation type'. (Note: PHYSICAL_EVENT does NOT enforce typology-match or assigned-vs-pool overlap — those checks are commented out, §10.26.)\nSource: ADMIN-BRD-Allocation §10.2 + §10.26."
+        },
+        {
+          "id": "TC_ALLOC_API_004",
+          "scenario": "To verify Excel validation errors return an XLSX body",
+          "description": "Verify that a failed campaign-create Excel validation returns HTTP 400 with an XLSX binary attachment, not JSON.",
+          "precond": "API access with admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. Submit a create with an invalid allotment/common-pool Excel.\n2. Inspect the response content type and disposition.",
+          "testData": "[TEST_DATA_REQUIRED] an invalid Dynamic or Physical Event Excel.",
+          "expected": "HTTP 400 with a binary XLSX body (Content-Disposition attachment), filename 'dynamic-allocation-errors.xlsx' or 'physical-event-allocation-errors.xlsx' — NOT a JSON error.\nSource: ADMIN-BRD-Allocation §10.3 (GAP-TL-003)."
+        },
+        {
+          "id": "TC_ALLOC_API_005",
+          "scenario": "To verify the Dynamic rounds endpoint",
+          "description": "Verify that the rounds endpoint returns a paginated rounds list for a Dynamic campaign.",
+          "precond": "API access with admin token; a Dynamic campaign id. [TEST_DATA_REQUIRED].",
+          "steps": "1. GET /api/v1/admin/allocation/campaign/<id>/rounds.\n2. Inspect the response and pagination defaults.",
+          "testData": "[TEST_DATA_REQUIRED] a Dynamic campaign id (e.g. 291).",
+          "expected": "A paginated rounds list is returned with defaults page=1, limit=20.\nSource: ADMIN-BRD-Allocation §10.4 (GAP-TL-004) + ADMIN-FS-Allocation 'Dynamic Campaign Rounds'."
+        },
+        {
+          "id": "TC_ALLOC_API_006",
+          "scenario": "To verify 'Approved' is not a campaign status (clarification)",
+          "description": "Verify that the campaign Status filter has no 'Approved' option and clarify that 'Approved' is a buyer-side state.",
+          "precond": "An admin is on the Allocation page with a project picked.",
+          "steps": "1. Open the Status filter and list options.\n2. Confirm 'Approved' is absent.",
+          "testData": "(no input)",
+          "expected": "The Status filter offers only All Status / Active / Upcoming / Completed / Stopped / Cancelled / Failed. There is no 'Approved' campaign status — 'Approved' refers to a buyer/registrant allocation-request state in the Customers module.\nSource: INDEX.md Status Filter note (Approved is registrant-level)."
+        },
+        {
+          "id": "TC_ALLOC_API_007",
+          "scenario": "To verify stale past campaigns are auto-FAILED on next create",
+          "description": "Verify the documented behaviour that creating a new campaign forces past-window non-terminal campaigns to status FAILED.",
+          "precond": "A past-window non-terminal campaign exists. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. With a stale (past-window, non-terminal) campaign present, create a new campaign.\n2. Re-check the stale campaign's status.",
+          "testData": "[TEST_DATA_REQUIRED] a stale non-terminal campaign + authorisation.",
+          "expected": "[VERIFY WITH DEV] On next create, the stale campaign is updated to status='FAILED' (contradicts §5's auto-Complete). Combined with GAP-DEV-011, the FAILED row may also be destroyed — confirm observable behaviour with Dev.\nSource: ADMIN-BRD-Allocation §10.17 (GAP-DEV-007)."
+        },
+        {
+          "id": "TC_ALLOC_API_008",
+          "scenario": "To verify Stop/Cancel route via the action field",
+          "description": "Verify that Stop and Cancel route through a single updateAllocationCampaign PUT with an 'action' field rather than separate /stop and /cancel routes.",
+          "precond": "API access with admin token. [TEST_DATA_REQUIRED].",
+          "steps": "1. Trigger a Stop and a Cancel and capture the network request(s).\n2. Compare against the documented endpoints.",
+          "testData": "[TEST_DATA_REQUIRED] an Active and an Upcoming campaign + authorisation.",
+          "expected": "[VERIFY WITH DEV] Stop/Cancel use a single updateAllocationCampaign PUT with an 'action' field (DOC_DRIFT-ALLOC-001) — the FRD §11 separate /stop and /cancel routes are stale. Confirm the exact request shape with Dev.\nSource: ADMIN-BRD-Allocation §10.7 (GAP-TL-007) + DOC_DRIFT-ALLOC-001."
+        },
+        {
+          "id": "TC_ALLOC_API_009",
+          "scenario": "To verify the Notify endpoint",
+          "description": "Verify that the notify endpoint triggers Kaleyra notifications to Physical Event registrants.",
+          "precond": "API access with admin token; a Physical Event campaign id. [TEST_DATA_REQUIRED] + authorisation (sends real messages).",
+          "steps": "1. POST /api/v1/admin/allocation/campaigns/<id>/notify (only with authorisation).\n2. Observe the response and dispatch.",
+          "testData": "[TEST_DATA_REQUIRED] a Physical Event campaign id + authorisation.",
+          "expected": "The endpoint triggers Kaleyra notifications (QR + SMS/WhatsApp) to the campaign's Physical Event registrants. (DESTRUCTIVE — authorisation required.)\nSource: ADMIN-BRD-Allocation §10.6 (GAP-TL-006)."
+        },
+        {
+          "id": "TC_ALLOC_API_010",
+          "scenario": "To verify the allotments export endpoint",
+          "description": "Verify that the allotments export endpoint streams all campaign allotments as Excel.",
+          "precond": "API access with admin token; a campaign id with allotments. [TEST_DATA_REQUIRED].",
+          "steps": "1. GET /api/v1/admin/allocation/campaign/<id>/allotments/export.\n2. Inspect the streamed file.",
+          "testData": "[TEST_DATA_REQUIRED] a campaign id with allotments.",
+          "expected": "An Excel stream of all allotments for the campaign is returned. (This backs the 'Download Bookings' UI button.)\nSource: ADMIN-BRD-Allocation §10.5 (GAP-TL-005) + INDEX.md Export UI."
+        },
+        {
+          "id": "TC_ALLOC_API_011",
+          "scenario": "To verify the cron operations endpoint processes transitions",
+          "description": "Verify that the cron allocation-operations endpoint processes auto-transitions Upcoming->Active->Completed.",
+          "precond": "API access; campaigns whose start/end windows have passed. [TEST_DATA_REQUIRED].",
+          "steps": "1. Invoke the cron allocation-operations endpoint.\n2. Re-read affected campaign statuses.",
+          "testData": "[TEST_DATA_REQUIRED] campaigns past their start/end windows.",
+          "expected": "Returns 200; campaigns past start flip to Active and campaigns past end flip to Completed (per §5).\nSource: ADMIN-FS-Allocation Feature 1 §7 (scheduler) + existing TC ADM_ALLOC_051 baseline."
+        },
+        {
+          "id": "TC_ALLOC_API_012",
+          "scenario": "To verify the 2-minute pre-start blackout",
+          "description": "Verify that within 2 minutes before a scheduled campaign start, Customers mutations are blocked even though no campaign is yet Active.",
+          "precond": "An Upcoming campaign starts within 2 minutes. [TEST_DATA_REQUIRED].",
+          "steps": "1. With a campaign whose startTime is <= now + 2 minutes, attempt a Customers mutation (cancel/swap/assign/refund).\n2. Observe the response.",
+          "testData": "[TEST_DATA_REQUIRED] an Upcoming campaign starting within 2 minutes.",
+          "expected": "checkAnyActiveCampaignExists returns true and the mutation is blocked (HTTP 400 campaign-active error) during the 2-minute pre-start window, before the campaign is Active.\nSource: ADMIN-BRD-Allocation §10.16 (GAP-DEV-008)."
+        },
+        {
+          "id": "TC_ALLOC_API_013",
+          "scenario": "To verify cancelUserAllocation ownership gap (do not 403-test)",
+          "description": "Document the broken ownership check on cancelUserAllocation; this case is informational and must not be asserted as a 403 pass.",
+          "precond": "Documented backend gap (not safe to test in UAT).",
+          "steps": "1. Review the §10 GAP-TL-008 note.\n2. Do NOT issue a cross-user cancel against UAT.",
+          "testData": "(no input — do not execute against UAT)",
+          "expected": "[VERIFY WITH DEV] The ownership guard in allocation.controller.js:56-62 uses findOne (a Promise) in an if, so it is always truthy and never blocks — any authenticated user could cancel any registrationUnit by ID. Endpoint is undocumented and unsafe to test in UAT; do NOT write a negative test expecting 403. Flagged to Developer Agent.\nSource: ADMIN-BRD-Allocation §10 GAP-TL-008 (CRITICAL)."
+        }
+      ]
+    },
+    {
+      "name": "Role / Auth / Security",
+      "tcs": [
+        {
+          "id": "TC_ALLOC_SEC_001",
+          "scenario": "To verify no-session access redirects to login",
+          "description": "Verify that hitting /admin/allocation with no active session redirects to the login page.",
+          "precond": "No active admin session (cleared cookies/storage).",
+          "steps": "1. With no session, navigate to https://uat-web.xrportal.in/admin/allocation.\n2. Observe the result.",
+          "testData": "(no session)",
+          "expected": "The browser is redirected to the Admin login page; the Allocation page does not render without authentication.\nSource: dimensions-reference §9 (Customers no-session redirect pattern) + ADMIN-FS-Allocation Feature 1 §3 (admin session required)."
+        },
+        {
+          "id": "TC_ALLOC_SEC_002",
+          "scenario": "To verify expired/invalid token is rejected (401/403)",
+          "description": "Verify that an Allocation API call with an invalid or expired bearer token is rejected.",
+          "precond": "API access. [TEST_DATA_REQUIRED] an expired/invalid token.",
+          "steps": "1. Call an Allocation endpoint (e.g. list campaigns) with an invalid/expired token.\n2. Observe the status code.",
+          "testData": "[TEST_DATA_REQUIRED] an expired or malformed bearer token.",
+          "expected": "The request is rejected with 401 (or 403). [VERIFY WITH DEV] exact code — note the Login module documents logout as a server-side no-op (JWT valid until 1-day expiry), so a freshly-logged-out token may still pass; use a genuinely expired/invalid token.\nSource: dimensions-reference §9 + Login-Master security notes."
+        },
+        {
+          "id": "ADM_ALLOC_FSD_038",
+          "scenario": "To verify SM Admin cannot hit admin allocation endpoints",
+          "description": "Verify that the Sales Manager Admin role cannot access the admin allocation endpoints (admin-only).",
+          "precond": "An SM Admin token/session. [TEST_DATA_REQUIRED].",
+          "steps": "1. With an SM Admin token, call an admin allocation endpoint.\n2. Observe the response.",
+          "testData": "[TEST_DATA_REQUIRED] an SM Admin token.",
+          "expected": "HTTP 403 Forbidden — admin allocation endpoints are admin-only. [VERIFY WITH DEV] confirm the SM Admin role boundary in source.\nSource: ADMIN-FS-Allocation Backend Gap section + existing baseline ADM_ALLOC_FSD_038."
+        }
+      ]
+    },
+    {
+      "name": "Error Handling",
+      "tcs": [
+        {
+          "id": "TC_ALLOC_NEG_001",
+          "scenario": "To verify the no-project empty state",
+          "description": "Verify that before a project is selected the campaign list shows the guidance empty state.",
+          "precond": "An admin is on the Allocation page and no project is selected.",
+          "steps": "1. Without picking a project, look at the campaign list body.",
+          "testData": "(no input)",
+          "expected": "The list body shows 'Please select a project to view campaigns'. The column headers may render but no rows are shown.\nSource: INDEX.md Campaign Table empty-state text."
+        },
+        {
+          "id": "TC_ALLOC_NEG_009",
+          "scenario": "To verify server-error handling on the list",
+          "description": "Verify how the campaign list behaves on a server 500 or network failure.",
+          "precond": "Ability to simulate a failed list request. [VERIFY WITH DEV].",
+          "steps": "1. Trigger a server 500 / network failure on the campaign-list request.\n2. Observe the UI.",
+          "testData": "(simulated failure)",
+          "expected": "[VERIFY WITH DEV] No 500/network error copy is documented in BRD/FRD/FS or captured in INDEX.md. Confirm the intended error message/empty-state and whether a retry is offered before treating any result as pass/fail.\nSource: dimensions-reference §5 (no documented error string for this surface)."
+        }
+      ]
+    },
+    {
+      "name": "Edge Cases",
+      "tcs": [
+        {
+          "id": "ADM_ALLOC_032",
+          "scenario": "To verify stopping a campaign with in-flight payments",
+          "description": "Verify behaviour when an Active campaign is stopped while a buyer payment is mid-flow.",
+          "precond": "An Active campaign with an in-flight buyer payment. [TEST_DATA_REQUIRED] + authorisation; payment is manual on UAT.",
+          "steps": "1. With a buyer payment in progress, Stop the campaign (with authorisation).\n2. Observe whether the in-flight payment still completes and the final unit state.",
+          "testData": "[TEST_DATA_REQUIRED] an Active campaign + an in-flight payment.",
+          "expected": "[VERIFY WITH DEV] The buyer's in-flight payment may still complete via the Easebuzz webhook even though the campaign status becomes Stopped; the unit may finalize as Booked despite Stop. Confirm the race outcome with Dev. (DESTRUCTIVE — authorisation required; payment manual on UAT.)\nSource: ADMIN-FS-Allocation Feature 3 §7 + Feature 5 §7 + §10.18 (async stop)."
+        }
+      ]
+    }
+  ]
+}

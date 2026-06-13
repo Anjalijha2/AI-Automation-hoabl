@@ -1,0 +1,2 @@
+# New TCs awaiting user verification (gray fill in xlsx)
+# One TC_ID per line.

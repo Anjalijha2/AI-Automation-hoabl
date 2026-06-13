@@ -1,0 +1,647 @@
+{
+  "portal": "Admin",
+  "module": "Towers",
+  "sheetName": "Towers - Master",
+  "replaceSheets": ["Towers", "Towers (Exec)"],
+  "notes": [
+    "1. Towers is a READ-ONLY inventory view (/admin/towers). All tower/unit edits happen in the Config module (/admin/cms) — never on this page.",
+    "2. [TEST_DATA_REQUIRED] = a disposable UAT record/unit/tower-state must be supplied before executing this test (e.g. a tower with 0 available units, an in-progress HOLD unit, a freshly re-priced unit).",
+    "3. [VERIFY WITH DEV] = behaviour not confirmed in BRD/FRD/FS; confirm before treating Pass/Fail as authoritative.",
+    "4. KPI cards show GLOBAL project totals across all 18 towers; the grid-header stats are PER-SELECTED-TOWER. Do not confuse the two. Tower count is fixed at 18 for the Xanadu project.",
+    "5. The unit detail surface is an INLINE PANEL (div.more-details-allocation) in the right pane — NOT an Ant drawer or modal, and it has NO close (x) button; it is dismissed by clicking another cell or navigating away (see DOC_DRIFT-001 / DOC_DRIFT-002).",
+    "6. DOC_DRIFT-003: live UI opens the detail panel for RED (BOOKED) and ORANGE (HOLD) cells too — showing a customer block (First/Last name, Registration Number, Phone) — contradicting BRD/FRD which state only white/Available cells are clickable. TCs assert the OBSERVED behaviour; BRD/FRD §Feature 4 must be corrected.",
+    "7. DOC_DRIFT-004: the Available-unit detail panel carries a green 'Mark unit as Reserved' CTA — an action surface that contradicts the BRD 'fully read-only, no controls' statement. Treated as [VERIFY WITH DEV] until requirement confirms whether this admin reserve action is in scope.",
+    "8. Tower-level Active/Inactive toggle lives on /admin/cms (Config), not on this page; there is NO per-unit status toggle in the current UAT build (see INDEX.md). Active/Inactive KPI on this page reflects that Config toggle state.",
+    "9. Backend (BRD §11 / FS reconciliation): Disabled Units KPI counts RESERVED only (not REFUGE+RESERVED+PBT); units-by-tower API returns id/unitName/unitId/unitNo/floorNumber/status/basicPrice/totalUnitValue/facing (agreementValue & earlyBirdBenefit are NOT in that response); tower status-update fires a Python /broadcast-towers WebSocket fan-out; no-op toggles skip the audit log; projectId is env-derived (prod=1, uat=2).",
+    "10. Destructive / state-changing actions (any tower toggle in Config, any 'Mark unit as Reserved' attempt) require explicit user authorisation before running on UAT — this page is read-only by design."
+  ],
+  "subModules": [
+    {
+      "name": "Login & Landing",
+      "tcs": [
+        {
+          "id": "ADM_TWR_001",
+          "scenario": "To verify the Towers page loads at /admin/towers",
+          "description": "Verify that the Towers page opens with its KPI cards and tower list when an admin clicks Towers in the sidebar.",
+          "precond": "An admin is logged in (mobile 8888888888 / OTP 258369).",
+          "steps": "1. Open the Admin portal and log in.\n2. In the left sidebar, click 'Towers'.\n3. Observe the address bar and the page content.",
+          "testData": "Mobile: 8888888888, OTP: 258369",
+          "expected": "The URL ends in /admin/towers. The page shows the 'Tower View' title, the Towers and Units stat cards, and the 'Select Tower' list of towers."
+        },
+        {
+          "id": "ADM_TWR_031",
+          "scenario": "To verify the Towers page is read-only",
+          "description": "Verify that no edit, save, configure, activate or delete controls are present anywhere on the Towers page itself.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Scan the whole page top to bottom, including the stat cards, tower list, grid and any open unit panel.\n2. Look for any Save / Edit / Update / Activate / Delete control.",
+          "testData": "(no input)",
+          "expected": "No tower/unit configuration controls are present on this page. The only buttons are 'Download unit registrations', 'Pre-Booked Payments' and the refresh icon. (Note: an available-unit panel does show a green 'Mark unit as Reserved' CTA — see DOC_DRIFT-004 / ADM_TWR_NEG_048.)"
+        }
+      ]
+    },
+    {
+      "name": "KPI Cards — Towers & Units",
+      "tcs": [
+        {
+          "id": "ADM_TWR_002",
+          "scenario": "To verify the Total Towers KPI",
+          "description": "Verify that the Total Towers figure shows the fixed project count of 18.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Find the 'Towers' stat block at the top.\n2. Read the 'Total' figure.",
+          "testData": "(no input)",
+          "expected": "The Total figure reads 18 (fixed value for the Xanadu project)."
+        },
+        {
+          "id": "ADM_TWR_003",
+          "scenario": "To verify the Active Towers KPI reflects Config",
+          "description": "Verify that the Active towers figure equals the number of towers switched on in Config Tower Configuration.",
+          "precond": "An admin is on the Towers page; the active-tower count in Config is known.",
+          "steps": "1. Read the 'Active' figure in the Towers stat block.\n2. Open Config (/admin/cms) and count the towers whose switch is green/on.\n3. Compare the two figures.",
+          "testData": "Known active tower count from Config (ask user / [TEST_DATA_REQUIRED])",
+          "expected": "The Active figure equals the number of towers toggled on in Config (e.g. 15 of 18)."
+        },
+        {
+          "id": "ADM_TWR_004",
+          "scenario": "To verify the Inactive Towers KPI",
+          "description": "Verify that the Inactive towers figure equals 18 minus the Active count.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Read the 'Active' and 'Inactive' figures in the Towers stat block.\n2. Confirm Active + Inactive = 18.",
+          "testData": "(no input)",
+          "expected": "Inactive = 18 - Active (e.g. Active 15, Inactive 3)."
+        },
+        {
+          "id": "ADM_TWR_005",
+          "scenario": "To verify the Total Units KPI",
+          "description": "Verify that the Total Units figure shows the sum of all units across all 18 towers.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Find the 'Units' stat block.\n2. Read the 'Total' figure.",
+          "testData": "(no input)",
+          "expected": "The Total figure shows the project-wide unit count (e.g. 4708)."
+        },
+        {
+          "id": "ADM_TWR_006",
+          "scenario": "To verify the Available Units KPI",
+          "description": "Verify that the Available units figure shows the count of units currently available for selection.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. In the 'Units' stat block, read the 'Available' figure.",
+          "testData": "(no input)",
+          "expected": "The Available figure shows the count of AVAILABLE-status units across all towers (e.g. 3729)."
+        },
+        {
+          "id": "ADM_TWR_007",
+          "scenario": "To verify the Sold Units KPI",
+          "description": "Verify that the Sold units figure shows the count of booked units.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. In the 'Units' stat block, read the 'Sold' figure.",
+          "testData": "(no input)",
+          "expected": "The Sold figure shows the count of BOOKED-status units (e.g. 238)."
+        },
+        {
+          "id": "ADM_TWR_008",
+          "scenario": "To verify the Disabled Units KPI",
+          "description": "Verify that the Disabled units figure shows the count of reserved/blocked units, and that it counts RESERVED only (backend correction).",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. In the 'Units' stat block, read the 'Disabled' figure.",
+          "testData": "(no input)",
+          "expected": "The Disabled figure shows a count (e.g. 738). Per backend reconciliation (BRD §11.3) this counts RESERVED status only — NOT REFUGE+RESERVED+PBT as older docs stated."
+        },
+        {
+          "id": "ADM_TWR_002b",
+          "scenario": "To verify all four Units sub-stats are present",
+          "description": "Verify that the Units stat block shows exactly the four labels Total, Sold, Available and Disabled (full-form coverage of the KPI block).",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Look at the 'Units' stat block.\n2. List every sub-stat label and figure shown.",
+          "testData": "(no input)",
+          "expected": "Four sub-stats appear: Total, Sold, Available, Disabled — each with a numeric figure. No other unit sub-stat is shown at page level."
+        }
+      ]
+    },
+    {
+      "name": "KPI — Cross-Module / Live Update",
+      "tcs": [
+        {
+          "id": "ADM_TWR_036",
+          "scenario": "To verify the Active Towers KPI updates after a Config toggle",
+          "description": "Verify that toggling a tower active in Config and saving raises the Active Towers figure on the Towers page.",
+          "precond": "An admin is logged in; current Active figure noted; one inactive tower available to toggle. Requires user authorisation (Config write).",
+          "steps": "1. Note the current Active figure on the Towers page.\n2. Open Config, switch one inactive tower on, and click Update Tower Configuration.\n3. Return to the Towers page and refresh.\n4. Read the Active figure again.",
+          "testData": "Current Active count noted beforehand (ask user); [TEST_DATA_REQUIRED] one disposable inactive tower",
+          "expected": "The Active figure increases by one and Inactive decreases by one (e.g. Active 15 to 16)."
+        },
+        {
+          "id": "ADM_TWR_035",
+          "scenario": "To verify re-priced unit reflects new Agreement Value",
+          "description": "Verify that a pricing update done via Config Unit Cost Update is reflected in the unit's detail panel here.",
+          "precond": "An admin has just uploaded new pricing for a known unit via Config. Requires user authorisation.",
+          "steps": "1. Open the Towers page and select the affected tower.\n2. Click the re-priced available unit cell.\n3. Read the Agreement Value in the detail panel.",
+          "testData": "[TEST_DATA_REQUIRED] a unit with a known new price uploaded via Config Unit Cost Update",
+          "expected": "The Agreement Value shown reflects the newly uploaded price. [VERIFY WITH DEV] whether the panel reads the live Unit record or a cached grid payload."
+        },
+        {
+          "id": "ADM_TWR_034",
+          "scenario": "To verify an active offer is reflected in the All Inclusive Price",
+          "description": "Verify that when an active offer applies to a unit's typology, the All Inclusive Price reflects that offer relative to the Agreement Value.",
+          "precond": "An admin is logged in; an active Offer applies to the unit's typology.",
+          "steps": "1. Open the Towers page and select the tower.\n2. Click an available unit whose typology has an active offer.\n3. Compare the Agreement Value and the All Inclusive Price in the panel.",
+          "testData": "[TEST_DATA_REQUIRED] a unit whose typology has a known active offer",
+          "expected": "The All Inclusive Price reflects the active offer applied on top of the Agreement Value (BRD §8 Offers dependency). [VERIFY WITH DEV] exact calculation — offer fields are not in the units-by-tower API response."
+        },
+        {
+          "id": "ADM_TWR_INT_046",
+          "scenario": "To verify Active Towers KPI matches Customers page KPI",
+          "description": "Verify that the Active Towers count on the Towers page equals the Active Towers count shown on the Customers page (both read the same Config toggle state).",
+          "precond": "An admin is logged in.",
+          "steps": "1. Read the Active figure on the Towers page.\n2. Open the Customers page and read its Active Towers card.\n3. Compare.",
+          "testData": "(no input)",
+          "expected": "Both pages show the same Active Towers count, since both reflect the Config tower-toggle state (BRD §6 rule 7)."
+        }
+      ]
+    },
+    {
+      "name": "Tower Sidebar List",
+      "tcs": [
+        {
+          "id": "ADM_TWR_009",
+          "scenario": "To verify all 18 towers are listed",
+          "description": "Verify that the Select Tower list shows all 18 project towers by name.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Look at the 'Select Tower' list.\n2. Count and read every tower name.",
+          "testData": "(no input)",
+          "expected": "Exactly 18 towers are listed. Observed click-order: Crest, Triumph, Crown, Prestige, Horizon, Radiance, Aspire, Blossom, Pinnacle, Fortune, Bright, Grand, Dawn, Aura, Glory, Pride, Grace, Prime. (DOC_DRIFT-005: BRD lists a different order — see note.)"
+        },
+        {
+          "id": "ADM_TWR_010",
+          "scenario": "To verify each tower shows its available-unit count",
+          "description": "Verify that each tower row in the list shows the tower name plus its available-unit count.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Inspect any tower row in the 'Select Tower' list (e.g. Crest).\n2. Read the name and the count text.",
+          "testData": "(no input)",
+          "expected": "The row shows the tower name and an 'N Units Available' figure (e.g. Crest 84, Triumph 223, Blossom 0)."
+        },
+        {
+          "id": "ADM_TWR_011",
+          "scenario": "To verify an inactive tower shows the (Inactive) label",
+          "description": "Verify that a tower toggled inactive in Config is labelled '(Inactive)' in the list.",
+          "precond": "An admin is on the Towers page; at least one tower is inactive (e.g. Horizon).",
+          "steps": "1. Find an inactive tower row (e.g. Horizon, Pinnacle, Bright).\n2. Read its label.",
+          "testData": "(no input)",
+          "expected": "The row name is suffixed with '(Inactive)' (e.g. 'Horizon (Inactive)')."
+        },
+        {
+          "id": "ADM_TWR_013",
+          "scenario": "To verify the selected tower is visually highlighted",
+          "description": "Verify that the currently selected tower row is styled differently from the others.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Click 'Crest' in the list.\n2. Observe the Crest row versus the other rows.",
+          "testData": "(no input)",
+          "expected": "The Crest row is visually highlighted/active while the other rows are not."
+        },
+        {
+          "id": "ADM_TWR_044",
+          "scenario": "To verify the list count matches the Total Towers KPI",
+          "description": "Verify that the number of towers in the list equals the Total Towers KPI of 18.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Count the tower rows in the 'Select Tower' list.\n2. Compare with the Total figure in the Towers stat block.",
+          "testData": "(no input)",
+          "expected": "The list contains exactly 18 rows, matching the Total Towers figure of 18."
+        }
+      ]
+    },
+    {
+      "name": "Select Tower & Floor/Unit Grid",
+      "tcs": [
+        {
+          "id": "ADM_TWR_012",
+          "scenario": "To verify selecting a tower loads its grid",
+          "description": "Verify that clicking a tower in the list loads that tower's floor/unit grid in the right pane.",
+          "precond": "An admin is on the Towers page.",
+          "steps": "1. Click 'Crest' in the 'Select Tower' list.\n2. Observe the right pane.",
+          "testData": "(no input)",
+          "expected": "The Crest floor/unit grid loads in the right pane within about 3 seconds, with a 'Tower: Crest' header and inline stats."
+        },
+        {
+          "id": "ADM_TWR_014",
+          "scenario": "To verify the grid header shows that tower's totals",
+          "description": "Verify that the selected-tower header bar shows that tower's own stats (Total / Available / Sold / Paying now / Refuge / Disabled / PBT).",
+          "precond": "Crest is selected.",
+          "steps": "1. Read the header bar above the Crest grid.",
+          "testData": "(no input)",
+          "expected": "The header shows Crest-specific figures, e.g. '267 Total · 84 Available · 90 Sold · 3 Paying now · 6 Refuge (R) · 84 Disabled · 0 PBT'."
+        },
+        {
+          "id": "ADM_TWR_015",
+          "scenario": "To verify the grid is a floor x unit matrix",
+          "description": "Verify that the grid renders floors as rows and unit positions as columns.",
+          "precond": "A tower is selected.",
+          "steps": "1. Inspect the grid structure.\n2. Note the row leader and the cell layout.",
+          "testData": "(no input)",
+          "expected": "A 'Floor' column leads each row; floor numbers descend from the top (e.g. 35 down to 1); each floor row holds up to 8 unit cells with unit numbers (e.g. 3501..3508)."
+        },
+        {
+          "id": "ADM_TWR_002c",
+          "scenario": "To verify the unit-type legend strip",
+          "description": "Verify that the unit-type legend strip above the grid lists the per-position unit type and size.",
+          "precond": "A tower is selected and no unit panel is open.",
+          "steps": "1. Look at the legend strip at the top of the grid.\n2. Read each unit-position entry.",
+          "testData": "(no input)",
+          "expected": "Entries such as 'Unit - 1 / 323 / 1 BHK Growth', 'Unit - 3 / 621 / 2 BHK Rise', 'Unit - 4 / 485 / 2 BHK Growth' are shown for the 8 positions. (Note: the legend strip is replaced by the unit detail panel once a cell is clicked.)"
+        },
+        {
+          "id": "ADM_TWR_016",
+          "scenario": "To verify white cells indicate Available",
+          "description": "Verify that white/light-border cells in the grid represent AVAILABLE units.",
+          "precond": "A tower grid is loaded.",
+          "steps": "1. Identify a white-bordered cell.\n2. Note its appearance.",
+          "testData": "(no input)",
+          "expected": "White fill with a green/light border indicates an AVAILABLE unit (.unit-size-item.available)."
+        },
+        {
+          "id": "ADM_TWR_017",
+          "scenario": "To verify red cells indicate Sold",
+          "description": "Verify that red cells in the grid represent BOOKED/Sold units.",
+          "precond": "A tower grid is loaded.",
+          "steps": "1. Identify a red cell.",
+          "testData": "(no input)",
+          "expected": "A red fill (rgb 214,24,32) indicates a BOOKED/Sold unit."
+        },
+        {
+          "id": "ADM_TWR_018",
+          "scenario": "To verify orange cells indicate Paying now",
+          "description": "Verify that orange cells represent HOLD units (another buyer paying now).",
+          "precond": "A tower grid with at least one HOLD unit is loaded.",
+          "steps": "1. Identify an orange cell.",
+          "testData": "[TEST_DATA_REQUIRED] a tower with at least one HOLD/orange unit (Crest shows 3)",
+          "expected": "An orange fill (rgb 255,165,0) indicates a HOLD unit shown as 'Paying now'."
+        },
+        {
+          "id": "ADM_TWR_019",
+          "scenario": "To verify grey cells indicate Reserved/Disabled",
+          "description": "Verify that grey cells represent RESERVED/Disabled units.",
+          "precond": "A tower grid is loaded.",
+          "steps": "1. Identify a grey cell.",
+          "testData": "(no input)",
+          "expected": "A grey fill (rgba 114,114,114) indicates a RESERVED/Disabled unit (.unit-size-item.reserved)."
+        },
+        {
+          "id": "ADM_TWR_EDGE_047",
+          "scenario": "To verify Refuge cells render literal REFUGE text",
+          "description": "Verify that refuge-floor cells render the literal text 'REFUGE' and behave as non-clickable.",
+          "precond": "Crest is selected.",
+          "steps": "1. Locate the refuge cells (column 4 on floors 33, 28, 23, 18, 13, 8 — e.g. 3304, 2804, 2304, 1804, 1304, 804).\n2. Read the cell text.\n3. Click one.",
+          "testData": "(no input)",
+          "expected": "The cell shows the literal text 'REFUGE', is light-grey, and clicking it opens no detail panel."
+        },
+        {
+          "id": "ADM_TWR_NOTAVAIL_049",
+          "scenario": "To verify NOT_AVAILABLE (plain white) cells are distinct from Available",
+          "description": "Verify that NOT_AVAILABLE cells (plain white, no green border) are visually distinct from AVAILABLE cells and do not open the panel.",
+          "precond": "A tower grid is loaded (Crest shows 13 not-available cells).",
+          "steps": "1. Identify a plain-white cell with no green border (.unit-size-item.not_available).\n2. Compare its border with an AVAILABLE cell.\n3. Click it.",
+          "testData": "(no input)",
+          "expected": "The plain-white NOT_AVAILABLE cell has no green border (unlike AVAILABLE) and clicking it opens no detail panel. [VERIFY WITH DEV] business meaning of NOT_AVAILABLE vs DISABLED."
+        },
+        {
+          "id": "ADM_TWR_032",
+          "scenario": "To verify switching towers updates the grid",
+          "description": "Verify that selecting a different tower replaces the grid and header with the new tower's data.",
+          "precond": "Crest is currently selected.",
+          "steps": "1. Click 'Crown' in the list.\n2. Observe the grid and header.",
+          "testData": "(no input)",
+          "expected": "The grid replaces Crest's layout with Crown's, and the header updates to 'Tower: Crown' with Crown's stats."
+        },
+        {
+          "id": "ADM_TWR_013b",
+          "scenario": "To verify grid reloads fresh on tower switch (not cached)",
+          "description": "Verify that switching back to a previously viewed tower reloads its grid fresh rather than showing stale data.",
+          "precond": "Crest viewed, then Crown viewed.",
+          "steps": "1. Select Crest, note its grid.\n2. Select Crown.\n3. Re-select Crest.",
+          "testData": "(no input)",
+          "expected": "Crest's grid reloads with current data each time (FS Feature 3 rule 4 — grid loads fresh from server, not cached)."
+        }
+      ]
+    },
+    {
+      "name": "Unit Detail Panel (Available cells)",
+      "tcs": [
+        {
+          "id": "ADM_TWR_020",
+          "scenario": "To verify clicking an available unit opens the detail panel",
+          "description": "Verify that clicking a white/Available cell opens the inline unit detail panel in the right pane.",
+          "precond": "Crest grid loaded with visible white cells.",
+          "steps": "1. Click an available (white) cell, e.g. unit 3405.\n2. Observe the right pane.",
+          "testData": "Available unit e.g. 3405 (Crest)",
+          "expected": "An inline detail panel (div.more-details-allocation) appears in the right pane, replacing the legend strip. (DOC_DRIFT-001: this is NOT an Ant drawer/modal as BRD/FRD describe.)"
+        },
+        {
+          "id": "ADM_TWR_021",
+          "scenario": "To verify the panel shows the Unit Number",
+          "description": "Verify that the detail panel shows the unit number.",
+          "precond": "An available-unit detail panel is open.",
+          "steps": "1. Read the Unit No. row.",
+          "testData": "(no input)",
+          "expected": "The Unit No. value is shown (e.g. '3405'; BRD example format '3502 - Crest')."
+        },
+        {
+          "id": "ADM_TWR_022",
+          "scenario": "To verify the panel shows BHK Type",
+          "description": "Verify that the detail panel shows the BHK typology.",
+          "precond": "An available-unit detail panel is open.",
+          "steps": "1. Read the BHK row.",
+          "testData": "(no input)",
+          "expected": "The BHK type is shown (e.g. '1 BHK Growth Home' / '2 BHK Growth Home')."
+        },
+        {
+          "id": "ADM_TWR_023",
+          "scenario": "To verify the panel shows Size",
+          "description": "Verify that the detail panel shows the unit size.",
+          "precond": "An available-unit detail panel is open.",
+          "steps": "1. Read the Size row.",
+          "testData": "(no input)",
+          "expected": "The Size is shown with sq.ft. (e.g. '323 sq.ft.')."
+        },
+        {
+          "id": "ADM_TWR_024",
+          "scenario": "To verify the panel shows Agreement Value",
+          "description": "Verify that the detail panel shows the Agreement Value with currency formatting.",
+          "precond": "An available-unit detail panel is open.",
+          "steps": "1. Read the Agreement Value row.",
+          "testData": "(no input)",
+          "expected": "Agreement Value is shown with a Rupee prefix (e.g. '₹32,99,000'; 2BHK example ₹49,99,000). [VERIFY WITH DEV] — BRD §11.7 notes agreementValue is NOT in the units-by-tower API response; confirm where the UI sources this value."
+        },
+        {
+          "id": "ADM_TWR_025",
+          "scenario": "To verify the panel shows Early Bird Benefit",
+          "description": "Verify that the detail panel shows the Early Bird Benefit/Discount.",
+          "precond": "An available-unit detail panel is open for a unit with a discount.",
+          "steps": "1. Read the Early Bird Benefit row.",
+          "testData": "(no input)",
+          "expected": "Early Bird Benefit is shown with a Rupee prefix (e.g. '₹27,000') when applicable. [VERIFY WITH DEV] — earlyBirdBenefit is NOT in the units-by-tower API response (BRD §11.7)."
+        },
+        {
+          "id": "ADM_TWR_026",
+          "scenario": "To verify the panel shows All Inclusive Price",
+          "description": "Verify that the detail panel shows the all-inclusive/total price.",
+          "precond": "An available-unit detail panel is open.",
+          "steps": "1. Read the All inclusive / total row.",
+          "testData": "(no input)",
+          "expected": "An all-inclusive total is shown. The panel also exposes Final AV, Stamp Duty, GST and Registration Charges rows (per INDEX.md field list)."
+        },
+        {
+          "id": "ADM_TWR_FORM_050",
+          "scenario": "To verify the full field set of the available-unit panel",
+          "description": "Verify that every documented field of the available-unit panel is present (full-form coverage).",
+          "precond": "An available-unit detail panel is open.",
+          "steps": "1. List every label/value row shown in the panel.",
+          "testData": "(no input)",
+          "expected": "Rows present: Unit No., BHK, Size, Agreement Value, Final AV, Stamp Duty, GST, Registration Charges, All inclusive total — and a green 'Mark unit as Reserved' CTA at the bottom. No customer-name rows appear (unit is unsold)."
+        },
+        {
+          "id": "ADM_TWR_027",
+          "scenario": "To verify the panel is dismissed by clicking another cell",
+          "description": "Verify that the detail panel is dismissed by clicking a different unit cell (there is no close (x) button).",
+          "precond": "An available-unit detail panel is open.",
+          "steps": "1. With the panel open, click a different cell or navigate away.\n2. Observe the panel.",
+          "testData": "(no input)",
+          "expected": "The panel is replaced/dismissed. There is NO explicit close (x) control (DOC_DRIFT-002 — BRD/FRD claim a x close button that does not exist on UAT)."
+        },
+        {
+          "id": "ADM_TWR_045",
+          "scenario": "To verify switching towers closes an open panel",
+          "description": "Verify that selecting a different tower while a unit panel is open closes the panel and shows no stale data.",
+          "precond": "Crest selected with an available-unit panel open.",
+          "steps": "1. With the panel open, click 'Crown' in the list.",
+          "testData": "(no input)",
+          "expected": "The panel closes; Crown's grid loads; no stale Crest unit data remains visible."
+        }
+      ]
+    },
+    {
+      "name": "Unit Detail Panel — Booked & Hold cells (DOC_DRIFT-003)",
+      "tcs": [
+        {
+          "id": "ADM_TWR_DC_051",
+          "scenario": "To verify a RED (Booked) cell opens the panel with a customer block",
+          "description": "Verify the OBSERVED behaviour that clicking a red/BOOKED cell opens the detail panel populated with a customer block — contradicting BRD/FRD which say only white cells are clickable.",
+          "precond": "Crest grid loaded with red cells (e.g. unit 3501).",
+          "steps": "1. Click a red/BOOKED cell, e.g. 3501.\n2. Observe the right pane.",
+          "testData": "Booked unit 3501 (Crest)",
+          "expected": "The detail panel opens showing pricing PLUS a customer block: First Name, Last Name, Registration Number (e.g. GHNG-2000000009-Z), Phone (10-digit). (DOC_DRIFT-003 — BRD §Feature 4 must be corrected; the page is NOT 'white-only clickable'.)"
+        },
+        {
+          "id": "ADM_TWR_DC_052",
+          "scenario": "To verify an ORANGE (Hold) cell opens the panel with a customer block",
+          "description": "Verify the OBSERVED behaviour that clicking an orange/HOLD cell opens the detail panel with the buyer's customer block.",
+          "precond": "Crest grid loaded with an orange cell (e.g. unit 3307).",
+          "steps": "1. Click an orange/HOLD cell, e.g. 3307.\n2. Observe the right pane.",
+          "testData": "Hold unit 3307 (Crest, 2 BHK Growth Home)",
+          "expected": "The detail panel opens with the 2 BHK pricing (Agreement Value ₹49,99,000) plus a customer block (e.g. Supriya Dubey, reg GHNG-2000000009-Y). (DOC_DRIFT-003.)"
+        },
+        {
+          "id": "ADM_TWR_DC_053",
+          "scenario": "To verify the customer block appears ONLY for owned units",
+          "description": "Verify the routing rule: the customer-name rows appear for booked/hold (owned) cells and are absent for available (unowned) cells.",
+          "precond": "Crest grid loaded.",
+          "steps": "1. Open an available cell and note no customer rows.\n2. Open a booked cell and note the customer rows.\n3. Compare the two panels.",
+          "testData": "Available unit 3405 + Booked unit 3501 (Crest)",
+          "expected": "Available-cell panel shows no First/Last Name/Reg/Phone rows and a 'Mark unit as Reserved' CTA; booked-cell panel shows the customer block and no reserve CTA."
+        }
+      ]
+    },
+    {
+      "name": "Negative — Non-clickable cells (per BRD/FRD)",
+      "tcs": [
+        {
+          "id": "ADM_TWR_028",
+          "scenario": "To verify a red (sold) cell — BRD expectation",
+          "description": "Verify, per BRD/FRD rule that sold units are non-clickable, whether a red cell opens any panel.",
+          "precond": "A tower grid with red cells is loaded.",
+          "steps": "1. Click a red/Sold cell.\n2. Observe whether a panel opens.",
+          "testData": "(no input)",
+          "expected": "CONFLICT: BRD/FRD say no panel opens for sold units; live UI (ADM_TWR_DC_051) opens a panel with a customer block. Execute and record actual; flag DOC_DRIFT-003 either way. [VERIFY WITH DEV] which is correct."
+        },
+        {
+          "id": "ADM_TWR_029",
+          "scenario": "To verify a grey (reserved) cell does not open a panel",
+          "description": "Verify that clicking a grey/RESERVED cell opens no detail panel.",
+          "precond": "A tower grid with grey cells is loaded.",
+          "steps": "1. Click a grey/Reserved cell.\n2. Observe.",
+          "testData": "(no input)",
+          "expected": "No detail panel opens; no action is triggered."
+        },
+        {
+          "id": "ADM_TWR_030",
+          "scenario": "To verify an orange (paying) cell — BRD expectation",
+          "description": "Verify, per BRD/FRD rule that orange units are non-clickable, whether an orange cell opens any panel.",
+          "precond": "A tower grid with an orange cell is loaded.",
+          "steps": "1. Click an orange/HOLD cell.\n2. Observe.",
+          "testData": "[TEST_DATA_REQUIRED] a tower with a HOLD/orange unit",
+          "expected": "CONFLICT: BRD/FRD say no panel opens; live UI (ADM_TWR_DC_052) opens a customer-block panel. Record actual; flag DOC_DRIFT-003. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_TWR_NEG_048",
+          "scenario": "To verify the 'Mark unit as Reserved' CTA behaviour",
+          "description": "Verify the existence and behaviour of the green 'Mark unit as Reserved' CTA on an available-unit panel against the BRD 'read-only' claim.",
+          "precond": "An available-unit detail panel is open. NO live mutation without user authorisation.",
+          "steps": "1. Note the green 'Mark unit as Reserved' button at the bottom of the panel.\n2. Do NOT click it on UAT without authorisation — capture its presence only.",
+          "testData": "(capture-only; [TEST_DATA_REQUIRED] disposable unit if action is later authorised)",
+          "expected": "A green 'Mark unit as Reserved' CTA is present, which contradicts BRD §6 'page is fully read-only'. [VERIFY WITH DEV] whether this admin reserve action is in scope and what it does (DOC_DRIFT-004)."
+        }
+      ]
+    },
+    {
+      "name": "Cross-Module Navigation (View Tower from Config)",
+      "tcs": [
+        {
+          "id": "ADM_TWR_033",
+          "scenario": "To verify 'View Tower >' from Config opens this tower",
+          "description": "Verify that clicking the green 'View Tower >' link in Config navigates to the Towers page with that tower pre-selected.",
+          "precond": "An admin is on Config (/admin/cms), Tower Configuration section.",
+          "steps": "1. Find a tower row (e.g. Tower 8 - Crest).\n2. Click its green 'View Tower >' link.\n3. Observe the destination.",
+          "testData": "(no input)",
+          "expected": "The browser navigates to /admin/towers with that tower already selected and its grid loaded — no manual sidebar click needed. (Note: no URL query param observed; selection is via React/session state.)"
+        },
+        {
+          "id": "ADM_TWR_043",
+          "scenario": "To verify an inactive tower can still be opened via View Tower",
+          "description": "Verify that 'View Tower >' navigation works for an inactive tower and loads its grid read-only.",
+          "precond": "An admin is on Config; an inactive tower is present (e.g. Horizon).",
+          "steps": "1. Click 'View Tower >' for an inactive tower.\n2. Observe the Towers page.",
+          "testData": "(no input)",
+          "expected": "The Towers page opens with the inactive tower selected; its grid loads read-only (FS Feature 5 rule 1)."
+        }
+      ]
+    },
+    {
+      "name": "Edge / Empty States",
+      "tcs": [
+        {
+          "id": "ADM_TWR_037",
+          "scenario": "To verify a high-inventory tower grid loads in time",
+          "description": "Verify that a tower with high unit inventory renders its grid within about 3 seconds.",
+          "precond": "A high-inventory tower is available (e.g. Triumph 223 units).",
+          "steps": "1. Click the high-inventory tower.\n2. Time the grid render.",
+          "testData": "High-inventory tower (e.g. Triumph)",
+          "expected": "The full grid renders within about 3 seconds. [VERIFY WITH DEV] formal performance SLA — not stated in BRD/FRD."
+        },
+        {
+          "id": "ADM_TWR_038",
+          "scenario": "To verify a 0-available tower still loads its grid",
+          "description": "Verify that selecting a tower with 0 available units still loads a full grid (no available white cells).",
+          "precond": "A tower with 0 'Units Available' exists (e.g. Blossom 0).",
+          "steps": "1. Click the 0-available tower (e.g. Blossom).\n2. Observe the grid.",
+          "testData": "Tower with 0 available units (e.g. Blossom)",
+          "expected": "The grid loads showing all cells in non-available colours; no clickable white/available cells present; header shows 'Available: 0'."
+        }
+      ]
+    },
+    {
+      "name": "API & Security",
+      "tcs": [
+        {
+          "id": "ADM_TWR_FSD_039",
+          "scenario": "To verify tower status update fires audit + cache + Python broadcast (API)",
+          "description": "Verify that a real tower status change persists, writes an audit row, and fires the Python /broadcast-towers WebSocket fan-out (fire-and-forget).",
+          "precond": "An OPEN tower (isActive=true) and a valid admin token. NO-VISUAL-EVIDENCE — API layer. Requires user authorisation.",
+          "steps": "1. Send a tower status-update changing one tower from active to inactive.\n2. Inspect the audit log, the cache, and the Python broadcast inbound.",
+          "testData": "[TEST_DATA_REQUIRED] disposable tower id; admin JWT (PUT /api/v1/admin/towers/status-update {towers:[{id,isActive:false}]})",
+          "expected": "DB updated, audit row written, and a GET to Python /broadcast-towers fired. The broadcast is fire-and-forget — its failure does NOT roll back the DB write (BRD §11.5)."
+        },
+        {
+          "id": "ADM_TWR_FSD_040",
+          "scenario": "To verify a no-op tower status update is skipped (DB)",
+          "description": "Verify that sending a status-update equal to the current state writes nothing and logs no audit row (idempotent).",
+          "precond": "A tower already isActive=true. NO-VISUAL-EVIDENCE — DB layer.",
+          "steps": "1. Send a status-update with the tower's current value (isActive:true).\n2. Inspect audit_logs for a new row.",
+          "testData": "[TEST_DATA_REQUIRED] a tower with known current state (PUT {towers:[{id,isActive:true}]})",
+          "expected": "No DB write and no audit-log row are created — the no-op is skipped (BRD §11.6)."
+        },
+        {
+          "id": "ADM_TWR_FSD_041",
+          "scenario": "To verify unit status change syncs to Python (API)",
+          "description": "Verify that a unit status change (e.g. AVAILABLE to RESERVED) triggers a sync call to the Python service.",
+          "precond": "A unit status change can be triggered (bulk update or cancel). NO-VISUAL-EVIDENCE — API layer. Requires user authorisation.",
+          "steps": "1. Trigger a unit status flip (e.g. cancel a winner unit so status becomes RESERVED).\n2. Inspect the Python service inbound for the sync call.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable unit whose status can be flipped",
+          "expected": "A sync call fires to the Python service. Fire-and-forget — failure does not roll back the unit status change."
+        },
+        {
+          "id": "ADM_TWR_FSD_042",
+          "scenario": "To verify NO buyer notification on tower/unit status change (Notification, silent-by-design)",
+          "description": "Verify that toggling a tower inactive or changing a unit status dispatches NO buyer SMS/WhatsApp/email.",
+          "precond": "A tower with buyers holding registrations is toggled inactive. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. Toggle the tower inactive.\n2. Inspect buyer notification logs/channels.",
+          "testData": "[TEST_DATA_REQUIRED] a tower with associated buyer registrations",
+          "expected": "NO buyer SMS/WhatsApp/email is dispatched. Only inventory/cache/broadcast side effects fire. Silence-by-design is the required assertion (FS Feature 1-5 Notifications: None)."
+        },
+        {
+          "id": "ADM_TWR_API_054",
+          "scenario": "To verify getAllTowers honours the isActive filter via GET body (API)",
+          "description": "Verify that the towers-list endpoint filters by isActive when the literal true/false is supplied in the (non-standard) GET request body.",
+          "precond": "A valid admin token. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. Call the towers-list endpoint with isActive:true in the request body.\n2. Repeat with isActive:false.\n3. Compare the tower sets.",
+          "testData": "admin JWT (GET /api/v1/admin/towers, body {isActive:true|false})",
+          "expected": "true returns only active towers, false only inactive. Note the anti-pattern: filter is read from a GET request body which some HTTP clients strip (BRD §11.2). [VERIFY WITH DEV] behaviour when body omitted."
+        },
+        {
+          "id": "ADM_TWR_API_055",
+          "scenario": "To verify the units-by-tower response shape (API / UI-vs-backend)",
+          "description": "Verify the units-by-tower endpoint returns the documented backend fields and NOT the older FRD drawer fields — proving the UI computes some panel values itself.",
+          "precond": "A valid admin token. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. Call the units-by-tower endpoint for a known tower.\n2. Inspect the field set of one unit object.",
+          "testData": "admin JWT (GET /api/v1/admin/units-by-tower/:towerId)",
+          "expected": "Each unit returns id, unitName, unitId, unitNo, floorNumber, status, basicPrice, totalUnitValue, facing. agreementValue and earlyBirdBenefit are NOT present (BRD §11.7) — so the panel's Agreement Value/Early Bird rows are computed or sourced elsewhere. [VERIFY WITH DEV]."
+        },
+        {
+          "id": "ADM_TWR_API_056",
+          "scenario": "To verify projectId is env-derived and not client-overridable (API / security)",
+          "description": "Verify that tower endpoints scope on an env-derived projectId (uat=2) that the client cannot override.",
+          "precond": "A valid admin token. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. Call the towers-list endpoint with an attempted projectId override param.\n2. Compare results to the default call.",
+          "testData": "admin JWT; attempted projectId override",
+          "expected": "Results are scoped to the env projectId (uat=2) regardless of any client-supplied projectId — the override is ignored (BRD §11.1). [VERIFY WITH DEV] exact behaviour on override attempt."
+        },
+        {
+          "id": "ADM_TWR_NEG_057",
+          "scenario": "To verify unauthenticated access is blocked (security)",
+          "description": "Verify that opening /admin/towers with no active session redirects to login.",
+          "precond": "No admin session is active.",
+          "steps": "1. Clear the session.\n2. Navigate directly to /admin/towers.",
+          "testData": "(no session)",
+          "expected": "The browser redirects to the Admin login page; the Towers page is not rendered."
+        },
+        {
+          "id": "ADM_TWR_NEG_058",
+          "scenario": "To verify an expired/invalid token is rejected (security)",
+          "description": "Verify that calling a tower endpoint with an invalid or expired token returns 401/403.",
+          "precond": "An invalid/expired JWT is available. NO-VISUAL-EVIDENCE — API layer.",
+          "steps": "1. Call the towers-list or units-by-tower endpoint with an invalid/expired token.\n2. Read the HTTP status.",
+          "testData": "[TEST_DATA_REQUIRED] an expired/tampered admin JWT",
+          "expected": "The endpoint returns 401 or 403 and no tower/unit data. [VERIFY WITH DEV] exact status code."
+        }
+      ]
+    },
+    {
+      "name": "Error Handling",
+      "tcs": [
+        {
+          "id": "ADM_TWR_NEG_059",
+          "scenario": "To verify grid behaviour on a units-by-tower server error",
+          "description": "Verify the page's behaviour when the units-by-tower request fails (server 500).",
+          "precond": "The units-by-tower endpoint can be forced to 500 (mock/dev). NO confirmed spec.",
+          "steps": "1. Force the units-by-tower call to return 500.\n2. Select a tower.\n3. Observe the right pane.",
+          "testData": "[TEST_DATA_REQUIRED] forced 500 on units-by-tower",
+          "expected": "[VERIFY WITH DEV] — no error/empty-state copy is documented in BRD/FRD/FS. Record the actual behaviour (error banner, blank grid, or spinner) and confirm intended handling with dev."
+        },
+        {
+          "id": "ADM_TWR_NEG_060",
+          "scenario": "To verify KPI behaviour on a tower-kpi request failure",
+          "description": "Verify how the KPI cards behave when the tower-kpi request fails.",
+          "precond": "The tower-kpi endpoint can be forced to fail. NO confirmed spec.",
+          "steps": "1. Force the tower-kpi call to fail.\n2. Load the Towers page.\n3. Observe the KPI cards.",
+          "testData": "[TEST_DATA_REQUIRED] forced failure on tower-kpi",
+          "expected": "[VERIFY WITH DEV] — no documented failure copy. Record whether cards show 0, a dash, or an error; confirm intended behaviour with dev."
+        }
+      ]
+    }
+  ]
+}
