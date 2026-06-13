@@ -1,0 +1,702 @@
+{
+  "ADM_CUST_001": {
+    "scenario": "Verify that the Customers page opens automatically as the first screen after an admin logs in.",
+    "preconditions": "An admin account is available (mobile 8888888888 / OTP 258369).",
+    "steps": "1. Open the Admin portal login page.\n2. Enter the mobile number, request the OTP, and enter the code.\n3. Complete login and watch where the browser lands.",
+    "testData": "Mobile: 8888888888, OTP: 258369",
+    "expected": "After login the browser lands on the Customers page (web address ends in /admin/customers). The row of six summary cards at the top and the registrations table below both finish loading within about 5 seconds."
+  },
+  "ADM_CUST_002": {
+    "scenario": "Verify that all six summary cards appear in the correct order across the top of the Customers page.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Look at the row of summary cards across the top of the page.\n2. Read each card title from left to right.",
+    "testData": "(no input)",
+    "expected": "Six cards are shown in this order: Registered, Inactive Registrations, Cancelled Registrations, KYC Pending (Booked), Confirmed (Paid + KYC), and Active Towers."
+  },
+  "ADM_CUST_003": {
+    "scenario": "Verify that the Registered summary card shows a number count.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Find the card titled 'Registered' at the top of the page.\n2. Read the number shown on it.",
+    "testData": "(no input)",
+    "expected": "The Registered card shows a non-zero number (for example 8,673). (This figure is the combined total of Booked Offline + Booked Online + Registered + Inactive registrations, not just those marked 'Registered'.)"
+  },
+  "ADM_CUST_006": {
+    "scenario": "Verify that the heading above the table states the total number of registration records.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Look at the heading directly above the registrations table.",
+    "testData": "(no input)",
+    "expected": "The heading reads 'N Registration Records' where N is a number (for example '9,684 Registration Records'). This is the true total record count, not the count of rows visible on screen."
+  },
+  "ADM_CUST_007": {
+    "scenario": "Verify that the registrations table shows all ten expected columns in order.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Look at the column headers across the top of the registrations table.\n2. Read them left to right.",
+    "testData": "(no input)",
+    "expected": "The columns appear in this order: Registration Details, Growth Partner, Phone, Home Loan Details, Confirmation Number, Alloted Unit, Allocation Status, Confirmation, Process Status, and Actions."
+  },
+  "ADM_CUST_008": {
+    "scenario": "Verify that the newest registrations appear at the top of the table.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. In the Registration Details column, read the dates from the top row downward.",
+    "testData": "(no input)",
+    "expected": "Rows are ordered with the most recently created registration at the top and older ones further down (newest first)."
+  },
+  "ADM_CUST_009": {
+    "scenario": "Verify that the Registration Details column shows both a registration number and a creation date.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Pick any row and look at its Registration Details cell.",
+    "testData": "(no input)",
+    "expected": "The cell shows a registration number (for example GHNG-1000008563-AT) together with the date and time it was created."
+  },
+  "ADM_CUST_010": {
+    "scenario": "Verify that the Allocation Status column only ever shows one of the allowed status values.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Read the values in the Allocation Status column down the page.\n2. Move through a few pages to see the different values that appear.",
+    "testData": "(no input)",
+    "expected": "Every Allocation Status value is one of: Registered, Booked Online, Booked Offline, Waitlisted, or Cancelled."
+  },
+  "ADM_CUST_011": {
+    "scenario": "Verify that the Process Status column shows the customer's KYC stage.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Read the values in the Process Status column.",
+    "testData": "(no input)",
+    "expected": "Each cell shows either 'KYC Pending' or 'KYC Completed'. Pending rows may also show the helper note 'Required to complete KYC from Customer!'."
+  },
+  "ADM_CUST_012": {
+    "scenario": "Verify that the Confirmation column shows 'Paid' for paid customers and is blank otherwise.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Look at the Confirmation column for several rows.",
+    "testData": "(no input)",
+    "expected": "Each cell either shows 'Paid' (payment received) or is blank / shows a dash when no payment has been made yet."
+  },
+  "ADM_CUST_021": {
+    "scenario": "Verify that the pagination bar shows which records are being viewed out of the total.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Scroll to the bottom of the table.\n2. Read the summary text in the pagination bar.",
+    "testData": "(no input)",
+    "expected": "The text reads 'Showing 1-10 of N items', where N is the total number of registration records."
+  },
+  "ADM_CUST_025": {
+    "scenario": "Verify that each registration row offers a trash (delete) icon and a three-dot menu in the Actions column.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Look at the Actions column (far right) on any normal row.",
+    "testData": "(no input)",
+    "expected": "The Actions cell shows a trash (bin) icon and a three-dot (…) menu icon. Rows that are in a refund state instead show only a dash ('-') with no icons."
+  },
+  "ADM_CUST_035": {
+    "scenario": "Verify that the downloaded registrations file contains all seventeen data columns.",
+    "preconditions": "A RegistrationData.xlsx file has been downloaded from the Customers page.",
+    "steps": "1. Open the downloaded RegistrationData.xlsx file in Excel.\n2. Count the columns.",
+    "testData": "Downloaded file: RegistrationData.xlsx",
+    "expected": "The spreadsheet has 17 columns of registration data."
+  },
+  "ADM_CUST_038": {
+    "scenario": "Verify that a customer's multiple sub-registrations each appear as their own separate row.",
+    "preconditions": "A customer who has more than one sub-registration (suffixes -A, -B, -C) exists.",
+    "steps": "1. Type the customer's phone number into the 'Search by Phone' box.\n2. Look at the Registration Details column in the results.",
+    "testData": "Phone: a customer known to have multiple sub-registrations (ask user)",
+    "expected": "Each sub-registration (for example GHNG-XXXX-A, GHNG-XXXX-B, GHNG-XXXX-C) is listed as its own row. (These represent the same buyer's different unit preferences. [TEST_DATA_REQUIRED] specific phone number.)"
+  },
+  "ADM_CUST_105": {
+    "scenario": "Verify that the Cancel Registration confirmation popup shows the registration number and refund amount.",
+    "preconditions": "The Cancel Registration popup is open, opened from a Registered or Waitlisted row.",
+    "steps": "1. Look at the details shown inside the Cancel Registration popup before the confirm button.",
+    "testData": "(no input)",
+    "expected": "The popup ('Confirm Refund') shows the registration number (for example GHNG-1000008563-AT), the unit (or 'Not Assigned'), and a warning that ₹999 must be refunded offline, before the red Cancel Registration button."
+  },
+  "TC_CUST_FUNC_046": {
+    "scenario": "Verify that the Cancel Registration popup clearly shows the ₹999 refund amount.",
+    "preconditions": "The Cancel Registration popup is open, opened from a Registered or Waitlisted row.",
+    "steps": "1. Read the refund amount shown in the popup.",
+    "testData": "(no input)",
+    "expected": "The popup shows '₹999' as the refund amount (the figure is shown in bold). (₹999 is the fixed registration confirmation amount per business rule.)"
+  },
+  "TC_CUST_FUNC_053": {
+    "scenario": "Verify that each milestone row shows the correct payment-status label for its progress.",
+    "preconditions": "A booked unit's milestone schedule is open, containing milestones at different payment stages.",
+    "steps": "1. Find a milestone that has had no payment yet and read its status label.\n2. Find a milestone that has been partly paid and read its status label.\n3. Find a milestone that has been fully paid and read its status label.\n4. Find a milestone whose start date is in the future and look at its status cell.",
+    "testData": "(no input)",
+    "expected": "An unpaid milestone shows a 'Pending' label with a clock icon; a partly-paid one shows 'Partial Payment' with a card icon; a fully-paid one shows 'Paid' with a check-circle icon; a future-dated milestone has an empty status cell. (A registration-fee line with a total of 0 shows a dash '-'.)"
+  },
+  "TC_CUST_FUNC_054": {
+    "scenario": "Verify that an 'Offline Payment' button appears on milestone rows that are due and still owe money.",
+    "preconditions": "A booked unit's milestone schedule is open and contains a past-due milestone with an outstanding balance.",
+    "steps": "1. Look at the Action column for a milestone whose start date has passed and which still has money outstanding.",
+    "testData": "(no input)",
+    "expected": "An 'Offline Payment' button is shown on that milestone row. Rows with a future start date, or a registration-fee line with a total of 0, do not show the button."
+  },
+  "TC_CUST_FUNC_061": {
+    "scenario": "Verify that the Unit Swap window displays all of its expected fields and controls.",
+    "preconditions": "The three-dot menu is open on a Booked row.",
+    "steps": "1. Click 'Unit swap' in the menu.\n2. Look over the window that opens.",
+    "testData": "(no input)",
+    "expected": "A 'Unit Swap' window opens showing read-only Registration Number, Current Unit (for example 2404-Crown) and Apartment Type with carpet area, a Tower dropdown, a Unit dropdown that stays disabled until a tower is chosen, two confirmation checkboxes, and a Submit button that is disabled to begin with."
+  },
+  "TC_CUST_FUNC_081": {
+    "scenario": "Verify that the Update Parking window opens with the unit's existing parking details already filled in.",
+    "preconditions": "A booked unit that already has parking enabled (2 parking spaces at ₹2,50,000 each).",
+    "steps": "1. Open the three-dot menu on that booked row and click 'Update Parking Details'.\n2. Look at the values shown in the window.",
+    "testData": "A booked unit with parking enabled, count 2, amount 250000 (ask user)",
+    "expected": "The window opens with the parking toggle ON, Parking Count showing 2, Parking Amount showing 250000, and a Total Parking Amount preview of 500000. ([TEST_DATA_REQUIRED] a booked unit pre-set with these parking values.)"
+  },
+  "TC_CUST_UI_041": {
+    "scenario": "Verify that the bold 'Allocation Opened' label is always shown above the registrations table.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Look at the area directly above the registrations table.",
+    "testData": "(no input)",
+    "expected": "A bold 'Allocation Opened' label is shown as the table title, with that exact wording. (Note: this label is fixed in place and always shows regardless of whether any allocation campaign is actually open — a known display issue, not a live status signal.)"
+  },
+  "ADM_CUST_013": {
+    "scenario": "Verify that typing a registered customer's phone number into the Search box filters the list to show only that customer.",
+    "preconditions": "An admin is on the Customers page and a valid registered phone number is known.",
+    "steps": "1. Click the 'Search by Phone' box above the table.\n2. Type a known 10-digit phone number.\n3. Wait for the list to refresh.",
+    "testData": "Phone: a known registered number (ask user)",
+    "expected": "The table updates to show only rows whose Phone column matches the number typed. (Search works on phone number only — it does not match on customer name, registration number, or unit number. [TEST_DATA_REQUIRED] a known phone.)"
+  },
+  "ADM_CUST_014": {
+    "scenario": "Verify that clearing the Search box brings back the full customer list.",
+    "preconditions": "A phone search has been applied and the list is filtered.",
+    "steps": "1. Delete the text from the 'Search by Phone' box.\n2. Wait for the list to reload.",
+    "testData": "(no input)",
+    "expected": "The table goes back to showing all records and the heading count returns to the original total."
+  },
+  "ADM_CUST_015": {
+    "scenario": "Verify that clicking 'Filter' reveals the filtering options for the table.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Click the 'Filter' button above the table.",
+    "testData": "(no input)",
+    "expected": "The filter controls appear, offering filters for Allocation Status, Home Loan Details, Confirmation, and Process Status. (The 'Filter' button label switches to 'Reset Filters'.)"
+  },
+  "ADM_CUST_016": {
+    "scenario": "Verify that filtering by Allocation Status 'Registered' shows only registered customers.",
+    "preconditions": "The filter controls are open on the Customers page.",
+    "steps": "1. Under Allocation Status, choose 'Registered'.\n2. Apply the filter (click OK).",
+    "testData": "Allocation Status filter: Registered",
+    "expected": "The table shows only rows whose Allocation Status is 'Registered'."
+  },
+  "ADM_CUST_017": {
+    "scenario": "Verify that filtering by Process Status 'KYC Completed' shows only customers who finished KYC.",
+    "preconditions": "The filter controls are open on the Customers page.",
+    "steps": "1. Under Process Status, choose 'KYC Completed'.\n2. Apply the filter (click OK).",
+    "testData": "Process Status filter: KYC Completed",
+    "expected": "The table shows only rows whose Process Status is 'KYC Completed'."
+  },
+  "ADM_CUST_018": {
+    "scenario": "Verify that 'Reset Filters' clears every active filter and shows all records again.",
+    "preconditions": "At least one filter has been applied.",
+    "steps": "1. Click 'Reset Filters' above the table.",
+    "testData": "(no input)",
+    "expected": "All filters clear and the table reloads the full set of records."
+  },
+  "ADM_CUST_019": {
+    "scenario": "Verify that applying two filters together shows only the rows that match both.",
+    "preconditions": "The filter controls are open on the Customers page.",
+    "steps": "1. Under Allocation Status, choose 'Booked Online'.\n2. Under Confirmation, choose 'Paid'.\n3. Apply the filters (click OK).",
+    "testData": "Allocation Status: Booked Online; Confirmation: Paid",
+    "expected": "The table shows only rows that match BOTH conditions (Booked Online and Paid)."
+  },
+  "ADM_CUST_020": {
+    "scenario": "Verify that clicking 'Refresh' reloads the table without leaving the page.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Click the 'Refresh' button.\n2. Watch the table.",
+    "testData": "(no input)",
+    "expected": "The table reloads its data from the server (a brief loading state may flash). The page does not navigate away."
+  },
+  "ADM_CUST_022": {
+    "scenario": "Verify that changing the page size to 50 shows 50 rows per page.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. At the bottom of the table, click the page-size dropdown (it shows '10 / page' by default).\n2. Choose '50'.",
+    "testData": "Page size: 50",
+    "expected": "The table reloads showing 50 rows per page and the pagination summary updates to 'Showing 1-50 of N items'."
+  },
+  "ADM_CUST_023": {
+    "scenario": "Verify that the Next arrow moves the table to the following page of records.",
+    "preconditions": "An admin is on the Customers page and there is more than one page of records.",
+    "steps": "1. Click the Next (right arrow) button in the pagination bar.",
+    "testData": "(no input)",
+    "expected": "The table shows the next 10 records and the summary updates to 'Showing 11-20 of N items'."
+  },
+  "ADM_CUST_024": {
+    "scenario": "Verify that clicking a page number jumps directly to that page.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Click the page number '3' in the pagination bar.",
+    "testData": "Page number: 3",
+    "expected": "The table jumps to page 3 and shows records 21-30."
+  },
+  "ADM_CUST_026": {
+    "scenario": "Verify that clicking the trash icon opens the relevant cancel flow (this older test has been split into the Cancel Unit and Cancel Registration tests below).",
+    "preconditions": "A registration row is available.",
+    "steps": "1. This older single test is no longer used. Use the separate Cancel Unit and Cancel Registration tests instead.",
+    "testData": "(no input)",
+    "expected": "Superseded — see the dedicated Cancel Unit (Booked rows) and Cancel Registration (Registered/Waitlisted rows) tests."
+  },
+  "ADM_CUST_027": {
+    "scenario": "Verify that the cancel popup shows the ₹999 refund amount (superseded; now covered by the dedicated Cancel Registration tests).",
+    "preconditions": "A Registered or Waitlisted row is available.",
+    "steps": "1. This older test is no longer used. Use the dedicated Cancel Registration refund test instead.",
+    "testData": "(no input)",
+    "expected": "Superseded — refund display is now verified by the dedicated Cancel Registration tests (refund amount is ₹999)."
+  },
+  "ADM_CUST_028": {
+    "scenario": "Verify that confirming a cancellation shows a success message (superseded; now covered by the dedicated Cancel Registration tests).",
+    "preconditions": "A Registered or Waitlisted row is available.",
+    "steps": "1. This older test is no longer used. Use the dedicated Cancel Registration confirmation test instead.",
+    "testData": "(no input)",
+    "expected": "Superseded — the success message is now verified by the dedicated Cancel Registration test ('Registration refunded successfully')."
+  },
+  "ADM_CUST_030": {
+    "scenario": "Verify that the three-dot menu on a row opens a list of available actions.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Click the three-dot (…) menu in the Actions column of a row.",
+    "testData": "(no input)",
+    "expected": "A dropdown opens. 'Home Loan Approval' is always listed. The other items depend on the row's status: a Registered row also shows 'Assign Unit'; a Booked row also shows 'View Milestones', 'Unit swap', and 'Update Parking Details'."
+  },
+  "ADM_CUST_031": {
+    "scenario": "Verify that choosing 'Home Loan Approval' opens a window with an approval toggle.",
+    "preconditions": "The three-dot menu is open on a row.",
+    "steps": "1. Click 'Home Loan Approval'.",
+    "testData": "(no input)",
+    "expected": "A 'Home Loan Approval' window opens showing the Registration Number, the Apartment Type, an Enable/Disable toggle switch, and a Submit button."
+  },
+  "ADM_CUST_032": {
+    "scenario": "Verify that enabling the toggle and saving approves the home loan, and that no message is sent to the buyer.",
+    "preconditions": "The Home Loan Approval window is open.",
+    "steps": "1. Switch the Enable toggle on.\n2. Click Submit.\n3. Check whether the buyer received any SMS, WhatsApp, or email.",
+    "testData": "(no input)",
+    "expected": "The home loan is marked approved and the window closes; the approved home-loan offer becomes available to the buyer. No SMS, WhatsApp, or email is sent to the buyer (this approval is silent by design — verify backend records updated rather than expecting a buyer message)."
+  },
+  "ADM_CUST_033": {
+    "scenario": "Verify that the 'Cancel Bulk Units' button opens the bulk cancellation flow.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Click the 'Cancel Bulk Units' button above the table.",
+    "testData": "(no input)",
+    "expected": "The bulk-cancellation interface opens, allowing several sub-registrations to be cancelled at once."
+  },
+  "ADM_CUST_034": {
+    "scenario": "Verify that the 'Download' button exports the registrations as an Excel file.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Click the 'Download' button (top-right area).\n2. Wait for the download to finish.",
+    "testData": "(no input)",
+    "expected": "A file named RegistrationData.xlsx downloads automatically."
+  },
+  "ADM_CUST_036": {
+    "scenario": "Verify that a download made while a filter is active includes only the filtered records.",
+    "preconditions": "A filter is active on the table (for example Allocation Status = Cancelled).",
+    "steps": "1. Apply a filter.\n2. Click 'Download'.\n3. Open the downloaded file and count the rows.",
+    "testData": "Allocation Status filter: Cancelled",
+    "expected": "The downloaded file contains only the records that match the active filter. With the Cancelled filter on, the row count matches the Cancelled Registrations card figure. With no filter, the file contains all records. (The export covers every matching record across all pages, not just the current page.)"
+  },
+  "ADM_CUST_098": {
+    "scenario": "Verify that closing the Cancel Unit window with the X discards the action and leaves the unit booked.",
+    "preconditions": "The Cancel Unit window is open from a Booked row.",
+    "steps": "1. Tick both confirmation checkboxes.\n2. Click the X (close) in the top-right corner instead of Submit.\n3. Find the same row again in the list.",
+    "testData": "(no input)",
+    "expected": "The window closes, nothing is cancelled, the row keeps its Booked Online/Offline status, and the unit is not released."
+  },
+  "ADM_CUST_099": {
+    "scenario": "Verify that cancelling a unit on a Booked Offline row releases that unit back into inventory.",
+    "preconditions": "A row with Allocation Status 'Booked Offline' exists; note the allotted unit number. (Destructive — requires user authorisation before submitting on UAT.)",
+    "steps": "1. Click the trash icon on the row, tick both confirmation checkboxes, and click Submit.\n2. Open the Towers page and go to the tower that unit belongs to.\n3. Find the unit on the tower grid.",
+    "testData": "A test Booked Offline row with its unit number (ask user)",
+    "expected": "The unit's cell on the tower grid turns white (Available) or grey (Reserved) depending on status sync, and is no longer shown as sold. ([TEST_DATA_REQUIRED] a disposable Booked Offline test record and user sign-off to submit.)"
+  },
+  "ADM_CUST_101": {
+    "scenario": "Verify that the Cancel Unit confirmation checkboxes always start unticked each time the window is opened.",
+    "preconditions": "A Booked row is available.",
+    "steps": "1. Open the Cancel Unit window, tick both checkboxes, then close it with the X.\n2. Open the Cancel Unit window again on the same row.",
+    "testData": "(no input)",
+    "expected": "Both confirmation checkboxes are unticked when the window reopens, and the Submit button is disabled."
+  },
+  "ADM_CUST_102": {
+    "scenario": "Verify that closing the Cancel Registration popup with its Cancel button discards the action and issues no refund.",
+    "preconditions": "The Cancel Registration popup is open from a Registered or Waitlisted row.",
+    "steps": "1. Click the 'Cancel' (close) button instead of the red 'Cancel Registration' button.\n2. Find the row again.",
+    "testData": "(no input)",
+    "expected": "The popup closes, the row keeps its Registered/Waitlisted status, no refund is made, and the ₹999 is not refunded."
+  },
+  "ADM_CUST_103": {
+    "scenario": "Verify that cancelling a registration on a Waitlisted row issues the ₹999 refund.",
+    "preconditions": "A Waitlisted row that has paid ₹999 exists. (Destructive — requires user authorisation before submitting on UAT.)",
+    "steps": "1. Click the trash icon on the Waitlisted row.\n2. Click the red 'Cancel Registration' button.\n3. Open the Payment Transactions page and find the refund record for that registration.",
+    "testData": "A test Waitlisted row with ₹999 paid (ask user)",
+    "expected": "The row's status changes to Cancelled, a ₹999 refund record appears on the Payment Transactions page for that registration, and a 'Registration refunded successfully' message is shown. ([TEST_DATA_REQUIRED] a disposable Waitlisted test record and user sign-off to submit.)"
+  },
+  "TC_CUST_FUNC_036b": {
+    "scenario": "Verify that downloading while the Cancelled filter is active produces a file whose row count matches the Cancelled total.",
+    "preconditions": "The Allocation Status filter is set to Cancelled so only cancelled rows are listed.",
+    "steps": "1. With the Cancelled filter active, click 'Download'.\n2. Open the file and count the data rows.",
+    "testData": "Allocation Status filter: Cancelled",
+    "expected": "The file contains only cancelled records; its row count equals the Cancelled Registrations card figure and is fewer than an unfiltered export. (Confirms the export honours active filters.)"
+  },
+  "TC_CUST_FUNC_042": {
+    "scenario": "Verify that the trash icon on a Booked row opens the 'Cancel Unit' window (not the 'Cancel Registration' popup).",
+    "preconditions": "A row with Allocation Status 'Booked Online' or 'Booked Offline' is on screen.",
+    "steps": "1. Hover the trash icon on the Booked row and check the tooltip reads 'Cancel Unit'.\n2. Click the trash icon.",
+    "testData": "(no input)",
+    "expected": "A window opens titled 'Please make sure that following actions are completed?' with two confirmation checkboxes: 'Activity - Token, Form, Booking deleted' and 'Mavis - Booking entry deleted'. No refund amount is shown."
+  },
+  "TC_CUST_FUNC_044": {
+    "scenario": "Verify that submitting a Cancel Unit shows the 'Unit cancelled successfully' message.",
+    "preconditions": "The Cancel Unit window is open on a disposable test Booked row with both checkboxes ticked. (Destructive — requires user authorisation; also needs upstream Mavis cleanup done first.)",
+    "steps": "1. Click Submit.\n2. Watch for the confirmation message and check the row's state.",
+    "testData": "A test Booked row safe to cancel (ask user)",
+    "expected": "A 'Unit cancelled successfully' message appears (not 'Registration refunded successfully'). The allotted unit is released back to inventory, while the parent registration and any sibling sub-registrations stay intact. ([TEST_DATA_REQUIRED] a disposable Booked record and user sign-off.)"
+  },
+  "TC_CUST_FUNC_045": {
+    "scenario": "Verify that the trash icon on a Registered or Waitlisted row opens the 'Cancel Registration' popup.",
+    "preconditions": "A row with Allocation Status 'Registered' or 'Waitlisted' (no unit allotted, only ₹999 paid) is on screen.",
+    "steps": "1. Hover the trash icon and check the tooltip reads 'Cancel Registration'.\n2. Click the trash icon.",
+    "testData": "(no input)",
+    "expected": "A 'Confirm Refund' popup opens showing any unit details and the refund amount ₹999, with a red 'Cancel Registration' button."
+  },
+  "TC_CUST_FUNC_047": {
+    "scenario": "Verify that confirming a Cancel Registration shows 'Registration refunded successfully' and sends no message to the buyer.",
+    "preconditions": "The Cancel Registration popup is open on a disposable test Registered/Waitlisted record. (Destructive — requires user authorisation.)",
+    "steps": "1. Click the red 'Cancel Registration' button.\n2. Check whether the buyer received any SMS, WhatsApp, or email after the refund.",
+    "testData": "A test Registered/Waitlisted record safe to cancel (ask user)",
+    "expected": "A 'Registration refunded successfully' message appears, the row's status becomes Cancelled, and the ₹999 is refunded to the original payment method. No SMS, WhatsApp, or email is sent to the buyer (this refund is silent by design). ([TEST_DATA_REQUIRED] a disposable record and user sign-off.)"
+  },
+  "TC_CUST_FUNC_051": {
+    "scenario": "Verify that choosing 'View Milestones' opens the milestone schedule for that booking.",
+    "preconditions": "The three-dot menu is open on a Booked row.",
+    "steps": "1. Click 'View Milestones'.\n2. Watch the page that opens.",
+    "testData": "(no input)",
+    "expected": "The Milestone Payment Schedule page opens, with a header card showing the Registration Number and Unit Number as read-only details. (The web address carries the registration number and unit id.)"
+  },
+  "TC_CUST_FUNC_055": {
+    "scenario": "Verify that the Offline Payment form collects all of its expected fields and requires a payment proof.",
+    "preconditions": "The Offline Payment panel is open for a milestone that is due for payment.",
+    "steps": "1. Check the form shows: Registration Number (read-only), Amount, Payment Method (NEFT / Cheque / Cash / Credit Card / Debit Card / UPI), Transaction ID, Transaction Date & Time, Comments (optional), and a Payment Proof upload.\n2. Try to submit without attaching a payment proof.",
+    "testData": "(no input)",
+    "expected": "All the visible fields are shown. Submit is blocked until a payment proof is attached (it is required). The Transaction Date cannot be set to a future date."
+  },
+  "TC_CUST_FUNC_056": {
+    "scenario": "Verify that 'Back to Customer Listing' returns from the milestone page to the customer dashboard.",
+    "preconditions": "The Milestone Payment Schedule page is open.",
+    "steps": "1. Click the 'Back to Customer Listing' link.",
+    "testData": "(no input)",
+    "expected": "The view returns to the admin dashboard and scrolls down to the customers table."
+  },
+  "TC_CUST_FUNC_064": {
+    "scenario": "Verify that a valid Unit Swap completes and shows a success message.",
+    "preconditions": "The Unit Swap window is filled in correctly on a disposable test Booked row, with no allocation campaign open and no leftover Mavis booking entry. (Destructive — requires user authorisation.)",
+    "steps": "1. Click Submit.\n2. Watch for the message and the updated row.",
+    "testData": "A test Booked row eligible for swap (ask user)",
+    "expected": "A 'Unit swapped successfully' message appears, the window closes, the table refreshes, and the row shows the new allotted unit. The old unit becomes Reserved and the new unit becomes Booked. ([TEST_DATA_REQUIRED] a disposable Booked record, no open campaign, and user sign-off.)"
+  },
+  "TC_CUST_FUNC_071": {
+    "scenario": "Verify that closing the Unit Swap window with the X clears every selection made.",
+    "preconditions": "The Unit Swap window is open with a tower selected, a unit selected, and both checkboxes ticked.",
+    "steps": "1. Click the X (close).\n2. Reopen the Unit Swap window.",
+    "testData": "(no input)",
+    "expected": "On reopening, nothing is preselected — no tower, no unit, both checkboxes unticked, and Submit disabled."
+  },
+  "TC_CUST_FUNC_083": {
+    "scenario": "Verify that turning the parking toggle off immediately clears the Count and Amount fields.",
+    "preconditions": "The Update Parking window is open with the toggle ON and Count 2, Amount 250000 already entered.",
+    "steps": "1. Switch the parking toggle from ON to OFF.\n2. Switch it back ON.",
+    "testData": "Count: 2, Amount: 250000",
+    "expected": "When the toggle goes OFF, the Parking Count and Parking Amount fields are cleared and hidden. When toggled back ON, those fields are blank — no earlier values are kept."
+  },
+  "TC_CUST_FUNC_086": {
+    "scenario": "Verify that the Total Parking Amount preview equals count multiplied by amount.",
+    "preconditions": "The Update Parking window is open with the parking toggle ON.",
+    "steps": "1. Enter Parking Count 3.\n2. Enter Parking Amount 250000.\n3. Look at the Total Parking Amount preview.",
+    "testData": "Count: 3, Amount: 250000",
+    "expected": "The preview shows 750000 (formatted as ₹7,50,000)."
+  },
+  "TC_CUST_FUNC_087": {
+    "scenario": "Verify that submitting a valid parking update shows a success message.",
+    "preconditions": "The Update Parking window is open on a Booked row and filled in validly (toggle ON or OFF). (Destructive — requires user authorisation.)",
+    "steps": "1. Click Submit.",
+    "testData": "A test Booked row safe to update (ask user)",
+    "expected": "A 'Parking details updated successfully' message appears and the table refreshes keeping the current filters. ([TEST_DATA_REQUIRED] a disposable Booked record and user sign-off.)"
+  },
+  "TC_CUST_FUNC_043": {
+    "scenario": "Verify that the Cancel Unit Submit button stays disabled until both confirmation checkboxes are ticked.",
+    "preconditions": "The Cancel Unit window is open.",
+    "steps": "1. Note that Submit is disabled to start with.\n2. Tick only 'Activity - Token, Form, Booking deleted' and note Submit is still disabled.\n3. Tick 'Mavis - Booking entry deleted' and note Submit becomes enabled.\n4. Untick the first checkbox and note Submit goes disabled again.",
+    "testData": "(no input)",
+    "expected": "Submit only becomes enabled when BOTH confirmation checkboxes are ticked, and unticking either one disables it again immediately."
+  },
+  "TC_CUST_FUNC_063": {
+    "scenario": "Verify that the Unit Swap Submit button enables only once a tower, a unit, and both confirmations are all set.",
+    "preconditions": "The Unit Swap window is open.",
+    "steps": "1. Choose a tower only — Submit stays disabled.\n2. Choose a unit — Submit still disabled.\n3. Tick the first checkbox — Submit still disabled.\n4. Tick the second checkbox — Submit becomes enabled.\n5. Untick either checkbox — Submit goes disabled again.",
+    "testData": "(no input)",
+    "expected": "Submit becomes enabled only when a target unit is selected and both confirmation checkboxes are ticked."
+  },
+  "TC_CUST_FUNC_082": {
+    "scenario": "Verify that turning the parking toggle on reveals Count and Amount fields that are both required before submitting.",
+    "preconditions": "The Update Parking window is open with the toggle OFF.",
+    "steps": "1. Switch the parking toggle ON.\n2. Try to Submit without entering a Count or Amount.",
+    "testData": "(no input)",
+    "expected": "The Count and Amount fields appear, and Submit is blocked with messages such as 'Parking count must be at least 1' / 'Parking amount required'. (This check is enforced by the screen, not by the server.)"
+  },
+  "TC_CUST_VAL_084": {
+    "scenario": "Verify that the Parking Count only accepts whole numbers from 1 to 500.",
+    "preconditions": "The Update Parking window is open with the toggle ON.",
+    "steps": "1. Enter 0 and note the error.\n2. Enter 501 and note it is capped or rejected.\n3. Enter 2.5 and note the decimal is not accepted.\n4. Enter -1 and note it is rejected.",
+    "testData": "Counts tried: 0, 501, 2.5, -1",
+    "expected": "Only whole numbers from 1 to 500 are accepted; any other value blocks Submit with a suitable error message."
+  },
+  "TC_CUST_VAL_085": {
+    "scenario": "Verify that the Parking Amount accepts non-negative decimals and rejects negatives or blanks.",
+    "preconditions": "The Update Parking window is open with the toggle ON and Count 2 entered.",
+    "steps": "1. Enter 250000.50 — should be accepted.\n2. Enter -100 — should be rejected.\n3. Leave it empty — should be rejected.",
+    "testData": "Amounts tried: 250000.50, -100, (empty)",
+    "expected": "Decimal amounts are accepted; negative amounts are rejected; leaving it empty is rejected while the toggle is ON."
+  },
+  "ADM_CUST_004": {
+    "scenario": "Verify that the Active Towers card count matches the number of active towers configured in Config.",
+    "preconditions": "An admin is on the Customers page; Config currently has a known number of active towers.",
+    "steps": "1. Read the number on the 'Active Towers' card.\n2. Open Config and count the towers whose toggle is set to active.",
+    "testData": "Known active tower count from Config (ask user)",
+    "expected": "The Active Towers card figure equals the number of towers switched on in Config."
+  },
+  "ADM_CUST_039": {
+    "scenario": "Verify that a cancellation cannot be undone.",
+    "preconditions": "A registration has just been cancelled.",
+    "steps": "1. Find the cancelled row.\n2. Look for any 'Undo' or restore option.",
+    "testData": "(no input)",
+    "expected": "There is no way to restore it; the status stays Cancelled permanently."
+  },
+  "ADM_CUST_100": {
+    "scenario": "Verify that cancelling a unit is blocked while an allocation campaign is open.",
+    "preconditions": "An allocation campaign is currently open; a Booked row is available.",
+    "steps": "1. Click the trash icon on a Booked row.\n2. Tick both confirmation checkboxes.\n3. Click Submit.",
+    "testData": "An open allocation campaign (ask user)",
+    "expected": "The action is rejected with an error message reading 'Cannot cancel unit when campaign is active', and the row's status is unchanged. ([TEST_DATA_REQUIRED] an environment with a campaign open.)"
+  },
+  "ADM_CUST_104": {
+    "scenario": "Verify that cancelling a registration is blocked while an allocation campaign is open.",
+    "preconditions": "An allocation campaign is currently open; a Registered row is available.",
+    "steps": "1. Click the trash icon on the Registered row.\n2. Click the red 'Cancel Registration' button.",
+    "testData": "An open allocation campaign (ask user)",
+    "expected": "The action is rejected with an error message reading 'Cannot refund registration when campaign is active', and the row's status is unchanged. ([TEST_DATA_REQUIRED] an environment with a campaign open.)"
+  },
+  "TC_CUST_FUNC_050": {
+    "scenario": "Verify that 'View Milestones' appears in the three-dot menu only for Booked rows.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Open the three-dot menu on a Registered row (no unit) and confirm 'View Milestones' is NOT listed.\n2. Open the three-dot menu on a Booked row and confirm 'View Milestones' IS listed.",
+    "testData": "(no input)",
+    "expected": "'View Milestones' is offered only on Booked rows and is absent on Registered rows."
+  },
+  "TC_CUST_FUNC_052": {
+    "scenario": "Verify that the milestone schedule page is view-only, with no way to add, edit, or delete milestones.",
+    "preconditions": "The Milestone Payment Schedule page is open for a Booked unit.",
+    "steps": "1. Look over the controls on the milestone table.",
+    "testData": "(no input)",
+    "expected": "There are no buttons to create, edit, reorder, or delete milestones — only the Back link, a per-row View (details), and an Offline Payment button where one is due."
+  },
+  "TC_CUST_FUNC_060": {
+    "scenario": "Verify that 'Unit swap' appears in the three-dot menu only for Booked rows.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Open the three-dot menu on a Registered row and confirm 'Unit swap' is NOT listed.\n2. Open the three-dot menu on a Booked row and confirm 'Unit swap' IS listed.",
+    "testData": "(no input)",
+    "expected": "'Unit swap' is offered only on Booked rows."
+  },
+  "TC_CUST_FUNC_062": {
+    "scenario": "Verify that the Unit Swap target-unit dropdown lists only available or reserved units, of any apartment type.",
+    "preconditions": "The Unit Swap window is open and a tower with a mix of unit statuses has been selected.",
+    "steps": "1. Open the target Unit dropdown.",
+    "testData": "(no input)",
+    "expected": "The dropdown lists only units that are Available or Reserved — no Booked, Sold, or Blocked units. Units of any apartment type / carpet area can appear (there is no apartment-type restriction)."
+  },
+  "TC_CUST_FUNC_080": {
+    "scenario": "Verify that 'Update Parking Details' appears in the three-dot menu only for Booked rows.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Open the three-dot menu on a Registered row and confirm 'Update Parking Details' is NOT listed.\n2. Open the three-dot menu on a Booked row and confirm 'Update Parking Details' IS listed.",
+    "testData": "(no input)",
+    "expected": "'Update Parking Details' is offered only on Booked rows."
+  },
+  "TC_CUST_FUNC_095": {
+    "scenario": "Verify that completing an Assign Unit for an Indian buyer sends a WhatsApp message and an SMS, but no email.",
+    "preconditions": "A unit is ready to assign and the buyer's number is an Indian (+91) number. (Technical / notification check.)",
+    "steps": "1. Complete the Assign Offline Unit action for the buyer.\n2. Check which notifications are sent.",
+    "testData": "A +91 buyer and an assignable unit (ask user)",
+    "expected": "Exactly one WhatsApp message and one SMS are sent to the buyer; no email is sent. (Template: WhatsApp 'congrates_payment_success_27sept'; SMS 'ALLOTMENT_PAYMENT_SUCCESS'. For non-+91 buyers the SMS is suppressed and only WhatsApp is sent.)"
+  },
+  "TC_CUST_API_005": {
+    "scenario": "Verify that the all-buyers API, when filtered to Booked Online, returns only Booked Online registrations.",
+    "preconditions": "A valid admin API token is available. (API-layer test — for a technical tester.)",
+    "steps": "1. Send GET /api/v1/admin/dashboard/all-buyers?allotmentStatus=booked_online&isDownload=1.\n2. Inspect the response.",
+    "testData": "allotmentStatus=booked_online",
+    "expected": "200 OK. Every returned record meets the booked_online predicate: allocationPaymentSource is not 'admin', status is 'WINNER', and allocationTransactionId is set."
+  },
+  "TC_CUST_API_006": {
+    "scenario": "Verify that a filtered export returns fewer records than an unfiltered export, proving filters are applied.",
+    "preconditions": "A valid admin API token is available, and refunded records exist as a subset of the data. (API-layer test — for a technical tester.)",
+    "steps": "1. Send GET /api/v1/admin/dashboard/all-buyers?isDownload=1&allotmentStatus=refunded and record the number of rows.\n2. Send GET /api/v1/admin/dashboard/all-buyers?isDownload=1 and record the number of rows.\n3. Compare the two counts.",
+    "testData": "allotmentStatus=refunded vs no filter",
+    "expected": "The filtered count is strictly smaller than the total count, confirming that isDownload=1 removes paging only and does not bypass the filter conditions."
+  },
+  "TC_CUST_API_048": {
+    "scenario": "Verify that submitting a Cancel Unit triggers the cancel-units backend call and creates no refund.",
+    "preconditions": "A Booked row's Cancel Unit window has been submitted. (API-layer test — for a technical tester.)",
+    "steps": "1. Capture the network traffic when Submit is clicked.",
+    "testData": "(no input)",
+    "expected": "A PUT request is sent to the adminCancelAllUnits endpoint, and no refund transaction is created for this flow."
+  },
+  "TC_CUST_NEG_097": {
+    "scenario": "Verify that an admin allocation-transaction update records the payment gateway as 'easebuzz', and flag this as a data-quality issue.",
+    "preconditions": "The allocation_transaction_update event is used on a Booked unit. (DB-layer test — for a technical tester.)",
+    "steps": "1. Submit an allocation transaction update for a Booked unit.\n2. Query the gateway value of the newly created payment transaction.",
+    "testData": "(no input)",
+    "expected": "The gateway is stored as 'easebuzz' even though this was an admin manual update. This misattributes the channel and should be logged as a data-quality bug."
+  },
+  "ADM_CUST_005": {
+    "scenario": "Verify that the Active Towers card updates after a tower is toggled active in Config.",
+    "preconditions": "An admin is on the Customers page; the current Active Towers figure is noted.",
+    "steps": "1. Open Config, switch one more tower to active, and save (Update).\n2. Return to the Customers page and refresh.",
+    "testData": "Current Active Towers count noted beforehand (ask user)",
+    "expected": "The Active Towers card increases by one (for example from 2 to 3)."
+  },
+  "ADM_CUST_040": {
+    "scenario": "Verify that cancelling one registration increases the Cancelled Registrations card by one.",
+    "preconditions": "A cancellation has just been performed.",
+    "steps": "1. Note the Cancelled Registrations card figure before.\n2. Cancel one registration.\n3. Refresh and read the figure again.",
+    "testData": "(no input)",
+    "expected": "The Cancelled Registrations card figure increases by one."
+  },
+  "ADM_CUST_037": {
+    "scenario": "Verify that searching for a phone number that does not exist shows an empty result.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Type a phone number that no customer has (for example 1234567890) into the 'Search by Phone' box.\n2. Wait for the list to refresh.",
+    "testData": "Phone: 1234567890 (non-existent)",
+    "expected": "The table heading changes to '0 Registration Records' and the table body shows an empty 'No data' state with a tray icon. The summary cards at the top stay unchanged."
+  },
+  "TC_CUST_NEG_096": {
+    "scenario": "Verify that assigning a unit to a non-Indian buyer sends only a WhatsApp message and no SMS.",
+    "preconditions": "The buyer is an NRI whose country code is not +91 (for example +1). (Notification check.)",
+    "steps": "1. Complete the Assign Offline Unit action for the NRI buyer.\n2. Check which notifications are sent.",
+    "testData": "An NRI buyer with country code not +91 (ask user)",
+    "expected": "Exactly one WhatsApp message is sent and no SMS is sent (the SMS step only runs for +91 numbers)."
+  },
+  "ADM_CUST_029": {
+    "scenario": "Verify that a cancellation cannot go through without confirming the popup.",
+    "preconditions": "An admin is logged in and on the Customers page.",
+    "steps": "1. Click the trash icon on a row.\n2. Click outside the popup (do not confirm).",
+    "testData": "(no input)",
+    "expected": "The popup closes, nothing is cancelled, and the row is unchanged."
+  },
+  "TC_CUST_NEG_010": {
+    "scenario": "Verify that typing a customer's name into the Search box does not find them, because search works on phone number only.",
+    "preconditions": "An admin is on the Customers page and a buyer named 'Rahul' is known to exist.",
+    "steps": "1. Type the buyer's first name 'Rahul' into the 'Search by Phone' box.\n2. Wait for the list to refresh.",
+    "testData": "Search text: Rahul (a name, not a phone)",
+    "expected": "The search does not match on name — an empty 'No data' state is shown (or the list stays unfiltered). Search only matches the phone number."
+  },
+  "TC_CUST_NEG_011": {
+    "scenario": "Verify that applying a table filter does not change the summary card numbers.",
+    "preconditions": "An admin is on the Customers page and the six card figures have been noted.",
+    "steps": "1. Note all six card figures (Registered, Inactive Registrations, Cancelled Registrations, KYC Pending, Confirmed, Active Towers).\n2. Apply the Allocation Status = Registered filter.\n3. Read all six card figures again.",
+    "testData": "Allocation Status filter: Registered",
+    "expected": "All six card figures are unchanged. The cards always show the global project totals and do not recompute when the table is filtered, searched, or sorted."
+  },
+  "TC_CUST_NEG_049": {
+    "scenario": "Verify that a row already in refund state shows a dash and offers no actions.",
+    "preconditions": "A row whose status is refunded exists.",
+    "steps": "1. Look at the Actions cell on that refunded row.",
+    "testData": "A refunded-status row (ask user)",
+    "expected": "The Actions cell shows only a dash ('-') — neither the trash icon nor the three-dot menu is shown."
+  },
+  "TC_CUST_NEG_057": {
+    "scenario": "Verify that opening View Milestones sends no message to the buyer.",
+    "preconditions": "A Booked registration exists.",
+    "steps": "1. Open 'View Milestones' for the row.\n2. Check the buyer's phone and notification logs for any SMS, WhatsApp, or email.",
+    "testData": "(no input)",
+    "expected": "No message of any kind is sent to the buyer — viewing milestones is a read-only action (this silence is expected behaviour, not a defect)."
+  },
+  "TC_CUST_NEG_065": {
+    "scenario": "Verify that a Unit Swap is blocked while an allocation campaign is open.",
+    "preconditions": "An allocation campaign is open for the project; a Booked row in that project is available.",
+    "steps": "1. Open the Unit Swap window, choose a tower and unit, tick both checkboxes, and click Submit.",
+    "testData": "An open allocation campaign (ask user)",
+    "expected": "The swap is rejected with an error message reading 'Cannot swap unit when campaign is active', and the booking is unchanged. (The menu item still appears; the block happens when you submit.)"
+  },
+  "TC_CUST_NEG_066": {
+    "scenario": "Verify that a Unit Swap is blocked when the upstream Mavis booking entry still exists.",
+    "preconditions": "A Booked row whose Mavis booking entry has not yet been cleared; no campaign is open.",
+    "steps": "1. Open the Unit Swap window, fill it in, tick both checkboxes, and click Submit.",
+    "testData": "A Booked row with Mavis entry still present (ask user)",
+    "expected": "The swap is rejected with an error message reading 'Mavis booking still exists, please clear that step first'. (Ticking the checkbox is only the admin's declaration; the server checks the actual Mavis record independently.)"
+  },
+  "TC_CUST_NEG_067": {
+    "scenario": "Verify that trying to swap a unit to the same current unit is rejected.",
+    "preconditions": "The Unit Swap window is open on a Booked row.",
+    "steps": "1. In the Unit Swap window, try to pick the same unit that is already the Current Unit.",
+    "testData": "(no input)",
+    "expected": "Either the dropdown does not offer the current unit (its status is Booked, so it is excluded), or, if submitted, the swap is rejected with 'Registration unit is already linked to the provided unit'."
+  },
+  "TC_CUST_NEG_068": {
+    "scenario": "Verify that swapping to a unit already assigned to another registration is rejected.",
+    "preconditions": "A unit is set up to be contended by two registrations.",
+    "steps": "1. Submit a Unit Swap targeting a unit that is already linked to another registration.",
+    "testData": "A unit linked to another registration (ask user)",
+    "expected": "The swap is rejected with an error reading 'Requested unit is already assigned to another registration'."
+  },
+  "TC_CUST_NEG_069": {
+    "scenario": "Verify that the milestone schedule is NOT automatically rebuilt after a Unit Swap.",
+    "preconditions": "A Unit Swap has just been done on a Booked unit that had an existing milestone schedule.",
+    "steps": "1. After the swap, open 'View Milestones' for the same registration.",
+    "testData": "(no input)",
+    "expected": "The milestone rows are still the original unit's schedule — no new schedule is generated. (This is a known limitation: the schedule may be stale if the new unit's pricing differs.)"
+  },
+  "TC_CUST_NEG_070": {
+    "scenario": "Verify that completing a Unit Swap sends no message to the buyer.",
+    "preconditions": "A Unit Swap has just completed successfully.",
+    "steps": "1. Check the buyer's phone and notification logs for any SMS, WhatsApp, or email after the swap.",
+    "testData": "(no input)",
+    "expected": "No message of any kind is sent to the buyer (only an internal audit record is written; this silence is expected behaviour, not a defect)."
+  },
+  "TC_CUST_NEG_088": {
+    "scenario": "Verify that submitting a parking update with no actual change in count is rejected.",
+    "preconditions": "A registration unit already has a parking count of 2.",
+    "steps": "1. Open the Update Parking window, keep the toggle ON, set Count to 2 (the existing value), enter any Amount.\n2. Click Submit.",
+    "testData": "Count: 2 (same as current)",
+    "expected": "The update is rejected with an error reading 'No change in parking count', because the count did not change."
+  },
+  "TC_CUST_NEG_089": {
+    "scenario": "Verify that a parking update is rejected when there are not enough spaces left in the pool.",
+    "preconditions": "Only 1 parking space remains available for this unit's typology.",
+    "steps": "1. Enter a parking Count of 5 (more than the pool can supply).\n2. Click Submit.",
+    "testData": "Count: 5 (pool has only 1 free)",
+    "expected": "The update is rejected with an error reading 'Available parking count (X) is less than required (Y)'."
+  },
+  "TC_CUST_NEG_090": {
+    "scenario": "Verify that a successful parking update sends no message to the buyer.",
+    "preconditions": "A parking update has just completed successfully.",
+    "steps": "1. Check the buyer's phone and notification logs for any SMS, WhatsApp, or email.",
+    "testData": "(no input)",
+    "expected": "No message of any kind is sent to the buyer (only an internal audit record is written; this silence is expected behaviour, not a defect)."
+  },
+  "TC_CUST_NEG_091": {
+    "scenario": "Verify that cancelling a single unit sends no message to the buyer.",
+    "preconditions": "A Booked unit has just been cancelled successfully.",
+    "steps": "1. Perform the single-unit cancel.\n2. Check the buyer's phone and notification logs for any SMS, WhatsApp, or email.",
+    "testData": "(no input)",
+    "expected": "No SMS, WhatsApp, or email is sent to the buyer. (Only an internal integration sync runs in the background — this is not a buyer message; the silence is expected behaviour, not a defect.)"
+  },
+  "TC_CUST_NEG_092": {
+    "scenario": "Verify that a bulk unit cancellation sends no message to any of the affected buyers.",
+    "preconditions": "A bulk cancellation has been completed for several booked units via Excel upload.",
+    "steps": "1. Upload the bulk-cancel Excel and complete the submission.\n2. Check the notification logs for each of the affected buyers.",
+    "testData": "A bulk-cancel Excel for 5+ booked units (ask user)",
+    "expected": "No message of any kind is sent to any of the cancelled buyers (the silence is expected behaviour, not a defect)."
+  },
+  "TC_CUST_NEG_093": {
+    "scenario": "Verify that updating parking details sends no message to the buyer.",
+    "preconditions": "A parking update has just completed on a Booked unit.",
+    "steps": "1. Update parking (toggle on, count 2, amount 250000) and submit.\n2. Check the buyer's notifications.",
+    "testData": "Count: 2, Amount: 250000",
+    "expected": "No SMS, WhatsApp, or email is sent to the buyer (only an internal audit record is written; the silence is expected behaviour, not a defect)."
+  },
+  "TC_CUST_NEG_094": {
+    "scenario": "Verify that recording an offline milestone payment sends no message to the buyer.",
+    "preconditions": "An admin has submitted an offline milestone payment on a booked unit.",
+    "steps": "1. Submit the offline milestone payment for the full outstanding amount.\n2. Check the buyer's phone and notification logs.",
+    "testData": "Offline payment for the full outstanding amount (ask user)",
+    "expected": "No message of any kind is sent to the buyer. (Only internal integration syncs run in the background — these are not buyer messages; the silence is expected behaviour, not a defect.)"
+  }
+}
