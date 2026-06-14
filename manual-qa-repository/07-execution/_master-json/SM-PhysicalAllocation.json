@@ -1,0 +1,921 @@
+{
+  "portal": "Sales Manager",
+  "module": "Physical Allocation",
+  "sheetName": "Physical Allocation - Master",
+  "replaceSheets": ["Physical Allocation", "Physical Allocation (Exec)"],
+  "notes": [
+    "1. Registration prefix used in this module = GHNG-NNNNNNNNNN-X (e.g. GHNG-2000000014-A). The Sales Manager (SM) searches buyers by name, phone number, OR registration number. The search uses a MySQL LIKE %term% against User.phone / firstName / lastName plus RegistrationUnit.registrationNumber; minimum query length is 5 trimmed characters and the search is debounced 500 ms.",
+    "2. [TEST_DATA_REQUIRED] = a disposable UAT record/unit/registration in the correct state must be supplied before executing this test (e.g. a PREALLOCATED registration to reach checkout, an AVAILABLE pool unit to hold, a WINNER registration to reach the KYC link). Ask the user for the exact campaign + registration number + phone to use. Known UAT seed (campaign 295 'Test New Physical Campaign', RUNNING in the capture window): phone 7666470638 / GHNG-2000000014-A (Anjali WhatsAppTemp, PREALLOCATED, units Crest 1404 / Crest 1407 / Aspire 2805); phone 7020527871 / GHNG-2000000024-A (aman guptaa, PREALLOCATED, Aura); phone 9167746035 / GHNG-2000000009-Y (Supriya Dubey, HOLD). These may have changed — confirm before relying on them.",
+    "3. [VERIFY WITH DEV] = behaviour not confirmed in BRD/FRD/FS/Workflow or only inferred from source/visual-memory; confirm before treating Pass/Fail as authoritative.",
+    "4. MUTATION-AUTHORISATION WARNING: Physical Allocation WRITES to live, stateful UAT data. Selecting a unit and clicking 'Proceed to Pay' fires PUT /update-unit-status (places a 20-minute Redis HOLD) and POST /allocation-order; completing payment marks the unit BOOKED and the registration WINNER (irreversible without admin rollback); 'Submit KYC' fires POST /kyc/submit (generates a PDF, uploads to Azure, syncs to LeadSquared). Every destructive / state-changing TC below carries [TEST_DATA_REQUIRED] and MUST NOT be executed on UAT without explicit user authorisation and a disposable record — UAT accounts are stateful and one-shot. Capture-only steps (open a screen, click a unit card to view pricing, open a drawer/modal, read a cost sheet) are SAFE because clicking a unit card only fetches pricing (GET allocation-unit-details) and performs NO mutation — the hold + order fire only on 'Proceed to Pay'.",
+    "5. CLICKING A UNIT CARD IS NON-DESTRUCTIVE: per source (handleUnitClick), selecting/deselecting a unit card only toggles local state and calls GET allocation-unit-details for pricing. No PUT /update-unit-status runs until 'Proceed to Pay'. So pricing, cost sheet, payment schedule and cart preview can all be asserted without authorisation; only Proceed to Pay / payment / KYC submit need it.",
+    "6. CAMPAIGN-DRIVEN MODULE: Physical Allocation only works while a PHYSICAL_EVENT campaign is RUNNING for the SM's project. When no campaign is active the landing shows a '🏢 No Active Campaign' idle card and the search input + 'Scan QR' button are DISABLED. The active-campaign name is NOT rendered anywhere on the page — the only visible cue is the search input being enabled. The global header strip 'India's Biggest Growth Housing Revolution Begins On 7th April 2026.' is static marketing chrome, NOT campaign-driven.",
+    "7. THREE SUB-ROUTES form the pipeline: /physical-allocation (CustomerSearchPage — always reachable), /physical-allocation/checkout (UnitAllocationPage — guarded: redirects to /physical-allocation if no customer is in navigation state), /physical-allocation/kyc (KycPage — renders a BLANK white page, no crash/redirect, if no customerContext is in navigation state).",
+    "8. ALLOCATION GLOSSARY: PREALLOCATED = registration has units assigned to it before the event (shown as 'Not Started' pill in the registration card); HOLD = registration is under verification / already paying (shown as 'Verification' pill); WINNER = unit fully booked + paid (shown as 'Booked' pill, and ONLY then does the 'KYC & E-Sign' link replace the 'Common Pool' button); AVAILABLE / HOLD / BOOKED = unit-card states (green / orange / red badges). Pre Allocated Units = units already attached to the registration; Common Pool = browsable shared inventory opened via the 'Common Pool' button/drawer. Unit Allocation Cart = the right-rail list of units chosen for this checkout with a Combined Payable Amount.",
+    "9. KYC LINK VISIBILITY: the 'KYC & E-Sign' link in the Pre Allocated Units card header is rendered ONLY when the active registration is WINNER (unit already paid). For PREALLOCATED / HOLD the same slot shows the 'Common Pool' button instead. None of the seeded UAT registrations were WINNER during capture, so the populated KYC form and the confirmation/success screen were NOT captured — every KYC-form-content TC therefore carries [TEST_DATA_REQUIRED] + [VERIFY WITH DEV] and must use a real WINNER registration. Direct nav to /kyc was captured (blank state).",
+    "10. SILENT-BY-DESIGN: clicking a unit card performs no mutation and shows no toast (silent — verify the GET pricing call, not a toast). Per CLAUDE.md Pipeline Discipline rule #6, a missing toast/confirmation is NOT a bug if the backend side-effect occurred. Notification dispatch (SMS/WhatsApp via Kaleyra) is documented only on payment success/failure and on KYC sync to LeadSquared — assert presence/absence per the source, not by assumption.",
+    "11. SM auth = Mobile-OTP only (no password). UAT mobile = 8888888888, SM static OTP = 258369. SM portal base = https://uat-web.xrportal.in/sales-manager. The SM sidebar shows three nav items — Callback Requests, Towers, Allocation (the 'Allocation' tile is this module and shows a green selected state) — plus a Logout button.",
+    "12. LeadSquared (LSQ) is EXCLUDED from direct test scope (no LSQ credentials / API calls per project constraints): the KYC->LSQ sync and VC->LSQ sync are asserted only as 'the portal-side action completed and the downstream sync was attempted' [VERIFY WITH DEV]; do not call LSQ directly. Strapi is out of scope. The 20-minute hold and BOOKED/WINNER transition are driven by the payment-gateway webhook (Easebuzz/Razorpay) which is the source of truth — never inferred from the browser."
+  ],
+  "docDrift": [
+    "DOC_DRIFT-SMPA-001: SM-FS-Physical-Allocation Feature 2 §2.2 states 'Units must be available for the customer's registered apartment type' and §2.3 implies the SM browses a list of available units filtered by typology. The live checkout (visual-memory allocation-checkout.png) instead shows a 'Pre Allocated Units' column listing the SPECIFIC units already attached to the registration (Crest 1404 / Crest 1407 / Aspire 2805) PLUS a 'Common Pool' button/drawer for browsing shared inventory — it is not a single typology-filtered grid. Live UI is authoritative. RESOLUTION: TCs use the live 'Pre Allocated Units' + 'Common Pool' model. Recommend FS Feature 2 wording be updated. No 'typology-filtered grid' pass/fail asserted.",
+    "DOC_DRIFT-SMPA-002: SM-FS Feature 2 §2.3 / SM-FRD §5 give an example allocation amount 'Rs. 27,000 + GST Rs. 4,860 (18%)' and 'All Inclusive Price Rs. 35,52,960'. The live captured Unit Details (allocation-checkout-unit-selected.png, Crest 1404) shows a different and fuller breakdown: Agreement Value 49,99,000, Stamp Duty 7% 3,49,930, GST 5% 2,49,950, Registration Charges 30,000, All inclusive 56,28,880, with a separate Combined Payable Amount 5,18,647. The doc figures are illustrative examples for a different unit, not contractual values. Live pricing labels (Agreement Value / Car Parking / Home Loan Discount / Final Agreement Value / Stamp Duty 7% / GST 5% / Registration Charges / All inclusive) are authoritative for the field list. RESOLUTION: TCs assert the live label set and that values are non-negative and internally consistent, NOT the doc example numbers. Recommend FS/FRD mark its figures as illustrative.",
+    "DOC_DRIFT-SMPA-003: SM-FS Feature 2 §2.4 and SM-FRD §5 describe an 'Online — QR code' method where the SM opens a QrScannerModal so the customer scans a code to pay. The live search-card 'Scan QR' button opens a QrScannerModal used for REGISTRATION LOOKUP (camera-based scan to find a registration), per visual-memory Key Structural Notes. Whether a SECOND QR modal exists at checkout for PAYMENT is not confirmed in visual-memory (the checkout capture shows Online/Offline radio + Proceed to Pay, no QR-pay modal captured). RESOLUTION: the search-page 'Scan QR' = registration lookup (asserted); the checkout QR-pay path is marked [VERIFY WITH DEV]. Recommend the FS distinguish 'Scan QR (find registration)' from 'QR payment'.",
+    "DOC_DRIFT-SMPA-004: SM-FS Feature 2 §2.5 rule 5/6 say the SM can view 'Floor & Unit Plan', 'Cost Sheet' and 'Payment Schedule' before payment. Visual-memory confirms 'Payment Schedule' and 'Cost Sheet' action buttons in the Unit Details right rail (button labels approximate, to confirm in next capture) but does NOT confirm a 'Floor & Unit Plan' control on the captured checkout. RESOLUTION: Cost Sheet + Payment Schedule TCs use the live right-rail buttons; the 'Floor & Unit Plan' control is marked [VERIFY WITH DEV] pending capture. No drift to whether the feature exists — only its on-screen surface is unconfirmed."
+  ],
+  "subModules": [
+    {
+      "name": "Landing — No Active Campaign (Idle State)",
+      "tcs": [
+        {
+          "id": "TC_PHYSALLOC_UI_001",
+          "scenario": "To verify the No Active Campaign idle state",
+          "description": "Verify that, when no PHYSICAL_EVENT campaign is active, the Physical Allocation landing shows the 'No Active Campaign' idle card and disabled controls.",
+          "precond": "An SM is logged in (mobile 8888888888 / OTP 258369) and no PHYSICAL_EVENT campaign is currently RUNNING for the SM's project.",
+          "steps": "1. Log in to the SM portal.\n2. From the sidebar click 'Allocation'.\n3. Wait for the page to finish loading.\n4. Read the page body and the state of the search input and 'Scan QR' button.",
+          "testData": "[TEST_DATA_REQUIRED] a moment when NO PHYSICAL_EVENT campaign is active (ask user — or run before a campaign starts / after it ends).",
+          "expected": "The URL is https://uat-web.xrportal.in/sales-manager/physical-allocation. The body shows a '🏢 No Active Campaign' idle card. The search input and 'Scan QR' button are disabled. (Source: INDEX.md No-Active-Campaign idle state, allocation-loaded.png / allocation-empty.png + SM-FS Feature 1 §1.5 rule 1.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_002",
+          "scenario": "To verify the page heading renders",
+          "description": "Verify that the page heading 'Physical Unit Allocation' is shown on the landing in both idle and active states.",
+          "precond": "An SM is on the Physical Allocation landing page.",
+          "steps": "1. Read the heading at the top of the content area.",
+          "testData": "(no input)",
+          "expected": "The page shows the heading 'Physical Unit Allocation'. (Source: INDEX.md Key Structural Notes — Page heading <h5>Physical Unit Allocation</h5>.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_033",
+          "scenario": "To verify the SM sidebar items",
+          "description": "Verify that the SM sidebar shows the three nav items and the Logout button, with 'Allocation' selected on this route.",
+          "precond": "An SM is on the Physical Allocation landing page.",
+          "steps": "1. Look at the left sidebar.\n2. Read each nav item and note which is selected.\n3. Confirm the Logout button is present.",
+          "testData": "(no input)",
+          "expected": "The sidebar shows three nav items — 'Callback Requests', 'Towers', and 'Allocation' — with 'Allocation' showing the green selected (filled) state. A 'Logout' button is present at the foot. (Source: INDEX.md Sidebar.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_003",
+          "scenario": "To verify Refresh re-queries the active-campaign endpoint (idle)",
+          "description": "Verify that, in the idle state, a Refresh re-checks whether a PHYSICAL_EVENT campaign has become active without leaving the page.",
+          "precond": "An SM is on the Physical Allocation landing in the No-Active-Campaign idle state.",
+          "steps": "1. Note the current URL.\n2. Trigger a Refresh / reload of the page.\n3. Observe whether the idle card persists and the URL stays the same.",
+          "testData": "(no input)",
+          "expected": "The page re-queries GET /physical-event/campaign/active; the URL stays /sales-manager/physical-allocation. If still no active campaign, the idle card persists; if a campaign has started, the search UI appears. (Source: INDEX.md Route + active-campaign fetch + idle state.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_REG_034",
+          "scenario": "To verify the global header strip is static (regression)",
+          "description": "Verify that the marketing header strip is static global chrome and does not change based on whether a campaign is active.",
+          "precond": "An SM is on the Physical Allocation landing page.",
+          "steps": "1. Read the top header strip text in the idle state.\n2. (If possible) read it again when a campaign is active.",
+          "testData": "(no input)",
+          "expected": "The header strip reads 'India's Biggest Growth Housing Revolution Begins On 7th April 2026.' in both states — it is static global chrome, NOT a campaign banner. The active-campaign name is never rendered on this page. (Source: INDEX.md Active Campaign note — name is NOT rendered; header is static.)"
+        }
+      ]
+    },
+    {
+      "name": "Landing — Active Campaign & Search Card",
+      "tcs": [
+        {
+          "id": "SM_ALLOC_002",
+          "scenario": "To verify the Customer Search screen loads during an active campaign",
+          "description": "Verify that, when a PHYSICAL_EVENT campaign is RUNNING, the Customer Search screen loads with an enabled search input.",
+          "precond": "An SM is logged in and a PHYSICAL_EVENT campaign is RUNNING for the SM's project.",
+          "steps": "1. Log in to the SM portal.\n2. From the sidebar click 'Allocation'.\n3. Wait for the page to load.\n4. Observe the search card.",
+          "testData": "[TEST_DATA_REQUIRED] an active PHYSICAL_EVENT campaign (ask user — UAT seed was campaign 295 'Test New Physical Campaign').",
+          "expected": "The Customer Search screen loads at /sales-manager/physical-allocation showing the search card with an ENABLED input placeholder 'Search by Phone or Registration Number...' and an ENABLED 'Scan QR' button. No 'No Active Campaign' idle card is shown. No results table is shown until a query is typed. (Source: INDEX.md allocation-loaded-active.png + SM-FS Feature 1.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_003",
+          "scenario": "To verify the active-campaign landing shows enabled controls",
+          "description": "Verify that on the active-campaign landing both the search input and the 'Scan QR' button are enabled.",
+          "precond": "An SM is on the Physical Allocation landing with a PHYSICAL_EVENT campaign RUNNING.",
+          "steps": "1. Look at the search input field.\n2. Look at the 'Scan QR' button.\n3. Confirm both are enabled (not greyed).",
+          "testData": "[TEST_DATA_REQUIRED] an active PHYSICAL_EVENT campaign (ask user).",
+          "expected": "Both the search input ('Search by Phone or Registration Number...') and the 'Scan QR' button are enabled. (Note: enabled = disabled attribute false; this is the only visible cue a campaign is active.) (Source: INDEX.md Key Structural Notes — disabled={!isRunning}.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_004",
+          "scenario": "To verify the search card layout",
+          "description": "Verify the structure of the search card — a search input on the left and a 'Scan QR' button on the right.",
+          "precond": "An SM is on the active-campaign landing.",
+          "steps": "1. Look at the search card.\n2. Note the input placeholder text and the button on the right.",
+          "testData": "[TEST_DATA_REQUIRED] an active PHYSICAL_EVENT campaign (ask user).",
+          "expected": "The search card shows a large input with placeholder 'Search by Phone or Registration Number...' on the left and a 'Scan QR' button (QR icon) on the right. (Source: INDEX.md Search card + allocation-search-form.png.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_011",
+          "scenario": "To verify the Scan QR button opens the registration-lookup modal",
+          "description": "Verify that clicking 'Scan QR' opens the QR scanner modal used to look up a registration by camera.",
+          "precond": "An SM is on the active-campaign landing.",
+          "steps": "1. Click the 'Scan QR' button.\n2. Observe the modal that opens.\n3. Close the modal.",
+          "testData": "[TEST_DATA_REQUIRED] an active PHYSICAL_EVENT campaign (ask user).",
+          "expected": "A QR scanner modal opens (camera-based registration lookup). [VERIFY WITH DEV] exact modal title/contents — not captured in visual-memory. (Note: this 'Scan QR' is for finding a registration, NOT for payment — see DOC_DRIFT-SMPA-003.) (Source: INDEX.md Search card — QrScannerModal.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_004",
+          "scenario": "To verify Refresh transitions to search when a campaign becomes active",
+          "description": "Verify that when a PHYSICAL_EVENT campaign becomes active, refreshing the idle landing transitions the UI to the Customer Search screen.",
+          "precond": "An SM is on the idle landing and a PHYSICAL_EVENT campaign has just started.",
+          "steps": "1. While on the idle landing, trigger a Refresh after the campaign starts.\n2. Observe the page.",
+          "testData": "[TEST_DATA_REQUIRED] a campaign that transitions to RUNNING during the session (ask user).",
+          "expected": "After refresh the idle card disappears and the enabled search card is shown (search input + Scan QR enabled). (Source: INDEX.md Route active-campaign fetch + idle->active transition.)"
+        }
+      ]
+    },
+    {
+      "name": "Customer Search — Query, Debounce & Results",
+      "tcs": [
+        {
+          "id": "SM_ALLOC_003",
+          "scenario": "To verify search by customer name returns matching registrations",
+          "description": "Verify that searching by a registered customer's name returns the matching customer row(s).",
+          "precond": "An SM is on the active-campaign Customer Search screen and a registered buyer exists.",
+          "steps": "1. Type at least 5 characters of the customer's name in the search input.\n2. Wait about 2 seconds for results.\n3. Read the results table.",
+          "testData": "[TEST_DATA_REQUIRED] a registered name of >=5 chars (UAT seed: 'supriya' / 'aman guptaa').",
+          "expected": "The results table shows the matching customer row(s) with columns Customer Name | Phone Number | Registration Numbers | Registration Count | Action, each with a green 'Select' button. (Source: INDEX.md Results table + allocation-search-result.png + SM-FS Feature 1.)"
+        },
+        {
+          "id": "SM_ALLOC_004",
+          "scenario": "To verify search by phone number returns the customer",
+          "description": "Verify that searching by a registered phone number returns the matching customer row.",
+          "precond": "An SM is on the active-campaign Customer Search screen.",
+          "steps": "1. Type a registered phone number in the search input.\n2. Wait about 2 seconds.\n3. Read the result row.",
+          "testData": "[TEST_DATA_REQUIRED] a registered phone (UAT seed: 7666470638 -> Anjali WhatsAppTemp / GHNG-2000000014-A).",
+          "expected": "One row appears — Customer Name (e.g. Anjali WhatsAppTemp), Phone (e.g. 7666470638), Registration Numbers (e.g. GHNG-2000000014-A), Registration Count (e.g. 1), and a 'Select' button. (Source: INDEX.md allocation-search-result.png.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_028",
+          "scenario": "To verify search by registration number returns the customer",
+          "description": "Verify that searching by a full or partial registration number returns the matching customer.",
+          "precond": "An SM is on the active-campaign Customer Search screen.",
+          "steps": "1. Type a registration number (or its numeric core, >=5 chars) in the search input.\n2. Wait about 2 seconds.\n3. Read the result.",
+          "testData": "[TEST_DATA_REQUIRED] a registration number (UAT seed: GHNG-2000000014-A or 2000000014).",
+          "expected": "The matching customer row appears with that registration number listed in the Registration Numbers column. (Source: INDEX.md search uses LIKE on RegistrationUnit.registrationNumber.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_005",
+          "scenario": "To verify the debounce threshold (under 5 chars fires no search)",
+          "description": "Verify that typing fewer than 5 characters does not trigger a search request.",
+          "precond": "An SM is on the active-campaign Customer Search screen.",
+          "steps": "1. Type 4 characters in the search input.\n2. Wait about 2 seconds.\n3. Observe whether any results or empty-state render.",
+          "testData": "Search term: 4 characters (e.g. '7666')",
+          "expected": "No search request fires and no results table mounts while the query is under 5 trimmed characters. (Source: INDEX.md Debounce — performSearch only when query.trim().length >= 5.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_006",
+          "scenario": "To verify exactly 5 chars triggers a search after debounce",
+          "description": "Verify that a 5-character query fires the search after the 500 ms debounce.",
+          "precond": "An SM is on the active-campaign Customer Search screen.",
+          "steps": "1. Type exactly 5 characters in the search input.\n2. Wait ~500 ms + network (~2 s).\n3. Observe the result (rows or 'No data').",
+          "testData": "Search term: 5 characters (e.g. '76664')",
+          "expected": "After the 500 ms debounce the search fires and the results table mounts showing matching rows, or the 'No data' empty state if none match. (Source: INDEX.md Debounce 500 ms + >=5 chars.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_EDGE_035",
+          "scenario": "To verify rapid typing collapses to a single search call",
+          "description": "Verify that typing several characters quickly results in a single debounced search, not one per keystroke.",
+          "precond": "An SM is on the active-campaign Customer Search screen.",
+          "steps": "1. Type a 10-character query quickly (within ~1 second).\n2. Wait for results.\n3. (If observing network) confirm only one search call fired for the final value.",
+          "testData": "Search term: a 10-char value typed quickly",
+          "expected": "Only one search request fires — for the final query value — because of the 500 ms debounce. Intermediate keystrokes do not each fire a call. (Source: INDEX.md Debounce — single 500 ms setTimeout.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_007",
+          "scenario": "To verify the results table header order",
+          "description": "Verify that the results table renders its five columns in the documented order.",
+          "precond": "An SM has a non-empty search result on screen.",
+          "steps": "1. Read the column headers of the results table left to right.",
+          "testData": "[TEST_DATA_REQUIRED] a query that returns at least one row (ask user).",
+          "expected": "The headers read, in order: Customer Name | Phone Number | Registration Numbers | Registration Count | Action. (Source: INDEX.md Results table columns.)"
+        },
+        {
+          "id": "SM_ALLOC_005",
+          "scenario": "To verify the No data empty state for an unmatched search",
+          "description": "Verify that a search query with no match shows the 'No data' empty state.",
+          "precond": "An SM is on the active-campaign Customer Search screen.",
+          "steps": "1. Type a non-matching query of >=5 chars (e.g. ZZNOTFOUND).\n2. Wait about 2 seconds.\n3. Read the table body.",
+          "testData": "Search term: ZZNOTFOUND",
+          "expected": "The results table shows the Ant empty state with description text 'No data'. (Source: INDEX.md allocation-search-no-result.png + SM-FS Feature 1 §1.5 rule 4 'No records found'.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_009",
+          "scenario": "To verify a non-matching alphanumeric query shows No data",
+          "description": "Verify that an alphanumeric non-matching query of >=5 chars also shows the same 'No data' empty state.",
+          "precond": "An SM is on the active-campaign Customer Search screen.",
+          "steps": "1. Type an alphanumeric non-matching query (e.g. ABC12XYZ).\n2. Wait about 2 seconds.\n3. Read the table body.",
+          "testData": "Search term: ABC12XYZ",
+          "expected": "The 'No data' empty state is shown, identical to the unmatched-phone case. (Source: INDEX.md empty-state behaviour.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_010",
+          "scenario": "To verify clearing the search unmounts the results table",
+          "description": "Verify that clearing the search input removes the results table immediately.",
+          "precond": "An SM has a search result (or empty state) showing.",
+          "steps": "1. With results showing, clear the entire search input.\n2. Observe the page.",
+          "testData": "(clear the input)",
+          "expected": "The results table unmounts immediately (searchResults cleared at length 0) and the bare search card remains. (Source: INDEX.md Debounce — clearing input clears searchResults immediately.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_NEG_031",
+          "scenario": "To verify special characters in search do not error",
+          "description": "Verify that typing special characters in the search input does not crash the page or throw a visible error.",
+          "precond": "An SM is on the active-campaign Customer Search screen.",
+          "steps": "1. Type special characters (e.g. %_'\"<>) in the search input.\n2. Wait about 2 seconds.\n3. Observe the page.",
+          "testData": "Search term: %_'\\\"<>!@",
+          "expected": "The page does not crash; the result is either the 'No data' empty state or no results. No unhandled error is shown. [VERIFY WITH DEV] server handling of LIKE wildcard chars (% _). (Source: INDEX.md search uses MySQL LIKE — wildcard handling unconfirmed.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_056",
+          "scenario": "To verify the results table shows a Select button per row",
+          "description": "Verify that every result row exposes a green primary 'Select' button in the Action column.",
+          "precond": "An SM has a non-empty search result on screen.",
+          "testData": "[TEST_DATA_REQUIRED] a query returning >=1 row (ask user).",
+          "steps": "1. Look at the Action column of each result row.\n2. Confirm each row has a 'Select' button.",
+          "expected": "Each result row's Action column shows a green primary 'Select' button. (Source: INDEX.md Results table — select-action-btn per row.)"
+        }
+      ]
+    },
+    {
+      "name": "Customer Selection & Checkout Navigation",
+      "tcs": [
+        {
+          "id": "SM_ALLOC_006",
+          "scenario": "To verify selecting a customer navigates to checkout",
+          "description": "Verify that clicking 'Select' on a customer row navigates to the checkout screen with the customer's context loaded.",
+          "precond": "An SM has a customer row showing in the search results.",
+          "steps": "1. Click 'Select' on the customer row.\n2. Observe the URL and the page that loads.",
+          "testData": "[TEST_DATA_REQUIRED] a PREALLOCATED registration (UAT seed: 7666470638 / GHNG-2000000014-A).",
+          "expected": "The app navigates to /sales-manager/physical-allocation/checkout and the UnitAllocationPage renders for that customer (there is no intermediate 'selected but still on search page' state — Select navigates synchronously). (Source: INDEX.md allocation-customer-selected.png + allocation-checkout.png.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_032",
+          "scenario": "To verify the customer context loads on checkout",
+          "description": "Verify that after Select, the checkout left column shows the selected customer's information and registrations.",
+          "precond": "An SM has just selected a customer and is on the checkout screen.",
+          "steps": "1. Read the Customer Information column on the left of the checkout page.\n2. Confirm the name, phone and registration match the selected customer.",
+          "testData": "[TEST_DATA_REQUIRED] a known registration (UAT seed: Anjali WhatsAppTemp / 7666470638 / GHNG-2000000014-A).",
+          "expected": "The left 'Customer Information' card shows the selected customer's name and phone, a 'Customer Registrations' section with the registration card, and a 'Customer Preferences' table. (Source: INDEX.md Checkout Column 1.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_NEG_013",
+          "scenario": "To verify direct /checkout nav without a customer redirects",
+          "description": "Verify that navigating directly to the checkout URL without selecting a customer redirects to the search landing.",
+          "precond": "An SM is logged in with no customer selected.",
+          "steps": "1. In the address bar go directly to /sales-manager/physical-allocation/checkout.\n2. Observe the resulting page/URL.",
+          "testData": "(direct URL nav)",
+          "expected": "The app redirects to /sales-manager/physical-allocation (the search landing) because no customer is present in navigation state. No crash. (Source: INDEX.md Route — checkout guarded, redirects if location.state.customer missing.)"
+        },
+        {
+          "id": "SM_PA_027",
+          "scenario": "To verify back-navigation from checkout is clean",
+          "description": "Verify that using the 'Back to Physical Allocation' link from checkout returns to the search landing without error.",
+          "precond": "An SM is on the checkout screen for a selected customer.",
+          "steps": "1. Click the '← Back to Physical Allocation' link in the checkout top bar.\n2. Observe the resulting page.",
+          "testData": "[TEST_DATA_REQUIRED] a selected customer on checkout (ask user).",
+          "expected": "The app returns to /sales-manager/physical-allocation (search landing); no error or blank page. (Source: INDEX.md Checkout top bar — Back to Physical Allocation link.)"
+        }
+      ]
+    },
+    {
+      "name": "Checkout — Pre Allocated Units & Layout",
+      "tcs": [
+        {
+          "id": "SM_ALLOC_007",
+          "scenario": "To verify available units display with pricing details",
+          "description": "Verify that the checkout page shows the customer's pre-allocated unit cards with status badges, and the three-column layout.",
+          "precond": "An SM is on the checkout screen for a PREALLOCATED registration.",
+          "steps": "1. Observe the centre 'Pre Allocated Units' column.\n2. Note the unit cards and their badges.\n3. Note the left and right columns.",
+          "testData": "[TEST_DATA_REQUIRED] a PREALLOCATED registration with pre-allocated units (UAT seed: GHNG-2000000014-A -> Crest 1404 / Crest 1407 / Aspire 2805).",
+          "expected": "The centre column titled 'Pre Allocated Units' shows the unit cards (e.g. Crest 1404, Crest 1407, Aspire 2805) each with a green 'Available' badge, plus a 'Common Pool' button. The left column shows Customer Information / Registrations / Preferences; the right column shows 'Unit Details' (placeholder 'Click a unit to view details') and 'Unit Allocation Cart' ('No units selected for allocation.'). (Source: INDEX.md allocation-checkout.png + Checkout columns.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_057",
+          "scenario": "To verify the checkout three-section layout",
+          "description": "Verify that the checkout page renders the three-section layout (Customer info / Pre Allocated Units / Unit Details + Cart).",
+          "precond": "An SM is on the checkout screen for a selected customer.",
+          "steps": "1. Observe the page structure left to right.\n2. Confirm three sections are present.",
+          "testData": "[TEST_DATA_REQUIRED] a selected customer (ask user).",
+          "expected": "Three columns render: (1) Customer Information + Customer Registrations + Customer Preferences, (2) Pre Allocated Units, (3) Unit Details + Unit Allocation Cart. (Source: INDEX.md three-section-layout.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_058",
+          "scenario": "To verify the registration card status pill",
+          "description": "Verify that the registration card shows the correct status pill mapped from the registration status.",
+          "precond": "An SM is on the checkout screen for a registration of a known status.",
+          "steps": "1. Look at the registration card in the Customer Registrations section.\n2. Read the status pill.",
+          "testData": "[TEST_DATA_REQUIRED] registrations of differing status (PREALLOCATED -> 'Not Started'; HOLD -> 'Verification'; WINNER -> 'Booked').",
+          "expected": "The pill reads 'Not Started' for a PREALLOCATED registration, 'Verification' for HOLD, or 'Booked' for WINNER, matching the status mapping. (Source: INDEX.md Checkout Column 1 status mapping.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_059",
+          "scenario": "To verify the Customer Preferences table",
+          "description": "Verify that the Customer Preferences table renders the buyer's prior preferences with their columns.",
+          "precond": "An SM is on the checkout screen for a customer with preferences.",
+          "steps": "1. Scroll the left column to the 'Customer Preferences' section.\n2. Read the table columns and rows.",
+          "testData": "[TEST_DATA_REQUIRED] a customer with recorded preferences (UAT seed: Anjali — Crest/Blossom/Glory rows).",
+          "expected": "The Customer Preferences table shows columns Registration / Tower / Unit No / Status, with each row showing a 'Booked' pill (these are prior preferences, not the current allocation). (Source: INDEX.md Checkout Column 1 + allocation-checkout-fullpage.png.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_060",
+          "scenario": "To verify the Pre Allocated Units header control by status",
+          "description": "Verify that the Pre Allocated Units header shows the 'Common Pool' button for non-WINNER registrations (and the KYC link only for WINNER).",
+          "precond": "An SM is on the checkout screen.",
+          "steps": "1. Look at the right-side control in the 'Pre Allocated Units' card header.\n2. Note whether it is 'Common Pool' or 'KYC & E-Sign'.",
+          "testData": "[TEST_DATA_REQUIRED] a PREALLOCATED registration (shows Common Pool); a WINNER registration (shows KYC & E-Sign) (ask user).",
+          "expected": "For PREALLOCATED / HOLD registrations the header shows a 'Common Pool' button. For a WINNER registration the header instead shows a 'KYC & E-Sign' link (or '✓ KYC Done' once submitted). (Source: INDEX.md Checkout Column 2 header-extra logic.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_061",
+          "scenario": "To verify unit-card badge states render",
+          "description": "Verify that unit cards render the correct availability badge (Available / Hold / Booked).",
+          "precond": "An SM is on the checkout screen with units of differing states.",
+          "steps": "1. Look at each unit card's badge chip.\n2. Confirm the badge text/colour matches the unit state.",
+          "testData": "[TEST_DATA_REQUIRED] units in Available / Hold / Booked states (ask user; seed showed all Available).",
+          "expected": "Available units show a green 'Available' badge; held units show a 'Hold'/'paying' badge; booked units show a 'Booked' badge. Common-pool-sourced cards carry a 'Common Pool' tag. (Source: INDEX.md unit-card state modifiers.)"
+        }
+      ]
+    },
+    {
+      "name": "Checkout — Unit Selection, Pricing & Cart (Non-Destructive)",
+      "tcs": [
+        {
+          "id": "TC_PHYSALLOC_FUNC_062",
+          "scenario": "To verify selecting a unit card populates Unit Details",
+          "description": "Verify that clicking a unit card selects it and populates the right-rail Unit Details with the unit's pricing breakdown (non-destructive — no hold).",
+          "precond": "An SM is on the checkout screen with at least one available unit card.",
+          "steps": "1. Click an available unit card (e.g. Crest 1404).\n2. Observe the card state and the right rail.",
+          "testData": "[TEST_DATA_REQUIRED] a PREALLOCATED registration with an available unit (UAT seed: Crest 1404).",
+          "expected": "The clicked card flips to a green 'Selected' badge and other cards dim to ~40% opacity. The right 'Unit Details' card populates with the unit number, tower, BHK typology, area, and a pricing breakdown. NO hold is placed at this stage (only a GET pricing call fires). (Source: INDEX.md allocation-checkout-unit-selected.png + Key note — clicking a card performs no mutation.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_063",
+          "scenario": "To verify the Unit Details pricing field list",
+          "description": "Verify that the Unit Details pricing breakdown shows the full set of live pricing rows.",
+          "precond": "An SM has selected a unit card and the Unit Details are populated.",
+          "steps": "1. Read each pricing row label and value in the Unit Details card.\n2. Note the highlighted total.",
+          "testData": "[TEST_DATA_REQUIRED] a selected unit (UAT seed: Crest 1404).",
+          "expected": "The pricing breakdown lists: Agreement Value, Car Parking (with a checkbox, unchecked by default), Home Loan Discount (negative), Final Agreement Value, Stamp Duty (7%), GST (5%), Registration Charges, and a highlighted 'All inclusive' total, plus a 'Total Discount' banner. Values are non-negative and internally consistent. (Assert the label set, NOT the doc example numbers — see DOC_DRIFT-SMPA-002.) (Source: INDEX.md Checkout Column 3 pricing.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_064",
+          "scenario": "To verify the Car Parking checkbox changes pricing",
+          "description": "Verify that toggling the Car Parking option in Unit Details updates the pricing total.",
+          "precond": "An SM has a unit selected with Unit Details populated.",
+          "steps": "1. Note the current 'All inclusive' total.\n2. Tick the Car Parking checkbox in the pricing rows.\n3. Observe the total.",
+          "testData": "[TEST_DATA_REQUIRED] a selected unit (UAT seed: Crest 1404, Car Parking ₹5,00,000).",
+          "expected": "Ticking Car Parking adds the parking amount and the 'All inclusive' total recalculates upward; unticking reverts it. (Source: INDEX.md parking-option-checkbox changes pricing.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_065",
+          "scenario": "To verify deselecting a unit clears Unit Details",
+          "description": "Verify that clicking a selected unit card again deselects it and restores the empty Unit Details placeholder.",
+          "precond": "An SM has a unit selected.",
+          "steps": "1. Click the currently selected unit card again.\n2. Observe the cards and the right rail.",
+          "testData": "[TEST_DATA_REQUIRED] a selected unit (ask user).",
+          "expected": "The card deselects, the dim on other cards clears, and the Unit Details card returns to the 'Click a unit to view details' placeholder (and the cart empties if it held only that unit). (Source: INDEX.md handleUnitClick toggles local state.)"
+        },
+        {
+          "id": "SM_ALLOC_009",
+          "scenario": "To verify the Cost Sheet shows the full pricing breakdown",
+          "description": "Verify that opening the Cost Sheet for a selected unit shows the complete pricing breakdown.",
+          "precond": "An SM has a unit selected with Unit Details populated.",
+          "steps": "1. Click the 'Cost Sheet' button in the Unit Details card.\n2. Read the cost sheet content.\n3. Close it.",
+          "testData": "[TEST_DATA_REQUIRED] a selected unit (UAT seed: Crest 1404).",
+          "expected": "A Cost Sheet view opens showing the full pricing breakdown for the unit (agreement value, charges, taxes, all-inclusive total). [VERIFY WITH DEV] exact button label and cost-sheet layout (button name approximate, not finalised in capture). (Source: INDEX.md Cost Sheet button + DOC_DRIFT-SMPA-004.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_015",
+          "scenario": "To verify the Payment Schedule shows milestones",
+          "description": "Verify that opening the Payment Schedule for a selected unit shows the milestone payment plan before payment.",
+          "precond": "An SM has a unit selected with Unit Details populated.",
+          "steps": "1. Click the 'Payment Schedule' button in the Unit Details card.\n2. Read the schedule.\n3. Close it.",
+          "testData": "[TEST_DATA_REQUIRED] a selected unit (ask user).",
+          "expected": "A Payment Schedule view opens listing the milestone payments. [VERIFY WITH DEV] exact button label and schedule layout (button name approximate). (Source: INDEX.md Payment Schedule button + SM-FS Feature 2 §2.5 rule 6.)"
+        },
+        {
+          "id": "SM_ALLOC_008",
+          "scenario": "To verify the Floor & Unit Plan opens",
+          "description": "Verify that the Floor & Unit Plan control opens the architectural plan view for the unit.",
+          "precond": "An SM is on the checkout screen with a unit context.",
+          "steps": "1. Click the 'Floor & Unit Plan' control.\n2. Observe the plan view.\n3. Close it.",
+          "testData": "[TEST_DATA_REQUIRED] a selected unit (ask user).",
+          "expected": "[VERIFY WITH DEV] The Floor & Unit Plan view opens showing the architectural plan. The on-screen control for this was NOT confirmed in the captured checkout (see DOC_DRIFT-SMPA-004) — confirm the control exists and its label before treating Pass/Fail as authoritative. (Source: SM-FS Feature 2 §2.5 rule 5 + SM-FRD §5.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_066",
+          "scenario": "To verify the Unit Allocation Cart populates on selection",
+          "description": "Verify that selecting a unit adds it to the Unit Allocation Cart with a combined payable amount.",
+          "precond": "An SM has a unit selected.",
+          "steps": "1. After selecting a unit, look at the 'Unit Allocation Cart' card on the right.\n2. Read the cart row and the Combined Payable Amount.",
+          "testData": "[TEST_DATA_REQUIRED] a selected unit (UAT seed: Crest 1404 -> payable ₹5,18,647).",
+          "expected": "The cart shows a row with Registration / Unit No / Amount / Action (red delete icon) and a 'Combined Payable Amount' value. Before any selection the cart reads 'No units selected for allocation.' (Source: INDEX.md Checkout Column 3 cart.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_067",
+          "scenario": "To verify removing a unit from the cart",
+          "description": "Verify that the red delete icon in the cart removes the unit and updates the combined payable.",
+          "precond": "An SM has at least one unit in the cart.",
+          "steps": "1. Click the red delete icon on a cart row.\n2. Observe the cart and the unit card.",
+          "testData": "[TEST_DATA_REQUIRED] a unit in the cart (ask user).",
+          "expected": "The cart row is removed, the Combined Payable Amount updates (or the cart returns to 'No units selected for allocation.'), and the corresponding unit card deselects. (Source: INDEX.md cart Action delete icon.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_068",
+          "scenario": "To verify the Collect-without-GST and payment options render",
+          "description": "Verify that the cart footer shows the 'Collect payment without GST' checkbox, the Online/Offline payment radios, the T&C checkbox, and the Proceed to Pay button.",
+          "precond": "An SM has a unit in the cart (scroll to the bottom of the right rail).",
+          "steps": "1. Scroll to the bottom of the Unit Allocation Cart.\n2. Note each control.",
+          "testData": "[TEST_DATA_REQUIRED] a unit in the cart (ask user).",
+          "expected": "The footer shows: a 'Collect payment without GST' checkbox; an Online Payment / Offline Payment radio group (Online preselected); an 'I agree to Terms & Conditions' checkbox; and a 'Proceed to Pay' button. (Source: INDEX.md allocation-checkout-unit-selected-fullpage.png.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_VAL_069",
+          "scenario": "To verify Proceed to Pay is disabled until T&C is agreed",
+          "description": "Verify that the Proceed to Pay button stays disabled until the T&C checkbox is ticked (and a unit is in the cart).",
+          "precond": "An SM has a unit in the cart and the T&C checkbox unticked.",
+          "steps": "1. Confirm a unit is in the cart and T&C is unticked.\n2. Observe the Proceed to Pay button.\n3. Tick the T&C checkbox.\n4. Observe the button again. (Do NOT click Proceed to Pay.)",
+          "testData": "[TEST_DATA_REQUIRED] a unit in the cart (ask user).",
+          "expected": "Proceed to Pay is disabled while T&C is unticked; it enables once T&C is ticked (and at least one unit is in the cart). Do NOT click it without authorisation (it fires a hold + order). (Source: INDEX.md Proceed-to-Pay initially disabled until T&C checked.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_VAL_070",
+          "scenario": "To verify the Collect-without-GST option adjusts the payable",
+          "description": "Verify that ticking 'Collect payment without GST' changes the Combined Payable Amount accordingly.",
+          "precond": "An SM has a unit in the cart.",
+          "steps": "1. Note the Combined Payable Amount.\n2. Tick 'Collect payment without GST'.\n3. Observe the payable amount.",
+          "testData": "[TEST_DATA_REQUIRED] a unit in the cart (ask user).",
+          "expected": "[VERIFY WITH DEV] Ticking 'Collect payment without GST' recalculates the Combined Payable Amount (GST excluded). Confirm the exact recalculation rule with Dev — not specified in BRD/FRD/FS. (Source: INDEX.md allocation-gst-checkbox.)"
+        }
+      ]
+    },
+    {
+      "name": "Common Pool Drawer",
+      "tcs": [
+        {
+          "id": "TC_PHYSALLOC_FUNC_071",
+          "scenario": "To verify the Common Pool button opens the pool drawer",
+          "description": "Verify that clicking 'Common Pool' opens a drawer of browsable shared-inventory units.",
+          "precond": "An SM is on the checkout screen for a non-WINNER registration.",
+          "steps": "1. Click the 'Common Pool' button.\n2. Observe the drawer that opens.\n3. Close it.",
+          "testData": "[TEST_DATA_REQUIRED] a PREALLOCATED registration on an active campaign (ask user).",
+          "expected": "A side drawer opens listing browsable pool units (from GET pool-units). [VERIFY WITH DEV] exact drawer title/layout — the drawer was NOT captured in visual-memory (allocation-common-pool-drawer.png is a documented gap). (Source: INDEX.md NOT-captured table + pool-towers / pool-units endpoints.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_072",
+          "scenario": "To verify the Common Pool drawer lists towers",
+          "description": "Verify that the Common Pool drawer exposes the campaign's pool towers for filtering.",
+          "precond": "The Common Pool drawer is open.",
+          "steps": "1. Look for a tower filter / list inside the drawer.\n2. Read the tower names.",
+          "testData": "[TEST_DATA_REQUIRED] an active campaign with pool towers (UAT seed campaign 295: Pride, Aspire, Crest, Triumph, Crown, Radiance).",
+          "expected": "[VERIFY WITH DEV] The drawer lists the campaign's pool towers (e.g. Pride / Aspire / Crest / Triumph / Crown / Radiance) and lets the SM browse pool units per tower. Confirm layout when the drawer is captured. (Source: INDEX.md pool-towers for campaign 295.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_073",
+          "scenario": "To verify selecting a Common Pool unit adds it to the cart",
+          "description": "Verify that choosing a unit from the Common Pool drawer marks it as common-pool-selected and adds it to the allocation cart.",
+          "precond": "The Common Pool drawer is open with available pool units.",
+          "steps": "1. Select an available pool unit in the drawer.\n2. Observe the unit card and the Unit Allocation Cart.",
+          "testData": "[TEST_DATA_REQUIRED] an available pool unit (ask user).",
+          "expected": "[VERIFY WITH DEV] The chosen pool unit is added as a card carrying a 'Common Pool' tag and appears in the Unit Allocation Cart. NO hold is placed until 'Proceed to Pay'. Confirm exact behaviour on capture. (Source: INDEX.md unit-card common-pool-selected modifier + Common Pool tag.)"
+        }
+      ]
+    },
+    {
+      "name": "Payment — Online / Offline (Destructive — Authorisation Required)",
+      "tcs": [
+        {
+          "id": "SM_ALLOC_010",
+          "scenario": "To verify selecting and paying places a 20-minute hold",
+          "description": "Verify that initiating payment (Proceed to Pay) places the selected unit on a 20-minute HOLD.",
+          "precond": "An SM has a unit in the cart and T&C ticked. [TEST_DATA_REQUIRED] + explicit user authorisation (this mutates live state).",
+          "steps": "1. With a unit in the cart and T&C ticked, click 'Proceed to Pay'.\n2. Observe the unit status / timer.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable PREALLOCATED registration + an available unit + user authorisation.",
+          "expected": "On Proceed to Pay the unit is placed on a 20-minute HOLD (PUT /update-unit-status fires; Redis timer starts) and the payment step begins. DESTRUCTIVE — run only with user authorisation; otherwise stop before clicking Proceed to Pay. (Source: SM-FS Feature 2 §2.5 rule 1 + SM-WF-Allocation §8 + INDEX.md update-unit-status.)"
+        },
+        {
+          "id": "SM_ALLOC_011",
+          "scenario": "To verify the QR code payment modal opens",
+          "description": "Verify that choosing Online payment surfaces a QR code (or gateway) for the customer to pay.",
+          "precond": "An SM has reached the payment step with Online selected. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. With Online Payment selected, proceed to the payment step.\n2. Observe the QR / gateway surface.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration + authorisation.",
+          "expected": "[VERIFY WITH DEV] An online-payment surface (QR code modal or Easebuzz/Razorpay redirect) appears for the customer to pay. The checkout QR-pay modal was NOT captured (see DOC_DRIFT-SMPA-003) — confirm whether it is a QR modal or a gateway redirect. DESTRUCTIVE — authorisation required. (Source: SM-FS Feature 2 §2.4 + SM-FRD §5.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_020",
+          "scenario": "To verify the Offline Payment drawer fields",
+          "description": "Verify that choosing Offline payment opens the OfflinePaymentDrawer requesting reference number, amount, date, and proof upload.",
+          "precond": "An SM has a unit in the cart with Offline payment selectable. [TEST_DATA_REQUIRED] + authorisation to proceed.",
+          "steps": "1. Select 'Offline Payment'.\n2. Proceed to record an offline payment.\n3. Read the fields in the drawer.\n4. Close without submitting (unless authorised).",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration + authorisation.",
+          "expected": "[VERIFY WITH DEV] The Offline Payment drawer opens with fields for reference number, amount, date, and a proof-document upload. The drawer was NOT captured in visual-memory — confirm field labels on capture. (Source: SM-FS Feature 2 §2.4/§2.5 rule 4 + SM-FRD §5.)"
+        },
+        {
+          "id": "SM_ALLOC_012",
+          "scenario": "To verify offline payment requires all mandatory fields",
+          "description": "Verify that an offline payment cannot be submitted with any of reference / amount / date / proof missing.",
+          "precond": "The Offline Payment drawer is open. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Leave one mandatory field blank (e.g. no proof upload).\n2. Attempt to submit the offline payment.\n3. Observe the validation.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration; submit with one field missing.",
+          "expected": "Submission is blocked with a validation message until reference number, amount, date AND proof document are all provided. [VERIFY WITH DEV] exact error strings (not captured). (Source: SM-FS Feature 2 §2.5 rule 4 + SM-FRD §5 + SM-BRD §6.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_VAL_074",
+          "scenario": "To verify offline proof upload accepts a document",
+          "description": "Verify that the offline payment proof upload accepts a valid receipt/document file.",
+          "precond": "The Offline Payment drawer is open. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Upload a valid proof document (bank receipt image/PDF).\n2. Observe the upload state.",
+          "testData": "[TEST_DATA_REQUIRED] a sample receipt file + authorisation.",
+          "expected": "[VERIFY WITH DEV] The proof file uploads and is shown as attached. Confirm accepted file types/size — not specified in BRD/FRD/FS. (Source: SM-FS Feature 2 §2.4 offline proof upload.)"
+        },
+        {
+          "id": "SM_ALLOC_014",
+          "scenario": "To verify successful payment marks the unit BOOKED and proceeds to KYC",
+          "description": "Verify that on payment success the unit becomes BOOKED, the registration becomes WINNER, and the flow proceeds to KYC.",
+          "precond": "A payment was initiated for a held unit. [TEST_DATA_REQUIRED] + authorisation (irreversible without admin rollback).",
+          "steps": "1. Complete the payment (online or offline) with authorisation.\n2. Observe the confirmation and the next screen.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration + a means to complete a real payment + authorisation.",
+          "expected": "On payment success (gateway webhook is source of truth) the unit status becomes BOOKED, the registration becomes WINNER, and the flow proceeds to the KYC screen. The confirmation/success screen was NOT captured — [VERIFY WITH DEV] exact copy. DESTRUCTIVE/IRREVERSIBLE — authorisation required. (Source: SM-FS Feature 2 §2.6 + SM-WF-Allocation §7 §11 webhook-is-source-of-truth.)"
+        },
+        {
+          "id": "SM_ALLOC_013",
+          "scenario": "To verify a unit is released if payment is not completed in 20 minutes",
+          "description": "Verify that if payment is not completed within the 20-minute hold, the unit returns to AVAILABLE.",
+          "precond": "A unit was placed on hold and payment was not completed. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Place a unit on hold (Proceed to Pay) with authorisation.\n2. Do not complete payment.\n3. Wait beyond 20 minutes (a cron releases holds every minute).\n4. Re-check the unit status.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration + an available unit + authorisation.",
+          "expected": "After the 20-minute window the hold is released and the unit returns to AVAILABLE (cron runs every 1 minute to release expired holds). DESTRUCTIVE setup — authorisation required. (Source: SM-FS Feature 2 §2.5 rule 2 + SM-WF-Allocation §8 hold rules.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_NEG_023",
+          "scenario": "To verify payment failure releases the hold",
+          "description": "Verify that a failed payment releases the hold and returns the unit to AVAILABLE.",
+          "precond": "A payment was attempted and failed. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Initiate payment with authorisation.\n2. Cause/allow the payment to fail.\n3. Re-check the unit status and the on-screen message.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration + a failing payment path + authorisation.",
+          "expected": "On payment failure the hold is released, the unit returns to AVAILABLE, and the SM can retry with a different method or unit. [VERIFY WITH DEV] exact failure message. DESTRUCTIVE — authorisation required. (Source: SM-FS Feature 2 §2.6 'On payment failure or timeout' + SM-FRD §9.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_NEG_040",
+          "scenario": "To verify a network failure during payment is recoverable",
+          "description": "Verify that a network failure during payment surfaces a recoverable error rather than a silent failure.",
+          "precond": "A payment is in progress. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Initiate payment with authorisation.\n2. Simulate a network drop during the payment step.\n3. Observe the error and recovery options.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration + a way to drop the network + authorisation.",
+          "expected": "[VERIFY WITH DEV] A recoverable error is shown (not a silent failure) and the SM can resume from a saved state. Confirm exact behaviour. DESTRUCTIVE — authorisation required. (Source: SM-FRD §9 'Network disconnection during physical event — SM can resume from saved state'.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_NEG_017",
+          "scenario": "To verify only one unit can be held at a time per customer",
+          "description": "Verify that a customer cannot hold more than one unit simultaneously.",
+          "precond": "An SM has one unit held for a customer. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Place a unit on hold for the customer (with authorisation).\n2. Attempt to place a second unit on hold for the same customer.\n3. Observe the result.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration + two available units + authorisation.",
+          "expected": "The system enforces one hold at a time per customer — the second hold is blocked or replaces the first. [VERIFY WITH DEV] exact behaviour/message. DESTRUCTIVE — authorisation required. (Source: SM-FS Feature 2 §2.5 rule 3 'Only one unit can be held at a time per customer'.)"
+        },
+        {
+          "id": "SM_PA_037",
+          "scenario": "To verify concurrent SMs cannot hold the same unit",
+          "description": "Verify that two SMs cannot place the same unit on hold at the same time (race protection).",
+          "precond": "Two SM sessions are viewing the same available unit. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. From SM session A, place a unit on hold (with authorisation).\n2. From SM session B, attempt to hold the same unit.\n3. Observe session B's result.",
+          "testData": "[TEST_DATA_REQUIRED] two SM sessions + one shared available unit + authorisation.",
+          "expected": "Session B is rejected — the unit is already held (re-validated at submit). [VERIFY WITH DEV] exact 'unit no longer available' message. DESTRUCTIVE — authorisation required. (Source: SM-WF-Allocation §8 hold rules + dimensions §4 submit-time re-validation.)"
+        }
+      ]
+    },
+    {
+      "name": "KYC — Form, Applicants & Documents (Destructive / WINNER-only)",
+      "tcs": [
+        {
+          "id": "TC_PHYSALLOC_NEG_014",
+          "scenario": "To verify direct /kyc nav without context renders blank",
+          "description": "Verify that navigating directly to the KYC URL without a checkout context renders a blank page (no crash, no redirect).",
+          "precond": "An SM is logged in with no checkout context.",
+          "steps": "1. In the address bar go directly to /sales-manager/physical-allocation/kyc.\n2. Observe the page.",
+          "testData": "(direct URL nav)",
+          "expected": "The URL stays on /kyc but the body renders completely blank (white screen) because customerContext is missing — no crash and no redirect. (Source: INDEX.md allocation-kyc.png + KYC sub-route notes.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_UI_025",
+          "scenario": "To verify the KYC page loads after payment",
+          "description": "Verify that, after a successful payment, the KYC page loads with the applicant form (WINNER context).",
+          "precond": "A unit payment was completed and the SM has the WINNER context. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. From a WINNER registration, open the 'KYC & E-Sign' link in the Pre Allocated Units header (or proceed after payment).\n2. Observe the KYC form.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration (none seeded — ask user / requires a completed booking).",
+          "expected": "[VERIFY WITH DEV] The KYC page renders the applicants form (primary applicant section). The populated KYC form was NOT captured (no WINNER seeded) — confirm on a real WINNER registration. (Source: INDEX.md KYC sub-route + NOT-captured table.)"
+        },
+        {
+          "id": "SM_ALLOC_015",
+          "scenario": "To verify primary applicant fields auto-fill from registration",
+          "description": "Verify that the KYC primary applicant fields are pre-populated from the customer's registration record.",
+          "precond": "An SM is on the KYC page for a WINNER registration. [TEST_DATA_REQUIRED].",
+          "steps": "1. Read the primary applicant fields on the KYC form.\n2. Compare them to the customer's registration data.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration with known details (ask user).",
+          "expected": "[VERIFY WITH DEV] The primary applicant fields (name, contact, etc.) are pre-filled from the registration; the SM verifies and completes any missing fields. Confirm on a real WINNER registration (not captured). (Source: SM-FS Feature 3 §3.6 rule 2 + SM-FRD §5.)"
+        },
+        {
+          "id": "SM_ALLOC_016",
+          "scenario": "To verify all 4 documents are mandatory per applicant",
+          "description": "Verify that KYC submission is blocked unless all 4 documents are uploaded for the primary applicant.",
+          "precond": "An SM is on the KYC page for a WINNER registration. [TEST_DATA_REQUIRED].",
+          "steps": "1. Fill the primary applicant fields.\n2. Upload fewer than 4 documents (e.g. omit Aadhaar back).\n3. Attempt to submit KYC.\n4. Observe the validation.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration + 3 of 4 documents.",
+          "expected": "[VERIFY WITH DEV] Submission is blocked until all 4 documents are present: Passport photograph, PAN card, Aadhaar front, Aadhaar back. Confirm exact error string. (Source: SM-FS Feature 3 §3.4 'All 4 documents are mandatory' + SM-BRD §4 rule 7.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_VAL_075",
+          "scenario": "To verify each of the 4 document slots is present",
+          "description": "Verify that the KYC form exposes upload controls for all four required documents per applicant.",
+          "precond": "An SM is on the KYC page for a WINNER registration. [TEST_DATA_REQUIRED].",
+          "steps": "1. Look at the document-upload section for the primary applicant.\n2. Note each upload slot.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration (ask user).",
+          "expected": "[VERIFY WITH DEV] Four upload slots are present: Passport photograph, PAN card, Aadhaar front, Aadhaar back. Confirm labels on capture. (Source: SM-FS Feature 3 §3.4.)"
+        },
+        {
+          "id": "SM_PA_032",
+          "scenario": "To verify Submit KYC is blocked until primary fields are complete",
+          "description": "Verify that KYC submission is blocked while any mandatory primary-applicant field is empty.",
+          "precond": "An SM is on the KYC page for a WINNER registration. [TEST_DATA_REQUIRED].",
+          "steps": "1. Leave a mandatory primary field blank.\n2. Attempt to submit KYC.\n3. Observe the validation.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration; submit with one field blank.",
+          "expected": "[VERIFY WITH DEV] Submission is blocked with an inline error until all mandatory primary-applicant fields are completed. Confirm exact behaviour. (Source: SM-FS Feature 3 §3.6 + SM-FRD §5.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_FUNC_076",
+          "scenario": "To verify Add Applicant creates a co-applicant section",
+          "description": "Verify that '+ Add Applicant' adds a co-applicant section with its own mandatory fields and document slots.",
+          "precond": "An SM is on the KYC page for a WINNER registration. [TEST_DATA_REQUIRED].",
+          "steps": "1. Click '+ Add Applicant'.\n2. Observe the new co-applicant section.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration (ask user).",
+          "expected": "[VERIFY WITH DEV] A co-applicant section appears with fields for name, mobile, email, address, relationship, plus its own 4 document slots. Confirm on capture. (Source: SM-FS Feature 3 §3.5 + 'How to Use' Step 2.)"
+        },
+        {
+          "id": "SM_ALLOC_017",
+          "scenario": "To verify maximum 4 applicants (3 co-applicants)",
+          "description": "Verify that the form allows at most 4 applicants total and hides/disables Add Applicant at the limit.",
+          "precond": "An SM is on the KYC page for a WINNER registration. [TEST_DATA_REQUIRED].",
+          "steps": "1. Add co-applicants up to 3 (total 4 including primary).\n2. Observe the 'Add Applicant' button at the limit.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration (ask user).",
+          "expected": "[VERIFY WITH DEV] After 3 co-applicants (4 total) the 'Add Applicant' button is disabled/hidden and the label 'Max. 4 Applicants allowed' is shown. (Source: SM-FS Feature 3 §3.5 + SM-BRD §4 rule 8.)"
+        },
+        {
+          "id": "SM_ALLOC_018",
+          "scenario": "To verify co-applicant relationship restricted to blood relatives",
+          "description": "Verify that the co-applicant relationship dropdown only offers blood-relative options.",
+          "precond": "An SM is adding a co-applicant on the KYC page. [TEST_DATA_REQUIRED].",
+          "steps": "1. Open the relationship dropdown for a co-applicant.\n2. Read the options.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration (ask user).",
+          "expected": "[VERIFY WITH DEV] The relationship options are blood relatives (Father, Mother, Spouse, Son, Daughter, Sibling, etc. — full list unconfirmed). Confirm the complete enum on capture. (Source: SM-FS Feature 3 §3.5 + SM-FRD §5.)"
+        },
+        {
+          "id": "SM_PA_033",
+          "scenario": "To verify a co-applicant requires all 4 documents",
+          "description": "Verify that a co-applicant with a partial document set blocks KYC submission.",
+          "precond": "An SM has added a co-applicant. [TEST_DATA_REQUIRED].",
+          "steps": "1. Fill the co-applicant fields.\n2. Upload fewer than 4 documents for the co-applicant.\n3. Attempt to submit KYC.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration + a co-applicant with 3 of 4 documents.",
+          "expected": "[VERIFY WITH DEV] Submission is rejected — each co-applicant requires all 4 documents (partial uploads rejected). Confirm exact error. (Source: SM-FS Feature 3 §3.6 rule 3 + SM-BRD §4 rule 7.)"
+        },
+        {
+          "id": "SM_PA_034",
+          "scenario": "To verify removing a co-applicant clears their documents",
+          "description": "Verify that removing a co-applicant clears that co-applicant's uploaded documents from the form state.",
+          "precond": "An SM has a co-applicant with uploaded documents. [TEST_DATA_REQUIRED].",
+          "steps": "1. Remove a co-applicant who has documents uploaded.\n2. Observe the remaining form state.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration + a co-applicant with documents (ask user).",
+          "expected": "[VERIFY WITH DEV] The co-applicant section is removed and their uploaded documents are cleared from form state (not retained for other applicants). Confirm on capture. (Source: derived from SM-FS Feature 3 applicant model; not explicitly documented.)"
+        },
+        {
+          "id": "SM_ALLOC_019",
+          "scenario": "To verify KYC submit sets the isKycSubmitted flag",
+          "description": "Verify that a successful KYC submission sets isKycSubmitted=true on the registration unit and generates the KYC PDF.",
+          "precond": "An SM has a complete KYC form (all fields + all documents). [TEST_DATA_REQUIRED] + authorisation (fires kyc/submit).",
+          "steps": "1. Complete all applicant fields and documents.\n2. Click 'Submit KYC' (with authorisation).\n3. Observe the result.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration + full document set + authorisation.",
+          "expected": "[VERIFY WITH DEV] On submit, isKycSubmitted=true is set on the registration unit, a KYC PDF is generated (Puppeteer) and stored in Azure, and the header link flips to '✓ KYC Done'. DESTRUCTIVE — authorisation required. (Source: SM-FS Feature 3 §3.6 + INDEX.md KYC sub-route + kyc/submit endpoint.)"
+        },
+        {
+          "id": "SM_ALLOC_FSD_021",
+          "scenario": "To verify there is no admin KYC approval step (self-attested)",
+          "description": "Verify that KYC is self-attested at submission with no separate admin approval flow.",
+          "precond": "A KYC was submitted. [TEST_DATA_REQUIRED].",
+          "steps": "1. After KYC submit, look for any 'pending admin approval' state.\n2. Confirm the booking is treated as confirmed on submit.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration with KYC submitted (ask user).",
+          "expected": "[VERIFY WITH DEV] There is no admin KYC approval flow — KYC is self-attested and the unit booking is fully confirmed on submit (isKycSubmitted=true). (Source: FSD-CORRECTION baseline TC + SM-FS Feature 3 §3.6.)"
+        },
+        {
+          "id": "SM_ALLOC_FSD_020",
+          "scenario": "To verify the KYC document upload has no size limit (bug ref)",
+          "description": "Verify the documented behaviour that KYC document upload enforces no file-size limit.",
+          "precond": "An SM is uploading a KYC document. [TEST_DATA_REQUIRED].",
+          "steps": "1. Upload a very large document file for an applicant.\n2. Observe whether it is accepted.",
+          "testData": "[TEST_DATA_REQUIRED] a large image/PDF + a WINNER registration.",
+          "expected": "[VERIFY WITH DEV / BUG-KYC-001] The upload accepts the large file with no size limit enforced (documented gap). Treat as the documented behaviour, not a fresh defect, but note BUG-KYC-001. (Source: baseline FSD TC SM_ALLOC_FSD_020 / BUG-KYC-001.)"
+        }
+      ]
+    },
+    {
+      "name": "KYC — Integration & Persistence",
+      "tcs": [
+        {
+          "id": "SM_PA_038",
+          "scenario": "To verify KYC submission syncs to LeadSquared",
+          "description": "Verify that a submitted KYC triggers the downstream sync of documents to LeadSquared CRM.",
+          "precond": "A KYC was submitted. [TEST_DATA_REQUIRED].",
+          "steps": "1. Submit KYC (with authorisation).\n2. Confirm the portal-side sync action was attempted.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration + authorisation.",
+          "expected": "[VERIFY WITH DEV] The portal records that KYC documents were queued/synced to LeadSquared. LSQ is out of direct test scope (no LSQ credentials) — assert only the portal-side sync attempt, do NOT call LSQ. (Source: SM-FS Feature 3 §3.6 rule 5 + project LSQ-exclusion constraint.)"
+        },
+        {
+          "id": "SM_PA_041",
+          "scenario": "To verify the generated KYC PDF matches the submitted form",
+          "description": "Verify that the generated KYC PDF includes all applicants and matches the submitted data.",
+          "precond": "A KYC was submitted with multiple applicants. [TEST_DATA_REQUIRED].",
+          "steps": "1. Submit KYC with primary + co-applicant(s) (with authorisation).\n2. Open/inspect the generated KYC PDF.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration + co-applicants + authorisation.",
+          "expected": "[VERIFY WITH DEV] The KYC PDF includes all applicants and their submitted details/documents. Confirm PDF contents on a real submission. (Source: SM-FS Feature 3 §3.6 + INDEX.md kyc/submit generates PDF.)"
+        },
+        {
+          "id": "SM_PA_036",
+          "scenario": "To verify the booking persists after refresh",
+          "description": "Verify that a completed booking persists in the system after a page refresh.",
+          "precond": "A unit was successfully booked. [TEST_DATA_REQUIRED].",
+          "steps": "1. After a successful booking, refresh the page / re-open the registration.\n2. Confirm the unit shows BOOKED and the registration WINNER.",
+          "testData": "[TEST_DATA_REQUIRED] a registration with a completed booking (ask user).",
+          "expected": "[VERIFY WITH DEV] After refresh the unit still shows BOOKED and the registration WINNER — the booking persisted server-side. (Source: SM-WF-Allocation §7 + webhook-source-of-truth.)"
+        },
+        {
+          "id": "SM_PA_039",
+          "scenario": "To verify an audit log records the allocation event",
+          "description": "Verify that the unit allocation event is recorded with the SM user ID and a timestamp.",
+          "precond": "A unit allocation occurred. [TEST_DATA_REQUIRED] + backend/audit access.",
+          "steps": "1. Perform an allocation (with authorisation).\n2. Inspect the audit log for the event.",
+          "testData": "[TEST_DATA_REQUIRED] backend/audit access + a disposable allocation.",
+          "expected": "[VERIFY WITH DEV] An audit log entry records the allocation with the SM user ID and timestamp. Requires backend access — confirm with Dev. (Source: baseline TC SM_PA_039; not surfaced in portal UI.)"
+        }
+      ]
+    },
+    {
+      "name": "Cross-Module & Downstream Effects",
+      "tcs": [
+        {
+          "id": "TC_PHYSALLOC_E2E_021",
+          "scenario": "To verify the full search-to-KYC happy path (E2E)",
+          "description": "Verify the end-to-end physical allocation flow: search -> select -> pick unit -> pay -> BOOKED/WINNER -> KYC submit.",
+          "precond": "An active PHYSICAL_EVENT campaign and a disposable PREALLOCATED registration exist. [TEST_DATA_REQUIRED] + authorisation.",
+          "steps": "1. Search and select the customer.\n2. Select a unit and review pricing/cost sheet/payment schedule.\n3. Proceed to Pay and complete payment (with authorisation).\n4. Confirm BOOKED/WINNER.\n5. Complete and submit KYC.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration + completable payment + authorisation.",
+          "expected": "The full flow completes: customer found, unit selected, payment succeeds, unit BOOKED, registration WINNER, KYC submitted (isKycSubmitted=true). DESTRUCTIVE/IRREVERSIBLE — authorisation required. (Source: SM-WF-Allocation §7 PHYSICAL_EVENT full flow + SM-FS Features 1-3.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_INT_001",
+          "scenario": "To verify a booked unit reflects in the SM Towers heatmap",
+          "description": "Verify that a unit booked via physical allocation is reflected as booked in the SM Towers heatmap (read-only cross-module).",
+          "precond": "A unit was booked via physical allocation. [TEST_DATA_REQUIRED].",
+          "steps": "1. After booking a unit, open the 'Towers' module in the SM sidebar.\n2. Locate the booked unit in the heatmap.",
+          "testData": "[TEST_DATA_REQUIRED] a registration whose unit was just booked (ask user).",
+          "expected": "[VERIFY WITH DEV] The booked unit shows the booked/sold colour in the SM Towers heatmap (read-only; data refreshes via WebSocket during an active campaign). (Source: SM-BRD §4 rule 9 + SM-FRD Module 2 + cross-module dimension.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_INT_002",
+          "scenario": "To verify the Admin campaign KPIs update after a booking",
+          "description": "Verify that booking a unit via physical allocation increments the Admin-side campaign KPIs (Booked counts).",
+          "precond": "A unit was booked via physical allocation. [TEST_DATA_REQUIRED] + admin access.",
+          "steps": "1. Note the Admin campaign detail KPIs (Booked From Assigned / Common Pool, Registrations Pending To Book) before booking.\n2. Book a unit via SM physical allocation.\n3. Re-read the Admin KPIs.",
+          "testData": "[TEST_DATA_REQUIRED] a disposable registration + admin access + authorisation.",
+          "expected": "[VERIFY WITH DEV] The Admin Physical Event campaign KPIs update — a booked-from-assigned or booked-from-common-pool count increases and pending-to-book decreases. (Source: Admin-Allocation campaign-295 inventory in INDEX.md + cross-portal allocation workflow.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_NEG_042",
+          "scenario": "To verify a user-friendly error when the campaign expires mid-flow",
+          "description": "Verify that if the PHYSICAL_EVENT campaign ends while the SM is mid-allocation, a clear error is shown rather than a silent failure.",
+          "precond": "An SM is mid-flow and the campaign transitions to ended. [TEST_DATA_REQUIRED].",
+          "steps": "1. Begin an allocation while a campaign is active.\n2. Have the campaign end (or expire) before completion.\n3. Attempt to continue.",
+          "testData": "[TEST_DATA_REQUIRED] a campaign that ends mid-session (ask user).",
+          "expected": "[VERIFY WITH DEV] A user-friendly message indicates the campaign is no longer active and the flow cannot continue (no silent failure). Confirm exact message. (Source: baseline TC SM_PA_042 + SM-FRD §9.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_BIZ_028",
+          "scenario": "To verify a WINNER cannot be re-allocated another unit",
+          "description": "Verify that re-selecting a customer who is already a WINNER does not allow booking a second unit in the same campaign.",
+          "precond": "A customer is already WINNER for the campaign. [TEST_DATA_REQUIRED].",
+          "steps": "1. Search and select a WINNER customer.\n2. Attempt to allocate another unit.\n3. Observe the result.",
+          "testData": "[TEST_DATA_REQUIRED] a WINNER registration (ask user).",
+          "expected": "[VERIFY WITH DEV] The system prevents a second allocation for an already-WINNER registration (the registration shows 'Booked' and the flow does not allow another booking). Confirm exact behaviour. (Source: baseline TC_PHYSALLOC_BIZ_028 / SM-WF-Allocation one-unit-per-winner.)"
+        },
+        {
+          "id": "SM_PA_030",
+          "scenario": "To verify a customer with no active registration cannot be selected",
+          "description": "Verify that a customer without an active registration cannot proceed to checkout.",
+          "precond": "An SM is on the Customer Search screen. [TEST_DATA_REQUIRED].",
+          "steps": "1. Search for a customer with no active registration in the campaign.\n2. Attempt to Select them.",
+          "testData": "[TEST_DATA_REQUIRED] a customer with no active registration (ask user).",
+          "expected": "[VERIFY WITH DEV] The customer either does not appear in results or cannot be selected to proceed (an active registration is required). Confirm exact behaviour. (Source: SM-FS Feature 1 §1.5 rule 2 + SM-FRD §5.)"
+        }
+      ]
+    },
+    {
+      "name": "Role / Auth / Security",
+      "tcs": [
+        {
+          "id": "SM_PA_035",
+          "scenario": "To verify unauthenticated access redirects to login",
+          "description": "Verify that accessing /physical-allocation with no session redirects to the SM login.",
+          "precond": "No SM session is active.",
+          "steps": "1. With no session, go to https://uat-web.xrportal.in/sales-manager/physical-allocation.\n2. Observe the result.",
+          "testData": "(no session)",
+          "expected": "The browser is redirected to the SM login page (/sales-manager). The protected route is not rendered. (Source: SM-FRD §7 auth + dimensions §9 role/auth.)"
+        },
+        {
+          "id": "SM_PA_022",
+          "scenario": "To verify the route is blocked without an active campaign",
+          "description": "Verify that direct URL access to /physical-allocation when no PHYSICAL_EVENT campaign is active shows the idle state (allocation unavailable).",
+          "precond": "An SM is logged in and no PHYSICAL_EVENT campaign is active.",
+          "steps": "1. Go directly to /sales-manager/physical-allocation with no active campaign.\n2. Observe the page.",
+          "testData": "[TEST_DATA_REQUIRED] a moment with no active campaign (ask user).",
+          "expected": "The page shows the 'No Active Campaign' idle state with the search disabled — allocation cannot proceed without an active campaign. (Source: SM-FS Feature 1 §1.5 rule 1 + INDEX.md idle state.)"
+        },
+        {
+          "id": "SM_PA_026",
+          "scenario": "To verify a Buyer/CP token cannot access the SM route",
+          "description": "Verify that a Buyer or Channel Partner JWT cannot access the SM /physical-allocation route.",
+          "precond": "A Buyer or CP session/token is available. [TEST_DATA_REQUIRED].",
+          "steps": "1. Using a Buyer or CP session/token, attempt to load /sales-manager/physical-allocation.\n2. Observe the result.",
+          "testData": "[TEST_DATA_REQUIRED] a Buyer or CP token (ask user).",
+          "expected": "[VERIFY WITH DEV] Access is denied / redirected — only Sales Manager (role 5) and Sales Manager Admin (role 4) may access SM routes. Confirm exact behaviour (403 vs redirect). (Source: SM-FRD §7 + SM-BRD §2 roles + dimensions §9 multi-tenant isolation.)"
+        },
+        {
+          "id": "SM_PA_023",
+          "scenario": "To verify the Allocation nav appears only with an active campaign",
+          "description": "Verify the documented behaviour around when the Physical Allocation navigation is meaningful (active campaign).",
+          "precond": "An SM is logged in.",
+          "steps": "1. With no active campaign, open Allocation and note the idle state.\n2. With an active campaign, open Allocation and note the search state.",
+          "testData": "[TEST_DATA_REQUIRED] sessions with and without an active campaign (ask user).",
+          "expected": "[VERIFY WITH DEV] The 'Allocation' nav item is always present, but the page is only functional during an active PHYSICAL_EVENT campaign (otherwise the idle state). Confirm whether the nav is ever hidden vs always shown. (Source: baseline TC SM_PA_023; INDEX.md shows nav always present.)"
+        }
+      ]
+    },
+    {
+      "name": "API Contract & Performance",
+      "tcs": [
+        {
+          "id": "TC_PHYSALLOC_API_031",
+          "scenario": "To verify the active-campaign API response shape",
+          "description": "Verify that the active-campaign endpoint returns the expected fields for a RUNNING PHYSICAL_EVENT.",
+          "precond": "An active PHYSICAL_EVENT campaign exists. [TEST_DATA_REQUIRED] API access.",
+          "steps": "1. Call GET /api/v1/sales-manager/physical-event/campaign/active.\n2. Read the response body.",
+          "testData": "[TEST_DATA_REQUIRED] a valid SM token + an active campaign (ask user).",
+          "expected": "HTTP 200 with the active campaign object including id, name, status='RUNNING', startTime, endTime, projectId (e.g. campaign 295). (Source: INDEX.md Active Campaign API capture.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_API_032",
+          "scenario": "To verify the search API enforces campaignId scoping",
+          "description": "Verify that the customer-search endpoint scopes results to the supplied campaignId and requires q length >= 5.",
+          "precond": "An active campaign exists. [TEST_DATA_REQUIRED] API access.",
+          "steps": "1. Call GET /physical-event/search?campaignId=<id>&q=<>=5 chars>.\n2. Read the response.\n3. Repeat with q under 5 chars.",
+          "testData": "[TEST_DATA_REQUIRED] a valid SM token + campaignId + a >=5-char query (UAT seed: campaignId=295, q=7666470638).",
+          "expected": "With a >=5-char q, results are scoped to that campaignId. A q under 5 chars returns no search (the UI never fires it). [VERIFY WITH DEV] server response for short q. (Source: INDEX.md Customer search endpoint + debounce >=5.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_API_033",
+          "scenario": "To verify the pool-units API requires a campaignId",
+          "description": "Verify that the pool-units endpoint returns pool inventory scoped to a campaignId (and optional towerId).",
+          "precond": "An active campaign with pool units exists. [TEST_DATA_REQUIRED] API access.",
+          "steps": "1. Call GET /physical-event/pool-units?campaignId=<id>.\n2. Read the response.\n3. (Optional) add &towerId=<id> and confirm filtering.",
+          "testData": "[TEST_DATA_REQUIRED] a valid SM token + campaignId (UAT seed: 295) + towerId (e.g. testtower-1757934355725 Crest).",
+          "expected": "HTTP 200 with the campaign's pool units; adding towerId filters to that tower. (Source: INDEX.md pool-units endpoint + pool towers.)"
+        },
+        {
+          "id": "TC_PHYSALLOC_API_034",
+          "scenario": "To verify the search API rejects an unauthenticated call",
+          "description": "Verify that the customer-search endpoint rejects a request with no/invalid token.",
+          "precond": "API access is available.",
+          "steps": "1. Call GET /physical-event/search with no Authorization header.\n2. Read the HTTP status.",
+          "testData": "(no token)",
+          "expected": "[VERIFY WITH DEV] The endpoint returns 401/403 for an unauthenticated request. Confirm exact code. (Source: SM-FRD §7 + dimensions §9.)"
+        },
+        {
+          "id": "SM_PA_024",
+          "scenario": "To verify the Customer Search page loads within budget",
+          "description": "Verify that the Customer Search landing loads within an acceptable performance budget.",
+          "precond": "An SM is logging in to the active-campaign landing.",
+          "steps": "1. Navigate to the Physical Allocation landing.\n2. Measure the time to interactive (search input enabled).",
+          "testData": "[TEST_DATA_REQUIRED] an active campaign (ask user).",
+          "expected": "[VERIFY WITH DEV] The landing reaches an interactive state within an acceptable budget (no fixed SLA in BRD/FRD — confirm target). (Source: baseline TC SM_PA_024.)"
+        },
+        {
+          "id": "SM_PA_025",
+          "scenario": "To verify a loader shows during the campaign-active check",
+          "description": "Verify that a skeleton/loader is shown while the active-campaign check is in flight.",
+          "precond": "An SM is opening the Physical Allocation landing.",
+          "steps": "1. Open the Allocation route.\n2. Observe the page while the active-campaign API is loading.",
+          "testData": "(no input)",
+          "expected": "[VERIFY WITH DEV] A skeleton/loader is shown while GET /campaign/active is in flight, then resolves to the idle card or the search card. Confirm the loader exists on capture. (Source: baseline TC SM_PA_025.)"
+        }
+      ]
+    }
+  ]
+}

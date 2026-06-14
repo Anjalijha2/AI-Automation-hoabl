@@ -30,6 +30,9 @@ if (!jsonPath) { console.error('Usage: node xlsx-build-master.js <jsonPath>'); p
 const PORTAL_FILE = {
   Admin: 'TestCases-AdminPortal.xlsx', SM: 'TestCases-SMPortal.xlsx',
   CP: 'TestCases-CPPortal.xlsx', Buyer: 'TestCases-BuyerPortal.xlsx',
+  // full-name aliases (agents may emit either form)
+  'Sales Manager': 'TestCases-SMPortal.xlsx',
+  'Channel Partner': 'TestCases-CPPortal.xlsx',
 };
 
 const HEADERS = ['Testcase_ID', 'Module Name', 'Sub Module', 'Testcase_Scenario', 'Testcase Description', 'Precondition', 'Test Steps', 'Test data', 'Expected results', 'Actual result', 'Stauts: Pass/Fail', 'Pass/Fail Resource - Anjali'];
