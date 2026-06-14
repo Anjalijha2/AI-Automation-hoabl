@@ -37,10 +37,16 @@ const PORTAL_FILE = {
 
 const HEADERS = ['Testcase_ID', 'Module Name', 'Sub Module', 'Testcase_Scenario', 'Testcase Description', 'Precondition', 'Test Steps', 'Test data', 'Expected results', 'Actual result', 'Stauts: Pass/Fail', 'Pass/Fail Resource - Anjali'];
 
-const HDR_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2E5C8A' } };
-const HDR_FONT = { bold: true, color: { argb: 'FFFFFFFF' } };
-const NOTE_TITLE_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF2CC' } };
-const BANNER_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDDEBF7' } };
+// Reference palette (matches Customers - Master). Factory functions, not constants:
+// ExcelJS corrupts its style registry when one fill object is shared across many
+// cells — every cell must get a fresh object.
+const HDR_FILL = () => ({ type: 'pattern', pattern: 'solid', fgColor: { argb: '00FFD24D' } });
+const BANNER_FILL = () => ({ type: 'pattern', pattern: 'solid', fgColor: { argb: '002E75B6' } });
+const NOTE_FILL = () => ({ type: 'pattern', pattern: 'solid', fgColor: { argb: '00FFF2CC' } });
+const HDR_FONT = { bold: true, color: { argb: '00000000' }, size: 11, name: 'Arial' };
+const BANNER_FONT = { bold: true, color: { argb: '00FFFFFF' }, size: 10, name: 'Arial' };
+const TITLE_FONT = { bold: true, color: { argb: '00C00000' }, size: 11, name: 'Arial' };
+const NOTE_FONT = { size: 10, name: 'Arial' };
 
 (async () => {
   const spec = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
@@ -64,26 +70,30 @@ const BANNER_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDDE
   // Notes block
   const titleRow = s.addRow(['Some points to remember of testcases']);
   s.mergeCells(1, 1, 1, 6);
-  titleRow.getCell(1).font = { bold: true, size: 12 };
-  titleRow.getCell(1).fill = NOTE_TITLE_FILL;
+  titleRow.getCell(1).font = TITLE_FONT;
+  titleRow.getCell(1).fill = NOTE_FILL();
+  titleRow.getCell(1).alignment = { horizontal: 'left', vertical: 'middle', wrapText: true };
   for (const note of (spec.notes || [])) {
     const nr = s.addRow([note]);
     s.mergeCells(nr.number, 1, nr.number, 6);
-    nr.getCell(1).alignment = { wrapText: true };
+    nr.getCell(1).font = NOTE_FONT;
+    nr.getCell(1).fill = NOTE_FILL();
+    nr.getCell(1).alignment = { horizontal: 'left', vertical: 'middle', wrapText: true };
   }
   s.addRow([]); // blank separator
 
   // Header
   const hRow = s.addRow(HEADERS);
-  hRow.eachCell((c) => { c.font = HDR_FONT; c.fill = HDR_FILL; c.alignment = { vertical: 'middle', wrapText: true }; });
+  hRow.eachCell((c) => { c.font = HDR_FONT; c.fill = HDR_FILL(); c.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }; });
 
   // Sub-module groups
   let tcCount = 0;
   for (const sm of (spec.subModules || [])) {
     const banner = s.addRow([sm.name]);
     s.mergeCells(banner.number, 1, banner.number, HEADERS.length);
-    banner.getCell(1).font = { bold: true };
-    banner.getCell(1).fill = BANNER_FILL;
+    banner.getCell(1).font = BANNER_FONT;
+    banner.getCell(1).fill = BANNER_FILL();
+    banner.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
     for (const tc of (sm.tcs || [])) {
       const row = s.addRow([
         tc.id, spec.module, sm.name,
