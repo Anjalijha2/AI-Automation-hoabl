@@ -1,7 +1,16 @@
 // scripts/xlsx-write-results.js
-// Parse playwright run log → populate Status / Last Run Status / Execution Details /
-// Actual Result (Run) / Screenshot Link / Automation Status columns in xlsx.
-// Also mirrors status into TestCases.md (appends/updates Status column).
+// Parse playwright run log → populate the inline execution columns of the
+// gold-standard "<Module> - Master" sheet:
+//   col 10  Actual result            (rich text: pass/fail + timestamp + duration + screenshot)
+//   col 11  Stauts: Pass/Fail        (Pass / Fail / Skip — header text kept verbatim incl. typo)
+//   col 12  Pass/Fail Resource - Anjali  (set to "Automation" for automated runs)
+//
+// Legacy fallback (pre-overhaul workbooks) still supported:
+//   - "<Module> (Exec)" companion sheet (cols 2/3/4/5/6/7)
+//   - legacy single combined sheet      (cols 9/11/12/13/14/15)
+//
+// Sheet resolution order for <sheetName>: "<sheetName> - Master" → "<sheetName> (Exec)"
+//   → "<sheetName>". Passing the full sheet name (already ending in " - Master") also works.
 //
 // Usage:
 //   node scripts/xlsx-write-results.js <portal> <sheetName> <logPath> [testResultsDir]
@@ -277,33 +286,65 @@ function findScreenshot(tcid, results, sheetName, portalArg) {
   return '';
 }
 
+// ─── Resolve the target sheet ────────────────────────────────────────────────
+// Returns { sheet, format } where format ∈ { 'master', 'exec', 'legacy' }.
+//   master : gold-standard "<Module> - Master" — inline exec cols 10/11/12
+//   exec   : companion "<Module> (Exec)"        — cols 2/3/4/5/6/7
+//   legacy : single combined sheet              — cols 9/11/12/13/14/15
+function resolveSheet(wb) {
+  // 1) caller passed the full master name, or the module name → "<Module> - Master"
+  const masterName = /- Master$/.test(sheetName) ? sheetName : `${sheetName} - Master`;
+  let s = wb.getWorksheet(masterName);
+  if (s) return { sheet: s, format: 'master' };
+  // 2) legacy companion exec sheet
+  s = wb.getWorksheet(`${sheetName} (Exec)`.slice(0, 31));
+  if (s) return { sheet: s, format: 'exec' };
+  // 3) legacy single combined sheet
+  s = wb.getWorksheet(sheetName);
+  if (s) return { sheet: s, format: 'legacy' };
+  return { sheet: null, format: null };
+}
+
+// ─── Build the rich "Actual result" text for the Master format ───────────────
+// The Master sheet has only ONE free-text execution cell (col 10), so we fold
+// timestamp + duration + outcome + screenshot path into it.
+function masterActualText(result, timestamp, screenshot) {
+  const dur = result.duration || 'n/a';
+  const retry = result.isRetry ? ' (after retry)' : '';
+  if (result.status === 'Pass') return `PASS${retry} — matched expected. [Automation ${timestamp}, ${dur}]`;
+  if (result.status === 'Fail') {
+    const shot = screenshot ? ` | screenshot: ${screenshot}` : '';
+    return `FAIL${retry} — see error context.${shot} [Automation ${timestamp}, ${dur}]`;
+  }
+  if (result.status === 'Skip') return `SKIPPED — not executed (ENV-guarded or fixme). [Automation ${timestamp}]`;
+  return `PENDING [Automation ${timestamp}]`;
+}
+
 // ─── Update xlsx ──────────────────────────────────────────────────────────────
-// New readable format (v3): execution results live in a companion "<Module> (Exec)"
-// sheet with columns 1 TCID | 2 Status | 3 Automation Status | 4 Last Run Status
-// | 5 Execution Details | 6 Actual Result (Run) | 7 Screenshot Link.
-// Falls back to legacy single-sheet (cols 9/11/12/13/14/15) if no (Exec) sheet.
 async function updateXlsx(results) {
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.readFile(XLSX_PATH);
 
-  const execName = `${sheetName} (Exec)`.slice(0, 31);
-  const execSheet = wb.getWorksheet(execName);
-  const legacy = !execSheet;
-  const sheet = execSheet || wb.getWorksheet(sheetName);
+  const { sheet, format } = resolveSheet(wb);
   if (!sheet) {
-    console.error('Sheet not found:', execName, 'or', sheetName);
+    console.error(`Sheet not found for "${sheetName}" (tried "<name> - Master", "<name> (Exec)", "<name>").`);
     process.exit(1);
   }
 
-  // Column map differs between new exec sheet and legacy combined sheet.
-  const COL = legacy
-    ? { status: 9, auto: 11, lastRun: 12, details: 13, actual: 14, screenshot: 15 }
-    : { status: 2, auto: 3, lastRun: 4, details: 5, actual: 6, screenshot: 7 };
-  const startRow = legacy ? 3 : 2; // legacy has title+header (2 rows); exec has header only (1 row)
+  // Column map + first data row per format.
+  const COL = {
+    master: { actual: 10, status: 11, resource: 12 },
+    exec: { status: 2, auto: 3, lastRun: 4, details: 5, actual: 6, screenshot: 7 },
+    legacy: { status: 9, auto: 11, lastRun: 12, details: 13, actual: 14, screenshot: 15 },
+  }[format];
+  // Master & legacy have a notes/title block before TC rows; exec has header only.
+  // Scanning from row 1 is safe — non-TC rows (notes, banners, header) never match
+  // a TC_ID in the results map, so they are skipped naturally.
+  const startRow = format === 'exec' ? 2 : 1;
 
   const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' IST';
   let updated = 0;
-  let unmatched = [];
+  const unmatched = [];
 
   for (let r = startRow; r <= sheet.rowCount; r++) {
     const id = (sheet.getRow(r).getCell(1).value || '').toString().trim();
@@ -321,18 +362,24 @@ async function updateXlsx(results) {
     const isPass = result.status === 'Pass';
     const isFail = result.status === 'Fail';
     const isSkip = result.status === 'Skip';
+    const screenshot = isFail ? findScreenshot(id, results, sheetName, portalArg) : '';
 
-    row.getCell(COL.status).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
-    row.getCell(COL.auto).value = 'Automated';
-    row.getCell(COL.lastRun).value = result.status + (result.isRetry ? ' (retry)' : '');
-    const details = isFail ? `${timestamp} — failed in ${result.duration || 'n/a'}` : `${timestamp} — ${result.status.toLowerCase()} in ${result.duration || 'n/a'}`;
-    row.getCell(COL.details).value = details;
-    row.getCell(COL.actual).value = isPass ? 'Matches expected' : isFail ? 'See screenshot + error context' : 'Not executed';
-    if (isFail) {
-      const link = findScreenshot(id, results, sheetName, portalArg);
-      row.getCell(COL.screenshot).value = link || '';
+    if (format === 'master') {
+      // Inline 3-column model: Actual result | Stauts: Pass/Fail | Resource.
+      row.getCell(COL.actual).value = masterActualText(result, timestamp, screenshot);
+      row.getCell(COL.status).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
+      row.getCell(COL.resource).value = 'Automation';
     } else {
-      row.getCell(COL.screenshot).value = '';
+      // Legacy / exec 6-column model.
+      row.getCell(COL.status).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
+      row.getCell(COL.auto).value = 'Automated';
+      row.getCell(COL.lastRun).value = result.status + (result.isRetry ? ' (retry)' : '');
+      const details = isFail
+        ? `${timestamp} — failed in ${result.duration || 'n/a'}`
+        : `${timestamp} — ${result.status.toLowerCase()} in ${result.duration || 'n/a'}`;
+      row.getCell(COL.details).value = details;
+      row.getCell(COL.actual).value = isPass ? 'Matches expected' : isFail ? 'See screenshot + error context' : 'Not executed';
+      row.getCell(COL.screenshot).value = isFail ? (screenshot || '') : '';
     }
 
     updated++;
@@ -351,7 +398,7 @@ async function updateXlsx(results) {
   }
 
   await wb.xlsx.writeFile(XLSX_PATH);
-  return { updated, unmatched };
+  return { updated, unmatched, format };
 }
 
 (async () => {
@@ -364,8 +411,8 @@ async function updateXlsx(results) {
     return;
   }
 
-  const { updated, unmatched } = await updateXlsx(results);
-  console.log(`✓ Updated ${updated} rows in ${PORTAL_FILE[portalArg]} → sheet "${sheetName}"`);
+  const { updated, unmatched, format } = await updateXlsx(results);
+  console.log(`✓ Updated ${updated} rows in ${PORTAL_FILE[portalArg]} → sheet "${sheetName}" (${format} format)`);
   if (unmatched.length > 0) {
     console.log(`⚠ ${unmatched.length} spec TC_IDs had no xlsx match (TC_ID alignment needed):`);
     unmatched.slice(0, 20).forEach((id) => console.log('  -', id));
