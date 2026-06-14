@@ -287,19 +287,27 @@ function findScreenshot(tcid, results, sheetName, portalArg) {
 }
 
 // ─── Resolve the target sheet ────────────────────────────────────────────────
-// Returns { sheet, format } where format ∈ { 'master', 'exec', 'legacy' }.
-//   master : gold-standard "<Module> - Master" — inline exec cols 10/11/12
-//   exec   : companion "<Module> (Exec)"        — cols 2/3/4/5/6/7
-//   legacy : single combined sheet              — cols 9/11/12/13/14/15
+// Returns { sheet, format } where format ∈ { 'exec2', 'master', 'exec', 'legacy' }.
+//   exec2  : gold-standard "<Module> - Exec"  — 7-col companion (preferred)
+//              cols: TC ID | Status | Automation Status | Last Run Status | Execution Details | Actual Result | Screenshot Link
+//   master : "<Module> - Master" inline exec cols 10/11/12 (fallback)
+//   exec   : legacy "<Module> (Exec)" companion — cols 2/3/4/5/6/7
+//   legacy : legacy single combined sheet       — cols 9/11/12/13/14/15
+//
+// Resolution order (1→4): - Exec → - Master → (Exec) → plain name
 function resolveSheet(wb) {
-  // 1) caller passed the full master name, or the module name → "<Module> - Master"
-  const masterName = /- Master$/.test(sheetName) ? sheetName : `${sheetName} - Master`;
-  let s = wb.getWorksheet(masterName);
+  const base = sheetName.replace(/ - (Master|Exec)$/, '').trim();
+  // 1) preferred: new companion exec sheet
+  let s = wb.getWorksheet(`${base} - Exec`);
+  if (s) return { sheet: s, format: 'exec2' };
+  // 2) Master inline
+  const masterName = /- Master$/.test(sheetName) ? sheetName : `${base} - Master`;
+  s = wb.getWorksheet(masterName);
   if (s) return { sheet: s, format: 'master' };
-  // 2) legacy companion exec sheet
-  s = wb.getWorksheet(`${sheetName} (Exec)`.slice(0, 31));
+  // 3) legacy companion exec sheet
+  s = wb.getWorksheet(`${base} (Exec)`.slice(0, 31));
   if (s) return { sheet: s, format: 'exec' };
-  // 3) legacy single combined sheet
+  // 4) legacy single combined sheet
   s = wb.getWorksheet(sheetName);
   if (s) return { sheet: s, format: 'legacy' };
   return { sheet: null, format: null };
@@ -332,17 +340,23 @@ async function updateXlsx(results) {
   }
 
   // Column map + first data row per format.
+  // exec2: new gold-standard "- Exec" companion (7-col): TC ID | Status | Auto Status | Last Run | Details | Actual | Screenshot
   const COL = {
+    exec2:  { status: 2, auto: 3, lastRun: 4, details: 5, actual: 6, screenshot: 7 },
     master: { actual: 10, status: 11, resource: 12 },
-    exec: { status: 2, auto: 3, lastRun: 4, details: 5, actual: 6, screenshot: 7 },
+    exec:   { status: 2, auto: 3, lastRun: 4, details: 5, actual: 6, screenshot: 7 },
     legacy: { status: 9, auto: 11, lastRun: 12, details: 13, actual: 14, screenshot: 15 },
   }[format];
-  // Master & legacy have a notes/title block before TC rows; exec has header only.
-  // Scanning from row 1 is safe — non-TC rows (notes, banners, header) never match
-  // a TC_ID in the results map, so they are skipped naturally.
-  const startRow = format === 'exec' ? 2 : 1;
+  // exec + exec2 have header at row 1; start data at row 2.
+  // Master & legacy may have a notes/title block — scanning from row 1 is safe (non-TC rows never match).
+  const startRow = (format === 'exec' || format === 'exec2') ? 2 : 1;
 
-  const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' IST';
+  // Timestamp: ISO → IST (UTC+5:30). If JENKINS_BUILD_ID is set, prefix for CI traceability.
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const ist = new Date(now.getTime() + istOffset);
+  const timestamp = ist.toISOString().replace('T', ' ').slice(0, 16) + ' IST';
+  const jenkinsBuild = process.env.JENKINS_BUILD_ID ? `Jenkins #${process.env.JENKINS_BUILD_ID} | ` : '';
   let updated = 0;
   const unmatched = [];
 
@@ -370,15 +384,16 @@ async function updateXlsx(results) {
       row.getCell(COL.status).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
       row.getCell(COL.resource).value = 'Automation';
     } else {
-      // Legacy / exec 6-column model.
+      // exec2 / exec / legacy — 6-column execution model.
       row.getCell(COL.status).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
       row.getCell(COL.auto).value = 'Automated';
       row.getCell(COL.lastRun).value = result.status + (result.isRetry ? ' (retry)' : '');
+      // Execution Details: Jenkins build prefix (if set) + timestamp + duration/error
       const details = isFail
-        ? `${timestamp} — failed in ${result.duration || 'n/a'}`
-        : `${timestamp} — ${result.status.toLowerCase()} in ${result.duration || 'n/a'}`;
+        ? `${jenkinsBuild}${timestamp} — FAIL in ${result.duration || 'n/a'}`
+        : `${jenkinsBuild}${timestamp} — ${result.status.toLowerCase()} in ${result.duration || 'n/a'}`;
       row.getCell(COL.details).value = details;
-      row.getCell(COL.actual).value = isPass ? 'Matches expected' : isFail ? 'See screenshot + error context' : 'Not executed';
+      row.getCell(COL.actual).value = isPass ? 'PASS — matched expected' : isFail ? 'FAIL — see screenshot + error context' : 'Not executed';
       row.getCell(COL.screenshot).value = isFail ? (screenshot || '') : '';
     }
 

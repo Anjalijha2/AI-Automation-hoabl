@@ -22,14 +22,24 @@ const FILENAME_MAP = {
 (async () => {
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.readFile(path.join(__dirname, '..', 'manual-qa-repository', '07-execution', FILENAME_MAP[portal]));
-  const sheet = wb.getWorksheet(sheetName);
+  // Resolve sheet: try exact name → "<name> - Master" → "<name>"
+  const base = sheetName.replace(/ - Master$/, '').trim();
+  const sheet = wb.getWorksheet(sheetName)
+    || wb.getWorksheet(`${base} - Master`)
+    || wb.getWorksheet(base);
   if (!sheet) {
     console.error('Sheet not found:', sheetName);
     process.exit(1);
   }
+  const resolvedName = sheet.name;
 
-  // Find scenario column
-  const headerRow = sheet.getRow(2);
+  // Find scenario column — scan from row 1 (Master sheets have a notes block before the header)
+  let headerRowNum = 1;
+  for (let r = 1; r <= Math.min(sheet.rowCount, 20); r++) {
+    const v = ((sheet.getRow(r).getCell(1).value || '') + '').trim();
+    if (v === 'Testcase_ID') { headerRowNum = r; break; }
+  }
+  const headerRow = sheet.getRow(headerRowNum);
   let scenarioCol = -1;
   headerRow.eachCell((c, col) => {
     const v = (c.value || '').toString().toLowerCase();
@@ -37,7 +47,7 @@ const FILENAME_MAP = {
   });
 
   const xlsxTcs = [];
-  for (let r = 3; r <= sheet.rowCount; r++) {
+  for (let r = headerRowNum + 1; r <= sheet.rowCount; r++) {
     const id = (sheet.getRow(r).getCell(1).value || '').toString().trim();
     if (/^[A-Z][A-Z0-9_]*_\d{3,}[a-z]?$/.test(id)) {
       const scenario = scenarioCol > 0 ? (sheet.getRow(r).getCell(scenarioCol).value || '').toString().trim() : '';
@@ -56,7 +66,7 @@ const FILENAME_MAP = {
   const orphanInSpec = [...specTcIds].filter((id) => !xlsxIds.has(id));
   const uncoveredInXlsx = xlsxTcs.filter((t) => !specTcIds.has(t.id));
 
-  console.log(`# Coverage Report — ${portal} / ${sheetName}`);
+  console.log(`# Coverage Report — ${portal} / ${resolvedName}`);
   console.log(`Spec: ${specPath}\n`);
   console.log(`xlsx TCs: ${xlsxTcs.length}`);
   console.log(`Spec TC refs: ${specTcIds.size}`);
