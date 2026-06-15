@@ -274,12 +274,12 @@ class AllocationPage extends BasePage {
 
   /**
    * searchCampaignByName(name) — type into the campaign-name search input.
-   * The list filters live; we wait for networkidle after typing so the
-   * caller can read settled rows.
+   * UAT search is not reactive — requires Enter or Refresh to apply.
    */
   async searchCampaignByName(name) {
     await this.fill(this.campaignNameSearch, name);
-    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.keyboard.press('Enter');
+    await this.page.waitForLoadState('networkidle', { timeout: 8_000 }).catch(() => {});
   }
 
   /**
@@ -567,6 +567,8 @@ class AllocationPage extends BasePage {
     }
     const name = ((await options.first().textContent()) || '').trim();
     await options.first().click();
+    // Wait for project dropdown to fully close before any subsequent dropdown opens.
+    await activeDropdown.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
     // Wait briefly for the table data to load, but don't block forever.
     await this.page.waitForLoadState('networkidle', { timeout: 8_000 }).catch(() => {});
     return name;
@@ -604,7 +606,9 @@ class AllocationPage extends BasePage {
     const activeDropdown = this.page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
     await activeDropdown.waitFor({ state: 'visible', timeout: 5_000 });
     await activeDropdown.locator(`.ant-select-item-option:has-text("${label}")`).first().click();
-    await this.page.waitForLoadState('networkidle').catch(() => {});
+    // Wait for dropdown to close and table to reload.
+    await activeDropdown.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+    await this.page.waitForLoadState('networkidle', { timeout: 8_000 }).catch(() => {});
   }
 
   /**
