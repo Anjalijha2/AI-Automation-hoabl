@@ -364,6 +364,7 @@ test.describe('Allocation — Admin Portal E2E', () => {
     });
 
     test('ADM_ALLOC_011 — ADMIN-FS-Allocation §2 — Allocation Type dropdown lists Static/Dynamic/Physical', async () => {
+      await allocationPage.openCreateCampaignModal();
       const options = await allocationPage.getCampaignTypeOptions();
       expect(options.length).toBeGreaterThan(0);
       const joined = options.join('|').toLowerCase();
