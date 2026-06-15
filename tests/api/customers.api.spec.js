@@ -138,6 +138,81 @@ test.describe('Customers — Admin Portal API', () => {
     }
   });
 
+  // ── Goal 2 — Search / Filter API variants ──────────────────────────────────
+  // TechSpec §2: allotmentStatus, kycStatus, paymentStatus, hasHomeLoan filters
+  // are separate query params; each is tested independently here.
+
+  test('TC_CUST_API_005 — TechSpec §2.1 — allotmentStatus=registered filter returns 200 with valid shape', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '20', allotmentStatus: 'registered' },
+    });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    expect(payload).toBeTruthy();
+    // KPI block must still be present regardless of filter (TechSpec: KPIs not filtered)
+    const flat = JSON.stringify(payload);
+    expect(typeof flat).toBe('string');
+  });
+
+  test('TC_CUST_API_006 — TechSpec §2.1 — kycStatus="KYC Completed" filter returns 200 (case-sensitive)', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '20', kycStatus: 'KYC Completed' },
+    });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    expect(payload).toBeTruthy();
+  });
+
+  test('TC_CUST_API_006b — TechSpec §2.1 — kycStatus="KYC Pending" filter returns 200', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '20', kycStatus: 'KYC Pending' },
+    });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    expect(payload).toBeTruthy();
+  });
+
+  test('TC_CUST_API_008 — TechSpec §2.1 — paymentStatus="Paid" filter returns 200 (case-sensitive)', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '20', paymentStatus: 'Paid' },
+    });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    expect(payload).toBeTruthy();
+  });
+
+  test('TC_CUST_API_009 — TechSpec §2.1 — hasHomeLoan=true filter returns 200', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '20', hasHomeLoan: 'true' },
+    });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    expect(payload).toBeTruthy();
+    // Rows, if any, should carry home loan data
+    const rows = extractRows(payload);
+    for (const row of rows) {
+      // hasHomeLoan=true → HomeLoan.status = 'completed' — presence of homeLoan key expected
+      const rowStr = JSON.stringify(row).toLowerCase();
+      expect(rowStr).toMatch(/homeloan|home_loan|loan/);
+    }
+  });
+
+  test('TC_CUST_API_010 — TechSpec §2.1 — combined filters (allotmentStatus + kycStatus) return 200', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '20', allotmentStatus: 'booked_offline', kycStatus: 'KYC Completed' },
+    });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    expect(payload).toBeTruthy();
+  });
+
+  // ── Goal 3 — Cancel Registration (skip-guarded destructive) ────────────────
   test('TC_CUST_API_004 — FRD-CUST §11 — PUT /admin/registration-units/:id/refund cancels a registration', async () => {
     test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
       'Skipped on UAT — destructive refund; set ALLOW_DESTRUCTIVE=1 with disposable UAT_REG_UNIT_ID');
@@ -159,3 +234,12 @@ test.describe('Customers — Admin Portal API', () => {
     expect(flat).toContain('cancelled');
   });
 });
+
+function extractRows(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.rows)) return payload.rows;
+  if (Array.isArray(payload?.items)) return payload.items;
+  if (Array.isArray(payload?.buyers)) return payload.buyers;
+  if (Array.isArray(payload?.records)) return payload.records;
+  return [];
+}

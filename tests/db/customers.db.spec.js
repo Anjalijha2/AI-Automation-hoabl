@@ -92,17 +92,68 @@ test.describe('Customers — DB State Consistency', () => {
     // Filtered by a specific allocation status
     const filtered = await api.get('/api/v1/admin/dashboard/all-buyers', {
       token,
-      params: { page: '1', limit: '1000', allocationStatus: 'Cancelled' },
+      params: { page: '1', limit: '1000', allotmentStatus: 'registered' },
     });
-    // Filtered must succeed (even if 0 results)
     expect([200, 204]).toContain(filtered.status);
 
-    // If both return arrays, filtered count <= total count
-    const totalArr  = extractArray(total.body);
+    const totalArr   = extractArray(total.body);
     const filteredArr = extractArray(filtered.body);
     if (totalArr && filteredArr) {
       expect(filteredArr.length).toBeLessThanOrEqual(totalArr.length);
     }
+  });
+
+  // ── Goal 2 — DB consistency for filter variants ─────────────────────────────
+
+  test('TC_CUST_DB_004 — TechSpec §2.1 — kycStatus filters are mutually consistent with DB total', async () => {
+    const [total, completed, pending] = await Promise.all([
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000' } }),
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000', kycStatus: 'KYC Completed' } }),
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000', kycStatus: 'KYC Pending' } }),
+    ]);
+    expect(total.status).toBe(200);
+    expect(completed.status).toBe(200);
+    expect(pending.status).toBe(200);
+
+    const totalArr    = extractArray(total.body);
+    const completedArr = extractArray(completed.body);
+    const pendingArr   = extractArray(pending.body);
+    if (totalArr && completedArr) expect(completedArr.length).toBeLessThanOrEqual(totalArr.length);
+    if (totalArr && pendingArr)   expect(pendingArr.length).toBeLessThanOrEqual(totalArr.length);
+    // Completed + Pending should not exceed total (some rows may have no KYC filter match)
+    if (totalArr && completedArr && pendingArr) {
+      expect(completedArr.length + pendingArr.length).toBeLessThanOrEqual(totalArr.length);
+    }
+  });
+
+  test('TC_CUST_DB_005 — TechSpec §2.1 — hasHomeLoan filter returns subset of total DB records', async () => {
+    const [total, withLoan, withoutLoan] = await Promise.all([
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000' } }),
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000', hasHomeLoan: 'true' } }),
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000', hasHomeLoan: 'false' } }),
+    ]);
+    expect(total.status).toBe(200);
+    expect(withLoan.status).toBe(200);
+    expect(withoutLoan.status).toBe(200);
+
+    const totalArr      = extractArray(total.body);
+    const withLoanArr   = extractArray(withLoan.body);
+    const withoutLoanArr = extractArray(withoutLoan.body);
+    if (totalArr && withLoanArr)    expect(withLoanArr.length).toBeLessThanOrEqual(totalArr.length);
+    if (totalArr && withoutLoanArr) expect(withoutLoanArr.length).toBeLessThanOrEqual(totalArr.length);
+  });
+
+  test('TC_CUST_DB_006 — TechSpec §2.1 — paymentStatus filter Paid/Pending both return valid subsets', async () => {
+    const [paid, pending] = await Promise.all([
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000', paymentStatus: 'Paid' } }),
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000', paymentStatus: 'Pending' } }),
+    ]);
+    // Both filter values must return 200 (case-sensitive param per TechSpec)
+    expect(paid.status).toBe(200);
+    expect(pending.status).toBe(200);
+    // Neither result should error out
+    expect(paid.body).toBeTruthy();
+    expect(pending.body).toBeTruthy();
   });
 });
 
