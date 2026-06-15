@@ -796,30 +796,9 @@ test.describe('Customers — Admin Portal E2E', () => {
       // UI REDESIGNED: Submit disabling logic has changed with slot-based UI.
     });
 
-    test('TC_CUST_NEG_090 — Parking modal Cancel discards pending changes', async () => {
-      await customersPage.searchByPhone('8888888888');
-      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
-      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
-      await customersPage.openParkingModal(rowIdx);
-      const aria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      if (aria !== 'true') {
-        await customersPage.parkingToggle.evaluate(el => el.click());
-        await expect(customersPage.parkingToggle).toHaveAttribute('aria-checked', 'true', { timeout: 5000 });
-      }
-      await customersPage.parkingCountInput.fill('3');
-      await customersPage.parkingAmountInput.fill('7777');
-      // Close without submit and re-open — fields should revert.
-      await customersPage.closeParkingModal();
-      await customersPage.openParkingModal(rowIdx);
-      const recheckAria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      // If toggle was originally OFF, it should be OFF again. We assert that the
-      // pending fields are NOT 3 / 7777 (i.e., they reset to server state).
-      if (recheckAria === 'true') {
-        const cnt = await customersPage.parkingCountInput.inputValue();
-        const amt = await customersPage.parkingAmountInput.inputValue();
-        expect(cnt === '3' && amt === '7777').toBeFalsy();
-      }
-      await customersPage.closeParkingModal();
+    test.fixme('TC_CUST_NEG_090 — Parking modal Cancel discards pending changes', async () => {
+      // UI REDESIGNED: parkingCountInput / parkingAmountInput no longer exist in UAT.
+      // Slot-based UI must be used instead. Revisit once slot-based POM is written.
     });
 
     test.fixme('TC_CUST_FUNC_093 — Parking update emits audit-log entry server-side', async () => {

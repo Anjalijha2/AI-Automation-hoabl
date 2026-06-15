@@ -703,7 +703,8 @@ class CustomersPage extends BasePage {
   // ── Unit Swap modal (read-only open/close) ──────────────────────────────────
   async openUnitSwapModal(rowIndex) {
     await this.openThreeDotMenu(rowIndex);
-    await this.click(this.unitSwapMenuItem);
+    await this.unitSwapMenuItem.waitFor({ state: 'visible', timeout: 10_000 });
+    await this.unitSwapMenuItem.click({ force: true });
     await this.unitSwapModal.waitFor({ state: 'visible', timeout: 10_000 });
   }
   async closeUnitSwapModal() {
@@ -714,7 +715,8 @@ class CustomersPage extends BasePage {
   // ── Update Parking modal (read-only open/close) ─────────────────────────────
   async openParkingModal(rowIndex) {
     await this.openThreeDotMenu(rowIndex);
-    await this.click(this.updateParkingMenuItem);
+    await this.updateParkingMenuItem.waitFor({ state: 'visible', timeout: 10_000 });
+    await this.updateParkingMenuItem.click({ force: true });
     await this.updateParkingModal.waitFor({ state: 'visible', timeout: 10_000 });
   }
   async closeParkingModal() {
@@ -734,7 +736,8 @@ class CustomersPage extends BasePage {
   // ── Home Loan Approval modal (read-only open/close) ─────────────────────────
   async openHomeLoanModalReadOnly(rowIndex) {
     await this.openThreeDotMenu(rowIndex);
-    await this.click(this.homeLoanApprovalMenuItem);
+    await this.homeLoanApprovalMenuItem.waitFor({ state: 'visible', timeout: 10_000 });
+    await this.homeLoanApprovalMenuItem.click({ force: true });
     await this.homeLoanModal.waitFor({ state: 'visible', timeout: 10_000 });
   }
   async closeHomeLoanModal() {
