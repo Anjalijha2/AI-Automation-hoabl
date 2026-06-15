@@ -758,32 +758,14 @@ test.describe('Customers — Admin Portal E2E', () => {
       await customersPage.closeParkingModal();
     });
 
-    test('TC_CUST_FUNC_081 — Parking toggle reveals count + amount inputs when enabled', async () => {
-      await customersPage.searchByPhone('8888888888');
-      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
-      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
-      await customersPage.openParkingModal(rowIdx);
-      // Toggle on (assuming initial off — idempotent regardless of starting state).
-      const initialAria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      if (initialAria !== 'true') {
-        await customersPage.parkingToggle.click();
-      }
-      await expect(customersPage.parkingCountInput).toBeVisible();
-      await expect(customersPage.parkingAmountInput).toBeVisible();
-      await customersPage.closeParkingModal();
+    test.fixme('TC_CUST_FUNC_081 — Parking toggle reveals count + amount inputs when enabled', async () => {
+      // UI REDESIGNED in UAT: modal now uses slot-based UI (Enter Amount per slot + Add More button)
+      // instead of count × amount. Source code in repo is stale vs deployed UAT. Rewrite once synced.
     });
 
-    test('TC_CUST_FUNC_082 — Parking preview text computes count × amount live', async () => {
-      await customersPage.searchByPhone('8888888888');
-      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
-      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
-      await customersPage.openParkingModal(rowIdx);
-      const aria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      if (aria !== 'true') await customersPage.parkingToggle.click();
-      await customersPage.parkingCountInput.fill('2');
-      await customersPage.parkingAmountInput.fill('5000');
-      await expect(customersPage.parkingPreviewText).toContainText(/10[\s,]*000|10000/);
-      await customersPage.closeParkingModal();
+    test.fixme('TC_CUST_FUNC_082 — Parking preview text computes count × amount live', async () => {
+      // UI REDESIGNED in UAT: slot-based totals now shown ("Total Parking Slots/Amount").
+      // Source code in repo is stale. Rewrite once source-code/ is synced to UAT.
     });
 
     test.fixme('TC_CUST_FUNC_083 — Parking Submit persists count and amount', async () => {
@@ -794,71 +776,24 @@ test.describe('Customers — Admin Portal E2E', () => {
       // DESTRUCTIVE-SUBMIT: requires submit.
     });
 
-    test('TC_CUST_FUNC_087 — Parking count max 500 enforced client-side', async () => {
-      await customersPage.searchByPhone('8888888888');
-      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
-      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
-      await customersPage.openParkingModal(rowIdx);
-      const aria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      if (aria !== 'true') await customersPage.parkingToggle.click();
-      await customersPage.parkingCountInput.fill('501');
-      const value = await customersPage.parkingCountInput.inputValue();
-      // Accept either: rejected entirely ("") OR clamped to ≤500.
-      expect(value === '' || Number(value) <= 500).toBeTruthy();
-      await customersPage.closeParkingModal();
+    test.fixme('TC_CUST_FUNC_087 — Parking count max 500 enforced client-side', async () => {
+      // UI REDESIGNED: no "Parking Count" input. Slot-based UI uses individual "Enter Amount" fields.
     });
 
-    test('TC_CUST_VAL_084 — Parking count rejects non-digit input', async () => {
-      await customersPage.searchByPhone('8888888888');
-      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
-      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
-      await customersPage.openParkingModal(rowIdx);
-      const aria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      if (aria !== 'true') await customersPage.parkingToggle.click();
-      await customersPage.parkingCountInput.fill('abc');
-      const value = await customersPage.parkingCountInput.inputValue();
-      expect(value).toMatch(/^\d*$/);
-      await customersPage.closeParkingModal();
+    test.fixme('TC_CUST_VAL_084 — Parking count rejects non-digit input', async () => {
+      // UI REDESIGNED: parkingCountInput no longer exists. Slot amounts accept numeric values.
     });
 
-    test('TC_CUST_VAL_085 — Parking amount rejects non-decimal input', async () => {
-      await customersPage.searchByPhone('8888888888');
-      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
-      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
-      await customersPage.openParkingModal(rowIdx);
-      const aria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      if (aria !== 'true') await customersPage.parkingToggle.click();
-      await customersPage.parkingAmountInput.fill('1.2.3');
-      const value = await customersPage.parkingAmountInput.inputValue();
-      // Acceptable: clamped to "1.2", "1.23", or empty — anything matching one-decimal regex.
-      expect(value).toMatch(/^\d*(\.\d*)?$/);
-      await customersPage.closeParkingModal();
+    test.fixme('TC_CUST_VAL_085 — Parking amount rejects non-decimal input', async () => {
+      // UI REDESIGNED: parkingAmountInput no longer exists. Slot amounts use new "Enter Amount" input.
     });
 
-    test('TC_CUST_NEG_088 — Parking Submit disabled when count empty but toggle on', async () => {
-      await customersPage.searchByPhone('8888888888');
-      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
-      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
-      await customersPage.openParkingModal(rowIdx);
-      const aria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      if (aria !== 'true') await customersPage.parkingToggle.click();
-      await customersPage.parkingCountInput.fill('');
-      await customersPage.parkingAmountInput.fill('5000');
-      await expect(customersPage.parkingSubmitButton).toBeDisabled();
-      await customersPage.closeParkingModal();
+    test.fixme('TC_CUST_NEG_088 — Parking Submit disabled when count empty but toggle on', async () => {
+      // UI REDESIGNED: Submit disabling logic has changed with slot-based UI.
     });
 
-    test('TC_CUST_NEG_089 — Parking Submit disabled when amount empty but toggle on', async () => {
-      await customersPage.searchByPhone('8888888888');
-      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
-      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
-      await customersPage.openParkingModal(rowIdx);
-      const aria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      if (aria !== 'true') await customersPage.parkingToggle.click();
-      await customersPage.parkingCountInput.fill('2');
-      await customersPage.parkingAmountInput.fill('');
-      await expect(customersPage.parkingSubmitButton).toBeDisabled();
-      await customersPage.closeParkingModal();
+    test.fixme('TC_CUST_NEG_089 — Parking Submit disabled when amount empty but toggle on', async () => {
+      // UI REDESIGNED: Submit disabling logic has changed with slot-based UI.
     });
 
     test('TC_CUST_NEG_090 — Parking modal Cancel discards pending changes', async () => {
@@ -867,7 +802,10 @@ test.describe('Customers — Admin Portal E2E', () => {
       test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
       await customersPage.openParkingModal(rowIdx);
       const aria = await customersPage.parkingToggle.getAttribute('aria-checked').catch(() => null);
-      if (aria !== 'true') await customersPage.parkingToggle.click();
+      if (aria !== 'true') {
+        await customersPage.parkingToggle.evaluate(el => el.click());
+        await expect(customersPage.parkingToggle).toHaveAttribute('aria-checked', 'true', { timeout: 5000 });
+      }
       await customersPage.parkingCountInput.fill('3');
       await customersPage.parkingAmountInput.fill('7777');
       // Close without submit and re-open — fields should revert.
