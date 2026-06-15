@@ -148,18 +148,97 @@ test.describe('Customers — DB State Consistency', () => {
       api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000', paymentStatus: 'Paid' } }),
       api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000', paymentStatus: 'Pending' } }),
     ]);
-    // Both filter values must return 200 (case-sensitive param per TechSpec)
     expect(paid.status).toBe(200);
     expect(pending.status).toBe(200);
-    // Neither result should error out
     expect(paid.body).toBeTruthy();
     expect(pending.body).toBeTruthy();
+  });
+
+  // ── Goals 3–4 — Cancel Registration / Cancel Unit DB consistency ───────────
+
+  test('TC_CUST_DB_007 — FS-CUST §CancelReg — allotmentStatus=refunded filter returns subset of DB total', async () => {
+    const [total, refunded] = await Promise.all([
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000' } }),
+      api.get('/api/v1/admin/dashboard/all-buyers', { token, params: { page: '1', limit: '1000', allotmentStatus: 'refunded' } }),
+    ]);
+    expect(total.status).toBe(200);
+    expect(refunded.status).toBe(200);
+    const totalArr   = extractArray(total.body);
+    const refundedArr = extractArray(refunded.body);
+    if (totalArr && refundedArr) {
+      expect(refundedArr.length).toBeLessThanOrEqual(totalArr.length);
+    }
+  });
+
+  test('TC_CUST_DB_008 — FS-CUST §CancelReg — booked_offline filter returns valid response shape', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '100', allotmentStatus: 'booked_offline' },
+    });
+    expect(res.status).toBe(200);
+    // Response must be a non-null object (rows may be empty array in clean UAT)
+    const arr = extractArray(res.body);
+    expect(arr === null || Array.isArray(arr)).toBe(true);
+  });
+
+  // ── Goal 5 — Unit Swap DB consistency ─────────────────────────────────────
+
+  test('TC_CUST_DB_009 — FS-UnitSwap — booked_online filter returns valid response shape (swap candidates)', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '100', allotmentStatus: 'booked_online' },
+    });
+    expect(res.status).toBe(200);
+    const arr = extractArray(res.body);
+    expect(arr === null || Array.isArray(arr)).toBe(true);
+  });
+
+  // ── Goals 6–7 — Parking / Home Loan DB consistency ────────────────────────
+
+  test('TC_CUST_DB_010 — FS-Parking — booked rows with parking_count carry numeric values in response', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '50', allotmentStatus: 'booked_offline' },
+    });
+    expect(res.status).toBe(200);
+    const rows = extractArray(res.body) || [];
+    // For rows that carry parking data, parkingCount must be a non-negative number
+    for (const row of rows) {
+      if (row.parkingCount !== undefined && row.parkingCount !== null) {
+        expect(typeof row.parkingCount).toBe('number');
+        expect(row.parkingCount).toBeGreaterThanOrEqual(0);
+      }
+    }
+  });
+
+  test('TC_CUST_DB_011 — FS-CUST §HomeLoan — hasHomeLoan=true rows carry home loan data in payload', async () => {
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '50', hasHomeLoan: 'true' },
+    });
+    expect(res.status).toBe(200);
+    const rows = extractArray(res.body) || [];
+    // Each row should carry a homeLoan or equivalent field
+    for (const row of rows) {
+      const rowStr = JSON.stringify(row).toLowerCase();
+      expect(rowStr).toMatch(/homeloan|home_loan|loan/);
+    }
+  });
+
+  // ── Goal 8 — Milestones DB read ────────────────────────────────────────────
+
+  test('TC_CUST_DB_012 — FS-Milestones §API — milestone detail endpoint is reachable and returns 4xx on missing params', async () => {
+    // A missing-param call proves the route is live and validates properly (no 500)
+    const res = await api.get('/api/v1/admin/user-unit-detail', { token, params: {} });
+    expect(res.status).toBeGreaterThanOrEqual(400);
+    expect(res.status).toBeLessThan(500);
   });
 });
 
 function extractArray(body) {
   const payload = body.data || body;
-  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload))          return payload;
+  if (Array.isArray(payload?.rows))    return payload.rows;
   if (Array.isArray(payload?.items))   return payload.items;
   if (Array.isArray(payload?.buyers))  return payload.buyers;
   if (Array.isArray(payload?.records)) return payload.records;

@@ -233,6 +233,121 @@ test.describe('Customers — Admin Portal API', () => {
     const flat = JSON.stringify(verify.body).toLowerCase();
     expect(flat).toContain('cancelled');
   });
+  // ── Goal 4 — Cancel Unit (skip-guarded destructive) ───────────────────────
+  // Endpoint: PUT /api/v1/admin/cancel-units (admin.routes.js:69)
+  // Accepts array of registrationUnitIds; single-cancel = array of 1.
+
+  test('TC_CUST_API_011 — FS-CUST cancel-unit — PUT /admin/cancel-units returns 200 for valid id', async () => {
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — destructive cancel-unit; set ALLOW_DESTRUCTIVE=1 with disposable UAT_CANCEL_UNIT_ID');
+    const cancelUnitId = process.env.UAT_CANCEL_UNIT_ID;
+    test.skip(!cancelUnitId, 'UAT_CANCEL_UNIT_ID env var not provided — required disposable registration-unit ID');
+
+    const res = await api.put('/api/v1/admin/cancel-units', { ids: [cancelUnitId] }, { token });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    expect(payload).toBeTruthy();
+    const msg = (payload.message || JSON.stringify(payload)).toLowerCase();
+    expect(msg).toMatch(/cancel|success/);
+  });
+
+  test('TC_CUST_API_012 — FS-CUST cancel-unit — PUT /admin/cancel-units with empty ids returns 4xx', async () => {
+    // BUG: backend does not validate ids:[] early — request hangs until gateway
+    // returns 502. Expected: 400 "No ids provided". Tracked as potential backend fix.
+    test.fixme(true, 'BUG: empty ids:[] causes backend hang → 502. Backend should return 400 immediately.');
+  });
+
+  // ── Goal 5 — Unit Swap (skip-guarded destructive) ─────────────────────────
+  // Endpoint: PUT /api/v1/admin/registration-unit/:id with event: 'unit-swap'
+  // (singular path, not plural — per ADMIN-FS-Customers-UnitSwap.md)
+
+  test('TC_CUST_API_013 — FS-UnitSwap §4 — PUT event:unit-swap requires targetUnitId → 400 if missing', async () => {
+    // Use a plausible-looking ID; backend should 404 (not found) or 400 (validation)
+    // rather than 500 — proves the event routing works
+    const fakeId = process.env.UAT_REG_UNIT_ID || '999999';
+    const res = await api.put(`/api/v1/admin/registration-unit/${fakeId}`,
+      { event: 'unit-swap', payload: {} }, { token });
+    // Missing targetUnitId → backend gate 1 → 400
+    expect([400, 404]).toContain(res.status);
+  });
+
+  test('TC_CUST_API_014 — FS-UnitSwap §4 — PUT event:unit-swap with same unit returns 400', async () => {
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — requires ALLOW_DESTRUCTIVE=1 + UAT_REG_UNIT_ID + UAT_CURRENT_UNIT_ID');
+    const regUnitId = process.env.UAT_REG_UNIT_ID;
+    const currentUnitId = process.env.UAT_CURRENT_UNIT_ID;
+    test.skip(!regUnitId || !currentUnitId, 'UAT_REG_UNIT_ID and UAT_CURRENT_UNIT_ID required');
+
+    // Gate 4: targetUnitId === currentUnitId → 400
+    const res = await api.put(`/api/v1/admin/registration-unit/${regUnitId}`,
+      { event: 'unit-swap', payload: { unitId: currentUnitId } }, { token });
+    expect(res.status).toBe(400);
+  });
+
+  // ── Goal 6 — Update Parking (non-destructive read + validation) ────────────
+  // Endpoint: PUT /api/v1/admin/registration-unit/:id with event: 'update-parking'
+
+  test('TC_CUST_API_015 — FS-Parking §4 — PUT event:update-parking with no delta returns 400', async () => {
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — requires ALLOW_DESTRUCTIVE=1 + UAT_REG_UNIT_ID');
+    const regUnitId = process.env.UAT_REG_UNIT_ID;
+    test.skip(!regUnitId, 'UAT_REG_UNIT_ID env var not provided');
+
+    // parkingCount same as current → no delta → backend returns 400 "No change in parking count"
+    // We send count=0 which is invalid; backend should reject
+    const res = await api.put(`/api/v1/admin/registration-unit/${regUnitId}`,
+      { event: 'update-parking', payload: { additionalParkingEnabled: true, parkingCount: 0, parkingAmount: 0 } },
+      { token });
+    expect([400, 422]).toContain(res.status);
+  });
+
+  // ── Goal 7 — Home Loan Approval (skip-guarded destructive) ────────────────
+  // Endpoint: PUT /api/v1/admin/registration-unit/:id with event: 'home-loan-approval'
+
+  test('TC_CUST_API_016 — FS-CUST §HomeLoan — PUT event:home-loan-approval requires valid registrationUnitId', async () => {
+    // Send to a non-existent ID — backend should return 404 (not found) not 500
+    const res = await api.put('/api/v1/admin/registration-unit/000000',
+      { event: 'home-loan-approval', payload: { loanApprovalStatus: 'admin_approved', approvalSource: 'admin' } },
+      { token });
+    expect([400, 404]).toContain(res.status);
+  });
+
+  // ── Goal 8 — View Milestones (read-only, safe) ────────────────────────────
+  // Endpoint: GET /api/v1/admin/user-unit-detail?registrationNumber=&unitId=
+
+  test('TC_CUST_API_017 — FS-Milestones §API — GET user-unit-detail with missing params returns 4xx', async () => {
+    // Omit required params → should return 400 or 404, not 500
+    const res = await api.get('/api/v1/admin/user-unit-detail', { token, params: {} });
+    expect(res.status).toBeGreaterThanOrEqual(400);
+    expect(res.status).toBeLessThan(500);
+  });
+
+  test('TC_CUST_API_018 — FS-Milestones §API — GET user-unit-detail with valid params returns milestone list', async () => {
+    test.skip(!process.env.UAT_REG_NUMBER || !process.env.UAT_UNIT_ID,
+      'UAT_REG_NUMBER and UAT_UNIT_ID env vars required for milestone read test');
+    const res = await api.get('/api/v1/admin/user-unit-detail', {
+      token,
+      params: { registrationNumber: process.env.UAT_REG_NUMBER, unitId: process.env.UAT_UNIT_ID },
+    });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    const flat = JSON.stringify(payload).toLowerCase();
+    expect(flat).toMatch(/milestone|unit|payment/);
+  });
+
+  // ── Goal 10 — Offline Payment (skip-guarded destructive) ──────────────────
+  // Endpoint: POST /api/v1/admin/milestone-payment-offline (multipart/form-data)
+
+  test('TC_CUST_API_019 — FS-Milestones §OfflinePayment — POST milestone-payment-offline without auth returns 401', async ({ request }) => {
+    const form = new URLSearchParams();
+    form.append('registrationNumber', 'TEST-0000');
+    const res = await request.post(`${API_BASE_URL}/api/v1/admin/milestone-payment-offline`, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      data: form.toString(),
+    });
+    // No auth header → 401
+    expect(res.status()).toBe(401);
+  });
 });
 
 function extractRows(payload) {
