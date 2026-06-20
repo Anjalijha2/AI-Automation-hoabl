@@ -269,25 +269,38 @@ test.describe('Customers — Admin Portal E2E', () => {
   // ════════════════════════════════════════════════════════════════════════════
 
   test('TC_CUST_BIZ_004 — ADM_CUST_004 — Active Towers KPI equals Config toggle-ON count', async ({ page }) => {
-    const activeTowersKpi = await customersPage.getKpiValue(customersPage.kpiActiveTowers);
-    expect(activeTowersKpi).toBeGreaterThan(0);
-    await page.goto('https://uat-web.xrportal.in/admin/cms');
-    await page.waitForLoadState('domcontentloaded');
-    // Tower Configuration is first section. Scope switch count to that block by
-    // finding heading's parent container and counting only ON switches inside.
-    const heading = page.getByText('Tower Configuration', { exact: false }).first();
-    await heading.waitFor({ state: 'visible', timeout: 15_000 });
-    const togglesOn = await heading.evaluate((h) => {
-      // Walk up to the nearest container holding both heading + switches
-      let node = h;
-      while (node && node.querySelectorAll('.ant-switch, button[role="switch"]').length === 0) {
-        node = node.parentElement;
-      }
-      if (!node) return 0;
-      const switches = node.querySelectorAll('button[role="switch"][aria-checked="true"], .ant-switch-checked');
-      return switches.length;
+    test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; navigates to /admin/customers then /admin/cms' });
+    test.info().annotations.push({ type: 'expectedResult', description: 'Active Towers KPI > 0; Config Tower Configuration section toggle-ON count equals KPI value' });
+
+    let activeTowersKpi;
+    await test.step('Step 1: Read Active Towers KPI from Customers page', async () => {
+      activeTowersKpi = await customersPage.getKpiValue(customersPage.kpiActiveTowers);
+      expect(activeTowersKpi).toBeGreaterThan(0);
     });
-    expect(togglesOn).toBe(activeTowersKpi);
+
+    await test.step('Step 2: Navigate to Config page (/admin/cms)', async () => {
+      await page.goto('https://uat-web.xrportal.in/admin/cms');
+      await page.waitForLoadState('domcontentloaded');
+    });
+
+    await test.step('Step 3: Wait for Tower Configuration section heading', async () => {
+      const heading = page.getByText('Tower Configuration', { exact: false }).first();
+      await heading.waitFor({ state: 'visible', timeout: 15_000 });
+    });
+
+    await test.step('Step 4: Count toggle-ON switches in Tower Configuration and assert equals KPI', async () => {
+      const heading = page.getByText('Tower Configuration', { exact: false }).first();
+      const togglesOn = await heading.evaluate((h) => {
+        let node = h;
+        while (node && node.querySelectorAll('.ant-switch, button[role="switch"]').length === 0) {
+          node = node.parentElement;
+        }
+        if (!node) return 0;
+        const switches = node.querySelectorAll('button[role="switch"][aria-checked="true"], .ant-switch-checked');
+        return switches.length;
+      });
+      expect(togglesOn).toBe(activeTowersKpi);
+    });
   });
 
   // ════════════════════════════════════════════════════════════════════════════

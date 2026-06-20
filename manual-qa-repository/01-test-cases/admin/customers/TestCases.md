@@ -270,3 +270,11 @@ The following actions are documented in dedicated FS files and require their own
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | TC_CUST_FUNC_001 | ADM_CUST_001 / ADM_CUST_002 / ADM_CUST_003 / ADM_CUST_006 / TC_CUST_UI_041 | ✅ PASS | Admin session — automation-repository/fixtures/.auth/admin.json (mobile 8888888888 / OTP 258369) | All assertions matched expected | 17.2s |
+
+---
+
+## Last Run: 2026-06-20 09:59 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_CUST_BIZ_004 | ADM_CUST_004 | ✅ PASS | Admin session — admin.json; navigates to /admin/customers then /admin/cms | All assertions matched expected | 17.2s |
