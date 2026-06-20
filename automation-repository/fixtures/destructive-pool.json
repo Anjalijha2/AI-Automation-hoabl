@@ -45,10 +45,6 @@
     ],
     "bookedOnline": [
       {
-        "regId": "GHNG-1000008364-D",
-        "unit": "1004-Grace"
-      },
-      {
         "regId": "GHNG-1000008364-E",
         "unit": "3002-Pinnacle"
       },
@@ -107,6 +103,13 @@
       "category": "bookedOnline",
       "reason": "DEST Test 3 TC_CUST_FUNC_071 PASS 2026-06-21 — swapped 1201-Glory -> Aura-204 (PUT 200); verified via agent-browser",
       "consumedAt": "2026-06-21 01:16 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-D",
+      "unit": "1004-Grace",
+      "category": "bookedOnline",
+      "reason": "DEST Test 4 TC_CUST_NEG_093 PASS 2026-06-21 — parking slot 250000 saved (PUT 200); no buyer msg",
+      "consumedAt": "2026-06-21 01:26 IST"
     }
   ]
 }
