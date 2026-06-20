@@ -23,7 +23,11 @@
       "Bash(agent-browser --help)",
       "Bash(agent-browser connect *)",
       "Bash(HEADLESS=true npx playwright test tests/e2e/admin/milestones.spec.js --config automation-repository/playwright.config.js --project=e2e-admin --workers=1)",
-      "Bash(echo \"EXIT=$?\")"
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(HEADLESS=true npx playwright test tests/e2e/admin/customers.spec.js --grep \"TC_CUST_FUNC_028|TC_CUST_FUNC_029|TC_CUST_FUNC_098|TC_CUST_FUNC_101|TC_CUST_NEG_067|ADM_CUST_039\" --config automation-repository/playwright.config.js --project=e2e-admin --workers=1)",
+      "Bash(HEADLESS=true npx playwright test tests/e2e/admin/customers.spec.js --grep \"TC_CUST_FUNC_101\" --config automation-repository/playwright.config.js --project=e2e-admin --workers=1)",
+      "Bash(ALLOW_DESTRUCTIVE=1 DEST_REG_ID=\"GHNG-1000008364-P\" HEADLESS=true npx playwright test tests/e2e/admin/customers.spec.js --grep \"TC_CUST_FUNC_047\" --config automation-repository/playwright.config.js --project=e2e-admin --workers=1)",
+      "Bash(timeout 140 bash -c 'until grep -q \"EXIT=\" test-results-DEST-047.log 2>/dev/null; do sleep 4; done; echo READY')"
     ],
     "deny": [
       "Read(./.env)",

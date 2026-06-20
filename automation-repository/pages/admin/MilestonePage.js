@@ -144,12 +144,16 @@ class MilestonePage extends BasePage {
     await loc.click({ force: true });
   }
 
-  /** selectPaymentMethod(method) — open the AntD select and pick an option. */
+  /** selectPaymentMethod(method) — pick a payment method. AntD selects use a virtualized
+   *  dropdown whose options are covered for a normal click (learned on Unit Swap), so we
+   *  open the combobox and keyboard-select: type to filter, then Enter. */
   async selectPaymentMethod(method) {
     await this.drawerPaymentMethod.click();
-    const dropdown = this.page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
-    await dropdown.waitFor({ state: 'visible', timeout: 5_000 });
-    await dropdown.locator(`.ant-select-item-option:has-text("${method}")`).first().click();
+    await this.page.locator('.ant-select-item-option:visible').first().waitFor({ state: 'visible', timeout: 6_000 }).catch(() => {});
+    // The #paymentMethod is a search combobox — typing filters to the match.
+    await this.drawerPaymentMethod.fill(method).catch(() => {});
+    await this.page.waitForTimeout(300);
+    await this.page.keyboard.press('Enter');
   }
 
   /**
@@ -166,11 +170,16 @@ class MilestonePage extends BasePage {
     }
     if (txnId)   await this.drawerTransactionId.fill(txnId);
     if (txnDate) {
+      // AntD DatePicker (date+time): focus the input, type the value, Enter, then click
+      // the panel's OK button if present (time pickers require confirming).
       await this.drawerTransactionDate.click();
       await this.drawerTransactionDate.fill(txnDate).catch(() => {});
       await this.page.keyboard.press('Enter').catch(() => {});
+      const okBtn = this.page.locator('.ant-picker-ok button, .ant-picker-dropdown:not(.ant-picker-dropdown-hidden) button:has-text("OK")');
+      if (await okBtn.first().isVisible().catch(() => false)) await okBtn.first().click().catch(() => {});
     }
     if (comments) await this.drawerComments.fill(comments);
+    // File upload is reliable via setInputFiles regardless of headless/visibility.
     if (proofPath) await this.drawerPaymentProofInput.setInputFiles(proofPath);
   }
 

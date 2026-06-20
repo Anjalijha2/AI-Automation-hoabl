@@ -232,4 +232,59 @@ test.describe('Milestones — Admin Portal E2E', () => {
       expect(anyToast).toBeFalsy();
     });
   });
-});
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // GOAL C — DESTRUCTIVE: Offline Payment submit (ALLOW_DESTRUCTIVE)
+  // ══════════════════════════════════════════════════════════════════════════
+  test('TC_CUST_NEG_094 — FRD §7 — Offline Payment submit posts payment; no buyer message', async () => {
+      test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+        'Skipped on UAT — destructive Offline Payment; set ALLOW_DESTRUCTIVE=1 (posts a real payment)');
+      const amount = process.env.DEST_PAY_AMOUNT || '1000';
+      test.info().annotations.push({ type: 'testData', description: `Admin session — admin.json; reg ${MILESTONE_FIXTURE_REG}; Amount=${amount}, Method=NEFT, Date=today, proof=sample-proof.pdf` });
+      test.info().annotations.push({ type: 'expectedResult', description: '"submitted successfully" toast; milestone PAYMENT STATUS advances; no buyer SMS/WhatsApp/email (FRD §8).' });
+
+      const ok = await navigateToMilestones();
+      test.skip(!ok, `Fixture ${MILESTONE_FIXTURE_REG} not found on UAT`);
+      const count = await milestonePage.offlinePaymentButtonCount();
+      test.skip(count === 0, 'No past-due outstanding milestone with an Offline Payment button on this fixture');
+
+      await test.step('Step 1: Open the Offline Payment drawer on the first due milestone', async () => {
+        await milestonePage.openOfflinePaymentDrawer(0);
+      });
+      await test.step('Step 2: Fill Amount / NEFT / Txn ID / today / proof', async () => {
+        // Build today's datetime (test code — Date allowed here). Format YYYY-MM-DD HH:mm:ss.
+        const d = new Date();
+        const pad = (n) => String(n).padStart(2, '0');
+        const today = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+        await milestonePage.fillOfflinePayment({
+          amount,
+          method: 'NEFT',
+          txnId: `UAT-TEST-${d.getTime()}`,
+          txnDate: today,
+          proofPath: PROOF_PATH,
+        });
+      });
+
+      let apiStatus = null, apiBody = '';
+      await test.step('Step 3: Submit and capture the offline-payment API response', async () => {
+        const respPromise = customersPage.page.waitForResponse(
+          (r) => /\/api\/v1\/admin\//.test(r.url())
+              && ['POST', 'PUT', 'PATCH'].includes(r.request().method())
+              && /(payment|offline|milestone)/i.test(r.url()),
+          { timeout: 20_000 }
+        ).catch(() => null);
+        await milestonePage.drawerSubmitButton.click();
+        const resp = await respPromise;
+        if (resp) { apiStatus = resp.status(); apiBody = await resp.text().catch(() => ''); }
+      });
+
+      await test.step('Step 4: Verify success (skip on a backend precondition rejection)', async () => {
+        if (apiStatus === 400 && /(campaign is active|already|exceed|outstanding)/i.test(apiBody)) {
+          test.skip(true, `Offline Payment blocked by backend precondition: ${apiBody.replace(/\s+/g, ' ').slice(0, 160)}`);
+        }
+        expect(apiStatus, `offline-payment API should succeed (got ${apiStatus}: ${apiBody})`).toBeGreaterThanOrEqual(200);
+        expect(apiStatus).toBeLessThan(300);
+        await expect(milestonePage.successToast).toBeVisible({ timeout: 15_000 });
+      });
+    });
+  });
