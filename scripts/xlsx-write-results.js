@@ -103,6 +103,13 @@ const SPEC_TO_XLSX_ALIAS = {
   TC_CUST_FUNC_126: ['TC_CUST_FUNC_126'],    // Home Loan Yes/No filter
   TC_CUST_FUNC_128: ['TC_CUST_FUNC_128'],    // PDF link on KYC-completed rows
   TC_CUST_FUNC_130: ['TC_CUST_FUNC_130'],    // page size 100
+  TC_CUST_FUNC_014: ['ADM_CUST_014'],        // clear search restores list
+  ADM_CUST_014:     ['ADM_CUST_014'],
+  TC_CUST_FUNC_121: ['TC_CUST_FUNC_121'],    // bulk units selection (read-only)
+  TC_CUST_NEG_124:  ['TC_CUST_NEG_124'],     // graceful failed-load handling
+  TC_CUST_FUNC_102: ['ADM_CUST_102'],        // cancel-reg discard (existing fixme→ now ADM alias)
+  ADM_CUST_102:     ['ADM_CUST_102'],
+  TC_CUST_NEG_123:  ['TC_CUST_NEG_123'],     // unauthenticated access blocked
   // ── Admin Customers — Goal 2 (read/filter/pagination, implemented) ──────
   TC_CUST_FUNC_018: ['ADM_CUST_018'],
   TC_CUST_FUNC_019: ['ADM_CUST_019'],

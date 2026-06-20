@@ -331,6 +331,18 @@ class CustomersPage extends BasePage {
   }
 
   /**
+   * clearSearch() — empty the Search by Phone box and submit so the full list returns.
+   * Used by ADM_CUST_014. We clear the field, press Enter (and Backspace fallback for
+   * variants that only react to key events), then wait for the table to reload.
+   */
+  async clearSearch() {
+    await this.searchByPhoneInput.fill('');
+    await this.searchByPhoneInput.press('Enter').catch(() => {});
+    await this.page.waitForLoadState('networkidle');
+    await this.tableRecordsHeading.waitFor({ state: 'visible', timeout: 10_000 });
+  }
+
+  /**
    * openFilterPanel() — ensure the inline filter row is visible.
    *
    * The "Filter" button (top-right of the table) shows/hides an extra row below
