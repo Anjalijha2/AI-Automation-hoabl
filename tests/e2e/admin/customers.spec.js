@@ -463,18 +463,28 @@ test.describe('Customers — Admin Portal E2E', () => {
   });
 
   test('TC_CUST_NEG_011 — ADM_CUST_011 — KPI counts unchanged when status filter is applied', async () => {
-    // BR1: KPI cards are computed server-side over the FULL dataset — they must NOT
-    // reflect the currently applied filter. Compare KPI snapshots before/after filter.
-    const before = {
-      registered: await customersPage.getKpiValue(customersPage.kpiRegistered),
-      cancelled:  await customersPage.getKpiValue(customersPage.kpiCancelled),
-    };
-    await customersPage.applyStatusFilter('Cancelled');
-    const after = {
-      registered: await customersPage.getKpiValue(customersPage.kpiRegistered),
-      cancelled:  await customersPage.getKpiValue(customersPage.kpiCancelled),
-    };
-    expect(after).toEqual(before);
+    test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; applies Cancelled status filter' });
+    test.info().annotations.push({ type: 'expectedResult', description: 'Registered KPI and Cancelled KPI values identical before and after filter (BRD §6 BR1: KPIs are server-side global counts, not per-filter)' });
+
+    let before;
+    await test.step('Step 1: Snapshot Registered and Cancelled KPI values before filter', async () => {
+      before = {
+        registered: await customersPage.getKpiValue(customersPage.kpiRegistered),
+        cancelled:  await customersPage.getKpiValue(customersPage.kpiCancelled),
+      };
+    });
+
+    await test.step('Step 2: Apply Cancelled status filter', async () => {
+      await customersPage.applyStatusFilter('Cancelled');
+    });
+
+    await test.step('Step 3: Assert KPI values unchanged after filter (BR1)', async () => {
+      const after = {
+        registered: await customersPage.getKpiValue(customersPage.kpiRegistered),
+        cancelled:  await customersPage.getKpiValue(customersPage.kpiCancelled),
+      };
+      expect(after).toEqual(before);
+    });
   });
 
   test('TC_CUST_NEG_049 — ADM_CUST_049 — REFUND-status rows expose limited actions', async () => {
