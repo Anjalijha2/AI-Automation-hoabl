@@ -9,3 +9,8 @@ test-results-*.log
 test-results-*/
 .playwright-mcp/
 .claude/agent-memory/
+
+# Reconstructed/temp run logs
+test-results-cust-*.log
+test-results-biz004.log
+test-inspect.log

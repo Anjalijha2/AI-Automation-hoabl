@@ -348,3 +348,11 @@ The following actions are documented in dedicated FS files and require their own
 | TC_CUST_FUNC_025 | TC_CUST_FUNC_025 | ✅ PASS | Admin session — admin.json; default page load (no filter) | All assertions matched expected | 18.2s |
 | TC_CUST_NEG_011 | TC_CUST_NEG_011 | ✅ PASS | Admin session — admin.json; applies Cancelled status filter | All assertions matched expected | 18.3s |
 | TC_CUST_NEG_049 | TC_CUST_NEG_049 | ✅ PASS | Admin session — admin.json; applies Cancelled filter to surface refund cohort | All assertions matched expected | 18.5s |
+
+---
+
+## Last Run: 2026-06-20 14:42 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_CUST_BIZ_004 | ADM_CUST_004 | ✅ PASS | Admin session — admin.json; navigates to /admin/customers then /admin/cms | All assertions matched expected | 17.8s |

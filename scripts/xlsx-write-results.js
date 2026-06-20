@@ -393,21 +393,40 @@ function* walkSpecs(suite) {
   for (const sub of (suite.suites || [])) yield* walkSpecs(sub);
 }
 
-// ─── Build the rich "Actual result" text for the Master format ───────────────
-// The Master sheet has only ONE free-text execution cell (col 10), so we fold
-// timestamp + duration + outcome + screenshot path + test-data annotation into it.
-function masterActualText(result, timestamp, screenshot, anns) {
-  const dur = result.duration || 'n/a';
+// ─── Build the concise "Actual result" text ──────────────────────────────────
+// Just the outcome — no Data / Expected / timestamp noise (those live in the
+// Test data column and Execution Details column respectively).
+function actualResultText(result) {
   const retry = result.isRetry ? ' (after retry)' : '';
-  const dataLine = anns && anns.testData ? ` | Data: ${anns.testData}` : '';
-  const expLine  = anns && anns.expectedResult ? ` | Expected: ${anns.expectedResult}` : '';
-  if (result.status === 'Pass') return `PASS${retry} — matched expected.${dataLine}${expLine} [Automation ${timestamp}, ${dur}]`;
-  if (result.status === 'Fail') {
-    const shot = screenshot ? ` | screenshot: ${screenshot}` : '';
-    return `FAIL${retry} — see error context.${shot}${dataLine}${expLine} [Automation ${timestamp}, ${dur}]`;
-  }
-  if (result.status === 'Skip') return `SKIPPED — not executed (ENV-guarded or fixme).${dataLine} [Automation ${timestamp}]`;
-  return `PENDING [Automation ${timestamp}]`;
+  if (result.status === 'Pass') return `PASS${retry} — matched expected`;
+  if (result.status === 'Fail') return `FAIL${retry} — see screenshot`;
+  if (result.status === 'Skip') return 'SKIPPED — not executed (ENV-guarded or fixme)';
+  return 'PENDING';
+}
+
+// ─── Persistent screenshot archive ───────────────────────────────────────────
+// Playwright WIPES test-results/ on every run, so a hyperlink pointing into it
+// breaks as soon as the next spec runs. We copy each screenshot into a durable
+// archive beside the workbook and link to THAT, using a workbook-relative path
+// so the link survives moving/sharing the .xlsx.
+//
+//   workbook:   manual-qa-repository/07-execution/TestCases-AdminPortal.xlsx
+//   archive:    manual-qa-repository/07-execution/screenshots/<sheetBase>/<id>.png
+//   hyperlink:  screenshots/<sheetBase>/<id>.png   (relative to workbook dir)
+//
+// Returns an ExcelJS hyperlink object, or '' when no source screenshot exists.
+function archiveScreenshot(relPathFromRoot, sheetBase, id) {
+  if (!relPathFromRoot) return '';
+  const srcAbs = path.join(__dirname, '..', relPathFromRoot);
+  if (!fs.existsSync(srcAbs)) return '';
+  const safeBase = sheetBase.replace(/[^A-Za-z0-9_-]/g, '_');
+  const destDir = path.join(path.dirname(XLSX_PATH), 'screenshots', safeBase);
+  fs.mkdirSync(destDir, { recursive: true });
+  const destAbs = path.join(destDir, `${id}.png`);
+  fs.copyFileSync(srcAbs, destAbs);
+  // Relative path from the workbook directory → portable, clickable in Excel & WPS.
+  const relFromWorkbook = `screenshots/${safeBase}/${id}.png`;
+  return { text: `${id}.png`, hyperlink: relFromWorkbook };
 }
 
 // ─── Update xlsx ──────────────────────────────────────────────────────────────
@@ -486,11 +505,12 @@ async function updateXlsx(results) {
                        (isFail ? findScreenshot(id, results, sheetName, portalArg) : '');
 
     const anns = jsonAnns.get(specIdForAnns) || jsonAnns.get(id) || null;
-    const dataLabel = anns && anns.testData ? anns.testData : '';
+    const actualText = actualResultText(result);
+    const shotLink = archiveScreenshot(screenshot, base, id);
 
     if (format === 'master') {
       // Inline 3-column model: Actual result | Stauts: Pass/Fail | Resource.
-      row.getCell(COL.actual).value = masterActualText(result, timestamp, screenshot, anns);
+      row.getCell(COL.actual).value = actualText;
       row.getCell(COL.status).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
       row.getCell(COL.resource).value = 'Automation';
     } else {
@@ -503,11 +523,11 @@ async function updateXlsx(results) {
         ? `${jenkinsBuild}${timestamp} — FAIL in ${result.duration || 'n/a'}`
         : `${jenkinsBuild}${timestamp} — ${result.status.toLowerCase()} in ${result.duration || 'n/a'}`;
       row.getCell(COL.details).value = details;
-      const actualBase = isPass ? 'PASS — matched expected' : isFail ? 'FAIL — see screenshot + error context' : 'Not executed';
-      const actualFull = dataLabel ? `${actualBase} | Data: ${dataLabel}` : actualBase;
-      row.getCell(COL.actual).value = actualFull;
-      // Screenshot link: now includes passing tests (test-finished-1.png)
-      row.getCell(COL.screenshot).value = screenshot || '';
+      row.getCell(COL.actual).value = actualText;
+      // Screenshot link: clickable hyperlink (pass = test-finished-1.png, fail = test-failed-1.png)
+      const shotCell = row.getCell(COL.screenshot);
+      shotCell.value = shotLink || '';
+      if (shotLink) shotCell.font = { color: { argb: 'FF0563C1' }, underline: true };
     }
     updated++;
 
@@ -519,7 +539,7 @@ async function updateXlsx(results) {
       const masterRowNum = masterRowMap.get(id);
       if (masterRowNum) {
         const mrow = masterSheet.getRow(masterRowNum);
-        mrow.getCell(10).value = masterActualText(result, timestamp, screenshot, anns);
+        mrow.getCell(10).value = actualText;
         mrow.getCell(11).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
         mrow.getCell(12).value = 'Automation';
         updatedMaster++;
