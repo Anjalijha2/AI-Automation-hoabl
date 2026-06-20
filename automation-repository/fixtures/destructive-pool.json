@@ -5,33 +5,85 @@
   "registrationPrefix": "GHNG-1000008364",
   "available": {
     "registered": [
-      { "regId": "GHNG-1000008364-P", "unit": "2 Bed Rise Home (621 sq.ft.)" },
-      { "regId": "GHNG-1000008364-O", "unit": "2 Bed Growth Home (485 sq.ft.)" },
-      { "regId": "GHNG-1000008364-N", "unit": "2 Bed Growth Home (485 sq.ft.)" },
-      { "regId": "GHNG-1000008364-M", "unit": "1 Bed Growth Home (323 sq.ft.)" },
-      { "regId": "GHNG-1000008364-L", "unit": "1 Bed Growth Home (323 sq.ft.)" },
-      { "regId": "GHNG-1000008364-K", "unit": "2 Bed Rise Home (621 sq.ft.)" }
+      {
+        "regId": "GHNG-1000008364-O",
+        "unit": "2 Bed Growth Home (485 sq.ft.)"
+      },
+      {
+        "regId": "GHNG-1000008364-N",
+        "unit": "2 Bed Growth Home (485 sq.ft.)"
+      },
+      {
+        "regId": "GHNG-1000008364-M",
+        "unit": "1 Bed Growth Home (323 sq.ft.)"
+      },
+      {
+        "regId": "GHNG-1000008364-L",
+        "unit": "1 Bed Growth Home (323 sq.ft.)"
+      },
+      {
+        "regId": "GHNG-1000008364-K",
+        "unit": "2 Bed Rise Home (621 sq.ft.)"
+      }
     ],
     "bookedOffline": [
-      { "regId": "GHNG-1000008364-G", "unit": "1107-Pride", "kyc": "none" },
-      { "regId": "GHNG-1000008364-H", "unit": "1204-Glory", "kyc": "pending" },
-      { "regId": "GHNG-1000008364-J", "unit": "1004-Pride", "kyc": "pending" },
-      { "regId": "GHNG-1000008364-Q", "unit": "301-Crest",  "kyc": "pending" }
+      {
+        "regId": "GHNG-1000008364-G",
+        "unit": "1107-Pride",
+        "kyc": "none"
+      },
+      {
+        "regId": "GHNG-1000008364-H",
+        "unit": "1204-Glory",
+        "kyc": "pending"
+      },
+      {
+        "regId": "GHNG-1000008364-J",
+        "unit": "1004-Pride",
+        "kyc": "pending"
+      },
+      {
+        "regId": "GHNG-1000008364-Q",
+        "unit": "301-Crest",
+        "kyc": "pending"
+      }
     ],
     "bookedOnline": [
-      { "regId": "GHNG-1000008364-C", "unit": "1201-Glory" },
-      { "regId": "GHNG-1000008364-D", "unit": "1004-Grace" },
-      { "regId": "GHNG-1000008364-E", "unit": "3002-Pinnacle" },
-      { "regId": "GHNG-1000008364-F", "unit": "1106-Pride" }
+      {
+        "regId": "GHNG-1000008364-C",
+        "unit": "1201-Glory"
+      },
+      {
+        "regId": "GHNG-1000008364-D",
+        "unit": "1004-Grace"
+      },
+      {
+        "regId": "GHNG-1000008364-E",
+        "unit": "3002-Pinnacle"
+      },
+      {
+        "regId": "GHNG-1000008364-F",
+        "unit": "1106-Pride"
+      }
     ],
     "kycCompleted": [
-      { "regId": "GHNG-1000008364-I", "unit": "1201-Pride", "note": "Booked Offline + KYC Completed — milestones present; use for Offline Payment" }
+      {
+        "regId": "GHNG-1000008364-I",
+        "unit": "1201-Pride",
+        "note": "Booked Offline + KYC Completed — milestones present; use for Offline Payment"
+      }
     ],
     "cancelled": [
-      { "regId": "GHNG-1000008364-B", "unit": "1 Bed Growth Home (323 sq.ft.)" }
+      {
+        "regId": "GHNG-1000008364-B",
+        "unit": "1 Bed Growth Home (323 sq.ft.)"
+      }
     ],
     "inactive": [
-      { "regId": "GHNG-1000008364-A", "unit": "2 Bed Rise Home (621 sq.ft.)" }
+      {
+        "regId": "GHNG-1000008364-A",
+        "unit": "2 Bed Rise Home (621 sq.ft.)"
+      }
     ]
   },
   "assignment": {
@@ -42,5 +94,13 @@
     "DEST-6_home_loan": "bookedOnline (e.g. -E)",
     "DEST-1_offline_payment": "kycCompleted (-I)"
   },
-  "consumed": []
+  "consumed": [
+    {
+      "regId": "GHNG-1000008364-P",
+      "unit": "2 Bed Rise Home (621 sq.ft.)",
+      "category": "registered",
+      "reason": "DEST Test 1 TC_CUST_FUNC_047 PASS 2026-06-20 — cancelled+refunded ₹999, now Cancelled",
+      "consumedAt": "2026-06-20 19:55 IST"
+    }
+  ]
 }
