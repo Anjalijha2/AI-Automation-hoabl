@@ -699,7 +699,14 @@ class CustomersPage extends BasePage {
     // for the specific reg-ID row to actually render — otherwise we'd scan the stale
     // (pre-filter) table and miss it.
     const target = this.page.locator(`tr.ant-table-row:has-text("${regId}")`).first();
-    const appeared = await target.waitFor({ state: 'visible', timeout: 10_000 }).then(() => true).catch(() => false);
+    let appeared = await target.waitFor({ state: 'visible', timeout: 6_000 }).then(() => true).catch(() => false);
+    // The target may be on a later page (default page size 10). Bump to 100 rows/page so
+    // every search result renders on one page, then re-check.
+    if (!appeared) {
+      await this.setPageSize(100).catch(() => {});
+      await this.page.waitForLoadState('networkidle').catch(() => {});
+      appeared = await target.waitFor({ state: 'visible', timeout: 10_000 }).then(() => true).catch(() => false);
+    }
     if (!appeared) return null;
     // "Registration Details" is the first data column (reg-ID + created date).
     const rowCount = await this.tableRows.count();

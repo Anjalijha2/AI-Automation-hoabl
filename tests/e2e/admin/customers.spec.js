@@ -1018,8 +1018,56 @@ test.describe('Customers — Admin Portal E2E', () => {
       });
     });
 
-    test.fixme('TC_CUST_FUNC_099 — ADM_CUST_099 — Cancel Unit confirm releases unit to inventory', async () => {
-      // DESTRUCTIVE-SUBMIT — enabled in Goal C (DEST-3) under ALLOW_DESTRUCTIVE. See destructive block.
+    // DESTRUCTIVE (Goal C / DEST-3) — campaign-aware, like FUNC_047. Cancel Unit is also
+    // blocked while an allocation campaign is active (same BR family as FUNC_100); a
+    // campaign-active 400 → skip with reason. Success → "...successfully" toast + unit released.
+    test('TC_CUST_FUNC_099 — ADM_CUST_099 — Cancel Unit confirm releases unit to inventory', async () => {
+      test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+        'Skipped on UAT — destructive Cancel Unit; set ALLOW_DESTRUCTIVE=1 with an approved disposable Booked row');
+      const regId = process.env.DEST_REG_ID || 'GHNG-1000008364-G';
+      test.info().annotations.push({ type: 'testData', description: `Admin session — admin.json; phone 8888888888, row ${regId} (Booked Offline, disposable)` });
+      test.info().annotations.push({ type: 'expectedResult', description: 'No campaign: "Unit cancelled successfully" toast, unit released. Active campaign: cancel 400 "campaign is active" (BR) → skip (UI silent-failure = BUG_011).' });
+
+      let rowIdx;
+      await test.step('Step 1: Search phone and locate the disposable Booked row', async () => {
+        await customersPage.searchByPhone('8888888888');
+        rowIdx = await customersPage.findRowByRegistrationId(regId);
+        expect(rowIdx, `fixture row ${regId} must be present and Booked`).not.toBeNull();
+      });
+      await test.step('Step 2: Open Cancel Unit modal, tick both attestations (enables Submit)', async () => {
+        await customersPage.openCancelUnitModal(rowIdx);
+        await expect(customersPage.cancelUnitModal).toBeVisible();
+        await customersPage.cancelUnitAttestation1.check();
+        await customersPage.cancelUnitAttestation2.check();
+        await expect(customersPage.cancelUnitSubmitButton).toBeEnabled();
+      });
+
+      let apiStatus = null, apiBody = '';
+      await test.step('Step 3: Click Submit and capture the cancel API response', async () => {
+        const respPromise = customersPage.page.waitForResponse(
+          (r) => /\/api\/v1\/admin\//.test(r.url())
+              && ['PUT', 'POST', 'DELETE', 'PATCH'].includes(r.request().method())
+              && /(cancel|unit|registration)/i.test(r.url()),
+          { timeout: 15_000 }
+        ).catch(() => null);
+        await customersPage.click(customersPage.cancelUnitSubmitButton);
+        const resp = await respPromise;
+        if (resp) { apiStatus = resp.status(); apiBody = await resp.text().catch(() => ''); }
+      });
+
+      await test.step('Step 4: Verify outcome (skip on a backend precondition rejection)', async () => {
+        // Cancel Unit has backend preconditions the portal cannot satisfy on its own:
+        //   • "campaign is active"           — allocation window open (same BR as FUNC_100)
+        //   • "Mavis booking still exists"   — the ERP booking must be cleared first
+        // These are legitimate 400 business-rule rejections, not test failures. Skip with
+        // the server's message so the blocker is explicit. (UI silently swallows them → BUG_011.)
+        if (apiStatus === 400 && /(campaign is active|mavis booking still exists|clear that step)/i.test(apiBody)) {
+          test.skip(true, `Cancel Unit blocked by backend precondition: ${apiBody.replace(/\s+/g, ' ').slice(0, 160)}`);
+        }
+        expect(apiStatus, `cancel API should succeed (got ${apiStatus}: ${apiBody})`).toBeGreaterThanOrEqual(200);
+        expect(apiStatus).toBeLessThan(300);
+        await expect(customersPage.toastSuccess).toBeVisible({ timeout: 15_000 });
+      });
     });
 
     test.fixme('TC_CUST_FUNC_100 — ADM_CUST_100 — Cancel Unit blocked while allocation campaign open', async () => {
