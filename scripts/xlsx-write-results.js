@@ -94,6 +94,15 @@ const SPEC_TO_XLSX_ALIAS = {
   TC_CUST_BIZ_004:  ['ADM_CUST_004'],  // dedicated cross-module Active Towers
   TC_CUST_API_003:  ['ADM_CUST_FSD_001'],
   TC_CUST_API_003b: ['ADM_CUST_FSD_002'],
+  // ── Admin Customers — Goal 2b (sort/filter/pagination, new TCs) ─────────
+  TC_CUST_FUNC_021: ['ADM_CUST_021'],        // pagination range indicator
+  TC_CUST_FUNC_122: ['TC_CUST_FUNC_122'],    // sort caret asc/desc
+  TC_CUST_FUNC_123: ['TC_CUST_FUNC_123'],    // column funnel filter icons
+  TC_CUST_FUNC_124: ['TC_CUST_FUNC_124'],    // Growth Partner HV Code filter
+  TC_CUST_FUNC_125: ['TC_CUST_FUNC_125'],    // sub-filter inputs
+  TC_CUST_FUNC_126: ['TC_CUST_FUNC_126'],    // Home Loan Yes/No filter
+  TC_CUST_FUNC_128: ['TC_CUST_FUNC_128'],    // PDF link on KYC-completed rows
+  TC_CUST_FUNC_130: ['TC_CUST_FUNC_130'],    // page size 100
   // ── Admin Customers — Goal 2 (read/filter/pagination, implemented) ──────
   TC_CUST_FUNC_018: ['ADM_CUST_018'],
   TC_CUST_FUNC_019: ['ADM_CUST_019'],
@@ -313,6 +322,8 @@ function resolveSheet(wb) {
   return { sheet: null, format: null };
 }
 
+const TC_ID_RX = /^(TC[_-][A-Z][A-Z0-9_]+_\d+[a-z]?|ADM(?:_[A-Z]+)+_\d+[a-z]?)/;
+
 // ─── Load annotations from Playwright JSON reporter output ───────────────────
 // Returns Map<specTcId, { testData, expectedResult }>
 function loadJsonAnnotations() {
@@ -323,15 +334,54 @@ function loadJsonAnnotations() {
     const map = new Map();
     for (const suite of (data.suites || [])) {
       for (const spec of walkSpecs(suite)) {
+        // Title lives on spec.title in Playwright JSON, not test.title
+        const specTitle = spec.title || '';
         for (const test of (spec.tests || [])) {
-          const tcMatch = test.title.match(/^(TC[_-][A-Z][A-Z0-9_]+_\d+[a-z]?|ADM(?:_[A-Z]+)+_\d+[a-z]?)/);
+          const title = specTitle || (test.title || '');
+          const tcMatch = title.match(TC_ID_RX);
           if (!tcMatch) continue;
           const tcId = tcMatch[1];
           const anns = {};
-          for (const a of (test.annotations || [])) {
+          // annotations may be on result (runtime push) or test object (static)
+          const results = test.results || [];
+          const last = results[results.length - 1] || {};
+          for (const a of ([...(last.annotations || []), ...(test.annotations || [])])) {
             if (a.type === 'testData' || a.type === 'expectedResult') anns[a.type] = a.description;
           }
           if (Object.keys(anns).length) map.set(tcId, anns);
+        }
+      }
+    }
+    return map;
+  } catch { return new Map(); }
+}
+
+// ─── Load screenshot paths from Playwright JSON attachments ──────────────────
+// Returns Map<specTcId, relativePath> — covers BOTH passing (test-finished-1.png)
+// and failing (test-failed-1.png) tests. Reading from results.json is more
+// reliable than filesystem glob because Playwright names dirs with a hash prefix.
+function loadScreenshotMap() {
+  const jsonPath = path.join(__dirname, '..', 'reports', 'results.json');
+  if (!fs.existsSync(jsonPath)) return new Map();
+  try {
+    const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    const map = new Map();
+    for (const suite of (data.suites || [])) {
+      for (const spec of walkSpecs(suite)) {
+        const specTitle = spec.title || '';
+        for (const test of (spec.tests || [])) {
+          const title = specTitle || (test.title || '');
+          const tcMatch = title.match(TC_ID_RX);
+          if (!tcMatch) continue;
+          const tcId = tcMatch[1];
+          const results = test.results || [];
+          const last = results[results.length - 1] || {};
+          for (const att of (last.attachments || [])) {
+            if (att.name === 'screenshot' && att.path) {
+              const relPath = path.relative(path.join(__dirname, '..'), att.path).replace(/\\/g, '/');
+              map.set(tcId, relPath);
+            }
+          }
         }
       }
     }
@@ -364,7 +414,8 @@ function masterActualText(result, timestamp, screenshot, anns) {
 async function updateXlsx(results) {
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.readFile(XLSX_PATH);
-  const jsonAnns = loadJsonAnnotations(); // testData / expectedResult per spec TC_ID
+  const jsonAnns = loadJsonAnnotations();     // testData / expectedResult per spec TC_ID
+  const screenshotMap = loadScreenshotMap();  // TC_ID → relative screenshot path (pass + fail)
 
   const { sheet, format } = resolveSheet(wb);
   if (!sheet) {
@@ -372,8 +423,25 @@ async function updateXlsx(results) {
     process.exit(1);
   }
 
+  // Dual-write: when writing to an Exec sheet, ALSO update the companion Master sheet
+  // cols 10 (Actual result) / 11 (Status: Pass/Fail) / 12 (Pass/Fail Resource - Anjali)
+  // so the Master sheet is kept in sync and the user sees results in both views.
+  const base = sheetName.replace(/ - (Master|Exec)$/, '').trim();
+  const masterSheet = (format === 'exec2' || format === 'exec')
+    ? (wb.getWorksheet(`${base} - Master`) || null)
+    : null;
+
+  // Pre-build Master TC_ID → row-number map for O(1) lookup (avoids O(n²) scan per row)
+  const masterRowMap = new Map();
+  if (masterSheet) {
+    for (let r = 1; r <= masterSheet.rowCount; r++) {
+      const mid = (masterSheet.getRow(r).getCell(1).value || '').toString().trim();
+      if (mid) masterRowMap.set(mid, r);
+    }
+  }
+
   // Column map + first data row per format.
-  // exec2: new gold-standard "- Exec" companion (7-col): TC ID | Status | Auto Status | Last Run | Details | Actual | Screenshot
+  // exec2: gold-standard "- Exec" companion (7-col): TC ID | Status | Auto Status | Last Run | Details | Actual | Screenshot
   const COL = {
     exec2:  { status: 2, auto: 3, lastRun: 4, details: 5, actual: 6, screenshot: 7 },
     master: { actual: 10, status: 11, resource: 12 },
@@ -391,6 +459,7 @@ async function updateXlsx(results) {
   const timestamp = ist.toISOString().replace('T', ' ').slice(0, 16) + ' IST';
   const jenkinsBuild = process.env.JENKINS_BUILD_ID ? `Jenkins #${process.env.JENKINS_BUILD_ID} | ` : '';
   let updated = 0;
+  let updatedMaster = 0;
   const unmatched = [];
 
   for (let r = startRow; r <= sheet.rowCount; r++) {
@@ -409,10 +478,13 @@ async function updateXlsx(results) {
     const isPass = result.status === 'Pass';
     const isFail = result.status === 'Fail';
     const isSkip = result.status === 'Skip';
-    const screenshot = isFail ? findScreenshot(id, results, sheetName, portalArg) : '';
 
-    // Resolve annotations: try specId first (direct match), then reverse alias
+    // Screenshot: prefer attachment-map path (covers pass + fail via test-finished/failed-1.png)
+    // Fall back to filesystem scan for fail only (legacy behaviour).
     const specIdForAnns = reverseAlias(id) || id;
+    const screenshot = screenshotMap.get(specIdForAnns) || screenshotMap.get(id) ||
+                       (isFail ? findScreenshot(id, results, sheetName, portalArg) : '');
+
     const anns = jsonAnns.get(specIdForAnns) || jsonAnns.get(id) || null;
     const dataLabel = anns && anns.testData ? anns.testData : '';
 
@@ -434,10 +506,25 @@ async function updateXlsx(results) {
       const actualBase = isPass ? 'PASS — matched expected' : isFail ? 'FAIL — see screenshot + error context' : 'Not executed';
       const actualFull = dataLabel ? `${actualBase} | Data: ${dataLabel}` : actualBase;
       row.getCell(COL.actual).value = actualFull;
-      row.getCell(COL.screenshot).value = isFail ? (screenshot || '') : '';
+      // Screenshot link: now includes passing tests (test-finished-1.png)
+      row.getCell(COL.screenshot).value = screenshot || '';
     }
-
     updated++;
+
+    // ── Dual-write: also populate Master sheet cols 10/11/12 ─────────────────
+    // This keeps the Master sheet "Actual result / Status / Resource" columns in sync
+    // so the user can see results in either view without running the script twice.
+    if (masterSheet) {
+      // id may be an xlsx row ID (e.g. ADM_CUST_001); find it in the Master
+      const masterRowNum = masterRowMap.get(id);
+      if (masterRowNum) {
+        const mrow = masterSheet.getRow(masterRowNum);
+        mrow.getCell(10).value = masterActualText(result, timestamp, screenshot, anns);
+        mrow.getCell(11).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
+        mrow.getCell(12).value = 'Automation';
+        updatedMaster++;
+      }
+    }
   }
 
   // log unmatched results (spec ran but no xlsx row)
@@ -453,7 +540,7 @@ async function updateXlsx(results) {
   }
 
   await wb.xlsx.writeFile(XLSX_PATH);
-  return { updated, unmatched, format };
+  return { updated, updatedMaster, unmatched, format };
 }
 
 (async () => {
@@ -466,8 +553,9 @@ async function updateXlsx(results) {
     return;
   }
 
-  const { updated, unmatched, format } = await updateXlsx(results);
+  const { updated, updatedMaster, unmatched, format } = await updateXlsx(results);
   console.log(`✓ Updated ${updated} rows in ${PORTAL_FILE[portalArg]} → sheet "${sheetName}" (${format} format)`);
+  if (updatedMaster > 0) console.log(`✓ Dual-write: also updated ${updatedMaster} rows in "${sheetName.replace(/ - (Master|Exec)$/, '')} - Master" cols 10/11/12`);
   if (unmatched.length > 0) {
     console.log(`⚠ ${unmatched.length} spec TC_IDs had no xlsx match (TC_ID alignment needed):`);
     unmatched.slice(0, 20).forEach((id) => console.log('  -', id));

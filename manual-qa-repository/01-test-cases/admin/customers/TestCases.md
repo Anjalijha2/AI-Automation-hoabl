@@ -318,3 +318,33 @@ The following actions are documented in dedicated FS files and require their own
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | TC_CUST_NEG_049 | TC_CUST_NEG_049 | ✅ PASS | Admin session — admin.json; applies Cancelled filter to surface refund cohort | All assertions matched expected | 17.6s |
+
+---
+
+## Last Run: 2026-06-20 11:09 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CUST_021 | ADM_CUST_021 | ✅ PASS | Admin session — admin.json; default page load (no filter) | All assertions matched expected | 17.5s |
+| TC_CUST_FUNC_122 | TC_CUST_FUNC_122 | ✅ PASS | Admin session — admin.json; default page load (no filter) | All assertions matched expected | 17.9s |
+| TC_CUST_FUNC_123 | TC_CUST_FUNC_123 | ✅ PASS | Admin session — admin.json; filter panel opened via filterButton | All assertions matched expected | 17.6s |
+| TC_CUST_FUNC_124 | TC_CUST_FUNC_124 | ✅ PASS | Admin session — admin.json; filter panel opened | All assertions matched expected | 17.9s |
+| TC_CUST_FUNC_125 | TC_CUST_FUNC_125 | ✅ PASS | Admin session — admin.json; filter panel opened | All assertions matched expected | 17.7s |
+| TC_CUST_FUNC_126 | TC_CUST_FUNC_126 | ✅ PASS | Admin session — admin.json; opens Home Loan column funnel dropdown | All assertions matched expected | 19.0s |
+| TC_CUST_FUNC_128 | TC_CUST_FUNC_128 | ⏭ SKIP | Admin session — admin.json; default page load; checks for PDF links in table | Not executed | 17.5s |
+| TC_CUST_FUNC_130 | TC_CUST_FUNC_130 | ✅ PASS | Admin session — admin.json; opens pagination page-size dropdown | All assertions matched expected | 20.0s |
+
+---
+
+## Last Run: 2026-06-20 11:15 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_CUST_FUNC_001 | ADM_CUST_001 / ADM_CUST_002 / ADM_CUST_003 / ADM_CUST_006 / TC_CUST_UI_041 | ✅ PASS | Admin session — automation-repository/fixtures/.auth/admin.json (mobile 8888888888 / OTP 258369) | All assertions matched expected | 17.5s |
+| TC_CUST_FUNC_002 | ADM_CUST_007 / ADM_CUST_009 / ADM_CUST_010 / ADM_CUST_011 / ADM_CUST_012 | ✅ PASS | Admin session — admin.json; starts at /admin/cms, clicks Customers in sidebar | All assertions matched expected | 34.5s |
+| TC_CUST_FUNC_003 | ADM_CUST_008 | ✅ PASS | Admin session — admin.json; search phone: 8888888888 (known UAT buyer) | All assertions matched expected | 18.0s |
+| TC_CUST_REG_002 | ADM_CUST_038 / ADM_CUST_003 / ADM_CUST_005 / ADM_CUST_040 | ✅ PASS | Admin session — admin.json; applies Cancelled filter then resets | All assertions matched expected | 20.1s |
+| TC_CUST_BIZ_004 | ADM_CUST_004 | ✅ PASS | Admin session — admin.json; navigates to /admin/customers then /admin/cms | All assertions matched expected | 18.6s |
+| TC_CUST_FUNC_025 | TC_CUST_FUNC_025 | ✅ PASS | Admin session — admin.json; default page load (no filter) | All assertions matched expected | 18.2s |
+| TC_CUST_NEG_011 | TC_CUST_NEG_011 | ✅ PASS | Admin session — admin.json; applies Cancelled status filter | All assertions matched expected | 18.3s |
+| TC_CUST_NEG_049 | TC_CUST_NEG_049 | ✅ PASS | Admin session — admin.json; applies Cancelled filter to surface refund cohort | All assertions matched expected | 18.5s |
