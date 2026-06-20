@@ -214,7 +214,16 @@ class CustomersPage extends BasePage {
    * Used in read-only visibility tests (we open the dropdown but do not click any item).
    */
   async openThreeDotMenu(rowIndex) {
-    await this.rowThreeDotMenu.nth(rowIndex).click();
+    // Scope the ⋯ trigger to the TARGET ROW, not a global nth — not every row has a
+    // three-dot menu (Registered/Cancelled rows differ), so a global index misaligns
+    // when the target row sits deep in a mixed list. The trigger is the row's
+    // .ant-dropdown-trigger button (falls back to the global nth if the row has none).
+    const rowTrigger = this.tableRows.nth(rowIndex).locator('.ant-dropdown-trigger');
+    if (await rowTrigger.count() > 0) {
+      await rowTrigger.first().click({ force: true });
+    } else {
+      await this.rowThreeDotMenu.nth(rowIndex).click();
+    }
     const activeDropdown = this.page.locator('.ant-dropdown:not(.ant-dropdown-hidden)');
     await activeDropdown.waitFor({ state: 'visible', timeout: 5_000 });
     return activeDropdown;
@@ -717,9 +726,18 @@ class CustomersPage extends BasePage {
     return null;
   }
 
+  /** rowTrashFor(rowIndex) — the trash control scoped to the target row (robust for deep
+   *  rows where a global nth misaligns), falling back to the global nth. */
+  rowTrashFor(rowIndex) {
+    const scoped = this.tableRows.nth(rowIndex).locator('button.copy-icon, .anticon-delete');
+    return scoped;
+  }
+
   // ── Cancel Registration (read-only open/close) ──────────────────────────────
   async openCancelRegistrationPopup(rowIndex) {
-    await this.rowTrashIcon.nth(rowIndex).click();
+    const scoped = this.rowTrashFor(rowIndex);
+    if (await scoped.count() > 0) await scoped.first().click({ force: true });
+    else await this.rowTrashIcon.nth(rowIndex).click();
     await this.cancelModal.waitFor({ state: 'visible', timeout: 10_000 });
   }
   async closeCancelRegistrationPopup() {
@@ -749,7 +767,9 @@ class CustomersPage extends BasePage {
   // Confirmed state (FRD §5). It reuses the trash control but renders a different
   // modal shape (two attestation checkboxes instead of a refund-amount line).
   async openCancelUnitModal(rowIndex) {
-    await this.rowTrashIcon.nth(rowIndex).click();
+    const scoped = this.rowTrashFor(rowIndex);
+    if (await scoped.count() > 0) await scoped.first().click({ force: true });
+    else await this.rowTrashIcon.nth(rowIndex).click();
     await this.cancelUnitModal.waitFor({ state: 'visible', timeout: 10_000 });
   }
   async closeCancelUnitModal() {
@@ -767,6 +787,44 @@ class CustomersPage extends BasePage {
   async closeUnitSwapModal() {
     await this.page.keyboard.press('Escape');
     await this.unitSwapModal.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+
+  /**
+   * selectUnitSwapTower(towerName?) — open the Tower select and pick an option.
+   * Defaults to the FIRST available tower. Returns the chosen option's text.
+   */
+  async selectUnitSwapTower(towerName) {
+    // The Unit Swap modal has two comboboxes in order: [0]=Select Tower, [1]=Select Unit.
+    // AntD uses a VIRTUALIZED dropdown (rc-virtual-list) whose options are covered for a
+    // normal click. Verified-working approach (agent-browser 2026-06-21): focus the
+    // combobox, then keyboard-navigate (ArrowDown + Enter) to choose the first option.
+    const towerCombo = this.unitSwapModal.getByRole('combobox').nth(0);
+    await towerCombo.click();
+    await this.page.locator('.ant-select-item-option:visible').first().waitFor({ state: 'visible', timeout: 8_000 }).catch(() => {});
+    await this.page.keyboard.press('ArrowDown');
+    await this.page.keyboard.press('Enter');
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    // Read the chosen tower from the selection item.
+    const txt = (await this.unitSwapModal.locator('.ant-select-selection-item').first().textContent().catch(() => '')) || '';
+    return txt.trim();
+  }
+
+  /**
+   * selectUnitSwapFirstUnit() — open the Unit combobox and pick the first AVAILABLE unit
+   * via keyboard nav (virtualized dropdown). Returns the chosen unit text, or null if
+   * no selectable unit is offered.
+   */
+  async selectUnitSwapFirstUnit() {
+    const unitCombo = this.unitSwapModal.getByRole('combobox').nth(1);
+    await unitCombo.click();
+    const hasOpt = await this.page.locator('.ant-select-item-option:visible:not(.ant-select-item-option-disabled)')
+      .first().waitFor({ state: 'visible', timeout: 8_000 }).then(() => true).catch(() => false);
+    if (!hasOpt) { await this.page.keyboard.press('Escape'); return null; }
+    await this.page.keyboard.press('ArrowDown');
+    await this.page.keyboard.press('Enter');
+    const items = this.unitSwapModal.locator('.ant-select-selection-item');
+    const txt = (await items.nth(await items.count() - 1).textContent().catch(() => '')) || '';
+    return txt.trim();
   }
 
   // ── Update Parking modal (read-only open/close) ─────────────────────────────

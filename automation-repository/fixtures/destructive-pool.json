@@ -45,10 +45,6 @@
     ],
     "bookedOnline": [
       {
-        "regId": "GHNG-1000008364-C",
-        "unit": "1201-Glory"
-      },
-      {
         "regId": "GHNG-1000008364-D",
         "unit": "1004-Grace"
       },
@@ -104,6 +100,13 @@
       "category": "bookedOffline",
       "reason": "DEST Test 2 TC_CUST_FUNC_099 PASS 2026-06-20 — Unit cancellation completed (301-Crest released); Mavis pre-cleared",
       "consumedAt": "2026-06-20 22:31 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-C",
+      "unit": "1201-Glory",
+      "category": "bookedOnline",
+      "reason": "DEST Test 3 TC_CUST_FUNC_071 PASS 2026-06-21 — swapped 1201-Glory -> Aura-204 (PUT 200); verified via agent-browser",
+      "consumedAt": "2026-06-21 01:16 IST"
     }
   ]
 }
