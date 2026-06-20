@@ -80,14 +80,25 @@ test.describe('Customers — Admin Portal E2E', () => {
   });
 
   test('TC_CUST_FUNC_002 — BRD-CUST §3 — Sidebar navigation opens Customers module', async ({ page }) => {
-    // Navigate to a different admin page first so we can test the sidebar link
-    // We use /admin/cms (not /admin root) because /admin root is the login page on this SPA
-    await page.goto('https://uat-web.xrportal.in/admin/cms');
-    await page.waitForLoadState('networkidle');
-    // Now click "Customers" in the left sidebar and verify we land on the Customers page
-    await customersPage.navigateViaSidebar();
-    await customersPage.expectOnCustomersUrl();
-    await customersPage.expectKpiVisible();
+    test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; starts at /admin/cms, clicks Customers in sidebar' });
+    test.info().annotations.push({ type: 'expectedResult', description: 'URL navigates to /admin/customers; 6 KPI cards visible after sidebar click' });
+
+    await test.step('Step 1: Navigate to a different admin page (/admin/cms)', async () => {
+      await page.goto('https://uat-web.xrportal.in/admin/cms');
+      await page.waitForLoadState('networkidle');
+    });
+
+    await test.step('Step 2: Click Customers in left sidebar', async () => {
+      await customersPage.navigateViaSidebar();
+    });
+
+    await test.step('Step 3: URL is /admin/customers', async () => {
+      await customersPage.expectOnCustomersUrl();
+    });
+
+    await test.step('Step 4: All 6 KPI cards visible after sidebar navigation', async () => {
+      await customersPage.expectKpiVisible();
+    });
   });
 
   // ════════════════════════════════════════════════════════════════════════════
