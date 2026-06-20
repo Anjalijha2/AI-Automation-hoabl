@@ -19,14 +19,18 @@ const AUTH      = (portal) => path.join(FIXTURES, `.auth/${portal}.json`);
 // downloaded (~/.agent-browser/browsers/chrome-*/chrome[.exe]) and point Playwright
 // at it via executablePath. Set USE_AGENT_BROWSER=false to fall back to the bundled
 // Playwright chromium. AGENT_BROWSER_CHROME overrides the path explicitly.
+// OPT-IN only: agent-browser's bundled Chrome 150 white-screens the app during load on
+// this environment, so the suite defaults to Playwright's bundled chromium (clean). To
+// run on agent-browser's Chrome, set USE_AGENT_BROWSER=true (or AGENT_BROWSER_CHROME=<path>).
+// agent-browser itself remains the tool for interactive/diagnostic browser work.
 function findAgentBrowserChrome() {
   if (process.env.AGENT_BROWSER_CHROME) return process.env.AGENT_BROWSER_CHROME;
-  if (process.env.USE_AGENT_BROWSER === 'false') return undefined;
+  if (process.env.USE_AGENT_BROWSER !== 'true') return undefined;
   try {
     const base = path.join(os.homedir(), '.agent-browser', 'browsers');
     if (!fs.existsSync(base)) return undefined;
     for (const d of fs.readdirSync(base)) {
-      for (const bin of ['chrome.exe', 'chrome', 'chrome-headless-shell.exe', 'chrome-headless-shell']) {
+      for (const bin of ['chrome.exe', 'chrome']) {
         const exe = path.join(base, d, bin);
         if (fs.existsSync(exe)) return exe;
       }
@@ -60,9 +64,14 @@ module.exports = defineConfig({
     video:             'retain-on-failure',
     trace:             'on-first-retry',
     headless:          process.env.HEADLESS === 'true',
-    viewport:          null,
+    viewport:          process.env.HEADLESS === 'true' ? { width: 1920, height: 1080 } : null,
     launchOptions:     {
-      args: ['--start-maximized', '--window-size=1920,1080'],
+      // When headless: force Chrome's new headless mode and DO NOT pass --start-maximized /
+      // --window-size — with agent-browser's full Chrome (executablePath) those directives
+      // open a real (white) window even under headless. Headed runs keep the maximized window.
+      args: process.env.HEADLESS === 'true'
+        ? ['--headless=new', '--no-first-run', '--no-default-browser-check']
+        : ['--start-maximized', '--window-size=1920,1080'],
       ...(AGENT_BROWSER_CHROME ? { executablePath: AGENT_BROWSER_CHROME } : {}),
     },
   },

@@ -41,11 +41,6 @@
         "regId": "GHNG-1000008364-J",
         "unit": "1004-Pride",
         "kyc": "pending"
-      },
-      {
-        "regId": "GHNG-1000008364-Q",
-        "unit": "301-Crest",
-        "kyc": "pending"
       }
     ],
     "bookedOnline": [
@@ -101,6 +96,14 @@
       "category": "registered",
       "reason": "DEST Test 1 TC_CUST_FUNC_047 PASS 2026-06-20 — cancelled+refunded ₹999, now Cancelled",
       "consumedAt": "2026-06-20 19:55 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-Q",
+      "unit": "301-Crest",
+      "kyc": "pending",
+      "category": "bookedOffline",
+      "reason": "DEST Test 2 TC_CUST_FUNC_099 PASS 2026-06-20 — Unit cancellation completed (301-Crest released); Mavis pre-cleared",
+      "consumedAt": "2026-06-20 22:31 IST"
     }
   ]
 }
