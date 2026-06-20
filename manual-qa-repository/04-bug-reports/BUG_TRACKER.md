@@ -88,6 +88,7 @@ These are documented in TC markdown files under `[BUG-REF: ...]` headers. Each e
 |--------|--------|----------|-------|----------|----------|--------|
 | [BUG_010](UAT/open/BUG_010-reg-status-validation.md) | Registration | P2 | Registration status validation skipped on empty submit | 2026-04-18 | — | Open |
 | BUG_011 | Customers | P2 | Cancel Registration: 400 "campaign is active" is swallowed silently (no error toast) | 2026-06-20 | — | Open |
+| BUG_012 | Customers | P3 | Home Loan Approval: Submit button enabled while approval toggle is OFF (FRD says it should be disabled) | 2026-06-21 | — | Open |
 
 ### BUG_011 — Cancel Registration shows NO error when blocked by active campaign
 
