@@ -278,3 +278,11 @@ The following actions are documented in dedicated FS files and require their own
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | TC_CUST_BIZ_004 | ADM_CUST_004 | ✅ PASS | Admin session — admin.json; navigates to /admin/customers then /admin/cms | All assertions matched expected | 17.2s |
+
+---
+
+## Last Run: 2026-06-20 10:02 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_CUST_REG_002 | ADM_CUST_038 / ADM_CUST_003 / ADM_CUST_005 / ADM_CUST_040 | ✅ PASS | Admin session — admin.json; applies Cancelled filter then resets | All assertions matched expected | 18.1s |

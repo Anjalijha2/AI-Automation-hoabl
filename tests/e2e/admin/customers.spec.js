@@ -238,30 +238,39 @@ test.describe('Customers — Admin Portal E2E', () => {
   // ════════════════════════════════════════════════════════════════════════════
 
   test('TC_CUST_REG_002 — BRD-CUST §6 BR1/BR4 — KPI counts stable after filter+reset cycle', async () => {
-    // Snapshot all 6 KPI values BEFORE the filter cycle
-    const kpiBefore = {
-      registered:   await customersPage.getKpiValue(customersPage.kpiRegistered),
-      inactive:     await customersPage.getKpiValue(customersPage.kpiInactive),
-      cancelled:    await customersPage.getKpiValue(customersPage.kpiCancelled),
-      kycPending:   await customersPage.getKpiValue(customersPage.kpiKycPending),
-      confirmed:    await customersPage.getKpiValue(customersPage.kpiConfirmed),
-      activeTowers: await customersPage.getKpiValue(customersPage.kpiActiveTowers),
-    };
+    test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; applies Cancelled filter then resets' });
+    test.info().annotations.push({ type: 'expectedResult', description: 'All 6 KPI values (Registered, Inactive, Cancelled, KYC Pending, Confirmed, Active Towers) identical before and after filter+reset cycle (server-side global counts, not filtered)' });
 
-    // Apply a filter then reset — the KPI cards must not change
-    await customersPage.applyStatusFilter('Cancelled');
-    await customersPage.resetFilters();
+    let kpiBefore;
+    await test.step('Step 1: Snapshot all 6 KPI values before filter cycle', async () => {
+      kpiBefore = {
+        registered:   await customersPage.getKpiValue(customersPage.kpiRegistered),
+        inactive:     await customersPage.getKpiValue(customersPage.kpiInactive),
+        cancelled:    await customersPage.getKpiValue(customersPage.kpiCancelled),
+        kycPending:   await customersPage.getKpiValue(customersPage.kpiKycPending),
+        confirmed:    await customersPage.getKpiValue(customersPage.kpiConfirmed),
+        activeTowers: await customersPage.getKpiValue(customersPage.kpiActiveTowers),
+      };
+    });
 
-    // Poll for KPI cards to settle to pre-filter state — reset triggers async
-    // re-fetch and brief flicker. expect.poll retries up to 15s.
-    await expect.poll(async () => ({
-      registered:   await customersPage.getKpiValue(customersPage.kpiRegistered),
-      inactive:     await customersPage.getKpiValue(customersPage.kpiInactive),
-      cancelled:    await customersPage.getKpiValue(customersPage.kpiCancelled),
-      kycPending:   await customersPage.getKpiValue(customersPage.kpiKycPending),
-      confirmed:    await customersPage.getKpiValue(customersPage.kpiConfirmed),
-      activeTowers: await customersPage.getKpiValue(customersPage.kpiActiveTowers),
-    }), { timeout: 15_000, intervals: [500, 1000, 2000] }).toEqual(kpiBefore);
+    await test.step('Step 2: Apply Cancelled status filter', async () => {
+      await customersPage.applyStatusFilter('Cancelled');
+    });
+
+    await test.step('Step 3: Reset filters to restore full list', async () => {
+      await customersPage.resetFilters();
+    });
+
+    await test.step('Step 4: Assert all 6 KPI values unchanged after filter+reset (BR1/BR4)', async () => {
+      await expect.poll(async () => ({
+        registered:   await customersPage.getKpiValue(customersPage.kpiRegistered),
+        inactive:     await customersPage.getKpiValue(customersPage.kpiInactive),
+        cancelled:    await customersPage.getKpiValue(customersPage.kpiCancelled),
+        kycPending:   await customersPage.getKpiValue(customersPage.kpiKycPending),
+        confirmed:    await customersPage.getKpiValue(customersPage.kpiConfirmed),
+        activeTowers: await customersPage.getKpiValue(customersPage.kpiActiveTowers),
+      }), { timeout: 15_000, intervals: [500, 1000, 2000] }).toEqual(kpiBefore);
+    });
   });
 
   // ════════════════════════════════════════════════════════════════════════════
