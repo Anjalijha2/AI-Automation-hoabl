@@ -87,6 +87,23 @@ These are documented in TC markdown files under `[BUG-REF: ...]` headers. Each e
 | Bug ID | Module | Severity | Title | Reported | Assigned | Status |
 |--------|--------|----------|-------|----------|----------|--------|
 | [BUG_010](UAT/open/BUG_010-reg-status-validation.md) | Registration | P2 | Registration status validation skipped on empty submit | 2026-04-18 | — | Open |
+| BUG_011 | Customers | P2 | Cancel Registration: 400 "campaign is active" is swallowed silently (no error toast) | 2026-06-20 | — | Open |
+
+### BUG_011 — Cancel Registration shows NO error when blocked by active campaign
+
+**Found:** 2026-06-20 during TC_CUST_FUNC_047 destructive run (reg `GHNG-1000008364-P`, unit id 10393).
+
+**Steps:** Customers → search 8888888888 → row `-P` (Registered) → trash icon → "Confirm Refund" popup → click red **Cancel Registration**.
+
+**Observed:** Button fires `PUT .../admin/registration-units/10393/refund` (body `{}`, valid Bearer token) → **HTTP 400** with response:
+`{"success":false,"message":"Cannot refund registration-unit when campaign is active","data":[],"errors":null}`
+The modal stays open, **no error toast/message is shown to the admin**, and the row remains Registered.
+
+**Root cause (confirmed via agent-browser network capture):** the backend correctly enforces a business rule — refund/cancel is disabled while an allocation campaign is active (the "Allocation Opened" banner is showing). The empty `{}` request body is what the UI itself sends; it is NOT a defect.
+
+**THE DEFECT (P2 — UX):** the 400 is **silently swallowed** — the admin gets zero feedback that the cancel was rejected. It looks like nothing happened. A blocked mutating action must surface the server message ("Cannot refund registration-unit when campaign is active"). Same rule family as TC_CUST_FUNC_100 (Cancel Unit blocked while campaign open).
+
+**Impact on automation:** TC_CUST_FUNC_047 can only complete a real cancel when NO allocation campaign is active. The test is made campaign-aware: it skips with a clear reason when the 400 "campaign is active" is detected, and passes (success toast) when no campaign is active.
 
 ---
 

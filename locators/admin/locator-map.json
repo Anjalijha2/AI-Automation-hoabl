@@ -1232,13 +1232,14 @@
       ]
     },
     "cancelRegistrationConfirmBtn": {
-      "selector": ".ant-modal-footer button.ant-btn-dangerous:has-text('Cancel Registration')",
+      "selector": ".ant-modal button.ant-btn-dangerous:has-text('Cancel Registration')",
       "type": "css",
       "fallback": ".ant-modal button:has-text('Cancel Registration')",
       "aria_role": "button",
       "deprecated": false,
       "changelog": [
-        "1.3.0 — initial from FS-CUST Feature 2 §5 (red Cancel Registration button)"
+        "1.3.0 — initial from FS-CUST Feature 2 §5 (red Cancel Registration button)",
+        "1.9.1 — corrected: confirm button is in the modal BODY, not .ant-modal-footer (live DOM via agent-browser 2026-06-20; modal title 'Confirm Refund', button class ant-btn-primary ant-btn-dangerous). Dropped the footer ancestor requirement that caused a 15s click timeout."
       ]
     },
     "cancelRegistrationCloseBtn": {
