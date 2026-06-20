@@ -421,11 +421,17 @@ test.describe('Customers — Admin Portal E2E', () => {
   });
 
   test('TC_CUST_FUNC_025 — ADM_CUST_025 — Trash (delete) icon visible on every row', async () => {
-    // VISIBILITY-ONLY — do NOT click; clicking opens the destructive Cancel Registration modal.
-    const rowCount = await customersPage.tableRows.count();
-    test.skip(rowCount === 0, 'No rows on UAT to verify trash icon visibility');
-    // Sample the first row's trash icon; FRD §5 guarantees every row has one
-    await expect(customersPage.trashIconForRow(0)).toBeVisible();
+    test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; default page load (no filter)' });
+    test.info().annotations.push({ type: 'expectedResult', description: 'Trash icon visible in Actions column of first row (FRD §5: every row has one); VISIBILITY-ONLY — do not click' });
+
+    await test.step('Step 1: Verify table has at least one row', async () => {
+      const rowCount = await customersPage.tableRows.count();
+      test.skip(rowCount === 0, 'No rows on UAT to verify trash icon visibility');
+    });
+
+    await test.step('Step 2: Trash icon is visible in Actions column of first row', async () => {
+      await expect(customersPage.trashIconForRow(0)).toBeVisible();
+    });
   });
 
   test('TC_CUST_FUNC_030 — ADM_CUST_030 — Three-dot menu opens action dropdown', async () => {
@@ -506,19 +512,19 @@ test.describe('Customers — Admin Portal E2E', () => {
   });
 
   test('TC_CUST_NEG_049 — ADM_CUST_049 — REFUND-status rows expose limited actions', async () => {
-    // BIZ rule: rows with Process Status = REFUND are read-only — no further
-    // cancel/swap operations allowed. We verify the rule by filtering for the
-    // refund cohort (via Cancelled status which is the precursor) and asserting
-    // the row still renders normally. The deeper "actions disabled" check needs
-    // a known REFUND-row fixture (deferred — see fixme block below).
-    await customersPage.applyStatusFilter('Cancelled');
-    const rowCount = await customersPage.tableRows.count();
-    // Either there are zero refund rows OR rows render with the standard layout
-    if (rowCount > 0) {
-      await expect(customersPage.tableRows.first()).toBeVisible();
-    }
-    // Visibility of refund-rule banner / disabled-state classes requires the
-    // exact fixture from the user (see destructive-fixme TC_CUST_BIZ_039).
+    test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; applies Cancelled filter to surface refund cohort' });
+    test.info().annotations.push({ type: 'expectedResult', description: 'Cancelled rows render with standard table layout; no crash. Full action-disabled assertion deferred (needs known REFUND-fixture)' });
+
+    await test.step('Step 1: Apply Cancelled status filter to surface refund cohort', async () => {
+      await customersPage.applyStatusFilter('Cancelled');
+    });
+
+    await test.step('Step 2: If rows present, first row renders with standard layout', async () => {
+      const rowCount = await customersPage.tableRows.count();
+      if (rowCount > 0) {
+        await expect(customersPage.tableRows.first()).toBeVisible();
+      }
+    });
   });
 
   // ════════════════════════════════════════════════════════════════════════════
