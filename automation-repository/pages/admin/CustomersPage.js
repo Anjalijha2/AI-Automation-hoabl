@@ -682,21 +682,59 @@ class CustomersPage extends BasePage {
     return null;
   }
 
+  /**
+   * findRowByRegistrationId(regId) — return the row-index of the FIRST table row
+   * whose Registration Details column contains the given registration-ID substring
+   * (e.g. 'GHNG-1000008364-P'). All fixture rows share one phone (8888888888), so
+   * destructive tests target a SPECIFIC registration by its suffix.
+   *
+   * Caller must have searched by phone first so the candidate rows are on screen.
+   * Returns null when no row matches (test should test.skip()).
+   *
+   * @param {string} regId — full or partial registration ID substring
+   * @returns {Promise<number|null>}
+   */
+  async findRowByRegistrationId(regId) {
+    // Search results settle asynchronously AFTER networkidle resolves, so first wait
+    // for the specific reg-ID row to actually render — otherwise we'd scan the stale
+    // (pre-filter) table and miss it.
+    const target = this.page.locator(`tr.ant-table-row:has-text("${regId}")`).first();
+    const appeared = await target.waitFor({ state: 'visible', timeout: 10_000 }).then(() => true).catch(() => false);
+    if (!appeared) return null;
+    // "Registration Details" is the first data column (reg-ID + created date).
+    const rowCount = await this.tableRows.count();
+    for (let i = 0; i < rowCount; i++) {
+      const rowText = (await this.tableRows.nth(i).textContent()) || '';
+      if (rowText.includes(regId)) return i;
+    }
+    return null;
+  }
+
   // ── Cancel Registration (read-only open/close) ──────────────────────────────
   async openCancelRegistrationPopup(rowIndex) {
     await this.rowTrashIcon.nth(rowIndex).click();
     await this.cancelModal.waitFor({ state: 'visible', timeout: 10_000 });
   }
   async closeCancelRegistrationPopup() {
-    // Try the modal's own Close button first; if it isn't visible (some variants
-    // only show an X icon) press Escape as a fallback.
-    const visible = await this.cancelModalCloseBtn.isVisible().catch(() => false);
-    if (visible) {
-      await this.click(this.cancelModalCloseBtn);
-    } else {
-      await this.page.keyboard.press('Escape');
-    }
-    await this.cancelModal.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+    // Dismiss WITHOUT confirming. The modal footer has no "Close" button — only the
+    // confirm button and the top-right X icon (.ant-modal-close). Try, in order:
+    //   1) footer Close button (if a variant renders one)
+    //   2) the X icon (.ant-modal-close) — the real dismiss control
+    //   3) click the mask backdrop (if maskClosable)
+    //   4) Escape key
+    // Stop as soon as the modal is hidden.
+    const tryDismiss = async (fn) => {
+      if (await this.cancelModal.isHidden().catch(() => false)) return true;
+      await fn().catch(() => {});
+      return await this.cancelModal.waitFor({ state: 'hidden', timeout: 2_000 }).then(() => true).catch(() => false);
+    };
+    if (await tryDismiss(async () => {
+      if (await this.cancelModalCloseBtn.isVisible().catch(() => false)) await this.click(this.cancelModalCloseBtn);
+      else throw new Error('no footer Close');
+    })) return;
+    if (await tryDismiss(() => this.page.locator('.ant-modal-close').first().click())) return;
+    if (await tryDismiss(() => this.page.locator('.ant-modal-wrap, .ant-modal-mask').first().click({ position: { x: 5, y: 5 } }))) return;
+    await tryDismiss(() => this.page.keyboard.press('Escape'));
   }
 
   // ── Cancel Unit modal (read-only open/close) ────────────────────────────────

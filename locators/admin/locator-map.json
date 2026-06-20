@@ -1,10 +1,11 @@
 {
   "_meta": {
     "portal": "admin",
-    "version": "1.8.0",
-    "lastUpdated": "2026-05-29",
+    "version": "1.9.0",
+    "lastUpdated": "2026-06-20",
     "maintainer": "Tech Lead Agent",
     "changelog": [
+      "1.9.0 — added new top-level 'milestone' module (35 selectors): schedule page heading + header card, Back-to-Listing link, 9 table columns, 3 status pills (partial inferred from FS §5.2), Offline Payment + View buttons, Offline Payment drawer 11 fields + Milestone Summary (3 outstanding values), success toast. Source: milestone-dom-dump.json (live capture 2026-06-20) + ADMIN-FS-Customers-Milestones.md",
       "1.5.0 — added Customers three-dot menu items (view-milestones, unit-swap, update-parking), Cancel Unit modal, Unit Swap modal, Update Parking modal selectors (source: CustomerTable.jsx L1114-L1132, L1408-L1444, L1799-L1878, L1880-L2001)",
       "1.6.0 — live-crawl pass on 2026-05-29 for login, dashboard, customers, sales-managers, payment-transactions, allocation, towers, jbp, offers, channel-partners, admin-cms, config",
       "1.7.0 — live-crawl pass on 2026-05-29 for login, dashboard, customers, sales-managers, payment-transactions, allocation, towers, jbp, offers, channel-partners, admin-cms, config",
@@ -1544,13 +1545,14 @@
       ]
     },
     "parkingCountInput": {
-      "selector": ".ant-modal:has(.ant-modal-title:has-text('Parking Details')) .ant-input-number input[name='parkingCount']",
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Parking Details')) input[placeholder='Parking Count']",
       "type": "css",
-      "fallback": ".ant-modal input[placeholder='Parking Count']",
+      "fallback": ".ant-modal .ant-input-number input",
       "aria_role": "spinbutton",
       "deprecated": false,
       "changelog": [
-        "1.5.0 — initial from CustomerTable.jsx L1946-L1961 (InputNumber, max 500, min 1, digit-only regex /^\\d*$/; visible only when additionalParkingEnabled=true)"
+        "1.5.0 — initial from CustomerTable.jsx L1946-L1961 (InputNumber, max 500, min 1, digit-only regex /^\\d*$/; visible only when additionalParkingEnabled=true)",
+        "1.8.1 — primary changed from name attr (not forwarded by InputNumber) to placeholder"
       ]
     },
     "parkingAmountInput": {
@@ -1560,7 +1562,8 @@
       "aria_role": "textbox",
       "deprecated": false,
       "changelog": [
-        "1.5.0 — initial from CustomerTable.jsx L1972-L1983 (Input, decimal regex /^\\d*\\.?\\d*$/; visible only when additionalParkingEnabled=true)"
+        "1.5.0 — initial from CustomerTable.jsx L1972-L1983 (Input, decimal regex /^\\d*\\.?\\d*$/; visible only when additionalParkingEnabled=true)",
+        "1.8.1 — fallback added; primary (name attr) is valid for <Input>, not InputNumber"
       ]
     },
     "parkingPreviewText": {
@@ -6153,6 +6156,382 @@
       "added": "2026-05-29",
       "changelog": [
         "2026-05-29 — added via live crawl"
+      ]
+    }
+  },
+  "milestone": {
+    "pageHeading": {
+      "selector": "h2:has-text(\"Milestone Payment Schedule\")",
+      "type": "css",
+      "fallback": "heading:has-text(\"Milestone Payment Schedule\")",
+      "aria_role": "heading",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from milestone-dom-dump.json (H2 'Milestone Payment Schedule', green left bar — FS §4.2)"
+      ]
+    },
+    "headerRegistrationNumber": {
+      "selector": "div.wrap-div:has-text(\"Registration No.\")",
+      "type": "css",
+      "fallback": "div.wrap-div >> text=/Registration No\\./",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (header card field 'Registration No.<rn>', from URL ?rn= — FS §4.2)"
+      ]
+    },
+    "headerUnitNumber": {
+      "selector": "div.wrap-div:has-text(\"Unit No.\")",
+      "type": "css",
+      "fallback": "div.wrap-div >> text=/Unit No\\./",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (header card field 'Unit No.<unitNumber>', from fetchData.unitNumber — FS §4.2)"
+      ]
+    },
+    "backToListingLink": {
+      "selector": "button.ant-btn-link:has-text(\"Back to Customer Listing\")",
+      "type": "css",
+      "fallback": "button:has-text(\"Back to Customer Listing\")",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (top-left link, navigates to /admin/dashboard?scrollTo=customerTable — FS §4.2, §7.4); rendered as button.ant-btn-link, not anchor"
+      ]
+    },
+    "milestoneTable": {
+      "selector": "table",
+      "type": "css",
+      "fallback": "[role='table']",
+      "aria_role": "table",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (milestone schedule table has no class; 9 columns, one row per milestone — FS §4.5)"
+      ]
+    },
+    "milestoneRow": {
+      "selector": "tbody tr.ant-table-row",
+      "type": "css",
+      "fallback": "tbody tr",
+      "aria_role": "row",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (48 milestone rows captured this run — FS §4.5)"
+      ]
+    },
+    "colMilestone": {
+      "selector": "thead th:has-text(\"MILESTONE\")",
+      "type": "css",
+      "fallback": "thead th:nth-child(1)",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (col 1 'MILESTONE', source field `milestone`, HTML-rendered — FS §4.5)"
+      ]
+    },
+    "colDue": {
+      "selector": "thead th:has-text(\"% DUE\")",
+      "type": "css",
+      "fallback": "thead th:nth-child(2)",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (col 2 '% DUE', source field `dues`, HTML-rendered — FS §4.5)"
+      ]
+    },
+    "colGst": {
+      "selector": "thead th:has-text(\"GST\")",
+      "type": "css",
+      "fallback": "thead th:nth-child(3)",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (col 3 'GST', source field `gst`, plain string — FS §4.5)"
+      ]
+    },
+    "colPrincipal": {
+      "selector": "thead th:nth-child(4)",
+      "type": "css",
+      "fallback": "thead th:has-text(\"PRINCIPAL\")",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (col 4: header text switches to uppercase unitName when present (this run: '1 BED GROWTH HOME 323 SQ.FT.') else 'PRINCIPAL'; source field `principalCollection` — FS §4.5). Use nth-child(4) as primary because the header label is dynamic."
+      ]
+    },
+    "colTotalAmount": {
+      "selector": "thead th:has-text(\"TOTAL AMOUNT\")",
+      "type": "css",
+      "fallback": "thead th:nth-child(5)",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (col 5 'TOTAL AMOUNT', source `totalAmount`; rendered only if startDate in past else '-' — FS §4.5)"
+      ]
+    },
+    "colTotalOutstanding": {
+      "selector": "thead th:has-text(\"TOTAL OUTSTANDING\")",
+      "type": "css",
+      "fallback": "thead th:nth-child(6)",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (col 6 'TOTAL OUTSTANDING', source `totalOutstanding`; '₹ 0' for future-dated — FS §4.5)"
+      ]
+    },
+    "colPaymentStatus": {
+      "selector": "thead th:has-text(\"PAYMENT STATUS\")",
+      "type": "css",
+      "fallback": "thead th:nth-child(7)",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (col 7 'PAYMENT STATUS', derived — pill rules FS §5.2)"
+      ]
+    },
+    "colAction": {
+      "selector": "thead th:has-text(\"ACTION\")",
+      "type": "css",
+      "fallback": "thead th:nth-child(8)",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (col 8 'ACTION', derived 'Offline Payment' button — FS §4.5, §6.1)"
+      ]
+    },
+    "colDetails": {
+      "selector": "thead th:has-text(\"DETAILS\")",
+      "type": "css",
+      "fallback": "thead th:nth-child(9)",
+      "aria_role": "columnheader",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (col 9 'DETAILS', 'View' button when transactionId present — FS §4.5, §6.1)"
+      ]
+    },
+    "statusPillPaid": {
+      "selector": "span.paid-payment-status",
+      "type": "css",
+      "fallback": "span:has-text(\"Paid\")",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (Paid pill: balance>=total, check-circle icon — FS §5.2)"
+      ]
+    },
+    "statusPillPending": {
+      "selector": "span.pending-payment-status",
+      "type": "css",
+      "fallback": "span:has-text(\"Pending\")",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (Pending pill: balance<=0 i.e. nothing paid, clock icon — FS §5.2)"
+      ]
+    },
+    "statusPillPartial": {
+      "selector": "span.partial-payment-status",
+      "type": "css",
+      "fallback": "span:has-text(\"Partial Payment\")",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from FS §5.2 (Partial Payment pill: 0<balance<total, card icon). INFERRED — not observed in this run's DOM dump (only Paid/Pending pills present); selector class mirrors paid-/pending-payment-status naming. Verify against a partially-paid milestone on next live pass."
+      ]
+    },
+    "offlinePaymentButton": {
+      "selector": "button.ant-btn-primary:has-text(\"Offline Payment\")",
+      "type": "css",
+      "fallback": "tbody tr button:has-text(\"Offline Payment\")",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (ACTION column button, ant-btn-primary ant-btn-sm; rendered on past-dated milestone with outstanding>0 — FS §6.1)"
+      ]
+    },
+    "transactionDetailsViewButton": {
+      "selector": "button.reset-btn-new:has-text(\"View\")",
+      "type": "css",
+      "fallback": "tbody tr button:has-text(\"View\")",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (DETAILS column button, ant-btn-default reset-btn-new; rendered when transactionId present — FS §6.1)"
+      ]
+    },
+    "drawerPaymentForPrincipal": {
+      "selector": ".ant-drawer .ant-radio-button-wrapper:has-text(\"Principal Payment\") input.ant-radio-button-input",
+      "type": "css",
+      "fallback": ".ant-radio-button-wrapper:has-text(\"Principal Payment\")",
+      "aria_role": "radio",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (Payment For radio, value 'principal'; conditional — shown only for non-HCF milestone with both legs outstanding — FS §5.1 #11). Radio inputs have no id; scoped by wrapper label text."
+      ]
+    },
+    "drawerPaymentForGst": {
+      "selector": ".ant-drawer .ant-radio-button-wrapper:has-text(\"GST Payment\") input.ant-radio-button-input",
+      "type": "css",
+      "fallback": ".ant-radio-button-wrapper:has-text(\"GST Payment\")",
+      "aria_role": "radio",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (Payment For radio, value 'gst'; in GST mode amount auto-locks to gstOutstanding — FS §5.1 #11, §6.2 BR7)"
+      ]
+    },
+    "drawerPaymentMethod": {
+      "selector": "#paymentMethod",
+      "type": "id",
+      "fallback": ".ant-drawer .ant-select:has(.ant-select-selection-placeholder:has-text(\"Select payment method\"))",
+      "aria_role": "combobox",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (AntD Select search input #paymentMethod; options NEFT/Cheque/Cash/Credit Card (CC)/Debit Card (DC)/UPI — FS §5.1 #6)"
+      ]
+    },
+    "drawerAmount": {
+      "selector": "#amount",
+      "type": "id",
+      "fallback": ".ant-drawer input.ant-input-number-input[placeholder=\"Enter amount\"]",
+      "aria_role": "spinbutton",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (InputNumber #amount, placeholder 'Enter amount'; disabled+auto-set to gstOutstanding in GST mode — FS §5.1 #4, §6.2 BR7)"
+      ]
+    },
+    "drawerTransactionId": {
+      "selector": "#transactionId",
+      "type": "id",
+      "fallback": ".ant-drawer input[placeholder=\"Enter transaction ID\"]",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (Input #transactionId, placeholder 'Enter transaction ID', required — FS §5.1 #7)"
+      ]
+    },
+    "drawerTransactionDate": {
+      "selector": "#transactionDate",
+      "type": "id",
+      "fallback": ".ant-drawer .ant-picker input[placeholder=\"Select date and time\"]",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (AntD DatePicker #transactionDate, placeholder 'Select date and time'; future dates disabled — FS §5.1 #8, §6.2 BR8)"
+      ]
+    },
+    "drawerComments": {
+      "selector": "#comments",
+      "type": "id",
+      "fallback": ".ant-drawer textarea[placeholder=\"Add any additional comments...\"]",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (TextArea #comments, placeholder 'Add any additional comments...', optional max 500 chars — FS §5.1 #9)"
+      ]
+    },
+    "drawerPaymentProofInput": {
+      "selector": ".ant-drawer input[type=\"file\"][name=\"file\"]",
+      "type": "css",
+      "fallback": "input[type=\"file\"][accept=\".pdf,.jpg,.jpeg,.png\"]",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (file input name='file', accept='.pdf,.jpg,.jpeg,.png'; mandatory, Submit blocked when empty — FS §5.1 #10, §6.2 BR9)"
+      ]
+    },
+    "drawerUploadProofButton": {
+      "selector": ".ant-drawer button:has-text(\"Upload Payment Proof\")",
+      "type": "css",
+      "fallback": "button:has-text(\"Upload Payment Proof\")",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (trigger button for payment proof upload; helper text 'Allowed formats: PDF, JPG, PNG (Max: 5MB)' — FS §5.1 #10)"
+      ]
+    },
+    "drawerSubmitPaymentButton": {
+      "selector": ".ant-drawer button[type=\"submit\"]:has-text(\"Submit Payment\")",
+      "type": "css",
+      "fallback": "button:has-text(\"Submit Payment\")",
+      "aria_role": "button",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (Submit Payment, type=submit, ant-btn-primary; posts multipart to adminMilestonePaymentOffline — FS §5.1, §7.3)"
+      ]
+    },
+    "drawerSummaryTotalOutstanding": {
+      "selector": ".ant-drawer :text(\"Total Outstanding\")",
+      "type": "css",
+      "fallback": ".ant-drawer :text-matches(\"Total Outstanding\")",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (Milestone Summary block label 'Total Outstanding' + value e.g. 'Rs. 3,31,430' — FS §4.4 drawer)"
+      ]
+    },
+    "drawerSummaryPrincipalOutstanding": {
+      "selector": ".ant-drawer :text(\"Principal Outstanding\")",
+      "type": "css",
+      "fallback": ".ant-drawer :text-matches(\"Principal Outstanding\")",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (Milestone Summary label 'Principal Outstanding' + value e.g. 'Rs. 3,28,149' — FS §4.4 drawer)"
+      ]
+    },
+    "drawerSummaryGstOutstanding": {
+      "selector": ".ant-drawer :text(\"GST Outstanding\")",
+      "type": "css",
+      "fallback": ".ant-drawer :text-matches(\"GST Outstanding\")",
+      "aria_role": null,
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from dump (Milestone Summary label 'GST Outstanding' + value e.g. 'Rs. 3,281'; Summary block also shows 'Total Amount' — FS §4.4 drawer)"
+      ]
+    },
+    "offlinePaymentSuccessToast": {
+      "selector": ":text(\"submitted successfully\")",
+      "type": "text",
+      "fallback": ".ant-message:has-text(\"submitted successfully\")",
+      "aria_role": "alert",
+      "deprecated": false,
+      "added": "2026-06-20",
+      "changelog": [
+        "1.9.0 — added from FS §7.3 / §8 (success toast 'Offline payment submitted successfully'). Not observed this run — capture-only pass, no Submit fired (live mutation requires user OK)."
       ]
     }
   }

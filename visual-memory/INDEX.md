@@ -23,6 +23,7 @@ Used as: baseline references for selectors, layout, and regression comparison.
 | Config               | [admin/config/INDEX.md](admin/config/INDEX.md)                             | STUB   |
 | Customers            | [admin/customers/INDEX.md](admin/customers/INDEX.md)                       | STUB   |
 | JBP Management       | [admin/jbp/INDEX.md](admin/jbp/INDEX.md)                                   | STUB   |
+| Milestones           | [admin/milestones/INDEX.md](admin/milestones/INDEX.md)                     | FULL   |
 | Offers               | [admin/offers/INDEX.md](admin/offers/INDEX.md)                             | STUB   |
 | Payment Transactions | [admin/payment-transactions/INDEX.md](admin/payment-transactions/INDEX.md) | STUB   |
 | Sales Managers       | [admin/sales-managers/INDEX.md](admin/sales-managers/INDEX.md)             | STUB   |

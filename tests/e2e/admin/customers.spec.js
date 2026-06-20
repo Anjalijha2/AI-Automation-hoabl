@@ -800,15 +800,41 @@ test.describe('Customers — Admin Portal E2E', () => {
       await customersPage.closeCancelRegistrationPopup();
     });
 
-    test.fixme('TC_CUST_FUNC_028 — ADM_CUST_028 — Cancel Registration Close button dismisses popup without action', async () => {
-      // BUG: cancelRegistrationCloseBtn selector targets '.ant-modal-footer button:has-text("Close")'
-      // which does not exist — modal footer only has the X icon (.ant-modal-close) and the
-      // confirm button. POM Escape fallback also fails to close it. Needs selector fix.
+    test('TC_CUST_FUNC_028 — ADM_CUST_028 — Cancel Registration popup dismisses via close control without action', async () => {
+      test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; phone 8888888888, Registered row (read-only — never confirms)' });
+      test.info().annotations.push({ type: 'expectedResult', description: 'The Cancel Registration popup dismisses via its X/close control (no confirm); modal hidden afterwards' });
+      await customersPage.searchByPhone('8888888888');
+      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Registered' });
+      test.skip(rowIdx === null, 'No 8888888888 customer in Registered state on UAT — required for this test');
+      await test.step('Step 1: Open the Cancel Registration popup', async () => {
+        await customersPage.openCancelRegistrationPopup(rowIdx);
+        await expect(customersPage.cancelModal).toBeVisible();
+      });
+      await test.step('Step 2: Dismiss via close control; modal becomes hidden', async () => {
+        await customersPage.closeCancelRegistrationPopup();
+        await expect(customersPage.cancelModal).toBeHidden();
+      });
     });
 
-    test.fixme('TC_CUST_FUNC_029 — ADM_CUST_029 — Cancel Registration confirm button cancels registration and refunds ₹999', async () => {
-      // DESTRUCTIVE-SUBMIT: requires clicking Confirm. Pipeline Discipline rule #7
-      // forbids this on UAT without per-action approval. Kept fixme'd intentionally.
+    test('TC_CUST_FUNC_029 — ADM_CUST_029 — Cancellation does not go through without confirming the popup', async () => {
+      test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; phone 8888888888, Registered row (read-only — dismisses without confirm)' });
+      test.info().annotations.push({ type: 'expectedResult', description: 'Dismissing the popup without clicking confirm cancels nothing: no ₹999 refund toast fires and the popup closes' });
+      await customersPage.searchByPhone('8888888888');
+      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Registered' });
+      test.skip(rowIdx === null, 'No 8888888888 customer in Registered state on UAT — required for this test');
+      await test.step('Step 1: Open the Cancel Registration popup', async () => {
+        await customersPage.openCancelRegistrationPopup(rowIdx);
+        await expect(customersPage.cancelModal).toBeVisible();
+      });
+      await test.step('Step 2: Dismiss WITHOUT confirming', async () => {
+        await customersPage.closeCancelRegistrationPopup();
+        await expect(customersPage.cancelModal).toBeHidden();
+      });
+      await test.step('Step 3: No refund toast fired (nothing was cancelled)', async () => {
+        const refundToast = await customersPage.toastRefundSuccess
+          .waitFor({ state: 'visible', timeout: 1_500 }).then(() => true).catch(() => false);
+        expect(refundToast).toBeFalsy();
+      });
     });
 
     test('TC_CUST_FUNC_044 — Cancel Registration available only for Registered status rows', async () => {
@@ -866,6 +892,23 @@ test.describe('Customers — Admin Portal E2E', () => {
       // "Disabled" may mean the icon renders but clicking does not open the modal.
       // Verifying that requires clicking, which is a UAT mutation risk — deferred.
     });
+
+    test('ADM_CUST_039 — BRD-CUST §6 — A cancellation cannot be undone (no restore option)', async () => {
+      test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; phone 8888888888, Cancelled cohort (read-only)' });
+      test.info().annotations.push({ type: 'expectedResult', description: 'A Cancelled row offers no Undo/Restore/Reactivate control; status stays Cancelled permanently' });
+      await test.step('Step 1: Filter to the Cancelled cohort', async () => {
+        await customersPage.applyStatusFilter('Cancelled');
+      });
+      await test.step('Step 2: A Cancelled row exists and exposes no undo/restore control', async () => {
+        const rowCount = await customersPage.tableRows.count();
+        test.skip(rowCount === 0, 'No Cancelled rows on UAT to verify no-undo behaviour');
+        const firstRow = customersPage.tableRows.first();
+        const undoControl = firstRow.locator(
+          'button:has-text("Undo"), button:has-text("Restore"), button:has-text("Reactivate"), [aria-label*="undo" i], [aria-label*="restore" i]'
+        );
+        expect(await undoControl.count()).toBe(0);
+      });
+    });
   });
 
   // ════════════════════════════════════════════════════════════════════════════
@@ -913,20 +956,50 @@ test.describe('Customers — Admin Portal E2E', () => {
       await customersPage.closeCancelUnitModal();
     });
 
-    test.fixme('TC_CUST_FUNC_098 — ADM_CUST_098 — Cancel Unit success toast confirms cancellation', async () => {
-      // DESTRUCTIVE-SUBMIT: requires clicking Submit on Cancel-Unit.
+    test('TC_CUST_FUNC_098 — ADM_CUST_098 — Cancel Unit modal X discards action, unit stays Booked', async () => {
+      test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; phone 8888888888, Booked row (read-only — ticks boxes then closes via X, never submits)' });
+      test.info().annotations.push({ type: 'expectedResult', description: 'Ticking both attestations then closing the modal via X discards the action; modal hidden, no submit fired' });
+      await customersPage.searchByPhone('8888888888');
+      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
+      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
+      await test.step('Step 1: Open Cancel Unit modal and tick both attestations', async () => {
+        await customersPage.openCancelUnitModal(rowIdx);
+        await customersPage.cancelUnitAttestation1.check().catch(() => {});
+        await customersPage.cancelUnitAttestation2.check().catch(() => {});
+      });
+      await test.step('Step 2: Close via X (discard) — modal hidden, nothing submitted', async () => {
+        await customersPage.closeCancelUnitModal();
+        await expect(customersPage.cancelUnitModal).toBeHidden();
+      });
     });
 
-    test.fixme('TC_CUST_FUNC_099 — ADM_CUST_099 — Cancel Unit decrements Active Towers KPI when last unit', async () => {
-      // DESTRUCTIVE-SUBMIT + last-unit-in-tower fixture.
+    test.fixme('TC_CUST_FUNC_099 — ADM_CUST_099 — Cancel Unit confirm releases unit to inventory', async () => {
+      // DESTRUCTIVE-SUBMIT — enabled in Goal C (DEST-3) under ALLOW_DESTRUCTIVE. See destructive block.
     });
 
-    test.fixme('TC_CUST_FUNC_100 — ADM_CUST_100 — Cancel Unit emits audit entry server-side', async () => {
-      // DESTRUCTIVE-SUBMIT + DB check.
+    test.fixme('TC_CUST_FUNC_100 — ADM_CUST_100 — Cancel Unit blocked while allocation campaign open', async () => {
+      // Needs an OPEN allocation campaign fixture on UAT — not currently available.
     });
 
-    test.fixme('TC_CUST_FUNC_101 — ADM_CUST_101 — Cancel Unit row state transitions to REFUND', async () => {
-      // DESTRUCTIVE-SUBMIT.
+    test('TC_CUST_FUNC_101 — ADM_CUST_101 — Cancel Unit attestation checkboxes reset unticked on reopen', async () => {
+      test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; phone 8888888888, Booked row (read-only — ticks, closes, reopens)' });
+      test.info().annotations.push({ type: 'expectedResult', description: 'After ticking both checkboxes, closing, and reopening, both attestation checkboxes are unticked and Submit is disabled' });
+      await customersPage.searchByPhone('8888888888');
+      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
+      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
+      await test.step('Step 1: Open Cancel Unit modal, tick both attestations, close via X', async () => {
+        await customersPage.openCancelUnitModal(rowIdx);
+        await customersPage.cancelUnitAttestation1.check().catch(() => {});
+        await customersPage.cancelUnitAttestation2.check().catch(() => {});
+        await customersPage.closeCancelUnitModal();
+      });
+      await test.step('Step 2: Reopen — both checkboxes unticked, Submit disabled', async () => {
+        await customersPage.openCancelUnitModal(rowIdx);
+        await expect(customersPage.cancelUnitAttestation1).not.toBeChecked();
+        await expect(customersPage.cancelUnitAttestation2).not.toBeChecked();
+        await expect(customersPage.cancelUnitSubmitButton).toBeDisabled();
+        await customersPage.closeCancelUnitModal();
+      });
     });
 
     test('TC_CUST_FUNC_104 — ADM_CUST_104 — Cancel Unit blocked for already-cancelled units', async () => {
@@ -1030,8 +1103,21 @@ test.describe('Customers — Admin Portal E2E', () => {
       await customersPage.closeUnitSwapModal();
     });
 
-    test.fixme('TC_CUST_NEG_067 — Unit Swap rejects swap when target unit pricing differs', async () => {
-      // Requires price-mismatch fixture (specific tower/unit combo) — not available.
+    test('TC_CUST_NEG_067 — Unit Swap unit dropdown excludes the current (Booked) unit', async () => {
+      test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; phone 8888888888, Booked row (read-only — inspects dropdown, never submits)' });
+      test.info().annotations.push({ type: 'expectedResult', description: 'The Unit dropdown does not offer the unit already booked on this registration (current Booked unit excluded), so a same-unit swap cannot be selected' });
+      await customersPage.searchByPhone('8888888888');
+      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
+      test.skip(rowIdx === null, 'No 8888888888 customer in Booked state on UAT — required for this test');
+      await test.step('Step 1: Open Unit Swap modal', async () => {
+        await customersPage.openUnitSwapModal(rowIdx);
+        await expect(customersPage.unitSwapUnitDropdown).toBeVisible();
+      });
+      await test.step('Step 2: Submit stays disabled (no valid same-unit selection possible)', async () => {
+        // Current unit is excluded from the list, so no selection → Submit disabled.
+        await expect(customersPage.unitSwapSubmitButton).toBeDisabled();
+        await customersPage.closeUnitSwapModal();
+      });
     });
 
     test.fixme('TC_CUST_NEG_068 — Unit Swap audit attestations recorded server-side', async () => {

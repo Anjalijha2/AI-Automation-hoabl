@@ -1,0 +1,615 @@
+{
+  "steps": [
+    {
+      "msg": "on customers",
+      "data": {
+        "url": "https://uat-web.xrportal.in/admin/customers"
+      }
+    },
+    {
+      "msg": "found target row",
+      "data": {
+        "reg": "GHNG-1000008364-I"
+      }
+    },
+    {
+      "msg": "three-dot menu items",
+      "data": [
+        "View Milestones",
+        "Unit swap",
+        "Update Parking Details",
+        "Home Loan Approval"
+      ]
+    },
+    {
+      "msg": "on milestone page",
+      "data": {
+        "url": "https://uat-web.xrportal.in/admin/milestone?rn=GHNG-1000008364-I&uid=testUnit-547664516033"
+      }
+    },
+    {
+      "msg": "captured schedule page screenshots",
+      "data": null
+    },
+    {
+      "msg": "schedule DOM facts",
+      "data": {
+        "cols": [
+          "MILESTONE",
+          "% DUE",
+          "GST",
+          "1 BED GROWTH HOME 323 SQ.FT.",
+          "TOTAL AMOUNT",
+          "TOTAL OUTSTANDING",
+          "PAYMENT STATUS",
+          "ACTION",
+          "DETAILS"
+        ],
+        "rows": 48,
+        "btns": 30
+      }
+    },
+    {
+      "msg": "captured offline payment drawer",
+      "data": null
+    },
+    {
+      "msg": "drawer DOM facts",
+      "data": {
+        "labels": [
+          "Payment For",
+          "Principal Payment",
+          "GST Payment",
+          "Payment Method",
+          "Amount",
+          "Transaction ID",
+          "Transaction Date & Time",
+          "Payment Proof",
+          "Comments (Optional)"
+        ],
+        "buttons": [
+          "",
+          "Upload Payment Proof",
+          "Submit Payment"
+        ]
+      }
+    },
+    {
+      "msg": "payment method options",
+      "data": [
+        "NEFT",
+        "Cheque",
+        "Cash",
+        "Credit Card",
+        "Debit Card",
+        "UPI"
+      ]
+    },
+    {
+      "msg": "drawer closed without submit",
+      "data": null
+    },
+    {
+      "msg": "transaction details drawer",
+      "data": {
+        "found": true,
+        "title": "Transaction Details",
+        "labels": [
+          "Payment Breakdown",
+          "Type",
+          "Amount Paid",
+          "Mode",
+          "Status",
+          "Payment Breakdown",
+          "Type",
+          "Amount Paid",
+          "Mode",
+          "Status",
+          "Full PaymentTestE2605090YEUTX9",
+          "Principal",
+          "₹ 1,00,000",
+          "UPI",
+          "Paid",
+          "Full PaymentTest613514343203",
+          "Principal",
+          "₹ 2,20,652",
+          "RTGS",
+          "Paid"
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "milestoneUrl": "https://uat-web.xrportal.in/admin/milestone?rn=GHNG-1000008364-I&uid=testUnit-547664516033",
+  "dom": {
+    "headings": [
+      {
+        "tag": "H2",
+        "text": "Milestone Payment Schedule"
+      }
+    ],
+    "backLink": {
+      "tag": "BUTTON",
+      "class": "ant-btn css-17wfwcs ant-btn-link ant-btn-color-link ant-btn-variant-link",
+      "text": "Back to Customer Listing",
+      "href": null
+    },
+    "headerLabels": [
+      {
+        "tag": "DIV",
+        "class": "wrap-div",
+        "text": "Registration No.GHNG-1000008364-I"
+      },
+      {
+        "tag": "DIV",
+        "class": "wrap-div",
+        "text": "Unit No.1201-Pride: 1 Bed Growth Home"
+      }
+    ],
+    "table": {
+      "class": ""
+    },
+    "columns": [
+      "MILESTONE",
+      "% DUE",
+      "GST",
+      "1 BED GROWTH HOME 323 SQ.FT.",
+      "TOTAL AMOUNT",
+      "TOTAL OUTSTANDING",
+      "PAYMENT STATUS",
+      "ACTION",
+      "DETAILS"
+    ],
+    "rowCount": 48,
+    "firstRowCells": [],
+    "pills": [
+      {
+        "tag": "SPAN",
+        "class": "paid-payment-status",
+        "text": "Paid"
+      },
+      {
+        "tag": "SPAN",
+        "class": "paid-payment-status",
+        "text": "Paid"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      },
+      {
+        "tag": "SPAN",
+        "class": "pending-payment-status",
+        "text": "Pending"
+      }
+    ],
+    "tableButtons": [
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined reset-btn-new",
+        "text": "View"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      },
+      {
+        "tag": "BUTTON",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-sm",
+        "text": "Offline Payment"
+      }
+    ],
+    "icons": [
+      ""
+    ]
+  },
+  "offlineButtonCount": 1,
+  "drawer": {
+    "found": true,
+    "title": "Offline Payment",
+    "labels": [
+      "Payment For",
+      "Principal Payment",
+      "GST Payment",
+      "Payment Method",
+      "Amount",
+      "Transaction ID",
+      "Transaction Date & Time",
+      "Payment Proof",
+      "Comments (Optional)"
+    ],
+    "inputs": [
+      {
+        "tag": "INPUT",
+        "type": "radio",
+        "id": "",
+        "placeholder": null,
+        "accept": null,
+        "ariaLabel": null,
+        "name": ":r4f:",
+        "role": null,
+        "class": "ant-radio-button-input"
+      },
+      {
+        "tag": "INPUT",
+        "type": "radio",
+        "id": "",
+        "placeholder": null,
+        "accept": null,
+        "ariaLabel": null,
+        "name": ":r4f:",
+        "role": null,
+        "class": "ant-radio-button-input"
+      },
+      {
+        "tag": "INPUT",
+        "type": "search",
+        "id": "paymentMethod",
+        "placeholder": null,
+        "accept": null,
+        "ariaLabel": null,
+        "name": null,
+        "role": "combobox",
+        "class": "ant-select-selection-search-input"
+      },
+      {
+        "tag": "INPUT",
+        "type": null,
+        "id": "amount",
+        "placeholder": "Enter amount",
+        "accept": null,
+        "ariaLabel": null,
+        "name": null,
+        "role": "spinbutton",
+        "class": "ant-input-number-input"
+      },
+      {
+        "tag": "INPUT",
+        "type": "text",
+        "id": "transactionId",
+        "placeholder": "Enter transaction ID",
+        "accept": null,
+        "ariaLabel": null,
+        "name": null,
+        "role": null,
+        "class": "ant-input ant-input-lg css-17wfwcs ant-input-outlined"
+      },
+      {
+        "tag": "INPUT",
+        "type": null,
+        "id": "transactionDate",
+        "placeholder": "Select date and time",
+        "accept": null,
+        "ariaLabel": null,
+        "name": null,
+        "role": null,
+        "class": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "file",
+        "id": "",
+        "placeholder": null,
+        "accept": ".pdf,.jpg,.jpeg,.png",
+        "ariaLabel": null,
+        "name": "file",
+        "role": null,
+        "class": ""
+      },
+      {
+        "tag": "TEXTAREA",
+        "type": null,
+        "id": "comments",
+        "placeholder": "Add any additional comments...",
+        "accept": null,
+        "ariaLabel": null,
+        "name": null,
+        "role": null,
+        "class": "ant-input ant-input-lg css-17wfwcs ant-input-outlined"
+      }
+    ],
+    "selects": [
+      {
+        "class": "ant-select ant-select-lg ant-select-outlined ant-select-in-form-item css-17wfwcs",
+        "text": "Select payment method"
+      }
+    ],
+    "radios": [
+      "principal",
+      "gst"
+    ],
+    "datePickers": [
+      {
+        "class": "ant-picker ant-picker-large ant-picker-outlined ant-picker-status-success css-17",
+        "placeholder": "Select date and time"
+      }
+    ],
+    "uploads": [
+      {
+        "tag": "DIV",
+        "class": "ant-upload ant-upload-select",
+        "accept": null
+      },
+      {
+        "tag": "SPAN",
+        "class": "ant-upload",
+        "accept": null
+      },
+      {
+        "tag": "INPUT",
+        "class": "",
+        "accept": ".pdf,.jpg,.jpeg,.png"
+      }
+    ],
+    "uploadHelperText": "Offline PaymentMilestone SummaryMilestoneFIRST DISBURSEMENT +30 DAYS FROM BOOKING (ON OR BEFORE JUNE 2026)Total Amount₹ 3,31,430Principal OutstandingRs. 3,28,149GST OutstandingRs. 3,281Total OutstandingRs. 3,31,430Payment ForPrincipal PaymentGST PaymentPayment MethodSelect payment methodAmountTransaction IDTransaction Date & TimePayment ProofUpload Payment ProofAllowed formats: PDF, JPG, PNG (Max: 5MB)Comments (Optional)Submit Payment",
+    "buttons": [
+      {
+        "text": "",
+        "class": "ant-btn css-17wfwcs ant-btn-text ant-btn-color-default ant-btn-variant-text",
+        "type": "button"
+      },
+      {
+        "text": "Upload Payment Proof",
+        "class": "ant-btn css-17wfwcs ant-btn-default ant-btn-color-default ant-btn-variant-outlined",
+        "type": "button"
+      },
+      {
+        "text": "Submit Payment",
+        "class": "ant-btn css-17wfwcs ant-btn-primary ant-btn-color-primary ant-btn-variant-solid",
+        "type": "submit"
+      }
+    ]
+  },
+  "paymentMethodOptions": [
+    "NEFT",
+    "Cheque",
+    "Cash",
+    "Credit Card",
+    "Debit Card",
+    "UPI"
+  ],
+  "viewButtonCount": 1,
+  "txnDrawer": {
+    "found": true,
+    "title": "Transaction Details",
+    "labels": [
+      "Payment Breakdown",
+      "Type",
+      "Amount Paid",
+      "Mode",
+      "Status",
+      "Payment Breakdown",
+      "Type",
+      "Amount Paid",
+      "Mode",
+      "Status",
+      "Full PaymentTestE2605090YEUTX9",
+      "Principal",
+      "₹ 1,00,000",
+      "UPI",
+      "Paid",
+      "Full PaymentTest613514343203",
+      "Principal",
+      "₹ 2,20,652",
+      "RTGS",
+      "Paid"
+    ]
+  }
+}

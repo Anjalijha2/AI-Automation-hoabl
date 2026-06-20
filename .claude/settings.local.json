@@ -15,7 +15,15 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(s['label'],s['status'],s.get\\('bodyPreview',''\\)[:200]\\) for s in d['steps']]\")",
       "Bash(tee test-results/admin-customers-adm-cust-001.log)",
       "Read(//c/Users/Hp/Downloads/**)",
-      "Read(//c/Users/Dell/Downloads/**)"
+      "Read(//c/Users/Dell/Downloads/**)",
+      "Bash(node \"C:/Users/Hp/AppData/Local/Temp/claude/D--AI-Automation-xanadu---AI-automation/741a684a-fa52-49a7-a122-204afc34ec81/scratchpad/capture-milestones.js\")",
+      "Bash(cp \"C:/Users/Hp/AppData/Local/Temp/claude/D--AI-Automation-xanadu---AI-automation/741a684a-fa52-49a7-a122-204afc34ec81/scratchpad/capture-milestones.js\" \"./_capture-milestones-tmp.js\")",
+      "Bash(node \"./_capture-milestones-tmp.js\")",
+      "Bash(node _probe-rows.js)",
+      "Bash(agent-browser --help)",
+      "Bash(agent-browser connect *)",
+      "Bash(HEADLESS=true npx playwright test tests/e2e/admin/milestones.spec.js --config automation-repository/playwright.config.js --project=e2e-admin --workers=1)",
+      "Bash(echo \"EXIT=$?\")"
     ],
     "deny": [
       "Read(./.env)",
