@@ -107,19 +107,26 @@ test.describe('Customers — Admin Portal E2E', () => {
   // ════════════════════════════════════════════════════════════════════════════
 
   test('TC_CUST_FUNC_003 — BRD-CUST §5 — Search by Phone filters registration table', async () => {
-    const phone = '9999999999'; // sample UAT buyer phone number per test data spec
-    await customersPage.searchByPhone(phone);
+    test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; search phone: 8888888888 (known UAT buyer)' });
+    test.info().annotations.push({ type: 'expectedResult', description: 'Table filters to rows containing the searched phone; or empty-state renders — both valid (live UAT data varies)' });
 
-    // On UAT, data changes over time. Either we get matching rows OR an empty state —
-    // both are valid outcomes. We just confirm the UI responded (no crash, no spinner stuck).
-    const rowCount = await customersPage.tableRows.count();
-    const isEmpty = await customersPage.emptyState.isVisible().catch(() => false);
-    expect(rowCount > 0 || isEmpty).toBeTruthy();
+    const phone = '8888888888';
+    await test.step('Step 1: Type phone number into Search by Phone field', async () => {
+      await customersPage.searchByPhone(phone);
+    });
 
-    // If rows exist, confirm at least one row contains the searched phone number
-    if (rowCount > 0) {
-      await customersPage.expectCustomerInTable(phone);
-    }
+    await test.step('Step 2: Table responds — shows matching rows or empty state (no crash)', async () => {
+      const rowCount = await customersPage.tableRows.count();
+      const isEmpty = await customersPage.emptyState.isVisible().catch(() => false);
+      expect(rowCount > 0 || isEmpty).toBeTruthy();
+    });
+
+    await test.step('Step 3: If rows exist, at least one row contains the searched phone', async () => {
+      const rowCount = await customersPage.tableRows.count();
+      if (rowCount > 0) {
+        await customersPage.expectCustomerInTable(phone);
+      }
+    });
   });
 
   test('TC_CUST_FUNC_004 — BRD-CUST §5 — Filter by Allocation Status returns matching rows', async () => {

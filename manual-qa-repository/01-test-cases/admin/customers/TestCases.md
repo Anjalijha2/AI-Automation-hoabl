@@ -302,3 +302,11 @@ The following actions are documented in dedicated FS files and require their own
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | TC_CUST_FUNC_002 | ADM_CUST_007 / ADM_CUST_009 / ADM_CUST_010 / ADM_CUST_011 / ADM_CUST_012 | ✅ PASS | Admin session — admin.json; starts at /admin/cms, clicks Customers in sidebar | All assertions matched expected | 33.4s |
+
+---
+
+## Last Run: 2026-06-20 10:10 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_CUST_FUNC_003 | ADM_CUST_008 | ✅ PASS | Admin session — admin.json; search phone: 8888888888 (known UAT buyer) | All assertions matched expected | 17.1s |
