@@ -313,18 +313,50 @@ function resolveSheet(wb) {
   return { sheet: null, format: null };
 }
 
+// ─── Load annotations from Playwright JSON reporter output ───────────────────
+// Returns Map<specTcId, { testData, expectedResult }>
+function loadJsonAnnotations() {
+  const jsonPath = path.join(__dirname, '..', 'reports', 'results.json');
+  if (!fs.existsSync(jsonPath)) return new Map();
+  try {
+    const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    const map = new Map();
+    for (const suite of (data.suites || [])) {
+      for (const spec of walkSpecs(suite)) {
+        for (const test of (spec.tests || [])) {
+          const tcMatch = test.title.match(/^(TC[_-][A-Z][A-Z0-9_]+_\d+[a-z]?|ADM(?:_[A-Z]+)+_\d+[a-z]?)/);
+          if (!tcMatch) continue;
+          const tcId = tcMatch[1];
+          const anns = {};
+          for (const a of (test.annotations || [])) {
+            if (a.type === 'testData' || a.type === 'expectedResult') anns[a.type] = a.description;
+          }
+          if (Object.keys(anns).length) map.set(tcId, anns);
+        }
+      }
+    }
+    return map;
+  } catch { return new Map(); }
+}
+function* walkSpecs(suite) {
+  for (const spec of (suite.specs || [])) yield spec;
+  for (const sub of (suite.suites || [])) yield* walkSpecs(sub);
+}
+
 // ─── Build the rich "Actual result" text for the Master format ───────────────
 // The Master sheet has only ONE free-text execution cell (col 10), so we fold
-// timestamp + duration + outcome + screenshot path into it.
-function masterActualText(result, timestamp, screenshot) {
+// timestamp + duration + outcome + screenshot path + test-data annotation into it.
+function masterActualText(result, timestamp, screenshot, anns) {
   const dur = result.duration || 'n/a';
   const retry = result.isRetry ? ' (after retry)' : '';
-  if (result.status === 'Pass') return `PASS${retry} — matched expected. [Automation ${timestamp}, ${dur}]`;
+  const dataLine = anns && anns.testData ? ` | Data: ${anns.testData}` : '';
+  const expLine  = anns && anns.expectedResult ? ` | Expected: ${anns.expectedResult}` : '';
+  if (result.status === 'Pass') return `PASS${retry} — matched expected.${dataLine}${expLine} [Automation ${timestamp}, ${dur}]`;
   if (result.status === 'Fail') {
     const shot = screenshot ? ` | screenshot: ${screenshot}` : '';
-    return `FAIL${retry} — see error context.${shot} [Automation ${timestamp}, ${dur}]`;
+    return `FAIL${retry} — see error context.${shot}${dataLine}${expLine} [Automation ${timestamp}, ${dur}]`;
   }
-  if (result.status === 'Skip') return `SKIPPED — not executed (ENV-guarded or fixme). [Automation ${timestamp}]`;
+  if (result.status === 'Skip') return `SKIPPED — not executed (ENV-guarded or fixme).${dataLine} [Automation ${timestamp}]`;
   return `PENDING [Automation ${timestamp}]`;
 }
 
@@ -332,6 +364,7 @@ function masterActualText(result, timestamp, screenshot) {
 async function updateXlsx(results) {
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.readFile(XLSX_PATH);
+  const jsonAnns = loadJsonAnnotations(); // testData / expectedResult per spec TC_ID
 
   const { sheet, format } = resolveSheet(wb);
   if (!sheet) {
@@ -378,9 +411,14 @@ async function updateXlsx(results) {
     const isSkip = result.status === 'Skip';
     const screenshot = isFail ? findScreenshot(id, results, sheetName, portalArg) : '';
 
+    // Resolve annotations: try specId first (direct match), then reverse alias
+    const specIdForAnns = reverseAlias(id) || id;
+    const anns = jsonAnns.get(specIdForAnns) || jsonAnns.get(id) || null;
+    const dataLabel = anns && anns.testData ? anns.testData : '';
+
     if (format === 'master') {
       // Inline 3-column model: Actual result | Stauts: Pass/Fail | Resource.
-      row.getCell(COL.actual).value = masterActualText(result, timestamp, screenshot);
+      row.getCell(COL.actual).value = masterActualText(result, timestamp, screenshot, anns);
       row.getCell(COL.status).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
       row.getCell(COL.resource).value = 'Automation';
     } else {
@@ -393,7 +431,9 @@ async function updateXlsx(results) {
         ? `${jenkinsBuild}${timestamp} — FAIL in ${result.duration || 'n/a'}`
         : `${jenkinsBuild}${timestamp} — ${result.status.toLowerCase()} in ${result.duration || 'n/a'}`;
       row.getCell(COL.details).value = details;
-      row.getCell(COL.actual).value = isPass ? 'PASS — matched expected' : isFail ? 'FAIL — see screenshot + error context' : 'Not executed';
+      const actualBase = isPass ? 'PASS — matched expected' : isFail ? 'FAIL — see screenshot + error context' : 'Not executed';
+      const actualFull = dataLabel ? `${actualBase} | Data: ${dataLabel}` : actualBase;
+      row.getCell(COL.actual).value = actualFull;
       row.getCell(COL.screenshot).value = isFail ? (screenshot || '') : '';
     }
 

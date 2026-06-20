@@ -63,14 +63,20 @@ test.describe('Customers — Admin Portal E2E', () => {
   // ════════════════════════════════════════════════════════════════════════════
 
   test('TC_CUST_FUNC_001 — BRD-CUST §3 — Customers page loads as default post-login', async ({ page }) => {
-    // Assert the URL contains /admin/customers
-    await customersPage.expectOnCustomersUrl();
-    // Assert all 6 KPI summary cards are visible (Registered, Inactive, Cancelled, etc.)
-    await customersPage.expectKpiVisible();
-    // Assert the registration data table itself is visible
-    await expect(customersPage.registrationTable).toBeVisible();
-    // KPI cards + table visibility already asserted above; full-page screenshot
-    // drifts due to live KPI counts + table data — functional correctness verified.
+    test.info().annotations.push({ type: 'testData',       description: 'Admin session — automation-repository/fixtures/.auth/admin.json (mobile 8888888888 / OTP 258369)' });
+    test.info().annotations.push({ type: 'expectedResult', description: 'URL=/admin/customers; 6 KPI cards visible (Registered, Inactive, Cancelled, KYC Pending, Confirmed, Active Towers); registration table visible' });
+
+    await test.step('Step 1: URL is /admin/customers', async () => {
+      await customersPage.expectOnCustomersUrl();
+    });
+
+    await test.step('Step 2: All 6 KPI summary cards are visible (Registered · Inactive Registrations · Cancelled Registrations · KYC Pending · Confirmed · Active Towers)', async () => {
+      await customersPage.expectKpiVisible();
+    });
+
+    await test.step('Step 3: Registration data table is visible', async () => {
+      await expect(customersPage.registrationTable).toBeVisible();
+    });
   });
 
   test('TC_CUST_FUNC_002 — BRD-CUST §3 — Sidebar navigation opens Customers module', async ({ page }) => {

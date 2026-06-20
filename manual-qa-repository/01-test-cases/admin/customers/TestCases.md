@@ -262,3 +262,11 @@ The following actions are documented in dedicated FS files and require their own
 - Strapi exclusion: respected (no Strapi/CMS test cases)
 - Orphan TCs: 0
 - Total TCs: 62 (was 59 in initial run; split Cancel Unit / Cancel Registration / Home Loan Approval workflow TCs into safe read-only + destructive Submit-path pairs for clean automation gating)
+
+---
+
+## Last Run: 2026-06-20 09:50 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_CUST_FUNC_001 | ADM_CUST_001 / ADM_CUST_002 / ADM_CUST_003 / ADM_CUST_006 / TC_CUST_UI_041 | ✅ PASS | Admin session — automation-repository/fixtures/.auth/admin.json (mobile 8888888888 / OTP 258369) | All assertions matched expected | 17.2s |

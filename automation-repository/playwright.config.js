@@ -21,6 +21,7 @@ module.exports = defineConfig({
   workers: 1,
 
   reporter: [
+    [path.join(__dirname, 'reporters', 'step-reporter.js')],
     ['list'],
     ['html', { outputFolder: path.join(ROOT, 'reports/html-report'), open: 'never' }],
     ['json', { outputFile: path.join(ROOT, 'reports/results.json') }],
