@@ -839,6 +839,71 @@ class CustomersPage extends BasePage {
     await this.updateParkingModal.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
   }
 
+  // ── Update Parking — slot-based UI helpers ──────────────────────────────────
+  // The parking modal was redesigned: a toggle (.ant-switch) enables "Additional
+  // Parking"; when ON it shows per-slot "Enter Amount" inputs with "+ Add More" /
+  // "Remove" controls and a Submit button. (No more count×amount model.)
+  get parkingSwitch()            { return this.updateParkingModal.locator('.ant-switch'); }
+  get parkingSlotAmountInputs()  { return this.updateParkingModal.locator("input[placeholder='Enter Amount']"); }
+  get parkingAddMoreButton()     { return this.updateParkingModal.locator("button:has-text('Add More')"); }
+  get parkingRemoveButtons()     { return this.updateParkingModal.locator("button:has-text('Remove')"); }
+
+  /** parkingToggleIsOn() — true when the Additional Parking switch is enabled. */
+  async parkingToggleIsOn() {
+    return (await this.parkingSwitch.getAttribute('aria-checked')) === 'true';
+  }
+  /** enableParking() — turn the Additional Parking switch ON and WAIT for a slot to render. */
+  async enableParking() {
+    if (!(await this.parkingToggleIsOn())) {
+      await this.parkingSwitch.click();
+    }
+    // Poll until at least one slot input renders (slot rows render async after toggle).
+    await this.page.waitForFunction(
+      () => {
+        const m = document.querySelector('.ant-modal');
+        return m && m.querySelectorAll("input[placeholder='Enter Amount']").length > 0;
+      },
+      { timeout: 8_000 }
+    ).catch(() => {});
+  }
+  /** disableParking() — turn the Additional Parking switch OFF and WAIT for slots to clear. */
+  async disableParking() {
+    if (await this.parkingToggleIsOn()) {
+      await this.parkingSwitch.click();
+      await this.page.waitForFunction(
+        () => {
+          const m = document.querySelector('.ant-modal');
+          return m && m.querySelectorAll("input[placeholder='Enter Amount']").length === 0;
+        },
+        { timeout: 8_000 }
+      ).catch(() => {});
+    }
+  }
+  /** setParkingSlotAmount(index, amount) — fill the Nth slot's amount. */
+  async setParkingSlotAmount(index, amount) {
+    await this.parkingSlotAmountInputs.nth(index).fill(String(amount));
+  }
+  /** typeParkingSlotAmount(index, text) — type raw text (for non-numeric validation). */
+  async typeParkingSlotAmount(index, text) {
+    const inp = this.parkingSlotAmountInputs.nth(index);
+    await inp.click();
+    await inp.pressSequentially(text, { timeout: 5_000 }).catch(() => {});
+  }
+  /** addParkingSlot() — click "+ Add More" to append a slot; waits for the count to grow. */
+  async addParkingSlot() {
+    const before = await this.parkingSlotAmountInputs.count();
+    await this.parkingAddMoreButton.first().click();
+    await this.page.waitForFunction(
+      (n) => {
+        const m = document.querySelector('.ant-modal');
+        return m && m.querySelectorAll("input[placeholder='Enter Amount']").length > n;
+      },
+      before,
+      { timeout: 8_000 }
+    ).catch(() => {});
+    return this.parkingSlotAmountInputs.count();
+  }
+
   // ── View Milestones nav (read-only — separate page) ─────────────────────────
   async openViewMilestones(rowIndex) {
     await this.openThreeDotMenu(rowIndex);
