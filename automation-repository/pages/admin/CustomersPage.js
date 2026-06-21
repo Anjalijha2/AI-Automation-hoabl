@@ -190,6 +190,15 @@ class CustomersPage extends BasePage {
     this.parkingAmountInput      = page.locator(C.parkingAmountInput.selector);
     this.parkingPreviewText      = page.locator(C.parkingPreviewText.selector);
     this.updateParkingSubmitBtn  = page.locator(C.updateParkingSubmitBtn.selector);
+
+    // ── Assign Unit modal (offline unit assignment — Registered rows) ─────────
+    this.assignUnitMenuItem      = page.locator(C.assignUnitMenuItem.selector);
+    this.assignUnitModal         = page.locator(C.assignUnitModal.selector);
+    this.assignUnitAmountInput   = page.locator(C.assignUnitAmountInput.selector);
+    this.assignUnitTransactionId = page.locator(C.assignUnitTransactionIdInput.selector);
+    this.assignUnitTransactionDate = page.locator(C.assignUnitTransactionDateInput.selector);
+    this.assignUnitProofInput    = page.locator(C.assignUnitProofInput.selector);
+    this.assignUnitSubmitBtn     = page.locator(C.assignUnitSubmitBtn.selector);
   }
 
   // ── Per-row action helpers ────────────────────────────────────────────────────
@@ -902,6 +911,45 @@ class CustomersPage extends BasePage {
       { timeout: 8_000 }
     ).catch(() => {});
     return this.parkingSlotAmountInputs.count();
+  }
+
+  // ── Assign Unit modal (offline unit assignment — Registered rows) ───────────
+  // Reached via three-dot → "Assign Unit" on a Registered row (no unit allotted).
+  // Selects (Tower/Unit/Payment Method) are AntD virtualized → keyboard nav.
+  async openAssignUnitModal(rowIndex) {
+    await this.openThreeDotMenu(rowIndex);
+    await this.assignUnitMenuItem.first().waitFor({ state: 'visible', timeout: 10_000 });
+    await this.assignUnitMenuItem.first().click({ force: true });
+    await this.assignUnitModal.waitFor({ state: 'visible', timeout: 10_000 });
+  }
+  async closeAssignUnitModal() {
+    await this.page.keyboard.press('Escape');
+    await this.assignUnitModal.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
+  /** assignUnitSelects() — the 3 selects in order: [0]=Tower, [1]=Unit, [2]=Payment Method. */
+  get assignUnitSelects() { return this.assignUnitModal.locator('.ant-select'); }
+  /** selectAssignUnitDropdown(index) — open the Nth select and keyboard-pick the first option. */
+  async selectAssignUnitDropdown(index) {
+    await this.assignUnitSelects.nth(index).getByRole('combobox').click().catch(async () => {
+      await this.assignUnitSelects.nth(index).locator('.ant-select-selector').click({ force: true });
+    });
+    await this.page.locator('.ant-select-item-option:visible').first().waitFor({ state: 'visible', timeout: 8_000 }).catch(() => {});
+    await this.page.keyboard.press('ArrowDown');
+    await this.page.keyboard.press('Enter');
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+  }
+  /** fillAssignUnit({amount, txnId, txnDate, proofPath}) — fills the non-select fields. */
+  async fillAssignUnit({ amount, txnId, txnDate, proofPath } = {}) {
+    if (amount != null) await this.assignUnitAmountInput.fill(String(amount)).catch(() => {});
+    if (txnId) await this.assignUnitTransactionId.fill(txnId);
+    if (txnDate) {
+      await this.assignUnitTransactionDate.click();
+      await this.assignUnitTransactionDate.fill(txnDate).catch(() => {});
+      await this.page.keyboard.press('Enter').catch(() => {});
+      const ok = this.page.locator('.ant-picker-ok button');
+      if (await ok.first().isVisible().catch(() => false)) await ok.first().click().catch(() => {});
+    }
+    if (proofPath) await this.assignUnitProofInput.setInputFiles(proofPath).catch(() => {});
   }
 
   // ── View Milestones nav (read-only — separate page) ─────────────────────────

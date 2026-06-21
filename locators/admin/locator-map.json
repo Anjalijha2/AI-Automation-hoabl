@@ -1587,6 +1587,66 @@
         "1.5.0 — initial from CustomerTable.jsx L1993-L1995 (className 'btn-book-solid', htmlType 'submit', loading=isParkingSubmitting)"
       ]
     },
+    "assignUnitMenuItem": {
+      "selector": ".ant-dropdown:not(.ant-dropdown-hidden) li:has-text('Assign Unit'), .ant-dropdown:not(.ant-dropdown-hidden) [role='menuitem']:has-text('Assign Unit')",
+      "type": "css",
+      "fallback": "[role='menuitem']:has-text('Assign Unit')",
+      "aria_role": "menuitem",
+      "deprecated": false,
+      "changelog": [
+        "1.9.2 — initial (live DOM via inspection 2026-06-21). Three-dot menu item on Registered rows (no unit) → opens Assign Unit modal (offline unit assignment)."
+      ]
+    },
+    "assignUnitModal": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Assign Unit'))",
+      "type": "css",
+      "fallback": ".ant-modal:has-text('Assign Unit')",
+      "aria_role": "dialog",
+      "deprecated": false,
+      "changelog": [
+        "1.9.2 — initial. Fields: Select Tower / Select Unit / Select Payment Method (AntD virtualized selects), Transaction Date & Time, Transaction ID, Transaction Amount, optional Payment Proof (Image/PDF max 5MB). Submit button text 'Assign Unit' (disabled until valid)."
+      ]
+    },
+    "assignUnitAmountInput": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Assign Unit')) .ant-input-number-input",
+      "type": "css",
+      "fallback": ".ant-modal input[placeholder='Enter Amount']",
+      "aria_role": "spinbutton",
+      "deprecated": false,
+      "changelog": ["1.9.2 — initial (Transaction Amount / booking amount)"]
+    },
+    "assignUnitTransactionIdInput": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Assign Unit')) input[placeholder='Enter Transaction ID']",
+      "type": "css",
+      "fallback": ".ant-modal input[placeholder*='Transaction ID' i]",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.9.2 — initial"]
+    },
+    "assignUnitTransactionDateInput": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Assign Unit')) input[placeholder='Select Transaction Date & Time']",
+      "type": "css",
+      "fallback": ".ant-modal .ant-picker input",
+      "aria_role": "textbox",
+      "deprecated": false,
+      "changelog": ["1.9.2 — initial"]
+    },
+    "assignUnitProofInput": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Assign Unit')) input[type='file']",
+      "type": "css",
+      "fallback": ".ant-modal input[type='file']",
+      "aria_role": null,
+      "deprecated": false,
+      "changelog": ["1.9.2 — initial (Upload Payment Proof — OPTIONAL; accepts Image or PDF, max 5MB)"]
+    },
+    "assignUnitSubmitBtn": {
+      "selector": ".ant-modal:has(.ant-modal-title:has-text('Assign Unit')) button:has-text('Assign Unit')",
+      "type": "css",
+      "fallback": ".ant-modal button.btn-book-solid",
+      "aria_role": "button",
+      "deprecated": false,
+      "changelog": ["1.9.2 — initial. Disabled until Tower+Unit+Method+Date+TxnID+Amount(>0) provided."]
+    },
     "sendOTPButton": {
       "selector": "button:has-text(\"Send OTP\")",
       "type": "text",

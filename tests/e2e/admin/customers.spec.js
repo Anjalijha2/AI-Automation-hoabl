@@ -1582,6 +1582,90 @@ test.describe('Customers — Admin Portal E2E', () => {
     });
   });
 
+  // ════════════════════════════════════════════════════════════════════════════
+  // GOAL 12 — Assign Unit (offline unit assignment for Registered rows)
+  // Reached via three-dot → "Assign Unit". Modal: Select Tower / Unit / Payment
+  // Method + Transaction Date / ID / Amount + optional proof. Submit disabled until valid.
+  // ════════════════════════════════════════════════════════════════════════════
+  test.describe('Goal 12 — Assign Unit', () => {
+    test('TC_CUST_NEG_120 — FS-CUST AssignUnit — Submit is blocked until mandatory fields are filled', async () => {
+      test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; phone 8888888888, Registered row (read-only — never submits)' });
+      test.info().annotations.push({ type: 'expectedResult', description: 'On opening Assign Unit with empty fields, the "Assign Unit" submit button is disabled (mandatory Tower/Unit/Method/Date/ID/Amount). It does not allow submit of an empty/zero form.' });
+      await customersPage.searchByPhone('8888888888');
+      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Registered' });
+      test.skip(rowIdx === null, 'No Registered row on UAT for Assign Unit');
+      await test.step('Step 1: Open Assign Unit modal', async () => {
+        await customersPage.openAssignUnitModal(rowIdx);
+        await expect(customersPage.assignUnitModal).toBeVisible();
+      });
+      await test.step('Step 2: Submit disabled with empty mandatory fields', async () => {
+        await expect(customersPage.assignUnitSubmitBtn).toBeDisabled();
+      });
+      await test.step('Step 3: Entering amount 0 alone does not enable Submit (Tower/Unit still empty)', async () => {
+        await customersPage.assignUnitAmountInput.fill('0').catch(() => {});
+        await expect(customersPage.assignUnitSubmitBtn).toBeDisabled();
+        await customersPage.closeAssignUnitModal();
+      });
+    });
+
+    test('TC_CUST_NEG_122 — FS-CUST AssignUnit — Assign Unit is NOT offered on already-Booked rows (no 2nd unit)', async () => {
+      test.info().annotations.push({ type: 'testData', description: 'Admin session — admin.json; phone 8888888888, Booked row (read-only)' });
+      test.info().annotations.push({ type: 'expectedResult', description: 'A registration that already has an active unit booking does not expose "Assign Unit" in its three-dot menu (it shows Unit Swap / Parking instead) — so a second unit cannot be assigned.' });
+      await customersPage.searchByPhone('8888888888');
+      const rowIdx = await customersPage.findFirstRowMatching({ status: 'Booked' });
+      test.skip(rowIdx === null, 'No Booked row on UAT to verify Assign-Unit absence');
+      await test.step('Step 1: Open the Booked row three-dot menu', async () => {
+        await customersPage.openThreeDotMenu(rowIdx);
+      });
+      await test.step('Step 2: "Assign Unit" is NOT among the menu items for a Booked row', async () => {
+        const assignItem = customersPage.page.locator(
+          ".ant-dropdown:not(.ant-dropdown-hidden) li:has-text('Assign Unit'), .ant-dropdown:not(.ant-dropdown-hidden) [role='menuitem']:has-text('Assign Unit')"
+        );
+        expect(await assignItem.count()).toBe(0);
+        await customersPage.closeAnyOpenDropdown();
+      });
+    });
+
+    test('TC_CUST_FUNC_120 — FS-CUST AssignUnit — Valid offline assignment books the unit', async () => {
+      // DESTRUCTIVE — guarded. Books a unit on a Registered row (consumes it).
+      test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+        'Skipped on UAT — destructive Assign Unit; set ALLOW_DESTRUCTIVE=1 with a disposable Registered row');
+      const regId = process.env.DEST_REG_ID || 'GHNG-1000008364-O';
+      test.info().annotations.push({ type: 'testData', description: `Admin session — admin.json; row ${regId} (Registered); Tower+Unit (first available), Method NEFT, amount 100000, today, optional proof` });
+      test.info().annotations.push({ type: 'expectedResult', description: 'Selecting Tower+Unit+Method + amount/date/txn enables Submit; submitting books the unit (POST/PUT 200) and the row becomes Booked.' });
+      await customersPage.searchByPhone('8888888888');
+      const rowIdx = await customersPage.findRowByRegistrationId(regId);
+      test.skip(rowIdx === null, `Fixture ${regId} not present/Registered`);
+      await customersPage.openAssignUnitModal(rowIdx);
+      await customersPage.selectAssignUnitDropdown(0); // Tower
+      await customersPage.selectAssignUnitDropdown(1); // Unit (first available in tower)
+      await customersPage.selectAssignUnitDropdown(2); // Payment Method
+      const d = new Date(); const pad = (x) => String(x).padStart(2, '0');
+      const today = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      await customersPage.fillAssignUnit({ amount: 100000, txnId: `UAT-ASSIGN-${d.getTime()}`, txnDate: today });
+      const respPromise = customersPage.page.waitForResponse(
+        (r) => /\/api\/v1\/admin\//.test(r.url()) && ['POST', 'PUT', 'PATCH'].includes(r.request().method()) && /(assign|book|registration-unit|allocat)/i.test(r.url()),
+        { timeout: 20_000 }
+      ).catch(() => null);
+      await customersPage.click(customersPage.assignUnitSubmitBtn);
+      const resp = await respPromise;
+      const status = resp ? resp.status() : null;
+      const body = resp ? await resp.text().catch(() => '') : '';
+      expect(status, `assign API should succeed (got ${status}: ${body.slice(0, 160)})`).toBeGreaterThanOrEqual(200);
+      expect(status).toBeLessThan(300);
+    });
+
+    test.fixme('TC_CUST_NEG_121 — Assign Unit re-checks availability at submit (concurrent interim booking)', async () => {
+      // Requires a unit taken in the interim by a second actor — two-session/concurrency
+      // fixture, out of single-session e2e scope.
+    });
+
+    test.fixme('TC_CUST_FUNC_129 — Home Loan Approval applies to all sub-registration units', async () => {
+      // Requires a multi-sub-registration fixture (one registration with several allotted
+      // sub-units) + destructive home-loan submit. Provision fixture, then enable.
+    });
+  });
+
   // ──────────────────────────────────────────────────────────────────────
   // Out-of-e2e-scope TCs (deferred to API/DB specs or manual audit):
   //   TC_CUST_API_005     → API spec  (tests/api/customers.api.spec.js)
