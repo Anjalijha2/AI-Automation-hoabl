@@ -53,7 +53,9 @@ class ConfigPage extends BasePage {
   constructor(page) {
     super(page);
     this.L   = L;
-    this.url = CONFIG_URL;
+    // Live route is /admin/cms — the /admin/config slug is NOT yet migrated and
+    // redirects to /admin/customers (CLAUDE.md §3). Navigate to the real URL.
+    this.url = CMS_URL;
 
     // ── Page-level chrome ─────────────────────────────────────────────────
     this.configLink           = page.locator(L['configLink']     && L['configLink'].selector     || 'a:has-text("Config")');
@@ -66,68 +68,76 @@ class ConfigPage extends BasePage {
     this.refreshButton         = page.locator(L['refreshButton']         && L['refreshButton'].selector         || 'button:has-text("Refresh")');
 
     // Page title — "Configurations"
-    this.pageHeading = page.locator('h1, h2, h3').filter({ hasText: /Configurations?/i }).first();
+    // Live page renders all headings as h5 — use role-based heading (level-agnostic).
+    this.pageHeading = page.getByRole('heading', { name: /Configurations?/i }).first();
 
     // ── Section 1 — Tower Configuration ───────────────────────────────────
     this.section1                  = this._sectionBlock(SECTION_HEADINGS.towerConfiguration);
-    this.towerCards                = this.section1.locator('[class*="tower-card"], [data-tower-card], .ant-card');
-    this.towerToggles              = this.section1.locator('button[role="switch"], .ant-switch');
-    this.updateTowerConfigButton   = this.section1.locator('button:has-text("Update Tower Configuration"), button:has-text("Update")');
-    this.viewTowerLink             = this.section1.locator('a:has-text("View Tower")');
+    // Towers render as "Tower N - Name" headings (role=heading, no .ant-card).
+    // Count page-wide via the a11y role tree — robust to the exact tag/level.
+    this.towerCards                = page.getByRole('heading', { name: /^Tower\s*\d+\s*-/i });
+    // Tower toggles/buttons live as flat siblings under the Tower Configuration
+    // heading; scope page-wide (toggles before the first upload section's heading).
+    this.towerToggles              = page.locator('[role="switch"], .ant-switch');
+    this.updateTowerConfigButton   = page.getByRole('button', { name: /Update Tower Configuration/i });
+    this.viewTowerLink             = page.getByRole('button', { name: /View Tower/i });
+
+    // Sections 2-9 share a FLAT DOM: each section's controls are SIBLINGS that
+    // follow its h5 heading (no per-section wrapper). Scope every control to the
+    // first matching element AFTER its section heading (see _after()).
+    const SAMPLE = 'button[contains(normalize-space(.),"Sample") or contains(normalize-space(.),"Download")]';
+    const UPLOAD = 'button[contains(normalize-space(.),"Upload")]';
+    const SUBMIT = 'button[normalize-space(.)="Submit"]';
+    const FILEIN = 'input[@type="file"]';
 
     // ── Section 2 — Registration Status ───────────────────────────────────
-    this.section2                  = this._sectionBlock(SECTION_HEADINGS.registrationStatus);
-    this.section2SampleDownload    = this.section2.locator('button:has-text("Sample"), a:has-text("Sample")').first();
-    this.section2FileInput         = this.section2.locator('input[type="file"]').first();
-    this.section2SubmitButton      = this.section2.locator('button:has-text("Submit")').first();
+    this.section2SampleDownload    = this._after('registrationStatus', SAMPLE);
+    this.section2UploadButton      = this._after('registrationStatus', UPLOAD);
+    this.section2FileInput         = this._after('registrationStatus', FILEIN);
+    this.section2SubmitButton      = this._after('registrationStatus', SUBMIT);
 
     // ── Section 3 — Unit Status ───────────────────────────────────────────
-    this.section3                  = this._sectionBlock(SECTION_HEADINGS.unitStatus);
-    this.section3SampleDownload    = this.section3.locator('button:has-text("Sample"), a:has-text("Sample")').first();
-    this.section3FileInput         = this.section3.locator('input[type="file"]').first();
-    this.section3SubmitButton      = this.section3.locator('button:has-text("Submit")').first();
+    this.section3SampleDownload    = this._after('unitStatus', SAMPLE);
+    this.section3UploadButton      = this._after('unitStatus', UPLOAD);
+    this.section3FileInput         = this._after('unitStatus', FILEIN);
+    this.section3SubmitButton      = this._after('unitStatus', SUBMIT);
 
     // ── Section 4 — Unit Cost Update ──────────────────────────────────────
-    this.section4                       = this._sectionBlock(SECTION_HEADINGS.unitCostUpdate);
-    this.availableUnitInventoryDownload = this.section4.locator('button:has-text("Available Unit Inventory Download"), button:has-text("Inventory Download")').first();
-    this.section4FileInput              = this.section4.locator('input[type="file"]').first();
-    this.section4SubmitButton           = this.section4.locator('button:has-text("Submit")').first();
+    this.availableUnitInventoryDownload = this._after('unitCostUpdate', SAMPLE);
+    this.section4UploadButton           = this._after('unitCostUpdate', UPLOAD);
+    this.section4FileInput              = this._after('unitCostUpdate', FILEIN);
+    this.section4SubmitButton           = this._after('unitCostUpdate', SUBMIT);
 
     // ── Section 5 — Bulk Booking Cancellation ─────────────────────────────
-    this.section5                  = this._sectionBlock(SECTION_HEADINGS.bulkBookingCancellation);
-    this.section5SampleDownload    = this.section5.locator('button:has-text("Sample"), a:has-text("Sample")').first();
-    this.section5FileInput         = this.section5.locator('input[type="file"]').first();
-    this.section5SubmitButton      = this.section5.locator('button:has-text("Submit")').first();
+    this.section5SampleDownload    = this._after('bulkBookingCancellation', SAMPLE);
+    this.section5UploadButton      = this._after('bulkBookingCancellation', UPLOAD);
+    this.section5FileInput         = this._after('bulkBookingCancellation', FILEIN);
+    this.section5SubmitButton      = this._after('bulkBookingCancellation', SUBMIT);
 
     // ── Section 6 — Bulk Registration Cancellation ────────────────────────
-    this.section6                  = this._sectionBlock(SECTION_HEADINGS.bulkRegistrationCancellation);
-    this.section6SampleDownload    = this.section6.locator('button:has-text("Sample"), a:has-text("Sample")').first();
-    this.section6FileInput         = this.section6.locator('input[type="file"]').first();
-    this.section6SubmitButton      = this.section6.locator('button:has-text("Submit")').first();
+    this.section6SampleDownload    = this._after('bulkRegistrationCancellation', SAMPLE);
+    this.section6UploadButton      = this._after('bulkRegistrationCancellation', UPLOAD);
+    this.section6FileInput         = this._after('bulkRegistrationCancellation', FILEIN);
+    this.section6SubmitButton      = this._after('bulkRegistrationCancellation', SUBMIT);
 
     // ── Section 7 — Sales Managers Bulk Upload ────────────────────────────
-    this.section7                  = this._sectionBlock(SECTION_HEADINGS.salesManagersBulkUpload);
-    this.section7SampleDownload    = this.section7.locator('button:has-text("Sample"), a:has-text("Sample")').first();
-    this.section7FileInput         = this.section7.locator('input[type="file"]').first();
-    this.section7SubmitButton      = this.section7.locator('button:has-text("Submit")').first();
+    this.section7SampleDownload    = this._after('salesManagersBulkUpload', SAMPLE);
+    this.section7UploadButton      = this._after('salesManagersBulkUpload', UPLOAD);
+    this.section7FileInput         = this._after('salesManagersBulkUpload', FILEIN);
+    this.section7SubmitButton      = this._after('salesManagersBulkUpload', SUBMIT);
 
     // ── Section 8 — Customer Actions Card ─────────────────────────────────
-    this.section8                       = this._sectionBlock(SECTION_HEADINGS.customerActionsCard);
-    this.allowAdditionalRegToggle       = this.section8.locator('button[role="switch"], .ant-switch').first();
-    this.oneBedGrowthCheckbox           = this.section8.locator('label:has-text("1 Bed Growth Home") input[type="checkbox"], input[type="checkbox"]').nth(0);
-    this.twoBedGrowthCheckbox           = this.section8.locator('label:has-text("2 Bed Growth Home") input[type="checkbox"], input[type="checkbox"]').nth(1);
-    this.twoBedRiseCheckbox             = this.section8.locator('label:has-text("2 Bed Rise Home") input[type="checkbox"], input[type="checkbox"]').nth(2);
-    this.oneBedCountSelect              = this.section8.locator('select, .ant-select').nth(0);
-    this.twoBedGrowthCountSelect        = this.section8.locator('select, .ant-select').nth(1);
-    this.twoBedRiseCountSelect          = this.section8.locator('select, .ant-select').nth(2);
-    this.section8SubmitButton           = this.section8.locator('button:has-text("Submit")').first();
+    this.allowAdditionalRegToggle       = this._after('customerActionsCard', '*[@role="switch"]');
+    this.oneBedGrowthCheckbox           = this._after('customerActionsCard', 'input[@type="checkbox"]');
+    this.twoBedGrowthCheckbox           = this._sectionHeading('customerActionsCard').locator('xpath=following::input[@type="checkbox"][2]');
+    this.twoBedRiseCheckbox             = this._sectionHeading('customerActionsCard').locator('xpath=following::input[@type="checkbox"][3]');
+    this.section8SubmitButton           = this._after('customerActionsCard', SUBMIT);
     // [BUG-REF: BUG-CFG-001] '2 Bed Peak Home' is server-side force-disabled
-    this.twoBedPeakHomeCheckbox         = this.section8.locator('label:has-text("2 Bed Peak Home") input[type="checkbox"]');
+    this.twoBedPeakHomeCheckbox         = this.page.locator('label:has-text("2 Bed Peak Home") input[type="checkbox"]');
 
     // ── Section 9 — Max Preferences Per Unit ──────────────────────────────
-    this.section9                       = this._sectionBlock(SECTION_HEADINGS.maxPreferencesPerUnit);
-    this.maxPreferencesSelect           = this.section9.locator('select, .ant-select, [role="combobox"]').first();
-    this.maxPreferencesUpdateButton     = this.section9.locator('button:has-text("Update")').first();
+    this.maxPreferencesSelect           = this._after('maxPreferencesPerUnit', '*[@role="combobox" or self::select]');
+    this.maxPreferencesUpdateButton     = this._after('maxPreferencesPerUnit', 'button[contains(normalize-space(.),"Update")]');
 
     // ── Generic validation / toast surfaces ───────────────────────────────
     this.toast                = page.locator('.ant-message, [role="alert"], .Toastify__toast');
@@ -141,11 +151,29 @@ class ConfigPage extends BasePage {
    * text. The section block is the nearest ancestor section/div that contains
    * the heading. Falls back gracefully if the DOM structure differs.
    */
+  /** The h5 heading element for a section (by SECTION_HEADINGS key), via a11y role. */
+  _sectionHeading(name) {
+    const text = SECTION_HEADINGS[name] || name;
+    return this.page.getByRole('heading', { name: text, exact: true });
+  }
+
+  /**
+   * First control matching an XPath tail that FOLLOWS a section's heading in
+   * document order. The Config page is a flat list (heading + sibling controls),
+   * so a section's controls are the elements after its heading and before the next.
+   */
+  _after(name, xpathTail) {
+    return this._sectionHeading(name).locator(`xpath=following::${xpathTail}[1]`);
+  }
+
   _sectionBlock(headingText) {
-    const safe = headingText.replace(/"/g, '\\"');
-    return this.page.locator(
-      `section:has(:text("${safe}")), div.section:has(:text("${safe}")), div:has(> h2:text("${safe}")), div:has(> h3:text("${safe}"))`
-    ).first();
+    // Section = the innermost div that contains the section's heading. Match the
+    // heading via the a11y role tree (robust to tag/level), then take the closest
+    // wrapping div (.last() = deepest ancestor in document order).
+    return this.page
+      .locator('div')
+      .filter({ has: this.page.getByRole('heading', { name: headingText }) })
+      .last();
   }
 
   // ── Navigation ─────────────────────────────────────────────────────────
@@ -180,11 +208,11 @@ class ConfigPage extends BasePage {
    * @returns {import('@playwright/test').Locator}
    */
   async openSection(name) {
-    const heading = SECTION_HEADINGS[name];
-    if (!heading) throw new Error(`Unknown Config section: ${name}`);
-    const block = this[`section${this._sectionIndex(name)}`];
-    await block.scrollIntoViewIfNeeded().catch(() => {});
-    return block;
+    if (!SECTION_HEADINGS[name]) throw new Error(`Unknown Config section: ${name}`);
+    // Flat DOM has no per-section container; the section's heading is the anchor.
+    const heading = this._sectionHeading(name);
+    await heading.scrollIntoViewIfNeeded().catch(() => {});
+    return heading;
   }
 
   _sectionIndex(name) {
