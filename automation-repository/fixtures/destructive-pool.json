@@ -4,16 +4,7 @@
   "otp": "258369",
   "registrationPrefix": "GHNG-1000008364",
   "available": {
-    "registered": [
-      {
-        "regId": "GHNG-1000008364-L",
-        "unit": "1 Bed Growth Home (323 sq.ft.)"
-      },
-      {
-        "regId": "GHNG-1000008364-K",
-        "unit": "2 Bed Rise Home (621 sq.ft.)"
-      }
-    ],
+    "registered": [],
     "bookedOffline": [
       {
         "regId": "GHNG-1000008364-G",
@@ -126,6 +117,20 @@
       "category": "registered",
       "reason": "FUNC_120 Assign Unit PASS 2026-06-21 17:56 — booked 306-Aspire, ₹27000 (slowmo demo)",
       "consumedAt": "2026-06-21 17:56 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-L",
+      "unit": "1 Bed Growth Home (323 sq.ft.)",
+      "category": "registered",
+      "reason": "FUNC_120 Assign Unit PASS 2026-06-21 — booked 307-Aspire, ₹45000 (capture run)",
+      "consumedAt": "2026-06-21 18:19 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-K",
+      "unit": "2 Bed Rise Home (621 sq.ft.)",
+      "category": "registered",
+      "reason": "FUNC_120 Assign Unit PASS 2026-06-21 — booked 401-Aspire, ₹27000 (headed live demo, user watched)",
+      "consumedAt": "2026-06-21 18:24 IST"
     }
   ]
 }

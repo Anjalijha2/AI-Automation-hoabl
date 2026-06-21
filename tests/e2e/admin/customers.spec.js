@@ -1633,14 +1633,25 @@ test.describe('Customers — Admin Portal E2E', () => {
       const regId = process.env.DEST_REG_ID || 'GHNG-1000008364-O';
       test.info().annotations.push({ type: 'testData', description: `Admin session — admin.json; row ${regId} (Registered); Tower+Unit (first available), Method NEFT, amount 100000, today, optional proof` });
       test.info().annotations.push({ type: 'expectedResult', description: 'Selecting Tower+Unit+Method + amount/date/txn enables Submit; submitting books the unit (POST/PUT 200) and the row becomes Booked.' });
+      // Optional step-by-step screenshot capture (CAPTURE_DIR=<dir>) for a visual walkthrough.
+      const capDir = process.env.CAPTURE_DIR;
+      let capN = 0;
+      const cap = async (label) => {
+        if (!capDir) return;
+        capN += 1;
+        await customersPage.page.screenshot({ path: `${capDir}/${String(capN).padStart(2, '0')}-${label}.png`, fullPage: false }).catch(() => {});
+      };
       await customersPage.searchByPhone('8888888888');
+      await cap('search-results');
       const rowIdx = await customersPage.findRowByRegistrationId(regId);
       test.skip(rowIdx === null, `Fixture ${regId} not present/Registered`);
       await customersPage.openAssignUnitModal(rowIdx);
+      await cap('modal-empty');
       let picked;
       await test.step('Step 1: Pick a Tower that has an available Unit (+ its first unit)', async () => {
         picked = await customersPage.pickAssignTowerWithAvailableUnit();
         test.skip(picked === null, 'No tower with an available unit found on UAT — cannot complete a booking');
+        await cap('tower-unit-allocation');
       });
       await test.step('Step 2: Select Payment Method + fill amount/date/txn', async () => {
         await customersPage.selectAssignUnitDropdown(2); // Payment Method
@@ -1652,6 +1663,7 @@ test.describe('Customers — Admin Portal E2E', () => {
         const d = new Date(); const pad = (x) => String(x).padStart(2, '0');
         const today = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
         await customersPage.fillAssignUnit({ amount, txnId: `UAT-ASSIGN-${d.getTime()}`, txnDate: today });
+        await cap('form-filled');
       });
       await test.step('Step 3: Submit becomes enabled once the form is valid', async () => {
         await expect(customersPage.assignUnitSubmitBtn).toBeEnabled({ timeout: 10_000 });
@@ -1672,6 +1684,17 @@ test.describe('Customers — Admin Portal E2E', () => {
         }
         expect(status, `assign API should succeed (got ${status}: ${body.slice(0, 160)})`).toBeGreaterThanOrEqual(200);
         expect(status).toBeLessThan(300);
+        // Capture the success toast ("Unit assigned and payment recorded successfully").
+        // Screenshot the instant the response resolves (the toast is transient ~3s).
+        if (capDir) {
+          await cap('success-immediate');
+          await customersPage.page.locator('.ant-message, .ant-message-notice, .ant-notification, [class*="toast"]')
+            .first().waitFor({ state: 'visible', timeout: 6_000 }).catch(() => {});
+          await cap('success-toast');
+        }
+        // DEMO_PAUSE_MS: hold the window on the success screen so a watcher can switch to it.
+        const pauseMs = Number(process.env.DEMO_PAUSE_MS || 0);
+        if (pauseMs > 0) await customersPage.page.waitForTimeout(pauseMs);
       });
     });
 

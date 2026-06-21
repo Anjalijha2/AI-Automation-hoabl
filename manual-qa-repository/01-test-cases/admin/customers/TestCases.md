@@ -400,3 +400,11 @@ The following actions are documented in dedicated FS files and require their own
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | TC_CUST_FUNC_120 | TC_CUST_FUNC_120 | ✅ PASS | Admin session — admin.json; row GHNG-1000008364-M (Registered); Tower+Unit (first available), Method NEFT, amount 100000, today, optional proof | All assertions matched expected | 38.7s |
+
+---
+
+## Last Run: 2026-06-21 18:24 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_CUST_FUNC_120 | TC_CUST_FUNC_120 | ✅ PASS | Admin session — admin.json; row GHNG-1000008364-L (Registered); Tower+Unit (first available), Method NEFT, amount 100000, today, optional proof | All assertions matched expected | 21.2s |
