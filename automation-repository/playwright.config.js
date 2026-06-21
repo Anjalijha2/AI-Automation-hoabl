@@ -88,6 +88,9 @@ module.exports = defineConfig({
     // evidence source. Set VIDEO=retain-on-failure to re-enable once ffmpeg is installed.
     video:             process.env.VIDEO || 'off',
     launchOptions:     {
+      // SLOWMO=<ms> delays each action so a headed run is followable by a watcher
+      // (opt-in; undefined by default = full speed). e.g. SLOWMO=600 npm run ... --headed
+      slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) : undefined,
       args: process.env.HEADLESS === 'true'
         ? ['--headless=new', '--no-first-run', '--no-default-browser-check']
         : ['--start-maximized', '--window-size=1920,1080'],

@@ -199,6 +199,12 @@ class CustomersPage extends BasePage {
     this.assignUnitTransactionDate = page.locator(C.assignUnitTransactionDateInput.selector);
     this.assignUnitProofInput    = page.locator(C.assignUnitProofInput.selector);
     this.assignUnitSubmitBtn     = page.locator(C.assignUnitSubmitBtn.selector);
+    // After a Unit is picked, the modal renders a price breakdown ending in an
+    // "Allocation Amount" row. The Transaction Amount must be >= this value or the
+    // backend rejects the booking. Read it dynamically per selected unit.
+    this.assignUnitAllocationAmount = this.assignUnitModal
+      .locator('.compact-price-row', { has: page.locator('.price-row-label', { hasText: 'Allocation Amount' }) })
+      .locator('.price-row-value');
   }
 
   // ── Per-row action helpers ────────────────────────────────────────────────────
@@ -976,6 +982,20 @@ class CustomersPage extends BasePage {
     }
     return null;
   }
+  /**
+   * getAssignAllocationAmount() — read the selected unit's Allocation Amount from the
+   * modal price breakdown (e.g. "₹27,000" → 27000). Returns a Number, or null if absent.
+   * Must be called AFTER a Unit is selected (the row renders only then).
+   */
+  async getAssignAllocationAmount() {
+    const ok = await this.assignUnitAllocationAmount.first()
+      .waitFor({ state: 'visible', timeout: 8_000 }).then(() => true).catch(() => false);
+    if (!ok) return null;
+    const raw = (await this.assignUnitAllocationAmount.first().textContent().catch(() => '')) || '';
+    const digits = raw.replace(/[^\d]/g, ''); // strip ₹ , and spaces
+    return digits ? Number(digits) : null;
+  }
+
   /** fillAssignUnit({amount, txnId, txnDate, proofPath}) — fills the non-select fields. */
   async fillAssignUnit({ amount, txnId, txnDate, proofPath } = {}) {
     if (amount != null) await this.assignUnitAmountInput.fill(String(amount)).catch(() => {});

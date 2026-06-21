@@ -6,14 +6,6 @@
   "available": {
     "registered": [
       {
-        "regId": "GHNG-1000008364-N",
-        "unit": "2 Bed Growth Home (485 sq.ft.)"
-      },
-      {
-        "regId": "GHNG-1000008364-M",
-        "unit": "1 Bed Growth Home (323 sq.ft.)"
-      },
-      {
         "regId": "GHNG-1000008364-L",
         "unit": "1 Bed Growth Home (323 sq.ft.)"
       },
@@ -120,6 +112,20 @@
       "category": "registered",
       "reason": "DEST FUNC_120 Assign Unit PASS 2026-06-21 (200, now booked)",
       "consumedAt": "2026-06-21 14:30 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-N",
+      "unit": "2 Bed Growth Home (485 sq.ft.)",
+      "category": "registered",
+      "reason": "FUNC_120 Assign Unit PASS 2026-06-21 17:49 — booked 206-Aspire, ₹27000",
+      "consumedAt": "2026-06-21 17:56 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-M",
+      "unit": "1 Bed Growth Home (323 sq.ft.)",
+      "category": "registered",
+      "reason": "FUNC_120 Assign Unit PASS 2026-06-21 17:56 — booked 306-Aspire, ₹27000 (slowmo demo)",
+      "consumedAt": "2026-06-21 17:56 IST"
     }
   ]
 }

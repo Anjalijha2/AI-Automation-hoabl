@@ -392,3 +392,11 @@ The following actions are documented in dedicated FS files and require their own
 | TC_CUST_NEG_097 | TC_CUST_NEG_097 | ✅ PASS | — | All assertions matched expected | 160ms |
 | TC_CUST_NEG_068 | TC_CUST_NEG_068 | ✅ PASS | — | All assertions matched expected | 244ms |
 | TC_CUST_API_048 | TC_CUST_API_048 | ✅ PASS | — | All assertions matched expected | 170ms |
+
+---
+
+## Last Run: 2026-06-21 17:56 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_CUST_FUNC_120 | TC_CUST_FUNC_120 | ✅ PASS | Admin session — admin.json; row GHNG-1000008364-M (Registered); Tower+Unit (first available), Method NEFT, amount 100000, today, optional proof | All assertions matched expected | 38.7s |

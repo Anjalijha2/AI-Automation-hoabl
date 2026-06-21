@@ -1644,9 +1644,14 @@ test.describe('Customers — Admin Portal E2E', () => {
       });
       await test.step('Step 2: Select Payment Method + fill amount/date/txn', async () => {
         await customersPage.selectAssignUnitDropdown(2); // Payment Method
+        // Transaction Amount must be >= the unit's Allocation Amount (booking token) or the
+        // backend rejects the booking. Read the modal's Allocation Amount and pay exactly it.
+        const allocAmount = await customersPage.getAssignAllocationAmount();
+        const amount = allocAmount != null ? allocAmount : 100000; // fallback if breakdown absent
+        test.info().annotations.push({ type: 'allocationAmount', description: `Unit allocation amount = ₹${allocAmount} → paying ₹${amount}` });
         const d = new Date(); const pad = (x) => String(x).padStart(2, '0');
         const today = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-        await customersPage.fillAssignUnit({ amount: 100000, txnId: `UAT-ASSIGN-${d.getTime()}`, txnDate: today });
+        await customersPage.fillAssignUnit({ amount, txnId: `UAT-ASSIGN-${d.getTime()}`, txnDate: today });
       });
       await test.step('Step 3: Submit becomes enabled once the form is valid', async () => {
         await expect(customersPage.assignUnitSubmitBtn).toBeEnabled({ timeout: 10_000 });
