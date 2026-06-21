@@ -6,10 +6,6 @@
   "available": {
     "registered": [
       {
-        "regId": "GHNG-1000008364-O",
-        "unit": "2 Bed Growth Home (485 sq.ft.)"
-      },
-      {
         "regId": "GHNG-1000008364-N",
         "unit": "2 Bed Growth Home (485 sq.ft.)"
       },
@@ -117,6 +113,13 @@
       "category": "bookedOnline",
       "reason": "DEST FUNC_083 parking submit PASS 2026-06-21 (PUT 200)",
       "consumedAt": "2026-06-21 13:52 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-O",
+      "unit": "2 Bed Growth Home (485 sq.ft.)",
+      "category": "registered",
+      "reason": "DEST FUNC_120 Assign Unit PASS 2026-06-21 (200, now booked)",
+      "consumedAt": "2026-06-21 14:30 IST"
     }
   ]
 }

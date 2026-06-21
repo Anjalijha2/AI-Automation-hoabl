@@ -938,16 +938,65 @@ class CustomersPage extends BasePage {
     await this.page.keyboard.press('Enter');
     await this.page.waitForLoadState('networkidle').catch(() => {});
   }
+
+  /**
+   * pickAssignTowerWithAvailableUnit(maxTowers) — iterate Tower options until one whose
+   * Unit dropdown actually has selectable units; select that tower + its first unit.
+   * The Unit list loads async per tower, and some towers have no AVAILABLE units, so we
+   * must probe. Returns { tower, unit } on success, or null if none had units.
+   */
+  async pickAssignTowerWithAvailableUnit(maxTowers = 12) {
+    const towerCombo = this.assignUnitSelects.nth(0).getByRole('combobox');
+    const unitCombo  = this.assignUnitSelects.nth(1).getByRole('combobox');
+    // Enumerate tower names from the open dropdown.
+    await towerCombo.click();
+    await this.page.locator('.ant-select-item-option:visible').first().waitFor({ state: 'visible', timeout: 8_000 }).catch(() => {});
+    const towers = (await this.page.locator('.ant-select-item-option:visible').allTextContents())
+      .map((t) => t.trim()).filter(Boolean).slice(0, maxTowers);
+    await this.page.keyboard.press('Escape').catch(() => {});
+    for (const tower of towers) {
+      // Select this tower by typing to filter, then Enter.
+      await towerCombo.click();
+      await this.page.keyboard.type(tower, { delay: 10 }).catch(() => {});
+      await this.page.waitForTimeout(400);
+      await this.page.keyboard.press('Enter');
+      await this.page.waitForLoadState('networkidle').catch(() => {});
+      await this.page.waitForTimeout(900); // unit list loads after tower (async)
+      // Probe the Unit dropdown.
+      await unitCombo.click().catch(() => {});
+      const hasUnit = await this.page.locator('.ant-select-item-option:visible:not(.ant-select-item-option-disabled)')
+        .first().waitFor({ state: 'visible', timeout: 5_000 }).then(() => true).catch(() => false);
+      if (hasUnit) {
+        const unit = (await this.page.locator('.ant-select-item-option:visible:not(.ant-select-item-option-disabled)').first().textContent().catch(() => '')) || '';
+        await this.page.keyboard.press('ArrowDown');
+        await this.page.keyboard.press('Enter');
+        return { tower, unit: unit.trim() };
+      }
+      await this.page.keyboard.press('Escape').catch(() => {}); // close empty unit dropdown, try next tower
+    }
+    return null;
+  }
   /** fillAssignUnit({amount, txnId, txnDate, proofPath}) — fills the non-select fields. */
   async fillAssignUnit({ amount, txnId, txnDate, proofPath } = {}) {
     if (amount != null) await this.assignUnitAmountInput.fill(String(amount)).catch(() => {});
     if (txnId) await this.assignUnitTransactionId.fill(txnId);
     if (txnDate) {
+      // AntD date+time picker: typing the value into the input does NOT commit to the form
+      // model unless confirmed. Type it, press Enter to set the date, then click the panel's
+      // "Ok" (time confirm) which commits and closes — leaving the form value populated.
       await this.assignUnitTransactionDate.click();
-      await this.assignUnitTransactionDate.fill(txnDate).catch(() => {});
+      await this.assignUnitTransactionDate.fill(''); // clear any partial
+      await this.assignUnitTransactionDate.pressSequentially(txnDate, { delay: 15 }).catch(() => {});
       await this.page.keyboard.press('Enter').catch(() => {});
-      const ok = this.page.locator('.ant-picker-ok button');
-      if (await ok.first().isVisible().catch(() => false)) await ok.first().click().catch(() => {});
+      const ok = this.page.locator('.ant-picker-dropdown:not(.ant-picker-dropdown-hidden) .ant-picker-ok button, .ant-picker-ok button');
+      if (await ok.first().isVisible().catch(() => false)) {
+        await ok.first().click().catch(() => {});
+      } else {
+        // No Ok button (date-only) — Enter committed it; close the panel.
+        await this.page.keyboard.press('Escape').catch(() => {});
+      }
+      // Blur to force the form field to register the committed value.
+      await this.assignUnitModal.locator('.ant-modal-title, .ant-drawer-title').first().click({ position: { x: 2, y: 2 } }).catch(() => {});
     }
     if (proofPath) await this.assignUnitProofInput.setInputFiles(proofPath).catch(() => {});
   }
