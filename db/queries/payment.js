@@ -60,6 +60,16 @@ async function getRecentOnlineTransactions(limit = 20) {
   );
 }
 
+// Count of (non-deleted) payment_transactions rows for a registration unit.
+// Used to prove Cancel Unit creates NO new (refund) transaction (NEG/API_048).
+async function countTransactionsByRegistrationUnit(registrationUnitId) {
+  const rows = await sequelize.query(
+    'SELECT COUNT(*) AS n FROM payment_transactions WHERE registration_unit_id = :id AND deleted_at IS NULL',
+    { replacements: { id: registrationUnitId }, type: sequelize.QueryTypes.SELECT }
+  );
+  return Number(rows[0]?.n || 0);
+}
+
 module.exports = {
   getTransactionById,
   getTransactionsByUser,
@@ -68,4 +78,5 @@ module.exports = {
   getMilestonesByRegistrationUnit,
   getGatewayDistribution,
   getRecentOnlineTransactions,
+  countTransactionsByRegistrationUnit,
 };

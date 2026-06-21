@@ -372,6 +372,70 @@ test.describe('Customers — Admin Portal API', () => {
     // No auth header → 401
     expect(res.status()).toBe(401);
   });
+
+  // ── Mutating-API tests (skip-guarded destructive) ─────────────────────────
+  // These mutate live UAT data. They run only with ALLOW_DESTRUCTIVE=1 and a
+  // disposable registration-unit ID, and consume the fixture row permanently.
+
+  test('TC_CUST_API_048 — FS-CancelUnit — PUT /admin/cancel-units cancels the unit and creates NO refund', async () => {
+    // Differs from Cancel Registration (which refunds the ₹999 EOI): Cancel Unit
+    // releases the unit WITHOUT inserting any new (refund) payment_transactions row.
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — destructive cancel-unit; set ALLOW_DESTRUCTIVE=1 with disposable UAT_CANCEL_UNIT_ID');
+    const cancelUnitId = process.env.UAT_CANCEL_UNIT_ID;
+    test.skip(!cancelUnitId, 'UAT_CANCEL_UNIT_ID env var not provided — disposable Booked registration-unit id (numeric)');
+
+    const payment = require('../../db/queries/payment');
+    const registration = require('../../db/queries/registration');
+
+    // 1. Pre-state (DB): the unit is Booked, and snapshot its transaction count.
+    const before = await registration.getRegistrationUnitById(cancelUnitId);
+    expect(before, `registration_unit ${cancelUnitId} must exist`).toBeTruthy();
+    const txnsBefore = await payment.countTransactionsByRegistrationUnit(cancelUnitId);
+
+    // 2. Act: cancel the unit via the admin cancel-units endpoint.
+    const res = await api.put('/api/v1/admin/cancel-units', { ids: [cancelUnitId] }, { token });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    const msg = (payload.message || res.body.message || JSON.stringify(payload)).toLowerCase();
+    expect(msg).toMatch(/cancel|success/);
+
+    // 3. Verify (DB): the unit left its Booked state ...
+    const after = await registration.getRegistrationUnitById(cancelUnitId);
+    expect(after).toBeTruthy();
+    expect(after.status).not.toBe(before.status); // WINNER/BOOKED → CANCELLED/REFUND/etc.
+
+    // 4. ... and NO new (refund) payment transaction was created for this unit.
+    const txnsAfter = await payment.countTransactionsByRegistrationUnit(cancelUnitId);
+    expect(txnsAfter).toBe(txnsBefore); // cancel-unit adds no refund row
+  });
+
+  test('TC_CUST_API_120 — FS-Parking — PUT update-parking enabled=true,count=0,amount=0 is ACCEPTED (validation gap)', async () => {
+    // Documented server-side gap: backend Yup marks parkingCount/parkingAmount
+    // notRequired and coerces to 0; only delta + pool capacity are checked. So a
+    // request the UI blocks (count=0) is accepted by the API. Logged as BUG-class gap.
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — mutates parking; set ALLOW_DESTRUCTIVE=1 with disposable UAT_PARKING_UNIT_ID');
+    const regUnitId = process.env.UAT_PARKING_UNIT_ID;
+    test.skip(!regUnitId, 'UAT_PARKING_UNIT_ID env var not provided — Booked registration-unit id whose current parking differs from 0 (non-zero delta)');
+
+    // enabled=true with count=0/amount=0 and a non-zero delta vs current parking.
+    const res = await api.put(`/api/v1/admin/registration-unit/${regUnitId}`,
+      { event: 'update-parking', payload: { additionalParkingEnabled: true, parkingCount: 0, parkingAmount: 0 } },
+      { token });
+    // The whole point: backend ACCEPTS it (200) despite the UI blocking count=0.
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    expect(payload).toBeTruthy();
+
+    // Cross-check (DB): the parking values were coerced/persisted to 0.
+    const registration = require('../../db/queries/registration');
+    const after = await registration.getRegistrationUnitById(regUnitId);
+    if (after) {
+      expect(Number(after.parking_count || 0)).toBe(0);
+      expect(Number(after.parking_amount || 0)).toBe(0);
+    }
+  });
 });
 
 function extractRows(payload) {
