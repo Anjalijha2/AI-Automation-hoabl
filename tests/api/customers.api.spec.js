@@ -377,11 +377,14 @@ test.describe('Customers — Admin Portal API', () => {
   // These mutate live UAT data. They run only with ALLOW_DESTRUCTIVE=1 and a
   // disposable registration-unit ID, and consume the fixture row permanently.
 
-  test('TC_CUST_API_048 — FS-CancelUnit — PUT /admin/cancel-units cancels the unit and creates NO refund', async () => {
+  test('TC_CUST_API_048b — FS-CancelUnit — live cancel-units trigger (BLOCKED by BUG_015 Mavis-reversal 504)', async () => {
+    // Companion to the canonical TC_CUST_API_048 (audit invariant, tests/db/customers-audit.db.spec.js),
+    // which proves "Cancel Unit creates no refund" read-only. This is the live-trigger variant.
+    // It is BLOCKED on UAT: cancel-units 504s on every fixture with mavis_booking_created=1 (BUG_015).
     // Differs from Cancel Registration (which refunds the ₹999 EOI): Cancel Unit
     // releases the unit WITHOUT inserting any new (refund) payment_transactions row.
     test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
-      'Skipped on UAT — destructive cancel-unit; set ALLOW_DESTRUCTIVE=1 with disposable UAT_CANCEL_UNIT_ID');
+      'Skipped on UAT — destructive cancel-unit; set ALLOW_DESTRUCTIVE=1 with disposable UAT_CANCEL_UNIT_ID (note: BUG_015 504 blocks all current fixtures)');
     const cancelUnitId = process.env.UAT_CANCEL_UNIT_ID;
     test.skip(!cancelUnitId, 'UAT_CANCEL_UNIT_ID env var not provided — disposable Booked registration-unit id (numeric)');
     test.setTimeout(120_000); // cancel-units is a heavy endpoint (Mavis/LSQ/refund checks)
@@ -396,10 +399,12 @@ test.describe('Customers — Admin Portal API', () => {
 
     // 2. Act: cancel the unit via the admin cancel-units endpoint (slow → 90s).
     const res = await api.put('/api/v1/admin/cancel-units', { ids: [cancelUnitId] }, { token, timeout: 90_000 });
-    // NOTE: when the unit still has a live Mavis booking, the backend performs a
-    // synchronous Mavis reversal that exceeds the gateway timeout → 504. The unit's
-    // Mavis booking must be cleared first (same precondition as the UI Cancel Unit).
-    expect(res.status, `cancel-units returned ${res.status} — if 504, clear the unit's Mavis booking first`).toBe(200);
+    // NOTE (BUG_015): for any unit with portal flag mavis_booking_created=1, the backend
+    // runs a synchronous Mavis reversal that exceeds the gateway timeout → 504, and the
+    // transaction rolls back (no mutation). Clearing Mavis externally does NOT reset the
+    // portal flag, so this 504s for every current UAT fixture. A passable run needs a
+    // booked unit whose mavis_booking_created is unset (or the backend fix).
+    expect(res.status, `cancel-units returned ${res.status} — 504 = BUG_015 Mavis-reversal timeout`).toBe(200);
     const payload = res.body.data || res.body;
     const msg = (payload.message || res.body.message || JSON.stringify(payload)).toLowerCase();
     expect(msg).toMatch(/cancel|success/);

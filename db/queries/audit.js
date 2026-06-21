@@ -45,8 +45,22 @@ async function getLatestUnitSwapBundle() {
   return recent.filter(r => key(r) === newestTs).sort((a, b) => a.id - b.id);
 }
 
+// Cancel-Unit audit rows that touch PaymentTransaction entities. Used to prove
+// the "creates no refund" invariant: ADMIN_CANCEL_UNIT soft-deletes existing
+// booking payment transactions (UPDATE, deletedAt set) and never CREATEs a new
+// (refund/credit) transaction row.
+async function getCancelUnitPaymentEvents(limit = 100) {
+  return sequelize.query(
+    "SELECT id, event, entity_id, entity_snapshot_before, entity_snapshot_after, created_at " +
+    "FROM audit_logs WHERE action = 'ADMIN_CANCEL_UNIT' AND entity_type = 'PaymentTransaction' " +
+    "ORDER BY id DESC LIMIT :limit",
+    { replacements: { limit }, type: sequelize.QueryTypes.SELECT }
+  );
+}
+
 module.exports = {
   getRecentByAction,
   countByAction,
   getLatestUnitSwapBundle,
+  getCancelUnitPaymentEvents,
 };

@@ -110,4 +110,31 @@ test.describe('Customers — Server-side DB Audit', () => {
     // The swap releases one unit (BOOKED → RESERVED/AVAILABLE) somewhere in the bundle.
     expect(statuses.some(s => s.before === 'BOOKED')).toBe(true);
   });
+
+  // ── API_048 (audit invariant) ───────────────────────────────────────────────
+  // The live cancel-units trigger is blocked by BUG_015 (504 Mavis-reversal timeout
+  // on every UAT fixture). The TC's core assertion — "Cancel Unit creates NO refund"
+  // — is instead proven read-only from the server-side ADMIN_CANCEL_UNIT audit trail:
+  // a cancel only soft-deletes the existing booking payment transactions and never
+  // inserts a new (refund/credit) transaction row.
+  test('TC_CUST_API_048 — FS-CancelUnit — Cancel Unit creates no refund (audit invariant: soft-delete only, no new txn)', async () => {
+    const events = await audit.getCancelUnitPaymentEvents(100);
+    test.skip(events.length === 0, 'No ADMIN_CANCEL_UNIT payment audit rows in UAT yet');
+    expect(events.length).toBeGreaterThan(0);
+
+    const parse = (v) => (typeof v === 'string' ? JSON.parse(v) : v) || {};
+    for (const e of events) {
+      // 1. Every cancel-unit payment audit row is an UPDATE — never a CREATE.
+      //    A refund would be a newly CREATED credit transaction; there are none.
+      expect(e.event).toBe('UPDATE');
+
+      // 2. The update is a soft-delete: deletedAt goes null → a timestamp.
+      const before = parse(e.entity_snapshot_before);
+      const after = parse(e.entity_snapshot_after);
+      expect(before.deletedAt == null).toBe(true);
+      expect(after.deletedAt).toBeTruthy();
+    }
+    // 3. Zero CREATE events confirms no refund transaction is ever inserted on cancel.
+    expect(events.filter(e => e.event === 'CREATE').length).toBe(0);
+  });
 });

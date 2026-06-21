@@ -91,7 +91,7 @@ These are documented in TC markdown files under `[BUG-REF: ...]` headers. Each e
 | BUG_012 | Customers | P3 | Home Loan Approval: Submit button enabled while approval toggle is OFF (FRD says it should be disabled) | 2026-06-21 | — | Open |
 | BUG_013 | Milestones | P2 | Offline Payment proof: UI accept=".pdf,.jpg,.jpeg,.png" allows PDF, but backend rejects PDF with HTTP 500 "Invalid file type. Only image files are allowed (JPG, JPEG, PNG, WEBP)" | 2026-06-21 | — | Open |
 | BUG_014 | Customers/Parking | P2 | Parking-update API contract drift: backend now requires slot-based `selectedParkings` and rejects documented `{parkingCount, parkingAmount}` with 400 "selectedParkings is required". FRD §5.1 (ADMIN-FS-Customers-Parking) is stale; TC_CUST_API_120 premise invalidated. | 2026-06-21 | — | Open |
-| BUG_015 | Customers/CancelUnit | P3 | `PUT /admin/cancel-units` returns 504 Gateway Timeout (no clean error) when the unit has a live Mavis booking — backend runs a synchronous Mavis reversal that exceeds the gateway timeout. Should fail fast with a clear 4xx instead of hanging to 504. | 2026-06-21 | — | Open |
+| BUG_015 | Customers/CancelUnit | P2 | `PUT /admin/cancel-units` returns 504 Gateway Timeout for any unit with portal flag `mavis_booking_created=1`: backend runs a synchronous Mavis reversal that exceeds the gateway timeout and the txn rolls back (no cancel applied). Confirmed 504 persists even after Mavis was cleared in the Mavis system — the portal flag is not reset, so the reversal is still attempted. Blocks API/UI cancel for all current UAT fixtures. Should fail fast with a clear 4xx (or make Mavis reversal async). | 2026-06-21 | — | Open |
 
 ### BUG_013 — Offline Payment proof: UI/backend file-type mismatch + 500
 
