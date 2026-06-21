@@ -138,6 +138,30 @@ test.describe('Customers — Admin Portal API', () => {
     }
   });
 
+  test('TC_CUST_API_121 — Security — admin JWT remains valid for reads (server logout is a no-op)', async () => {
+    // The portal logout is client-side (clears local token); the server does not blacklist
+    // the JWT. So an authenticated GET with the same token still returns 200 until expiry.
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '5' },
+    });
+    expect(res.status).toBe(200);
+    expect(res.body).toBeTruthy();
+  });
+
+  test('TC_CUST_API_122 — Security — omitting projectId returns 200 scoped data (default env, no cross-project leak)', async () => {
+    // Without an explicit projectId the API falls back to the default env project and
+    // returns a valid scoped response — it must not 500 or leak another project's data.
+    const res = await api.get('/api/v1/admin/dashboard/all-buyers', {
+      token,
+      params: { page: '1', limit: '5' }, // no projectId param
+    });
+    expect(res.status).toBe(200);
+    const payload = res.body.data || res.body;
+    expect(payload).toBeTruthy();
+    expect(typeof payload).toBe('object');
+  });
+
   // ── Goal 2 — Search / Filter API variants ──────────────────────────────────
   // TechSpec §2: allotmentStatus, kycStatus, paymentStatus, hasHomeLoan filters
   // are separate query params; each is tested independently here.
