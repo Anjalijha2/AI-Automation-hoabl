@@ -17,11 +17,16 @@ const AUTH      = (portal) => path.join(FIXTURES, `.auth/${portal}.json`);
 // Per the `use-agent-browser` skill, browser execution runs on the agent-browser
 // Chrome when available. We auto-detect the Chrome that `agent-browser install`
 // downloaded (~/.agent-browser/browsers/chrome-*/chrome[.exe]) and point Playwright
-// at it via executablePath. Set USE_AGENT_BROWSER=false to fall back to the bundled
-// Playwright chromium. AGENT_BROWSER_CHROME overrides the path explicitly.
-// OPT-IN only: agent-browser's bundled Chrome 150 white-screens the app during load on
-// this environment, so the suite defaults to Playwright's bundled chromium (clean). To
-// run on agent-browser's Chrome, set USE_AGENT_BROWSER=true (or AGENT_BROWSER_CHROME=<path>).
+// at it via executablePath.
+//
+// BROWSER SELECTION (default = system Google Chrome):
+//   • Default: `channel: 'chrome'` → uses the system-installed Google Chrome. No Playwright
+//     download needed, renders the XR Portal app cleanly (no white screen), reliable uploads.
+//     This is the default because the bundled Playwright chromium does not install in this
+//     environment (extraction wedges), and agent-browser's Chrome 150 white-screens the app.
+//   • PW_CHANNEL=<channel> → use a specific channel (e.g. msedge, chrome-beta).
+//   • PW_CHANNEL=bundled → use Playwright's bundled chromium (if installed).
+//   • USE_AGENT_BROWSER=true / AGENT_BROWSER_CHROME=<path> → run on agent-browser's Chrome.
 // agent-browser itself remains the tool for interactive/diagnostic browser work.
 function findAgentBrowserChrome() {
   if (process.env.AGENT_BROWSER_CHROME) return process.env.AGENT_BROWSER_CHROME;
@@ -35,10 +40,20 @@ function findAgentBrowserChrome() {
         if (fs.existsSync(exe)) return exe;
       }
     }
-  } catch { /* fall back to bundled chromium */ }
+  } catch { /* fall back to system chrome */ }
   return undefined;
 }
 const AGENT_BROWSER_CHROME = findAgentBrowserChrome();
+
+// Resolve the browser channel. Default: system Google Chrome. PW_CHANNEL=bundled forces
+// Playwright's bundled chromium (channel undefined + no executablePath). agent-browser's
+// Chrome (executablePath) takes precedence over a channel when explicitly requested.
+function resolveChannel() {
+  if (AGENT_BROWSER_CHROME) return undefined;            // executablePath path → no channel
+  if (process.env.PW_CHANNEL === 'bundled') return undefined;
+  return process.env.PW_CHANNEL || 'chrome';             // default: system Google Chrome
+}
+const PW_CHANNEL = resolveChannel();
 
 module.exports = defineConfig({
   testDir: path.join(ROOT, 'tests'),
@@ -65,17 +80,20 @@ module.exports = defineConfig({
     trace:             'on-first-retry',
     headless:          process.env.HEADLESS === 'true',
     viewport:          process.env.HEADLESS === 'true' ? { width: 1920, height: 1080 } : null,
-    // PW_CHANNEL=chrome → use the system-installed Google Chrome (no Playwright download
-    // needed, renders the app cleanly — no white screen). Set NO_VIDEO=true to skip video
-    // recording (avoids the ffmpeg binary requirement when only a system browser is present).
-    channel:           process.env.PW_CHANNEL || undefined,
-    video:             process.env.NO_VIDEO === 'true' ? 'off' : 'retain-on-failure',
+    // Default browser = system Google Chrome (PW_CHANNEL resolved above). No download,
+    // renders the app cleanly (no white screen), reliable uploads.
+    channel:           PW_CHANNEL,
+    // Video defaults OFF: it needs the Playwright ffmpeg binary, which isn't available in
+    // this environment (system Chrome has no bundled ffmpeg). Screenshots ('on') remain the
+    // evidence source. Set VIDEO=retain-on-failure to re-enable once ffmpeg is installed.
+    video:             process.env.VIDEO || 'off',
     launchOptions:     {
       args: process.env.HEADLESS === 'true'
         ? ['--headless=new', '--no-first-run', '--no-default-browser-check']
         : ['--start-maximized', '--window-size=1920,1080'],
-      // channel and executablePath are mutually exclusive — channel wins when set.
-      ...((!process.env.PW_CHANNEL && AGENT_BROWSER_CHROME) ? { executablePath: AGENT_BROWSER_CHROME } : {}),
+      // channel and executablePath are mutually exclusive — executablePath (agent-browser)
+      // only applies when no channel is resolved.
+      ...((!PW_CHANNEL && AGENT_BROWSER_CHROME) ? { executablePath: AGENT_BROWSER_CHROME } : {}),
     },
   },
 
