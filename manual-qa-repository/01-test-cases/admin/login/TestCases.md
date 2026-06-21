@@ -160,3 +160,58 @@ Neither gap blocks Approval (TCs flagged `[NO-VISUAL-EVIDENCE]` and excluded fro
 ## GAP Reports
 
 **None for this batch.** All BRD §1–§11.6 sections are fully covered. Known issues (BRD §11 KNOWN ISSUE — logout no-op) are explicitly tracked under TC_LOGIN_EDGE_002 as `[KNOWN-DEFECT]` per BRD §11.
+
+---
+
+## Last Run: 2026-06-21 18:38 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_LOGIN_FUNC_001 | ADM_LGN_031 / ADM_LGN_018 / ADM_LGN_009 / ADM_LGN_001 / ADM_LGN_002 / ADM_LGN_007 / ADM_LGN_010 | ✅ PASS | — | All assertions matched expected | 2.1s |
+| TC_LOGIN_FUNC_002 | ADM_LGN_009 / ADM_LGN_010 / ADM_LGN_003 | ✅ PASS | — | All assertions matched expected | 1.8s |
+| TC_LOGIN_FUNC_003 | ADM_LGN_032 / ADM_LGN_033 / ADM_LGN_063 | ✅ PASS | — | All assertions matched expected | 1.9s |
+| TC_LOGIN_FUNC_004 | ADM_LGN_035 | ✅ PASS | — | All assertions matched expected | 9.5s |
+| TC_LOGIN_UI_006 | TC_LOGIN_UI_006 | ✅ PASS | — | All assertions matched expected | 1.3s |
+| TC_LOGIN_UI_026 | TC_LOGIN_UI_026 | ✅ PASS | — | All assertions matched expected | 7.6s |
+| TC_LOGIN_FUNC_019 | TC_LOGIN_FUNC_019 | ✅ PASS | — | All assertions matched expected | 1.8s |
+| TC_LOGIN_FUNC_068 | TC_LOGIN_FUNC_068 | ✅ PASS | — | All assertions matched expected | 2.0s |
+| TC_LOGIN_FUNC_069 | TC_LOGIN_FUNC_069 | ✅ PASS | — | All assertions matched expected | 2.1s |
+| TC_LOGIN_FUNC_027 | TC_LOGIN_FUNC_027 | ✅ PASS | — | All assertions matched expected | 1.5s |
+| TC_LOGIN_FUNC_028 | TC_LOGIN_FUNC_028 | ✅ PASS | — | All assertions matched expected | 61.3s |
+| TC_LOGIN_FUNC_029 | TC_LOGIN_FUNC_029 | ✅ PASS | — | All assertions matched expected | 63.7s |
+| TC_LOGIN_VAL_001 | TC_LOGIN_VAL_001 | ✅ PASS | — | All assertions matched expected | 2.3s |
+| TC_LOGIN_VAL_002 | TC_LOGIN_VAL_002 | ✅ PASS | — | All assertions matched expected | 1.3s |
+| TC_LOGIN_VAL_003 | TC_LOGIN_VAL_003 | ✅ PASS | — | All assertions matched expected | 1.4s |
+| TC_LOGIN_VAL_004 | TC_LOGIN_VAL_004 | ✅ PASS | — | All assertions matched expected | 1.8s |
+| TC_LOGIN_VAL_005 | TC_LOGIN_VAL_005 | ✅ PASS | — | All assertions matched expected | 1.4s |
+| TC_LOGIN_NEG_001 | TC_LOGIN_NEG_001 | ✅ PASS | — | All assertions matched expected | 1.4s |
+| TC_LOGIN_NEG_002 | TC_LOGIN_NEG_002 | ✅ PASS | — | All assertions matched expected | 1.5s |
+| TC_LOGIN_NEG_003 | TC_LOGIN_NEG_003 | ✅ PASS | — | All assertions matched expected | 1.3s |
+| TC_LOGIN_NEG_037 | TC_LOGIN_NEG_037 | ✅ PASS | — | All assertions matched expected | 1.5s |
+| TC_LOGIN_NEG_038 | TC_LOGIN_NEG_038 | ✅ PASS | — | All assertions matched expected | 1.4s |
+| TC_LOGIN_NEG_039 | TC_LOGIN_NEG_039 | ⏭ SKIP | — | Not executed | 0ms |
+| TC_LOGIN_NEG_065 | TC_LOGIN_NEG_065 | ⏭ SKIP | — | Not executed | 0ms |
+| TC_LOGIN_NEG_066 | TC_LOGIN_NEG_066 | ✅ PASS | — | All assertions matched expected | 1.8s |
+| TC_LOGIN_EDGE_001 | TC_LOGIN_EDGE_001 | ✅ PASS | — | All assertions matched expected | 1.3s |
+| TC_LOGIN_EDGE_002 | TC_LOGIN_EDGE_002 | ✅ PASS | — | All assertions matched expected | 1.7s |
+| TC_LOGIN_E2E_001 | TC_LOGIN_E2E_001 | ✅ PASS | — | All assertions matched expected | 2.4s |
+| TC_LOGIN_UI_040 | TC_LOGIN_UI_040 | ✅ PASS | — | All assertions matched expected | 1.3s |
+| TC_LOGIN_FUNC_004b | TC_LOGIN_FUNC_004b | ✅ PASS | — | All assertions matched expected | 1.2s |
+| TC_LOGIN_FUNC_005 | TC_LOGIN_FUNC_005 | ✅ PASS | — | All assertions matched expected | 1.2s |
+
+---
+
+## Last Run: 2026-06-21 18:41 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_LOGIN_UI_001 | TC_LOGIN_UI_001 | ✅ PASS | — | All assertions matched expected | 3.2s |
+| TC_LOGIN_UI_002 | TC_LOGIN_UI_002 | ✅ PASS | — | All assertions matched expected | 2.0s |
+| TC_LOGIN_UI_003 | TC_LOGIN_UI_003 | ✅ PASS | — | All assertions matched expected | 1.9s |
+| TC_LOGIN_UI_004 | TC_LOGIN_UI_004 | ✅ PASS | — | All assertions matched expected | 1.6s |
+| TC_LOGIN_UI_005 | TC_LOGIN_UI_005 | ✅ PASS | — | All assertions matched expected | 4.0s |
+| TC_LOGIN_UI_006 | TC_LOGIN_UI_006 | ✅ PASS | — | All assertions matched expected | 3.2s |
+| TC_LOGIN_UI_007 | TC_LOGIN_UI_007 | ✅ PASS | — | All assertions matched expected | 1.1s |
+| TC_LOGIN_UI_008 | TC_LOGIN_UI_008 | ✅ PASS | — | All assertions matched expected | 2.9s |
+| TC_LOGIN_UI_009 | TC_LOGIN_UI_009 | ✅ PASS | — | All assertions matched expected | 2.2s |
+| TC_LOGIN_UI_010 | TC_LOGIN_UI_010 | ✅ PASS | — | All assertions matched expected | 1.8s |

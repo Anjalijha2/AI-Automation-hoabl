@@ -78,6 +78,13 @@ const SPEC_TO_XLSX_ALIAS = {
   TC_LOGIN_NEG_039:   ['ADM_LGN_039'],    // unregistered mobile (fixme)
   TC_LOGIN_NEG_065:   ['ADM_LGN_065'],    // tampered JWT redirect
   TC_LOGIN_NEG_066:   ['ADM_LGN_066'],    // leading-zero mobile rejected
+  // ── Admin Login — API layer (login.api.spec.js) ─────────────────────────
+  TC_LOGIN_API_001:   ['ADM_LGN_088'],    // send-otp 200 for registered phone
+  TC_LOGIN_API_004:   ['ADM_LGN_081', 'ADM_LGN_082'],  // verify-otp returns JWT (+ permissions in payload)
+  TC_LOGIN_API_007:   ['ADM_LGN_008'],    // protected endpoint without token → 401
+  TC_LOGIN_API_008:   ['ADM_LGN_084'],    // expired/invalid token → 401 (JWT exp)
+  TC_LOGIN_API_009:   ['ADM_LGN_085'],    // logout returns 200
+  TC_LOGIN_API_010:   ['ADM_LGN_FSD_045'],// token-after-logout behaviour (documented JWT gap)
   // ── Admin Customers ─────────────────────────────────────────────────────
   TC_CUST_FUNC_001: ['ADM_CUST_001', 'ADM_CUST_002', 'ADM_CUST_003', 'ADM_CUST_006', 'TC_CUST_UI_041'],  // page load + KPI + table heading + banner
   TC_CUST_FUNC_002: ['ADM_CUST_007', 'ADM_CUST_009', 'ADM_CUST_010', 'ADM_CUST_011', 'ADM_CUST_012'],  // table columns
