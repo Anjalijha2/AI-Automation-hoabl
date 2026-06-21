@@ -49,13 +49,7 @@
         "unit": "1106-Pride"
       }
     ],
-    "kycCompleted": [
-      {
-        "regId": "GHNG-1000008364-I",
-        "unit": "1201-Pride",
-        "note": "Booked Offline + KYC Completed — milestones present; use for Offline Payment"
-      }
-    ],
+    "kycCompleted": [],
     "cancelled": [
       {
         "regId": "GHNG-1000008364-B",
@@ -113,6 +107,14 @@
       "category": "bookedOnline",
       "reason": "DEST Test 5 TC_CUST_FUNC_032 PASS 2026-06-21 — home loan approved (PUT 200); FRD-guard divergence BUG_012",
       "consumedAt": "2026-06-21 01:31 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-I",
+      "unit": "1201-Pride",
+      "note": "Booked Offline + KYC Completed — milestones present; use for Offline Payment",
+      "category": "kycCompleted",
+      "reason": "DEST Test 6 TC_CUST_NEG_094 PASS 2026-06-21 — offline payment 1000 posted (ref OFL2606211205335696); milestone Partial",
+      "consumedAt": "2026-06-21 12:08 IST"
     }
   ]
 }

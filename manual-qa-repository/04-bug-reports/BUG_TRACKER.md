@@ -89,6 +89,15 @@ These are documented in TC markdown files under `[BUG-REF: ...]` headers. Each e
 | [BUG_010](UAT/open/BUG_010-reg-status-validation.md) | Registration | P2 | Registration status validation skipped on empty submit | 2026-04-18 | — | Open |
 | BUG_011 | Customers | P2 | Cancel Registration: 400 "campaign is active" is swallowed silently (no error toast) | 2026-06-20 | — | Open |
 | BUG_012 | Customers | P3 | Home Loan Approval: Submit button enabled while approval toggle is OFF (FRD says it should be disabled) | 2026-06-21 | — | Open |
+| BUG_013 | Milestones | P2 | Offline Payment proof: UI accept=".pdf,.jpg,.jpeg,.png" allows PDF, but backend rejects PDF with HTTP 500 "Invalid file type. Only image files are allowed (JPG, JPEG, PNG, WEBP)" | 2026-06-21 | — | Open |
+
+### BUG_013 — Offline Payment proof: UI/backend file-type mismatch + 500
+
+**Found:** 2026-06-21 during TC_CUST_NEG_094 (offline payment on GHNG-1000008364-I).
+**Observed:** Submitting a **PDF** payment proof → `POST /api/v1/admin/milestone-payment/offline` → **HTTP 500** `{"status":false,"message":"Invalid file type. Only image files are allowed (JPG, JPEG, PNG, WEBP)"}` (backend `offlinePaymentProofFileFilter`, upload.js:222).
+**Two defects:**
+1. **Contract mismatch:** the drawer's file input `accept` attribute is `.pdf,.jpg,.jpeg,.png` (advertises PDF) but the backend only accepts JPG/JPEG/PNG/WEBP. PDFs are selectable in the UI yet always fail server-side. (Also note FRD §5.1 #10 documents accept as PDF/JPG/PNG — the FRD is wrong too.)
+2. **500 not 400:** a rejected file type should be a clean 4xx validation response, not an unhandled 500 with a stack trace.
 
 ### BUG_011 — Cancel Registration shows NO error when blocked by active campaign
 

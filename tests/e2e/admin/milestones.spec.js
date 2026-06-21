@@ -25,7 +25,9 @@ const { MilestonePage } = require('../../../automation-repository/pages/admin/Mi
 test.use({ storageState: 'automation-repository/fixtures/.auth/admin.json' });
 
 const MILESTONE_FIXTURE_REG = 'GHNG-1000008364-I'; // Booked Offline + KYC Completed
-const PROOF_PATH = path.join(__dirname, '..', '..', '..', 'automation-repository', 'fixtures', 'sample-proof.pdf');
+// Payment-proof file: user-supplied via DEST_PROOF_PATH, else the bundled sample.
+const PROOF_PATH = process.env.DEST_PROOF_PATH
+  || path.join(__dirname, '..', '..', '..', 'automation-repository', 'fixtures', 'sample-proof.pdf');
 
 test.describe('Milestones — Admin Portal E2E', () => {
   let customersPage;

@@ -65,14 +65,17 @@ module.exports = defineConfig({
     trace:             'on-first-retry',
     headless:          process.env.HEADLESS === 'true',
     viewport:          process.env.HEADLESS === 'true' ? { width: 1920, height: 1080 } : null,
+    // PW_CHANNEL=chrome → use the system-installed Google Chrome (no Playwright download
+    // needed, renders the app cleanly — no white screen). Set NO_VIDEO=true to skip video
+    // recording (avoids the ffmpeg binary requirement when only a system browser is present).
+    channel:           process.env.PW_CHANNEL || undefined,
+    video:             process.env.NO_VIDEO === 'true' ? 'off' : 'retain-on-failure',
     launchOptions:     {
-      // When headless: force Chrome's new headless mode and DO NOT pass --start-maximized /
-      // --window-size — with agent-browser's full Chrome (executablePath) those directives
-      // open a real (white) window even under headless. Headed runs keep the maximized window.
       args: process.env.HEADLESS === 'true'
         ? ['--headless=new', '--no-first-run', '--no-default-browser-check']
         : ['--start-maximized', '--window-size=1920,1080'],
-      ...(AGENT_BROWSER_CHROME ? { executablePath: AGENT_BROWSER_CHROME } : {}),
+      // channel and executablePath are mutually exclusive — channel wins when set.
+      ...((!process.env.PW_CHANNEL && AGENT_BROWSER_CHROME) ? { executablePath: AGENT_BROWSER_CHROME } : {}),
     },
   },
 
