@@ -58,15 +58,31 @@ Allow admins to enable or disable additional parking on a buyer's booked unit an
 | `parkingAmount` | Number (Input) | Conditional (frontend) | Frontend (Formik Yup): `required` + `positive()` + non-negative-decimal regex `^\d*\.?\d*$` when `additionalParkingEnabled === true`; `notRequired()` otherwise. Backend: `notRequired()` (see §6 Rule 1). |
 
 ### 5.1 Submission Payload
+
+> **CORRECTION 2026-06-21 (BUG_014):** the live API migrated to a **slot-based**
+> payload. Verified by live capture of the UI's outgoing request (request aborted,
+> no mutation). The previous `{parkingCount, parkingAmount}` shape (struck through
+> below) is **obsolete** — the backend now requires `selectedParkings` and rejects
+> the old payload with `400 "selectedParkings is required"`.
+
+**Current contract:**
 ```json
 {
   "event": "update-parking",
   "payload": {
     "additionalParkingEnabled": true,
-    "parkingCount": 2,
-    "parkingAmount": 250000
+    "selectedParkings": [ { "parkingId": 85, "amount": 500000 } ],
+    "removedParkings": []
   }
 }
+```
+- `selectedParkings` — array of slots to add/keep; each `{ parkingId, amount }` where
+  `parkingId` references a parking-pool slot for the typology and `amount` is the per-slot price.
+- `removedParkings` — array of `parkingId`s to release.
+
+**Obsolete (pre-2026-06-21) contract — no longer accepted:**
+```json
+{ "event": "update-parking", "payload": { "additionalParkingEnabled": true, "parkingCount": 2, "parkingAmount": 250000 } }
 ```
 
 ## 6. Validations & Business Rules

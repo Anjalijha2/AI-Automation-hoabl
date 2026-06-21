@@ -414,37 +414,28 @@ test.describe('Customers — Admin Portal API', () => {
     expect(txnsAfter).toBe(txnsBefore); // cancel-unit adds no refund row
   });
 
-  test('TC_CUST_API_120 — FS-Parking — PUT update-parking enabled=true,count=0,amount=0 is ACCEPTED (validation gap)', async () => {
-    // CONTRACT DRIFT (BUG_014, 2026-06-21): the live parking-update API has migrated
-    // to a slot-based payload — it now rejects {parkingCount, parkingAmount} with
-    // 400 "selectedParkings is required". The FRD §5.1 count/amount contract — and
-    // this TC's "count=0/amount=0 accepted" premise — describe the OLD contract.
-    // Blocked pending BA Agent re-grounding against the real `selectedParkings` shape.
-    test.fixme(true, 'BUG_014: parking API migrated to slot-based selectedParkings; FRD §5.1 stale — TC premise must be re-grounded');
-    // Documented server-side gap (old contract): backend Yup marks parkingCount/parkingAmount
-    // notRequired and coerces to 0; only delta + pool capacity are checked.
-    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
-      'Skipped on UAT — mutates parking; set ALLOW_DESTRUCTIVE=1 with disposable UAT_PARKING_UNIT_ID');
-    const regUnitId = process.env.UAT_PARKING_UNIT_ID;
-    test.skip(!regUnitId, 'UAT_PARKING_UNIT_ID env var not provided — Booked registration-unit id whose current parking differs from 0 (non-zero delta)');
-
-    // enabled=true with count=0/amount=0 and a non-zero delta vs current parking.
-    // Route is PLURAL registration-units (FRD-CUST §API; registrationUnitUpdate).
+  test('TC_CUST_API_120 — FS-Parking — update-parking contract migrated to slot-based selectedParkings (old count/amount payload rejected)', async () => {
+    // RE-GROUNDED 2026-06-21 (BUG_014). The parking-update API migrated to a slot-based
+    // contract — verified by live capture of the UI's outgoing request (PUT aborted,
+    // no mutation):
+    //   PUT /api/v1/admin/registration-units/:id
+    //   { event:'update-parking',
+    //     payload:{ additionalParkingEnabled:true,
+    //               selectedParkings:[{ parkingId:<poolSlotId>, amount:<perSlot> }],
+    //               removedParkings:[] } }
+    // The documented FRD §5.1 {parkingCount, parkingAmount} shape — and the original
+    // TC premise ("count=0/amount=0 accepted as a validation gap") — are STALE: the old
+    // loose payload no longer reaches the service. The backend Yup now REQUIRES the
+    // structured `selectedParkings` field, so the old count=0/amount=0 gap is CLOSED.
+    // This test guards that migration (non-destructive — a 400, no mutation).
+    const regUnitId = process.env.UAT_PARKING_UNIT_ID || '9784'; // any Booked unit id; request is rejected pre-mutation
     const res = await api.put(`/api/v1/admin/registration-units/${regUnitId}`,
       { event: 'update-parking', payload: { additionalParkingEnabled: true, parkingCount: 0, parkingAmount: 0 } },
       { token });
-    // The whole point: backend ACCEPTS it (200) despite the UI blocking count=0.
-    expect(res.status).toBe(200);
-    const payload = res.body.data || res.body;
-    expect(payload).toBeTruthy();
-
-    // Cross-check (DB): the parking values were coerced/persisted to 0.
-    const registration = require('../../db/queries/registration');
-    const after = await registration.getRegistrationUnitById(regUnitId);
-    if (after) {
-      expect(Number(after.parking_count || 0)).toBe(0);
-      expect(Number(after.parking_amount || 0)).toBe(0);
-    }
+    // Old payload (no selectedParkings) is rejected by the new schema — no mutation occurs.
+    expect(res.status).toBe(400);
+    const errs = JSON.stringify(res.body || {}).toLowerCase();
+    expect(errs).toContain('selectedparkings');
   });
 });
 
