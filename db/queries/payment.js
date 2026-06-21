@@ -37,10 +37,35 @@ async function getMilestonesByRegistrationUnit(registrationUnitId) {
   );
 }
 
+// ── Gateway audit (NEG_097) ────────────────────────────────────────────────
+// Distribution of the `gateway` column across all payment_transactions.
+// Online (is_offline=0) txns are recorded against a payment gateway; the
+// canonical/active online gateway for the platform is 'easebuzz'.
+async function getGatewayDistribution() {
+  return sequelize.query(
+    'SELECT gateway, is_offline, COUNT(*) AS n ' +
+    'FROM payment_transactions GROUP BY gateway, is_offline ORDER BY n DESC',
+    { type: sequelize.QueryTypes.SELECT }
+  );
+}
+
+// Most recent online (gateway-backed) transactions — used to assert the
+// recorded gateway value on a real allocation/online payment record.
+async function getRecentOnlineTransactions(limit = 20) {
+  return sequelize.query(
+    'SELECT id, registration_id, registration_unit_id, gateway, is_offline, status, payment_method, created_at ' +
+    'FROM payment_transactions WHERE is_offline = 0 AND deleted_at IS NULL ' +
+    'ORDER BY created_at DESC LIMIT :limit',
+    { replacements: { limit }, type: sequelize.QueryTypes.SELECT }
+  );
+}
+
 module.exports = {
   getTransactionById,
   getTransactionsByUser,
   getTransactionsByStatus,
   getTransactionsByRegistrationUnit,
   getMilestonesByRegistrationUnit,
+  getGatewayDistribution,
+  getRecentOnlineTransactions,
 };

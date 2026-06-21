@@ -356,3 +356,12 @@ The following actions are documented in dedicated FS files and require their own
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | TC_CUST_BIZ_004 | ADM_CUST_004 | ✅ PASS | Admin session — admin.json; navigates to /admin/customers then /admin/cms | All assertions matched expected | 17.8s |
+
+---
+
+## Last Run: 2026-06-21 14:42 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_CUST_NEG_097 | TC_CUST_NEG_097 | ✅ PASS | — | All assertions matched expected | 124ms |
+| TC_CUST_NEG_068 | TC_CUST_NEG_068 | ✅ PASS | — | All assertions matched expected | 83ms |
