@@ -15,26 +15,29 @@ class ApiClient {
 
   // ── Core methods — return { status, body } ──────────────────────────────────
 
-  async get(path, { token, params } = {}) {
+  async get(path, { token, params, timeout } = {}) {
     const res = await this.request.get(`${this.baseURL}${path}`, {
       headers: this._headers(token),
       params,
+      ...(timeout ? { timeout } : {}),
     });
     return this._wrap(res);
   }
 
-  async post(path, body = {}, { token } = {}) {
+  async post(path, body = {}, { token, timeout } = {}) {
     const res = await this.request.post(`${this.baseURL}${path}`, {
       headers: this._headers(token),
       data: body,
+      ...(timeout ? { timeout } : {}),
     });
     return this._wrap(res);
   }
 
-  async put(path, body = {}, { token } = {}) {
+  async put(path, body = {}, { token, timeout } = {}) {
     const res = await this.request.put(`${this.baseURL}${path}`, {
       headers: this._headers(token),
       data: body,
+      ...(timeout ? { timeout } : {}),
     });
     return this._wrap(res);
   }

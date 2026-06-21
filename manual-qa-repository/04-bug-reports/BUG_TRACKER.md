@@ -5,7 +5,7 @@
 - `BUG_NNN` — sequential project-wide IDs (legacy)
 - `BUG-<MODULE>-NNN` — FSD-source-verified gaps (added 2026-05-29 from TC FSD-corrections)
 
-**Next sequential ID:** BUG_011
+**Next sequential ID:** BUG_016
 
 ---
 
@@ -90,6 +90,8 @@ These are documented in TC markdown files under `[BUG-REF: ...]` headers. Each e
 | BUG_011 | Customers | P2 | Cancel Registration: 400 "campaign is active" is swallowed silently (no error toast) | 2026-06-20 | — | Open |
 | BUG_012 | Customers | P3 | Home Loan Approval: Submit button enabled while approval toggle is OFF (FRD says it should be disabled) | 2026-06-21 | — | Open |
 | BUG_013 | Milestones | P2 | Offline Payment proof: UI accept=".pdf,.jpg,.jpeg,.png" allows PDF, but backend rejects PDF with HTTP 500 "Invalid file type. Only image files are allowed (JPG, JPEG, PNG, WEBP)" | 2026-06-21 | — | Open |
+| BUG_014 | Customers/Parking | P2 | Parking-update API contract drift: backend now requires slot-based `selectedParkings` and rejects documented `{parkingCount, parkingAmount}` with 400 "selectedParkings is required". FRD §5.1 (ADMIN-FS-Customers-Parking) is stale; TC_CUST_API_120 premise invalidated. | 2026-06-21 | — | Open |
+| BUG_015 | Customers/CancelUnit | P3 | `PUT /admin/cancel-units` returns 504 Gateway Timeout (no clean error) when the unit has a live Mavis booking — backend runs a synchronous Mavis reversal that exceeds the gateway timeout. Should fail fast with a clear 4xx instead of hanging to 504. | 2026-06-21 | — | Open |
 
 ### BUG_013 — Offline Payment proof: UI/backend file-type mismatch + 500
 

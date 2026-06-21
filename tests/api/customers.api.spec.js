@@ -384,6 +384,7 @@ test.describe('Customers — Admin Portal API', () => {
       'Skipped on UAT — destructive cancel-unit; set ALLOW_DESTRUCTIVE=1 with disposable UAT_CANCEL_UNIT_ID');
     const cancelUnitId = process.env.UAT_CANCEL_UNIT_ID;
     test.skip(!cancelUnitId, 'UAT_CANCEL_UNIT_ID env var not provided — disposable Booked registration-unit id (numeric)');
+    test.setTimeout(120_000); // cancel-units is a heavy endpoint (Mavis/LSQ/refund checks)
 
     const payment = require('../../db/queries/payment');
     const registration = require('../../db/queries/registration');
@@ -393,9 +394,12 @@ test.describe('Customers — Admin Portal API', () => {
     expect(before, `registration_unit ${cancelUnitId} must exist`).toBeTruthy();
     const txnsBefore = await payment.countTransactionsByRegistrationUnit(cancelUnitId);
 
-    // 2. Act: cancel the unit via the admin cancel-units endpoint.
-    const res = await api.put('/api/v1/admin/cancel-units', { ids: [cancelUnitId] }, { token });
-    expect(res.status).toBe(200);
+    // 2. Act: cancel the unit via the admin cancel-units endpoint (slow → 90s).
+    const res = await api.put('/api/v1/admin/cancel-units', { ids: [cancelUnitId] }, { token, timeout: 90_000 });
+    // NOTE: when the unit still has a live Mavis booking, the backend performs a
+    // synchronous Mavis reversal that exceeds the gateway timeout → 504. The unit's
+    // Mavis booking must be cleared first (same precondition as the UI Cancel Unit).
+    expect(res.status, `cancel-units returned ${res.status} — if 504, clear the unit's Mavis booking first`).toBe(200);
     const payload = res.body.data || res.body;
     const msg = (payload.message || res.body.message || JSON.stringify(payload)).toLowerCase();
     expect(msg).toMatch(/cancel|success/);
@@ -411,16 +415,22 @@ test.describe('Customers — Admin Portal API', () => {
   });
 
   test('TC_CUST_API_120 — FS-Parking — PUT update-parking enabled=true,count=0,amount=0 is ACCEPTED (validation gap)', async () => {
-    // Documented server-side gap: backend Yup marks parkingCount/parkingAmount
-    // notRequired and coerces to 0; only delta + pool capacity are checked. So a
-    // request the UI blocks (count=0) is accepted by the API. Logged as BUG-class gap.
+    // CONTRACT DRIFT (BUG_014, 2026-06-21): the live parking-update API has migrated
+    // to a slot-based payload — it now rejects {parkingCount, parkingAmount} with
+    // 400 "selectedParkings is required". The FRD §5.1 count/amount contract — and
+    // this TC's "count=0/amount=0 accepted" premise — describe the OLD contract.
+    // Blocked pending BA Agent re-grounding against the real `selectedParkings` shape.
+    test.fixme(true, 'BUG_014: parking API migrated to slot-based selectedParkings; FRD §5.1 stale — TC premise must be re-grounded');
+    // Documented server-side gap (old contract): backend Yup marks parkingCount/parkingAmount
+    // notRequired and coerces to 0; only delta + pool capacity are checked.
     test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
       'Skipped on UAT — mutates parking; set ALLOW_DESTRUCTIVE=1 with disposable UAT_PARKING_UNIT_ID');
     const regUnitId = process.env.UAT_PARKING_UNIT_ID;
     test.skip(!regUnitId, 'UAT_PARKING_UNIT_ID env var not provided — Booked registration-unit id whose current parking differs from 0 (non-zero delta)');
 
     // enabled=true with count=0/amount=0 and a non-zero delta vs current parking.
-    const res = await api.put(`/api/v1/admin/registration-unit/${regUnitId}`,
+    // Route is PLURAL registration-units (FRD-CUST §API; registrationUnitUpdate).
+    const res = await api.put(`/api/v1/admin/registration-units/${regUnitId}`,
       { event: 'update-parking', payload: { additionalParkingEnabled: true, parkingCount: 0, parkingAmount: 0 } },
       { token });
     // The whole point: backend ACCEPTS it (200) despite the UI blocking count=0.
