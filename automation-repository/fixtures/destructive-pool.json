@@ -43,12 +43,7 @@
         "kyc": "pending"
       }
     ],
-    "bookedOnline": [
-      {
-        "regId": "GHNG-1000008364-F",
-        "unit": "1106-Pride"
-      }
-    ],
+    "bookedOnline": [],
     "kycCompleted": [],
     "cancelled": [
       {
@@ -115,6 +110,13 @@
       "category": "kycCompleted",
       "reason": "DEST Test 6 TC_CUST_NEG_094 PASS 2026-06-21 — offline payment 1000 posted (ref OFL2606211205335696); milestone Partial",
       "consumedAt": "2026-06-21 12:08 IST"
+    },
+    {
+      "regId": "GHNG-1000008364-F",
+      "unit": "1106-Pride",
+      "category": "bookedOnline",
+      "reason": "DEST FUNC_083 parking submit PASS 2026-06-21 (PUT 200)",
+      "consumedAt": "2026-06-21 13:52 IST"
     }
   ]
 }
