@@ -215,3 +215,21 @@ Neither gap blocks Approval (TCs flagged `[NO-VISUAL-EVIDENCE]` and excluded fro
 | TC_LOGIN_UI_008 | TC_LOGIN_UI_008 | ✅ PASS | — | All assertions matched expected | 2.9s |
 | TC_LOGIN_UI_009 | TC_LOGIN_UI_009 | ✅ PASS | — | All assertions matched expected | 2.2s |
 | TC_LOGIN_UI_010 | TC_LOGIN_UI_010 | ✅ PASS | — | All assertions matched expected | 1.8s |
+
+---
+
+## Last Run: 2026-06-21 19:02 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_LOGIN_VAL_074 | TC_LOGIN_VAL_074 | ⏭ SKIP | — | Not executed | 0ms |
+| TC_LOGIN_NEG_079 | TC_LOGIN_NEG_079 | ⏭ SKIP | — | Not executed | 0ms |
+
+---
+
+## Last Run: 2026-06-21 19:03 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| TC_LOGIN_VAL_074 | TC_LOGIN_VAL_074 | ✅ PASS | — | All assertions matched expected | 4.8s |
+| TC_LOGIN_NEG_079 | TC_LOGIN_NEG_079 | ✅ PASS | — | All assertions matched expected | 62.6s |

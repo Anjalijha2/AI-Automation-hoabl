@@ -85,6 +85,25 @@ const SPEC_TO_XLSX_ALIAS = {
   TC_LOGIN_API_008:   ['ADM_LGN_084'],    // expired/invalid token → 401 (JWT exp)
   TC_LOGIN_API_009:   ['ADM_LGN_085'],    // logout returns 200
   TC_LOGIN_API_010:   ['ADM_LGN_FSD_045'],// token-after-logout behaviour (documented JWT gap)
+  // ── Admin Login — Goal 7 coverage gaps (e2e) ────────────────────────────
+  TC_LOGIN_UI_070:    ['ADM_LGN_070'],    // logo + banner images load
+  TC_LOGIN_UI_071:    ['ADM_LGN_071'],    // 1440×900 layout
+  TC_LOGIN_VAL_072:   ['ADM_LGN_072'],    // mobile field empty on load
+  TC_LOGIN_VAL_074:   ['ADM_LGN_074'],    // 9-digit too short
+  TC_LOGIN_UI_075:    ['ADM_LGN_075'],    // OTP helper sub-text
+  TC_LOGIN_UI_076:    ['ADM_LGN_076'],    // timer initial value
+  TC_LOGIN_VAL_078:   ['ADM_LGN_078'],    // OTP boxes reject letters
+  TC_LOGIN_EDGE_083:  ['ADM_LGN_083'],    // wrong-length OTP paste
+  TC_LOGIN_FUNC_077:  ['ADM_LGN_077'],    // OTP screen after timer expiry
+  TC_LOGIN_NEG_079:   ['ADM_LGN_079'],    // submit OTP after expiry re-validated
+  // ── Admin Login — Goal 7 coverage gaps (api) ────────────────────────────
+  TC_LOGIN_API_073:   ['ADM_LGN_073'],    // no rate limit on send-otp
+  TC_LOGIN_API_080:   ['ADM_LGN_080'],    // verify-otp does not surface SMS dispatch
+  TC_LOGIN_API_087:   ['ADM_LGN_087'],    // SQLi/XSS to API → 4xx not 500
+  TC_LOGIN_API_089:   ['ADM_LGN_089'],    // send-otp accepts extra tracking fields
+  TC_LOGIN_API_034:   ['ADM_LGN_034'],    // JWT valid within 1-day window
+  TC_LOGIN_API_064:   ['ADM_LGN_064'],    // 2nd-device login leaves 1st token valid
+  TC_LOGIN_API_086:   ['ADM_LGN_086'],    // revoked user rejected (fixture-gated)
   // ── Admin Customers ─────────────────────────────────────────────────────
   TC_CUST_FUNC_001: ['ADM_CUST_001', 'ADM_CUST_002', 'ADM_CUST_003', 'ADM_CUST_006', 'TC_CUST_UI_041'],  // page load + KPI + table heading + banner
   TC_CUST_FUNC_002: ['ADM_CUST_007', 'ADM_CUST_009', 'ADM_CUST_010', 'ADM_CUST_011', 'ADM_CUST_012'],  // table columns
