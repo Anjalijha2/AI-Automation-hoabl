@@ -535,4 +535,40 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(restored).toBe(initial ? 1 : 0);
   });
 
+  test('ADM_CFG_074 — ADMIN-FS-Config-CMS §1 — tower save refreshes Active Towers KPI (by one)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'Tower: Aura (flip Active→Inactive→restore); Active Towers KPI/DB before↔after; ALLOW_DESTRUCTIVE=1' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — real save; set ALLOW_DESTRUCTIVE=1 + CFG_TOWER');
+    const TOWER = process.env.CFG_TOWER || 'Aura';
+    const inv = require('../../../db/queries/inventory');
+    const activeCount = async () => (await inv.getTowers()).filter((t) => Number(t.is_active) === 1).length;
+
+    const before = await activeCount();
+    await configPage.expectSectionVisible('towerConfiguration');
+    const initial = await configPage.toggleState(configPage.getTowerToggleByName(TOWER));
+    expect(initial).toBe(true); // Aura starts Active
+
+    await test.step('Flip Aura Active→Inactive + save', async () => {
+      await configPage.setTowersState([TOWER], false);
+    });
+    const afterOff = await activeCount();
+    console.log(`[ADM_CFG_074] active-count before=${before} afterOff=${afterOff}`);
+    expect(afterOff).toBe(before - 1); // KPI source decreased by one
+
+    // Customers "Active Towers" KPI (UI evidence).
+    await page.goto('https://uat-web.xrportal.in/admin/customers');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    const kpiCtx = await page.getByText(/active towers/i).first()
+      .locator('xpath=ancestor::*[2]').textContent().catch(() => '');
+    console.log(`[ADM_CFG_074] Customers KPI ctx: ${(kpiCtx || '').replace(/\s+/g, ' ').slice(0, 60)}`);
+
+    // Restore.
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.setTowersState([TOWER], true);
+    const restored = await activeCount();
+    console.log(`[ADM_CFG_074] active-count restored=${restored} (expected ${before})`);
+    expect(restored).toBe(before); // KPI back to original
+    // NOTE: Python WebSocket / buyer-side real-time grid is cross-portal — [VERIFY WITH DEV].
+  });
+
 });

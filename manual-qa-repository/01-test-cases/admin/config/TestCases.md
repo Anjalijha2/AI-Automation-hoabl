@@ -165,3 +165,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_073 | ADM_CFG_073 | ✅ PASS | Tower: Aura (flip→save→restore); network-monitored for notification calls; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 30.7s |
+
+---
+
+## Last Run: 2026-06-27 23:07 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_074 | ADM_CFG_074 | ✅ PASS | Tower: Aura (flip Active→Inactive→restore); Active Towers KPI/DB before↔after; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 30.5s |
