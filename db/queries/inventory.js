@@ -37,4 +37,11 @@ async function getTypologies() {
   );
 }
 
-module.exports = { getUnitById, getUnitsByTower, getUnitsByStatus, getTowers, getTypologies };
+async function getTowerByName(name) {
+  return sequelize.query(
+    'SELECT id, tower_name, tower_code, is_active FROM towers WHERE tower_name = :name AND deleted_at IS NULL LIMIT 1',
+    { replacements: { name }, type: sequelize.QueryTypes.SELECT }
+  ).then((r) => r[0] || null);
+}
+
+module.exports = { getUnitById, getUnitsByTower, getUnitsByStatus, getTowers, getTypologies, getTowerByName };

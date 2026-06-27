@@ -283,6 +283,19 @@ class ConfigPage extends BasePage {
     await this.click(this.towerToggles.nth(idx));
   }
 
+  /** The Active/Inactive toggle on the tower card whose heading contains `name`. */
+  getTowerToggleByName(name) {
+    const heading = this.page.getByRole('heading', { name: new RegExp(name, 'i') }).first();
+    return heading.locator('xpath=following::*[@role="switch" or contains(@class,"ant-switch")][1]');
+  }
+
+  /** Read a switch locator's on/off state. */
+  async toggleState(loc) {
+    return loc.evaluate(
+      (el) => el.getAttribute('aria-checked') === 'true' || el.classList.contains('ant-switch-checked')
+    );
+  }
+
   /** Click the "View Tower" link on the card whose heading contains `name` (e.g. "Crest"). */
   async clickViewTowerByName(name) {
     const heading = this.page.getByRole('heading', { name: new RegExp(name, 'i') }).first();

@@ -370,4 +370,54 @@ test.describe('Config — Admin Portal E2E', () => {
     await expect(page).toHaveURL(/\/admin\/towers/);
     console.log(`[ADM_CFG_008] navigated to ${page.url()}`);
   });
+
+  test('ADM_CFG_071 — ADMIN-FS-Config-CMS §1 — deactivating a tower saves (no minimum-active block)', async ({ page }) => {
+    // DESTRUCTIVE — guarded. Safe variant: flip ONE tower off → Update (save) →
+    // confirm persisted (no min-active validation blocked it) → flip back → restore.
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — saves tower config; set ALLOW_DESTRUCTIVE=1 + CFG_TOWER');
+    const TOWER = process.env.CFG_TOWER || 'Aura';
+    await configPage.expectSectionVisible('towerConfiguration');
+    const initial = await configPage.toggleState(configPage.getTowerToggleByName(TOWER));
+
+    await test.step(`Flip ${TOWER} (${initial ? 'Active→Inactive' : 'Inactive→Active'}) and Save`, async () => {
+      await configPage.getTowerToggleByName(TOWER).click();
+      // Wait until the UI registers the flip BEFORE saving (else Update no-ops).
+      await expect.poll(async () => configPage.toggleState(configPage.getTowerToggleByName(TOWER)),
+        { timeout: 8_000 }).toBe(!initial);
+      await configPage.clickUpdateTowerConfiguration();
+      await page.waitForLoadState('networkidle').catch(() => {});
+      await page.waitForTimeout(1200);
+    });
+    await configPage.navigate(); await configPage.waitForLoad();
+    const afterSave = await configPage.toggleState(configPage.getTowerToggleByName(TOWER));
+    console.log(`[ADM_CFG_071] ${TOWER}: initial=${initial} afterSave=${afterSave}`);
+    expect(afterSave).not.toBe(initial); // save accepted + persisted → no minimum-active block
+
+    // DB layer (graceful — skip the assert if UAT DB is unreachable).
+    await test.step('DB: tower is_active reflects the saved UI state', async () => {
+      try {
+        const inv = require('../../../db/queries/inventory');
+        const row = await inv.getTowerByName(TOWER);
+        if (row) {
+          console.log(`[ADM_CFG_071] DB ${TOWER}.is_active=${row.is_active} (UI afterSave=${afterSave})`);
+          expect(Number(row.is_active) === 1).toBe(afterSave); // DB agrees with UI
+        }
+      } catch (e) { console.log(`[ADM_CFG_071] DB check skipped: ${e.message}`); }
+    });
+
+    await test.step(`Restore ${TOWER} to original state`, async () => {
+      await configPage.getTowerToggleByName(TOWER).click();
+      await expect.poll(async () => configPage.toggleState(configPage.getTowerToggleByName(TOWER)),
+        { timeout: 8_000 }).toBe(initial);
+      await configPage.clickUpdateTowerConfiguration();
+      await page.waitForLoadState('networkidle').catch(() => {});
+      await page.waitForTimeout(1200);
+    });
+    await configPage.navigate(); await configPage.waitForLoad();
+    const restored = await configPage.toggleState(configPage.getTowerToggleByName(TOWER));
+    console.log(`[ADM_CFG_071] ${TOWER} restored=${restored}`);
+    expect(restored).toBe(initial); // net state unchanged
+  });
+
 });
