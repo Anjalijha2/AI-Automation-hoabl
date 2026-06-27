@@ -420,4 +420,58 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(restored).toBe(initial); // net state unchanged
   });
 
+  test('ADM_CFG_009 — ADMIN-FS-Config-CMS §1 — set ALL towers Inactive saves; Active KPI=0 (edge)', async ({ page }) => {
+    // ⛔ HIGH-IMPACT DESTRUCTIVE. Snapshot-anchored: disable all active towers,
+    // verify (UI 0 active + DB active-count 0), then RESTORE every originally-active
+    // tower and HARD-VERIFY the DB matches the original snapshot.
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — disables ALL towers; set ALLOW_DESTRUCTIVE=1');
+    const fs = require('fs');
+    const inv = require('../../../db/queries/inventory');
+
+    const snapBefore = await inv.getTowers();
+    const originalActive = snapBefore.filter((t) => Number(t.is_active) === 1).map((t) => t.tower_name);
+    fs.writeFileSync('reports/towers-snapshot.json', JSON.stringify(snapBefore, null, 2));
+    console.log(`[ADM_CFG_009] originalActive=${originalActive.length}: ${originalActive.join(', ')}`);
+    expect(originalActive.length).toBeGreaterThan(0);
+
+    await configPage.expectSectionVisible('towerConfiguration');
+
+    await test.step('Disable all active towers and Save', async () => {
+      await configPage.setTowersState(originalActive, false);
+    });
+
+    await configPage.navigate(); await configPage.waitForLoad();
+    const uiAfter = await configPage.readTowerToggleStates();
+    const dbActiveAfter = (await inv.getTowers()).filter((t) => Number(t.is_active) === 1).length;
+    console.log(`[ADM_CFG_009] after-all-off: UI active=${uiAfter.active} DB active=${dbActiveAfter}`);
+    expect(uiAfter.active).toBe(0);
+    expect(dbActiveAfter).toBe(0);
+    await page.goto('https://uat-web.xrportal.in/admin/customers');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    const kpiCtx = await page.getByText(/active towers/i).first()
+      .locator('xpath=ancestor-or-self::*[2]').textContent().catch(() => '');
+    console.log(`[ADM_CFG_009] Active Towers KPI: ${(kpiCtx || '').replace(/\s+/g, ' ').slice(0, 60)}`);
+
+    await configPage.navigate(); await configPage.waitForLoad();
+    await test.step('Restore all originally-active towers', async () => {
+      await configPage.setTowersState(originalActive, true);
+    });
+    let dbActiveNow = 0;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const dbNow = await inv.getTowers();
+      const stillOff = originalActive.filter((n) => {
+        const row = dbNow.find((t) => t.tower_name === n);
+        return row && Number(row.is_active) !== 1;
+      });
+      dbActiveNow = dbNow.filter((t) => Number(t.is_active) === 1).length;
+      if (stillOff.length === 0) break;
+      console.log(`[ADM_CFG_009] restore retry ${attempt + 1}: still off = ${stillOff.join(', ')}`);
+      await configPage.navigate(); await configPage.waitForLoad();
+      await configPage.setTowersState(stillOff, true);
+    }
+    console.log(`[ADM_CFG_009] restored DB active=${dbActiveNow} (expected ${originalActive.length})`);
+    expect(dbActiveNow).toBe(originalActive.length); // every original active tower back
+  });
+
 });

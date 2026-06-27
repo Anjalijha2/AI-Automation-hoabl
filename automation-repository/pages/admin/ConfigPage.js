@@ -296,6 +296,26 @@ class ConfigPage extends BasePage {
     );
   }
 
+  /**
+   * Set a list of towers (by name) to a desired Active state, then click Update once.
+   * Polls each toggle until it registers the change before saving (avoids no-op saves).
+   */
+  async setTowersState(names, active) {
+    for (const name of names) {
+      let cur = await this.toggleState(this.getTowerToggleByName(name));
+      if (cur !== active) {
+        await this.getTowerToggleByName(name).click();
+        for (let t = 0; t < 14 && cur !== active; t++) {
+          await this.page.waitForTimeout(300);
+          cur = await this.toggleState(this.getTowerToggleByName(name)).catch(() => cur);
+        }
+      }
+    }
+    await this.clickUpdateTowerConfiguration();
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1500);
+  }
+
   /** Click the "View Tower" link on the card whose heading contains `name` (e.g. "Crest"). */
   async clickViewTowerByName(name) {
     const heading = this.page.getByRole('heading', { name: new RegExp(name, 'i') }).first();
