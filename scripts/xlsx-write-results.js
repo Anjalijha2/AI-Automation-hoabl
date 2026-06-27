@@ -539,8 +539,6 @@ async function updateXlsx(results) {
 
     const anns = jsonAnns.get(specIdForAnns) || jsonAnns.get(id) || null;
     const actualText = actualResultText(result);
-    // Test data actually used this run (from the test's `testData` annotation).
-    const dataNote = anns && anns.testData ? `  ·  data used: ${anns.testData}` : '';
     const shotLink = archiveScreenshot(screenshot, base, id);
 
     if (format === 'master') {
@@ -555,8 +553,8 @@ async function updateXlsx(results) {
       row.getCell(COL.lastRun).value = result.status + (result.isRetry ? ' (retry)' : '');
       // Execution Details: Jenkins build prefix (if set) + timestamp + duration/error
       const details = isFail
-        ? `${jenkinsBuild}${timestamp} — FAIL in ${result.duration || 'n/a'}${dataNote}`
-        : `${jenkinsBuild}${timestamp} — ${result.status.toLowerCase()} in ${result.duration || 'n/a'}${dataNote}`;
+        ? `${jenkinsBuild}${timestamp} — FAIL in ${result.duration || 'n/a'}`
+        : `${jenkinsBuild}${timestamp} — ${result.status.toLowerCase()} in ${result.duration || 'n/a'}`;
       row.getCell(COL.details).value = details;
       row.getCell(COL.actual).value = actualText;
       // Screenshot link: clickable hyperlink (pass = test-finished-1.png, fail = test-failed-1.png)
@@ -574,9 +572,14 @@ async function updateXlsx(results) {
       const masterRowNum = masterRowMap.get(id);
       if (masterRowNum) {
         const mrow = masterSheet.getRow(masterRowNum);
-        mrow.getCell(10).value = actualText + dataNote;
+        mrow.getCell(10).value = actualText;           // Actual result — outcome only
         mrow.getCell(11).value = isPass ? 'Pass' : isFail ? 'Fail' : isSkip ? 'Skip' : 'Pending';
         mrow.getCell(12).value = 'Automation';
+        // Test data USED → the Test Data column (col 8), preserving the TC's requirement.
+        if (anns && anns.testData) {
+          const base = (mrow.getCell(8).value || '').toString().split('  →  USED:')[0].trimEnd();
+          mrow.getCell(8).value = `${base}  →  USED: ${anns.testData}`;
+        }
         updatedMaster++;
       }
     }
