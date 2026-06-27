@@ -788,4 +788,32 @@ test.describe('Config — Admin Portal E2E', () => {
     expect((await stateOf(NORMAL)).avail).toBe(1);
   });
 
+  test('ADM_CFG_FSD_058 — ADMIN-FS-Config-CMS §2 — update writes BOTH status enum + availableForAllocation', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-Q: Forbid→{WAITLIST,false} then Allow→{PREALLOCATED,true}; both fields; self-restore; ALLOW_DESTRUCTIVE=1 (campaign OFF)' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — uploads; set ALLOW_DESTRUCTIVE=1 (campaign inactive)');
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REG = 'GHNG-1000008364-Q';
+    const stateOf = async () => { const u = await reg.getRegistrationUnitByNumber(REG); return { status: String(u.status).toUpperCase(), avail: Number(u.available_for_allocation) }; };
+    const fileFor = (status) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/fsd058_${status}.xlsx`);
+      const ws = X.utils.aoa_to_sheet([['Registration Number', 'Allocation Status'], [REG, status]]);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, 'S1'); X.writeFile(wb, fp); return fp;
+    };
+
+    await configPage.expectSectionVisible('registrationStatus');
+    await configPage.uploadRegStatusFile(fileFor('Forbid'));
+    const f = await stateOf();
+    console.log(`[ADM_CFG_FSD_058] after Forbid: ${JSON.stringify(f)}`);
+    expect(f.avail).toBe(0); expect(f.status).toBe('WAITLIST');           // both fields written (Forbid)
+
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('registrationStatus');
+    await configPage.uploadRegStatusFile(fileFor('Allow'));
+    const a = await stateOf();
+    console.log(`[ADM_CFG_FSD_058] after Allow: ${JSON.stringify(a)}`);
+    expect(a.avail).toBe(1); expect(a.status).toBe('PREALLOCATED');       // both fields written (Allow); -Q restored
+  });
+
 });

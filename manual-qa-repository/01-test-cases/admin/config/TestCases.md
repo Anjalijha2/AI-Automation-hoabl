@@ -237,3 +237,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_077 | ADM_CFG_077 | ✅ PASS | Upload Forbid for -C (WINNER) + -Q (normal): WINNER skipped (unchanged), normal applied; restore -Q; ALLOW_DESTRUCTIVE=1 (campaign OFF) | All assertions matched expected | 54.5s |
+
+---
+
+## Last Run: 2026-06-28 01:11 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_FSD_058 | ADM_CFG_FSD_058 | ✅ PASS | GHNG-1000008364-Q: Forbid→{WAITLIST,false} then Allow→{PREALLOCATED,true}; both fields; self-restore; ALLOW_DESTRUCTIVE=1 (campaign OFF) | All assertions matched expected | 42.3s |
