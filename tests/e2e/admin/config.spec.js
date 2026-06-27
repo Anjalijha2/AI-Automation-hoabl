@@ -341,4 +341,24 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(viewLinks).toBe(18);
     expect(updateBtns).toBe(1); // exactly one Update Tower Configuration button
   });
+
+  test('ADM_CFG_005 — ADMIN-FS-Config-CMS §1 — toggle change not persisted until Update (reload discards)', async () => {
+    // Flip the first tower toggle, reload WITHOUT clicking Update → must revert.
+    // Non-destructive: nothing is saved (BRD §6 rule 1).
+    await configPage.expectSectionVisible('towerConfiguration');
+    const readState = (loc) => loc.evaluate(
+      (el) => el.getAttribute('aria-checked') === 'true' || el.classList.contains('ant-switch-checked')
+    );
+    const sw = configPage.page.locator('[role="switch"], .ant-switch').first();
+    const before = await readState(sw);
+    await sw.click(); // flip — do NOT click Update
+    await configPage.page.waitForTimeout(400);
+    const flipped = await readState(sw);
+    expect(flipped).not.toBe(before); // UI reflects the unsaved flip
+    await configPage.navigate(); // reload without saving
+    await configPage.waitForLoad();
+    const after = await readState(configPage.page.locator('[role="switch"], .ant-switch').first());
+    console.log(`[ADM_CFG_005] before=${before} flipped=${flipped} afterReload=${after}`);
+    expect(after).toBe(before); // reverted — unsaved change discarded
+  });
 });
