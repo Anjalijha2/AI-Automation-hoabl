@@ -586,4 +586,25 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(fileInputs).toBeGreaterThanOrEqual(1); // upload file input attached (hidden)
   });
 
+  test('ADM_CFG_011 — ADMIN-FS-Config-CMS §2 — Sample template has Registration Number + Allocation Status', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'none — download + parse Section 2 sample template' });
+    const path = require('path'); const XLSX = require('xlsx');
+    await configPage.expectSectionVisible('registrationStatus');
+    const [download] = await Promise.all([
+      page.waitForEvent('download', { timeout: 25_000 }),
+      configPage.section2SampleDownload.click(),
+    ]);
+    const fp = path.join('reports', 'config-downloads', 'reg-status-sample.xlsx');
+    await download.saveAs(fp);
+    const wb = XLSX.readFile(fp);
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+    const headers = (rows[0] || []).map((h) => String(h).toLowerCase());
+    console.log(`[ADM_CFG_011] headers: ${JSON.stringify(rows[0])}`);
+    expect(headers.join('|')).toMatch(/registration\s*number/);
+    expect(headers.join('|')).toMatch(/allocation\s*status/);
+    const dataRows = rows.slice(1).filter((r) => r && r.length && r[0]);
+    console.log(`[ADM_CFG_011] data rows=${dataRows.length} sample=${JSON.stringify(dataRows[0])}`);
+    expect(dataRows.length).toBeGreaterThan(0); // populated with current registrations
+  });
+
 });

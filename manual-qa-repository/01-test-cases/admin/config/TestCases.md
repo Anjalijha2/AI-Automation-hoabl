@@ -181,3 +181,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_075 | ADM_CFG_075 | ✅ PASS | none — read-only enumeration | All assertions matched expected | 2.9s |
+
+---
+
+## Last Run: 2026-06-27 23:17 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_011 | ADM_CFG_011 | ✅ PASS | none — download + parse Section 2 sample template | All assertions matched expected | 3.6s |
