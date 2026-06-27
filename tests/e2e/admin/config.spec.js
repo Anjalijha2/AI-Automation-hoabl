@@ -571,4 +571,19 @@ test.describe('Config — Admin Portal E2E', () => {
     // NOTE: Python WebSocket / buyer-side real-time grid is cross-portal — [VERIFY WITH DEV].
   });
 
+  // ════════════════════════════════════════════════════════════════════════
+  // Section 2 — Registration Status (Bulk Upload)
+  // ════════════════════════════════════════════════════════════════════════
+
+  test('ADM_CFG_075 — ADMIN-FS-Config-CMS §2 — Section 2 control inventory (Sample/Upload/Submit)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only enumeration' });
+    await configPage.expectSectionVisible('registrationStatus');
+    await expect(configPage.section2SampleDownload).toBeVisible();
+    await expect(configPage.section2UploadButton).toBeVisible();
+    await expect(configPage.section2SubmitButton).toBeVisible();
+    const fileInputs = await configPage.section2FileInput.count();
+    console.log(`[ADM_CFG_075] sample+upload+submit visible; fileInputs=${fileInputs}`);
+    expect(fileInputs).toBeGreaterThanOrEqual(1); // upload file input attached (hidden)
+  });
+
 });
