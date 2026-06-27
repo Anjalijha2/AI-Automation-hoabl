@@ -149,3 +149,11 @@
 | ADM_CFG_008 | ADM_CFG_008 | ✅ PASS | Tower: Crest (View Tower link) | All assertions matched expected | 3.1s |
 | ADM_CFG_071 | ADM_CFG_071 | ✅ PASS | Tower: Aura (flip Active→Inactive→Save→restore); ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 29.0s |
 | ADM_CFG_072 | ADM_CFG_072 | ✅ PASS | route-mock: PUT /admin/towers/status-update → 500 (simulated; no real save) | All assertions matched expected | 4.7s |
+
+---
+
+## Last Run: 2026-06-27 22:00 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_FSD_057 | ADM_CFG_FSD_057 | ✅ PASS | PUT towers/status-update batch; flip Aura (id) → restore; admin JWT; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 20.6s |
