@@ -733,4 +733,30 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(qA).toBe(1); expect(gA).toBe(1); // both case variants accepted → restored to eligible
   });
 
+  test('ADM_CFG_076 — ADMIN-FS-Config-CMS §2 — upload rejected while a campaign is active', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-Q Forbid upload while campaign ACTIVE → expect rejection ("campaign is active"), no mutation; ALLOW_DESTRUCTIVE=1' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — needs ALLOW_DESTRUCTIVE=1 + an active campaign');
+    const path = require('path'); const XLSX = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REG = 'GHNG-1000008364-Q';
+    const before = Number((await reg.getRegistrationUnitByNumber(REG)).available_for_allocation);
+
+    await configPage.expectSectionVisible('registrationStatus');
+    const resp = await configPage.uploadRegStatusFile(path.resolve('automation-repository/fixtures/config-uploads/adm_cfg_076_forbid.xlsx'));
+    const status = resp ? resp.status() : null;
+    let body = '';
+    if (resp) {
+      const buf = await resp.body().catch(() => null);
+      if (buf) { try { const wb = XLSX.read(buf, { type: 'buffer' }); body = JSON.stringify(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 })); } catch { body = buf.toString().slice(0, 300); } }
+    }
+    const toast = await page.getByText(/campaign is active|cannot update|active campaign/i).first().isVisible().catch(() => false);
+    console.log(`[ADM_CFG_076] status=${status} toastSeen=${toast} body=${body.slice(0, 200)}`);
+    const after = Number((await reg.getRegistrationUnitByNumber(REG)).available_for_allocation);
+
+    const rejected = status === 400 || toast || /campaign is active|cannot update/i.test(body);
+    expect(rejected, 'upload must be rejected while a campaign is active').toBe(true);
+    expect(after).toBe(before); // no mutation on rejection
+  });
+
 });

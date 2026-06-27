@@ -221,3 +221,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_014 | ADM_CFG_014 | ✅ PASS | GHNG-1000008364-Q="allow" (lowercase), -G="ALLOW" (uppercase); Forbid baseline then mixed-case Allow; both → eligible; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 57.8s |
+
+---
+
+## Last Run: 2026-06-28 00:49 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_076 | ADM_CFG_076 | ✅ PASS | GHNG-1000008364-Q Forbid upload while campaign ACTIVE → expect rejection ("campaign is active"), no mutation; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 33.2s |
