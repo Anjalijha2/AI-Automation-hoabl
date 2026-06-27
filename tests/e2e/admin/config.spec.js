@@ -316,4 +316,16 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(active + inactive).toBe(total);
     expect(active).toBeGreaterThan(0); // not all towers off on the seed
   });
+
+  test('ADM_CFG_007 — ADMIN-FS-Config-CMS §1 — each tower card exposes View Tower + a state toggle', async () => {
+    await configPage.expectSectionVisible('towerConfiguration');
+    const cards = await configPage.towerCards.count();
+    expect(cards).toBe(18); // 18 tower cards
+    const viewLinks = await configPage.viewTowerLink.count();
+    expect(viewLinks).toBe(18); // each card has a View Tower link
+    const { total, active, inactive } = await configPage.readTowerToggleStates();
+    expect(total).toBe(18);
+    expect(active + inactive).toBe(18); // each toggle resolves to Active or Inactive
+    console.log(`[ADM_CFG_007] cards=${cards} viewLinks=${viewLinks} active=${active} inactive=${inactive}`);
+  });
 });
