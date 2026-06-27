@@ -328,4 +328,17 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(active + inactive).toBe(18); // each toggle resolves to Active or Inactive
     console.log(`[ADM_CFG_007] cards=${cards} viewLinks=${viewLinks} active=${active} inactive=${inactive}`);
   });
+
+  test('ADM_CFG_070 — ADMIN-FS-Config-CMS §1 — exact control inventory: 18 toggles, 18 View Tower, 1 Update', async () => {
+    await configPage.expectSectionVisible('towerConfiguration');
+    const cards = await configPage.towerCards.count();
+    const viewLinks = await configPage.viewTowerLink.count();
+    const updateBtns = await configPage.updateTowerConfigButton.count();
+    const { total: toggles } = await configPage.readTowerToggleStates();
+    console.log(`[ADM_CFG_070] toggles=${toggles} viewLinks=${viewLinks} updateBtns=${updateBtns} cards=${cards}`);
+    expect(cards).toBe(18);
+    expect(toggles).toBe(18);
+    expect(viewLinks).toBe(18);
+    expect(updateBtns).toBe(1); // exactly one Update Tower Configuration button
+  });
 });
