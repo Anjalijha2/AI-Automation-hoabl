@@ -213,3 +213,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_013 | ADM_CFG_013 | ✅ PASS | Registration: GHNG-1000008364-Q — upload Forbid → availableForAllocation=false (status WAITLIST) → restore Allow; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 31.5s |
+
+---
+
+## Last Run: 2026-06-28 00:36 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_014 | ADM_CFG_014 | ✅ PASS | GHNG-1000008364-Q="allow" (lowercase), -G="ALLOW" (uppercase); Forbid baseline then mixed-case Allow; both → eligible; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 57.8s |

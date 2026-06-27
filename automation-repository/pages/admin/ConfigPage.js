@@ -289,6 +289,24 @@ class ConfigPage extends BasePage {
    * the update-registrations-status response (its body is a per-row result Excel).
    */
   async uploadRegStatusFile(filePath) {
+    // SHOW_UPLOAD_DATA=1 (headed): overlay the exact rows on-screen, pause, then upload —
+    // so a watcher sees, in real time, what data is being uploaded.
+    if (process.env.SHOW_UPLOAD_DATA) {
+      const XLSX = require('xlsx');
+      const wb = XLSX.readFile(filePath);
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+      await this.page.evaluate(({ rows, name }) => {
+        const old = document.getElementById('__upload_preview__'); if (old) old.remove();
+        const d = document.createElement('div');
+        d.id = '__upload_preview__';
+        d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#107c10;color:#fff;padding:14px 20px;font:15px/1.5 monospace;box-shadow:0 6px 18px rgba(0,0,0,.5)';
+        d.innerHTML = `<b>⬆ UPLOADING THIS FILE → ${name}</b><br>` +
+          rows.map((r) => (r || []).join('&nbsp;&nbsp;|&nbsp;&nbsp;')).join('<br>');
+        document.body.appendChild(d);
+      }, { rows, name: filePath.split(/[\\/]/).pop() });
+      await this.page.waitForTimeout(Number(process.env.DEMO_PAUSE_MS || 5000));
+      await this.page.evaluate(() => { const e = document.getElementById('__upload_preview__'); if (e) e.remove(); });
+    }
     const [chooser] = await Promise.all([
       this.page.waitForEvent('filechooser', { timeout: 10_000 }),
       this.section2UploadButton.click(),

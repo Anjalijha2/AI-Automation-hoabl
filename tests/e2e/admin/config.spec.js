@@ -707,4 +707,30 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(Number(restored.available_for_allocation)).toBe(Number(orig.available_for_allocation));
   });
 
+  test('ADM_CFG_014 — ADMIN-FS-Config-CMS §2 — Allocation Status is case-insensitive (allow/ALLOW)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-Q="allow" (lowercase), -G="ALLOW" (uppercase); Forbid baseline then mixed-case Allow; both → eligible; ALLOW_DESTRUCTIVE=1' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — uploads; set ALLOW_DESTRUCTIVE=1');
+    const path = require('path');
+    const reg = require('../../../db/queries/registration');
+    const dir = 'automation-repository/fixtures/config-uploads';
+    const Q = 'GHNG-1000008364-Q', G = 'GHNG-1000008364-G';
+    const availOf = async (n) => Number((await reg.getRegistrationUnitByNumber(n)).available_for_allocation);
+
+    await configPage.expectSectionVisible('registrationStatus');
+    // 1. Baseline: Forbid both → availableForAllocation=0.
+    await configPage.uploadRegStatusFile(path.resolve(path.join(dir, 'adm_cfg_014_forbid.xlsx')));
+    const qF = await availOf(Q), gF = await availOf(G);
+    console.log(`[ADM_CFG_014] after Forbid: Q=${qF} G=${gF}`);
+    expect(qF).toBe(0); expect(gF).toBe(0);
+
+    // 2. Mixed-case Allow ('allow' / 'ALLOW') → both accepted → availableForAllocation=1.
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('registrationStatus');
+    await configPage.uploadRegStatusFile(path.resolve(path.join(dir, 'adm_cfg_014_allow_mixedcase.xlsx')));
+    const qA = await availOf(Q), gA = await availOf(G);
+    console.log(`[ADM_CFG_014] after mixed-case Allow: Q(allow)=${qA} G(ALLOW)=${gA}`);
+    expect(qA).toBe(1); expect(gA).toBe(1); // both case variants accepted → restored to eligible
+  });
+
 });
