@@ -839,4 +839,13 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(Number((await reg.getRegistrationUnitByNumber(REG)).available_for_allocation)).toBe(1);
   });
 
+  test('ADM_CFG_079 — ADMIN-FS-Config-CMS §2 — Redis sync + Python /broadcast-registrations fan-out', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'N/A — cross-system side-effect; DB trigger verified by Goals 12–19' });
+    // The §2 update's downstream Redis cache sync and admin-backend → Python
+    // /broadcast-registrations fan-out are server-to-server side-effects, NOT observable
+    // from the Admin portal or this harness (no Redis client / Python-service log access).
+    // The upstream trigger (DB availableForAllocation/status write) is already verified.
+    test.skip(true, 'VERIFY WITH DEV: Redis/Python /broadcast-registrations fan-out not observable from Admin portal; DB trigger verified (Goals 12-19).');
+  });
+
 });

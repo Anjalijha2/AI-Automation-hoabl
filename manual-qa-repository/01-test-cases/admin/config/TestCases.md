@@ -253,3 +253,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_078 | ADM_CFG_078 | ✅ PASS | GHNG-1000008364-Q Forbid upload, network-monitored for notifications → none; restore Allow; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 30.5s |
+
+---
+
+## Last Run: 2026-06-28 01:23 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_079 | ADM_CFG_079 | ⏭ SKIP | N/A — cross-system side-effect; DB trigger verified by Goals 12–19 | Not executed | 3.0s |
