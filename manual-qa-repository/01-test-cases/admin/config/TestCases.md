@@ -245,3 +245,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_FSD_058 | ADM_CFG_FSD_058 | ✅ PASS | GHNG-1000008364-Q: Forbid→{WAITLIST,false} then Allow→{PREALLOCATED,true}; both fields; self-restore; ALLOW_DESTRUCTIVE=1 (campaign OFF) | All assertions matched expected | 42.3s |
+
+---
+
+## Last Run: 2026-06-28 01:15 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_078 | ADM_CFG_078 | ✅ PASS | GHNG-1000008364-Q Forbid upload, network-monitored for notifications → none; restore Allow; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 30.5s |

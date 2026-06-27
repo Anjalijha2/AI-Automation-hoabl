@@ -816,4 +816,27 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(a.avail).toBe(1); expect(a.status).toBe('PREALLOCATED');       // both fields written (Allow); -Q restored
   });
 
+  test('ADM_CFG_078 — ADMIN-FS-Config-CMS §2 — Registration Status update is silent (no notifications)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-Q Forbid upload, network-monitored for notifications → none; restore Allow; ALLOW_DESTRUCTIVE=1' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — upload; set ALLOW_DESTRUCTIVE=1 (campaign inactive)');
+    const path = require('path');
+    const reg = require('../../../db/queries/registration');
+    const REG = 'GHNG-1000008364-Q';
+    const notif = [];
+    page.on('request', (req) => { if (/kaleyra|epinet|whatsapp|sendsms|\/sms|sendmail|\/email|notif/i.test(req.url())) notif.push(`${req.method()} ${req.url()}`); });
+
+    await configPage.expectSectionVisible('registrationStatus');
+    await configPage.uploadRegStatusFile(path.resolve('automation-repository/fixtures/config-uploads/fsd058_Forbid.xlsx'));
+    console.log(`[ADM_CFG_078] notification calls during §2 upload: ${notif.length} ${JSON.stringify(notif.slice(0, 3))}`);
+    expect(Number((await reg.getRegistrationUnitByNumber(REG)).available_for_allocation)).toBe(0); // upload applied
+    expect(notif.length).toBe(0); // silent (FS Feature 2 §8)
+
+    // Restore -Q → Allow.
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('registrationStatus');
+    await configPage.uploadRegStatusFile(path.resolve('automation-repository/fixtures/config-uploads/fsd058_Allow.xlsx'));
+    expect(Number((await reg.getRegistrationUnitByNumber(REG)).available_for_allocation)).toBe(1);
+  });
+
 });
