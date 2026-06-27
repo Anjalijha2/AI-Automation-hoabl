@@ -128,12 +128,13 @@ class ConfigPage extends BasePage {
 
     // ── Section 8 — Customer Actions Card ─────────────────────────────────
     this.allowAdditionalRegToggle       = this._after('customerActionsCard', '*[@role="switch"]');
-    this.oneBedGrowthCheckbox           = this._after('customerActionsCard', 'input[@type="checkbox"]');
-    this.twoBedGrowthCheckbox           = this._sectionHeading('customerActionsCard').locator('xpath=following::input[@type="checkbox"][2]');
-    this.twoBedRiseCheckbox             = this._sectionHeading('customerActionsCard').locator('xpath=following::input[@type="checkbox"][3]');
+    // Checkboxes are role=checkbox named "Allow <typology>" (not raw inputs).
+    this.oneBedGrowthCheckbox           = page.getByRole('checkbox', { name: /1 Bed Growth Home/i });
+    this.twoBedGrowthCheckbox           = page.getByRole('checkbox', { name: /2 Bed Growth Home/i });
+    this.twoBedRiseCheckbox             = page.getByRole('checkbox', { name: /2 Bed Rise Home/i });
     this.section8SubmitButton           = this._after('customerActionsCard', SUBMIT);
-    // [BUG-REF: BUG-CFG-001] '2 Bed Peak Home' is server-side force-disabled
-    this.twoBedPeakHomeCheckbox         = this.page.locator('label:has-text("2 Bed Peak Home") input[type="checkbox"]');
+    // [BUG-REF: BUG-CFG-001] '2 Bed Peak Home' is server-side force-disabled (often absent from UI).
+    this.twoBedPeakHomeCheckbox         = page.getByRole('checkbox', { name: /2 Bed Peak Home/i });
 
     // ── Section 9 — Max Preferences Per Unit ──────────────────────────────
     this.maxPreferencesSelect           = this._after('maxPreferencesPerUnit', '*[@role="combobox" or self::select]');
@@ -151,10 +152,15 @@ class ConfigPage extends BasePage {
    * text. The section block is the nearest ancestor section/div that contains
    * the heading. Falls back gracefully if the DOM structure differs.
    */
-  /** The h5 heading element for a section (by SECTION_HEADINGS key), via a11y role. */
+  /**
+   * The section heading element (by SECTION_HEADINGS key), via a11y role.
+   * Substring match (live "Customer Actions Card" vs config "Customer Actions")
+   * + .first() (some titles repeat as an h5 section header AND an h6 subtitle,
+   * e.g. "Max Preferences Per Unit") — first occurrence is the section header.
+   */
   _sectionHeading(name) {
     const text = SECTION_HEADINGS[name] || name;
-    return this.page.getByRole('heading', { name: text, exact: true });
+    return this.page.getByRole('heading', { name: text }).first();
   }
 
   /**
