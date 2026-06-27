@@ -505,4 +505,34 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(activeAfter).toBe(activeBefore);
   });
 
+  test('ADM_CFG_073 — ADMIN-FS-Config-CMS §1 — tower save is silent (no SMS/WhatsApp/email)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'Tower: Aura (flip→save→restore); network-monitored for notification calls; ALLOW_DESTRUCTIVE=1' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — real save; set ALLOW_DESTRUCTIVE=1 + CFG_TOWER');
+    const TOWER = process.env.CFG_TOWER || 'Aura';
+    const inv = require('../../../db/queries/inventory');
+    await configPage.expectSectionVisible('towerConfiguration');
+    const initial = await configPage.toggleState(configPage.getTowerToggleByName(TOWER));
+
+    // Monitor for ANY buyer/SM notification dispatch during the save (Rule #6).
+    const notif = [];
+    page.on('request', (req) => {
+      if (/kaleyra|epinet|whatsapp|sendsms|\/sms|sendmail|\/email|notif/i.test(req.url())) notif.push(`${req.method()} ${req.url()}`);
+    });
+
+    await test.step('Flip + save (monitor notifications)', async () => {
+      await configPage.setTowersState([TOWER], !initial);
+      await page.waitForTimeout(1500);
+    });
+    console.log(`[ADM_CFG_073] notification calls during save: ${notif.length} ${JSON.stringify(notif.slice(0, 3))}`);
+    expect(notif.length).toBe(0); // silent by design (FS Feature 1 §8)
+
+    // Restore.
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.setTowersState([TOWER], initial);
+    const restored = Number((await inv.getTowerByName(TOWER)).is_active);
+    console.log(`[ADM_CFG_073] ${TOWER} restored db=${restored} (expected ${initial ? 1 : 0})`);
+    expect(restored).toBe(initial ? 1 : 0);
+  });
+
 });

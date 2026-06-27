@@ -157,3 +157,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_FSD_057 | ADM_CFG_FSD_057 | ✅ PASS | PUT towers/status-update batch; flip Aura (id) → restore; admin JWT; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 20.6s |
+
+---
+
+## Last Run: 2026-06-27 23:03 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_073 | ADM_CFG_073 | ✅ PASS | Tower: Aura (flip→save→restore); network-monitored for notification calls; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 30.7s |
