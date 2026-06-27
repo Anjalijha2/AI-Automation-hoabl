@@ -189,3 +189,19 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_011 | ADM_CFG_011 | ✅ PASS | none — download + parse Section 2 sample template | All assertions matched expected | 3.6s |
+
+---
+
+## Last Run: 2026-06-27 23:53 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_012 | ADM_CFG_012 | ❌ FAIL | Registration: GHNG-1000008364 — upload Allocation Status Forbid(baseline)→Allow; verify availableForAllocation true; self-restores to original; ALLOW_DESTRUCTIVE=1 | See error-context.md in test-results/ | 22.7s |
+
+---
+
+## Last Run: 2026-06-27 23:55 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_012 | ADM_CFG_012 | ✅ PASS | Registration: GHNG-1000008364 — upload Allocation Status Forbid(baseline)→Allow; verify availableForAllocation true; self-restores to original; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 31.4s |

@@ -37,10 +37,18 @@ async function getRegistrationUnitById(id) {
   ).then(rows => rows[0] || null);
 }
 
+async function getRegistrationUnitByNumber(regNumber) {
+  return sequelize.query(
+    'SELECT * FROM registration_units WHERE registration_number = :regNumber AND deleted_at IS NULL LIMIT 1',
+    { replacements: { regNumber }, type: sequelize.QueryTypes.SELECT }
+  ).then(rows => rows[0] || null);
+}
+
 module.exports = {
   getRegistrationByNumber,
   getRegistrationsByBroker,
   getRegistrationsByUser,
   getRegistrationUnitsByRegId,
   getRegistrationUnitById,
+  getRegistrationUnitByNumber,
 };

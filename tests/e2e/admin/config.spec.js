@@ -607,4 +607,71 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(dataRows.length).toBeGreaterThan(0); // populated with current registrations
   });
 
+  test('ADM_CFG_012 — ADMIN-FS-Config-CMS §2 — upload Allow → registration availableForAllocation=true', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'Registration: GHNG-1000008364 — upload Allocation Status Forbid(baseline)→Allow; verify availableForAllocation true; self-restores to original; ALLOW_DESTRUCTIVE=1' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — mutates registration eligibility; set ALLOW_DESTRUCTIVE=1 + CFG_REG');
+    const XLSX = require('xlsx'); const path = require('path'); const fs = require('fs');
+    const reg = require('../../../db/queries/registration');
+    // §2 keys on the unit-level registration_number (e.g. GHNG-1000008364-Q), which
+    // must be eligible (Registered/PREALLOCATED, not allocated). The bare parent reg is rejected.
+    const REG = process.env.CFG_REG || 'GHNG-1000008364-Q';
+    const avail = async () => Number((await reg.getRegistrationUnitByNumber(REG)).available_for_allocation);
+
+    const uploadStatus = async (status) => {
+      const dir = 'automation-repository/fixtures/config-uploads'; fs.mkdirSync(dir, { recursive: true });
+      const fp = path.resolve(path.join(dir, `reg-status-${status}.xlsx`));
+      const ws = XLSX.utils.aoa_to_sheet([['Registration Number', 'Allocation Status'], [REG, status]]);
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); XLSX.writeFile(wb, fp);
+      // Attach via the file-chooser the "Upload File" button opens (the UI's real path).
+      const [chooser] = await Promise.all([
+        page.waitForEvent('filechooser', { timeout: 10_000 }),
+        configPage.section2UploadButton.click(),
+      ]);
+      await chooser.setFiles(fp);
+      await page.waitForTimeout(900);
+      const respP = page.waitForResponse((r) => /update-registrations-status/i.test(r.url()), { timeout: 20_000 }).catch(() => null);
+      await configPage.section2SubmitButton.click();
+      const resp = await respP;
+      if (resp) {
+        const buf = await resp.body().catch(() => null);
+        const ct = (resp.headers()['content-type'] || '');
+        if (buf && /spreadsheet|octet|xlsx|excel/i.test(ct)) {
+          try {
+            const rwb = XLSX.read(buf, { type: 'buffer' });
+            const rrows = XLSX.utils.sheet_to_json(rwb.Sheets[rwb.SheetNames[0]], { header: 1 });
+            console.log(`[ADM_CFG_012] ${status} result-file rows: ${JSON.stringify(rrows.slice(0, 4))}`);
+          } catch (e) { console.log(`[ADM_CFG_012] ${status} result-file parse err: ${e.message}`); }
+        } else {
+          console.log(`[ADM_CFG_012] ${status}: response ${resp.status()} ct=${ct} body=${buf ? buf.toString().slice(0, 200) : ''}`);
+        }
+      }
+      await page.waitForLoadState('networkidle').catch(() => {});
+      await page.waitForTimeout(1800);
+    };
+
+    const original = await avail();
+    console.log(`[ADM_CFG_012] ${REG} original availableForAllocation=${original}`);
+    await configPage.expectSectionVisible('registrationStatus');
+    await uploadStatus('Forbid');                                   // baseline → false
+    const afterForbid = await avail();
+    console.log(`[ADM_CFG_012] after Forbid=${afterForbid}`);
+    expect(afterForbid).toBe(0);
+
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('registrationStatus');
+    await uploadStatus('Allow');                                    // the assertion → true
+    const afterAllow = await avail();
+    console.log(`[ADM_CFG_012] after Allow=${afterAllow} (expect 1; original was ${original})`);
+    expect(afterAllow).toBe(1);                                     // Allow → availableForAllocation true
+
+    // Guaranteed restore to original (original was 1 → afterAllow already 1).
+    if (afterAllow !== original) {
+      await configPage.navigate(); await configPage.waitForLoad();
+      await configPage.expectSectionVisible('registrationStatus');
+      await uploadStatus(original === 1 ? 'Allow' : 'Forbid');
+    }
+    expect(await avail()).toBe(original);
+  });
+
 });
