@@ -135,3 +135,17 @@
 | BUG_NNN | TC_CONFIG_XXX_NNN | P1/P2/P3 | (numbered) | (observed) | (per BRD) | UAT / Prod | Open / Fixed / Closed |
 
 **Known bug already on tracker:** BUG_010 — Registration Status section: Submit with no file selected fails silently (BRD §7, §10). Covered by TC_CONFIG_NEG_002.
+
+---
+
+## Last Run: 2026-06-27 21:46 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_004 | ADM_CFG_004 | ✅ PASS | none — read-only state read (no input) | All assertions matched expected | 3.3s |
+| ADM_CFG_007 | ADM_CFG_007 | ✅ PASS | none — read-only (no input) | All assertions matched expected | 3.1s |
+| ADM_CFG_070 | ADM_CFG_070 | ✅ PASS | none — read-only enumeration (no input) | All assertions matched expected | 2.8s |
+| ADM_CFG_005 | ADM_CFG_005 | ✅ PASS | first tower card — flipped then reloaded WITHOUT saving (no persistence) | All assertions matched expected | 4.6s |
+| ADM_CFG_008 | ADM_CFG_008 | ✅ PASS | Tower: Crest (View Tower link) | All assertions matched expected | 3.1s |
+| ADM_CFG_071 | ADM_CFG_071 | ✅ PASS | Tower: Aura (flip Active→Inactive→Save→restore); ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 29.0s |
+| ADM_CFG_072 | ADM_CFG_072 | ✅ PASS | route-mock: PUT /admin/towers/status-update → 500 (simulated; no real save) | All assertions matched expected | 4.7s |

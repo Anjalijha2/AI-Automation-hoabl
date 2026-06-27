@@ -307,6 +307,7 @@ test.describe('Config — Admin Portal E2E', () => {
   // ════════════════════════════════════════════════════════════════════════
 
   test('ADM_CFG_004 — ADMIN-FS-Config-CMS §1 — tower default toggle state (record actual)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only state read (no input)' });
     // Read-only: record the live Active/Inactive state of all 18 tower toggles.
     // xlsx flags a BRD-vs-visual CONFLICT — we record ACTUAL and surface divergence.
     await configPage.expectSectionVisible('towerConfiguration');
@@ -318,6 +319,7 @@ test.describe('Config — Admin Portal E2E', () => {
   });
 
   test('ADM_CFG_007 — ADMIN-FS-Config-CMS §1 — each tower card exposes View Tower + a state toggle', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only (no input)' });
     await configPage.expectSectionVisible('towerConfiguration');
     const cards = await configPage.towerCards.count();
     expect(cards).toBe(18); // 18 tower cards
@@ -330,6 +332,7 @@ test.describe('Config — Admin Portal E2E', () => {
   });
 
   test('ADM_CFG_070 — ADMIN-FS-Config-CMS §1 — exact control inventory: 18 toggles, 18 View Tower, 1 Update', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only enumeration (no input)' });
     await configPage.expectSectionVisible('towerConfiguration');
     const cards = await configPage.towerCards.count();
     const viewLinks = await configPage.viewTowerLink.count();
@@ -343,6 +346,7 @@ test.describe('Config — Admin Portal E2E', () => {
   });
 
   test('ADM_CFG_005 — ADMIN-FS-Config-CMS §1 — toggle change not persisted until Update (reload discards)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'first tower card — flipped then reloaded WITHOUT saving (no persistence)' });
     // Flip the first tower toggle, reload WITHOUT clicking Update → must revert.
     // Non-destructive: nothing is saved (BRD §6 rule 1).
     await configPage.expectSectionVisible('towerConfiguration');
@@ -364,6 +368,7 @@ test.describe('Config — Admin Portal E2E', () => {
   });
 
   test('ADM_CFG_008 — ADMIN-FS-Config-CMS §1 — View Tower (Crest) navigates to Towers module', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'Tower: Crest (View Tower link)' });
     // Cross-module navigation — read-only.
     await configPage.expectSectionVisible('towerConfiguration');
     await configPage.clickViewTowerByName('Crest');
@@ -372,6 +377,7 @@ test.describe('Config — Admin Portal E2E', () => {
   });
 
   test('ADM_CFG_071 — ADMIN-FS-Config-CMS §1 — deactivating a tower saves (no minimum-active block)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'Tower: Aura (flip Active→Inactive→Save→restore); ALLOW_DESTRUCTIVE=1' });
     // DESTRUCTIVE — guarded. Safe variant: flip ONE tower off → Update (save) →
     // confirm persisted (no min-active validation blocked it) → flip back → restore.
     test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
@@ -421,6 +427,7 @@ test.describe('Config — Admin Portal E2E', () => {
   });
 
   test('ADM_CFG_009 — ADMIN-FS-Config-CMS §1 — set ALL towers Inactive saves; Active KPI=0 (edge)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'all 16 active towers (Dawn..Grand) disabled then restored; snapshot-anchored; ALLOW_DESTRUCTIVE=1' });
     // ⛔ HIGH-IMPACT DESTRUCTIVE. Snapshot-anchored: disable all active towers,
     // verify (UI 0 active + DB active-count 0), then RESTORE every originally-active
     // tower and HARD-VERIFY the DB matches the original snapshot.
@@ -472,6 +479,30 @@ test.describe('Config — Admin Portal E2E', () => {
     }
     console.log(`[ADM_CFG_009] restored DB active=${dbActiveNow} (expected ${originalActive.length})`);
     expect(dbActiveNow).toBe(originalActive.length); // every original active tower back
+  });
+
+  test('ADM_CFG_072 — ADMIN-FS-Config-CMS §1 — tower save handles a 500 (record actual behaviour)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'route-mock: PUT /admin/towers/status-update → 500 (simulated; no real save)' });
+    // Non-destructive: the save call is intercepted and forced to 500, so nothing persists.
+    const inv = require('../../../db/queries/inventory');
+    const activeBefore = (await inv.getTowers()).filter((t) => Number(t.is_active) === 1).length;
+    await configPage.expectSectionVisible('towerConfiguration');
+    await page.route('**/admin/towers/status-update', (route) =>
+      route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ message: 'Internal Server Error' }) }));
+    // Flip a toggle and attempt to save (the save hits the mocked 500).
+    await page.locator('[role="switch"], .ant-switch').first().click();
+    await page.waitForTimeout(400);
+    await configPage.clickUpdateTowerConfiguration();
+    await page.waitForTimeout(1500);
+    const errorToast = await page.getByText(/error|failed|something went wrong|try again/i).first().isVisible().catch(() => false);
+    const stillOnConfig = /\/admin\/(cms|config)/.test(page.url());
+    console.log(`[ADM_CFG_072] on500: errorToast=${errorToast} stillOnConfig=${stillOnConfig}`);
+    await page.unroute('**/admin/towers/status-update');
+    expect(stillOnConfig).toBe(true); // no crash / no redirect on save failure
+    // DB safety: the mocked failure persisted nothing — active count unchanged.
+    const activeAfter = (await inv.getTowers()).filter((t) => Number(t.is_active) === 1).length;
+    console.log(`[ADM_CFG_072] DB active before=${activeBefore} after=${activeAfter} (must match — no mutation)`);
+    expect(activeAfter).toBe(activeBefore);
   });
 
 });

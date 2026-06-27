@@ -56,6 +56,7 @@ const MODULE_MD_PATH = {
   Customers: path.join(__dirname, '..', 'manual-qa-repository', '01-test-cases', 'admin', 'customers', 'TestCases.md'),
   Allocation: path.join(__dirname, '..', 'manual-qa-repository', '01-test-cases', 'admin', 'allocation', 'TestCases.md'),
   Login:      path.join(__dirname, '..', 'manual-qa-repository', '01-test-cases', 'admin', 'login', 'TestCases.md'),
+  Config:     path.join(__dirname, '..', 'manual-qa-repository', '01-test-cases', 'admin', 'config', 'TestCases.md'),
 };
 const mdPath = MODULE_MD_PATH[moduleArg];
 if (!mdPath || !fs.existsSync(mdPath)) {
