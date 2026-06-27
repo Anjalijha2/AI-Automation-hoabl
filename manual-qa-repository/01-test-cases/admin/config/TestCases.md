@@ -269,3 +269,12 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_080 | ADM_CFG_080 | ✅ PASS | none — read-only enumeration | All assertions matched expected | 3.1s |
+
+---
+
+## Last Run: 2026-06-28 02:18 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_017 | ADM_CFG_017 | ✅ PASS | unit_no 302 (unit_id testUnit-547664512575, Crest, 1 BHK Growth Home): RESERVED baseline → AVAILABLE; Update=1; self-restore; ALLOW_DESTRUCTIVE=1 (campaign off). NOTE: §3 unit-status API validates the testUnit-/Crest dataset only — Tower 10/Unit-xxx units return "Invalid Unit ID". | DB-verified RESERVED then AVAILABLE; API result "Updated AVAILABLE → RESERVED" / "Updated RESERVED → AVAILABLE" | 30.4s |
+

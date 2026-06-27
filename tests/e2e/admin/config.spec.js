@@ -864,4 +864,38 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(hasCounter).toBe(true); // "Total active/inactive unit: N"
   });
 
+  test('ADM_CFG_017 — ADMIN-FS-Config-CMS §3 — upload Status=AVAILABLE Update=1 sets unit Available', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (unit_id testUnit-547664512575, Crest, 1 BHK Growth Home): RESERVED baseline then AVAILABLE; Update=1; self-restore to AVAILABLE; ALLOW_DESTRUCTIVE=1 (campaign off). NOTE: §3 unit-status API validates against the testUnit-/Crest dataset only — Tower 10/Unit-xxx units return "Invalid Unit ID".' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — unit-status upload; set ALLOW_DESTRUCTIVE=1 (campaign inactive)');
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UNIT_ID = process.env.CFG_UNIT_ID || 'testUnit-547664512575', UNIT_NO = process.env.CFG_UNIT_NO || '302';
+    const TOWER = 'Crest', TYPID = 'testtypology-1757656549935', TYPNAME = '1 BHK Growth Home';
+    const statusOf = async () => String((await inv.getUnitByUnitId(UNIT_ID)).status).toUpperCase();
+    const fileFor = (status) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/unit-status-${status}.xlsx`);
+      const ws = X.utils.aoa_to_sheet([
+        ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Status', 'Update (1/0)'],
+        [TOWER, TYPID, TYPNAME, UNIT_ID, UNIT_NO, status, 1],
+      ]);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, 'S1'); X.writeFile(wb, fp); return fp;
+    };
+
+    const orig = await statusOf();
+    await configPage.expectSectionVisible('unitStatus');
+    // Baseline → RESERVED.
+    await configPage.uploadUnitStatusFile(fileFor('RESERVED'));
+    const afterR = await statusOf();
+    console.log(`[ADM_CFG_017] orig=${orig} afterRESERVED=${afterR}`);
+    expect(afterR).toBe('RESERVED');
+    // Assertion → AVAILABLE (017).
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('unitStatus');
+    await configPage.uploadUnitStatusFile(fileFor('AVAILABLE'));
+    const afterA = await statusOf();
+    console.log(`[ADM_CFG_017] afterAVAILABLE=${afterA}`);
+    expect(afterA).toBe('AVAILABLE'); // Status=AVAILABLE applied; unit restored
+  });
+
 });

@@ -97,10 +97,13 @@ class ConfigPage extends BasePage {
     this.section2SubmitButton      = this._after('registrationStatus', SUBMIT);
 
     // ── Section 3 — Unit Status ───────────────────────────────────────────
-    this.section3SampleDownload    = this._after('unitStatus', SAMPLE);
-    this.section3UploadButton      = this._after('unitStatus', UPLOAD);
-    this.section3FileInput         = this._after('unitStatus', FILEIN);
-    this.section3SubmitButton      = this._after('unitStatus', SUBMIT);
+    // §3 controls scoped to the section's own .form-section-wrapper (robust;
+    // the flat `following::` walk hung here — see _sectionWrap()).
+    this.section3Wrap              = this._sectionWrap('unitStatus');
+    this.section3SampleDownload    = this.section3Wrap.getByRole('button', { name: /Sample|Download/i });
+    this.section3UploadButton      = this.section3Wrap.getByRole('button', { name: /Upload/i });
+    this.section3FileInput         = this.section3Wrap.locator('input[type="file"]');
+    this.section3SubmitButton      = this.section3Wrap.getByRole('button', { name: /^Submit$/i });
 
     // ── Section 4 — Unit Cost Update ──────────────────────────────────────
     this.availableUnitInventoryDownload = this._after('unitCostUpdate', SAMPLE);
@@ -170,6 +173,19 @@ class ConfigPage extends BasePage {
    */
   _after(name, xpathTail) {
     return this._sectionHeading(name).locator(`xpath=following::${xpathTail}[1]`);
+  }
+
+  /**
+   * The `.form-section-wrapper` that CONTAINS a section's heading. The Config page
+   * actually renders one `.form-section-wrapper` per section (9 total) — scoping
+   * controls to the wrapper is far more robust than the flat `following::` walk,
+   * which can cross section boundaries or resolve detached nodes (caused §3 hangs).
+   */
+  _sectionWrap(name) {
+    const text = SECTION_HEADINGS[name] || name;
+    return this.page
+      .locator('.form-section-wrapper', { has: this.page.getByRole('heading', { name: text }) })
+      .first();
   }
 
   _sectionBlock(headingText) {
@@ -321,6 +337,36 @@ class ConfigPage extends BasePage {
     return resp;
   }
 
+  /**
+   * Upload a file to Section 3 (Unit Status) via the file-chooser, then Submit.
+   * Mirrors uploadRegStatusFile (incl. the SHOW_UPLOAD_DATA banner). Returns the response.
+   */
+  async uploadUnitStatusFile(filePath) {
+    if (process.env.SHOW_UPLOAD_DATA) {
+      const XLSX = require('xlsx');
+      const rows = XLSX.utils.sheet_to_json(XLSX.readFile(filePath).Sheets[XLSX.readFile(filePath).SheetNames[0]], { header: 1 });
+      await this.page.evaluate(({ rows, name }) => {
+        const old = document.getElementById('__upload_preview__'); if (old) old.remove();
+        const d = document.createElement('div'); d.id = '__upload_preview__';
+        d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#107c10;color:#fff;padding:14px 20px;font:14px/1.5 monospace;box-shadow:0 6px 18px rgba(0,0,0,.5)';
+        d.innerHTML = `<b>⬆ UPLOADING → Section 3 (Unit Status): ${name}</b><br>` + rows.map((r) => (r || []).join('&nbsp;|&nbsp;')).join('<br>');
+        document.body.appendChild(d);
+      }, { rows, name: filePath.split(/[\\/]/).pop() });
+      await this.page.waitForTimeout(Number(process.env.DEMO_PAUSE_MS || 5000));
+      await this.page.evaluate(() => { const e = document.getElementById('__upload_preview__'); if (e) e.remove(); });
+    }
+    // The §3 wrapper has a real <input type=file> — attach to it directly (more
+    // reliable than the file-chooser, which the "Upload File" button triggers).
+    await this.section3FileInput.setInputFiles(filePath);
+    await this.page.waitForTimeout(900);
+    const respP = this.page.waitForResponse((r) => r.request().method() !== 'GET' && /admin\//i.test(r.url()), { timeout: 30_000 }).catch(() => null);
+    await this.section3SubmitButton.click();
+    const resp = await respP;
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1500);
+    return resp;
+  }
+
   /** The Active/Inactive toggle on the tower card whose heading contains `name`. */
   getTowerToggleByName(name) {
     const heading = this.page.getByRole('heading', { name: new RegExp(name, 'i') }).first();
@@ -369,12 +415,6 @@ class ConfigPage extends BasePage {
 
   async uploadRegistrationStatusFile(filePath) {
     await this.section2FileInput.setInputFiles(filePath);
-  }
-
-  // ── Section 3 — Unit Status ────────────────────────────────────────────
-
-  async uploadUnitStatusFile(filePath) {
-    await this.section3FileInput.setInputFiles(filePath);
   }
 
   // ── Section 4 — Unit Cost Update ───────────────────────────────────────
