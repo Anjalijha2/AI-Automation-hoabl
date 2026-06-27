@@ -283,6 +283,26 @@ class ConfigPage extends BasePage {
     await this.click(this.towerToggles.nth(idx));
   }
 
+  /**
+   * Upload a file to Section 2 (Registration Status) via the file-chooser the
+   * "Upload File" button opens (the UI's real attach path), then Submit. Returns
+   * the update-registrations-status response (its body is a per-row result Excel).
+   */
+  async uploadRegStatusFile(filePath) {
+    const [chooser] = await Promise.all([
+      this.page.waitForEvent('filechooser', { timeout: 10_000 }),
+      this.section2UploadButton.click(),
+    ]);
+    await chooser.setFiles(filePath);
+    await this.page.waitForTimeout(900);
+    const respP = this.page.waitForResponse((r) => /update-registrations-status/i.test(r.url()), { timeout: 20_000 }).catch(() => null);
+    await this.section2SubmitButton.click();
+    const resp = await respP;
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1500);
+    return resp;
+  }
+
   /** The Active/Inactive toggle on the tower card whose heading contains `name`. */
   getTowerToggleByName(name) {
     const heading = this.page.getByRole('heading', { name: new RegExp(name, 'i') }).first();

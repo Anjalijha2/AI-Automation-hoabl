@@ -205,3 +205,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_012 | ADM_CFG_012 | ✅ PASS | Registration: GHNG-1000008364 — upload Allocation Status Forbid(baseline)→Allow; verify availableForAllocation true; self-restores to original; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 31.4s |
+
+---
+
+## Last Run: 2026-06-28 00:05 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_013 | ADM_CFG_013 | ✅ PASS | Registration: GHNG-1000008364-Q — upload Forbid → availableForAllocation=false (status WAITLIST) → restore Allow; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 31.5s |

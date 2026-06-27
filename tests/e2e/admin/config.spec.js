@@ -674,4 +674,37 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(await avail()).toBe(original);
   });
 
+  test('ADM_CFG_013 — ADMIN-FS-Config-CMS §2 — upload Forbid blocks registration (availableForAllocation=false)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'Registration: GHNG-1000008364-Q — upload Forbid → availableForAllocation=false (status WAITLIST) → restore Allow; ALLOW_DESTRUCTIVE=1' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — mutates eligibility; set ALLOW_DESTRUCTIVE=1 + CFG_REG');
+    const XLSX = require('xlsx'); const path = require('path'); const fs = require('fs');
+    const reg = require('../../../db/queries/registration');
+    const REG = process.env.CFG_REG || 'GHNG-1000008364-Q';
+    const unit = async () => reg.getRegistrationUnitByNumber(REG);
+    const buildAndUpload = async (status) => {
+      const dir = 'automation-repository/fixtures/config-uploads'; fs.mkdirSync(dir, { recursive: true });
+      const fp = path.resolve(path.join(dir, `reg-status-${status}.xlsx`));
+      const ws = XLSX.utils.aoa_to_sheet([['Registration Number', 'Allocation Status'], [REG, status]]);
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); XLSX.writeFile(wb, fp);
+      return configPage.uploadRegStatusFile(fp);
+    };
+
+    const orig = await unit();
+    await configPage.expectSectionVisible('registrationStatus');
+    await buildAndUpload('Forbid');
+    const afterForbid = await unit();
+    console.log(`[ADM_CFG_013] after Forbid: avail=${afterForbid.available_for_allocation} status=${afterForbid.status}`);
+    expect(Number(afterForbid.available_for_allocation)).toBe(0);       // blocked from campaign
+    expect(String(afterForbid.status).toUpperCase()).toMatch(/WAITLIST|FORBID|BLOCK/); // excluded state
+
+    // Restore to original.
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('registrationStatus');
+    await buildAndUpload('Allow');
+    const restored = await unit();
+    console.log(`[ADM_CFG_013] restored avail=${restored.available_for_allocation} (orig ${orig.available_for_allocation})`);
+    expect(Number(restored.available_for_allocation)).toBe(Number(orig.available_for_allocation));
+  });
+
 });
