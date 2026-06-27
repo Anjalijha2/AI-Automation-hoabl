@@ -283,6 +283,17 @@ class ConfigPage extends BasePage {
     await this.click(this.towerToggles.nth(idx));
   }
 
+  /** Click the "View Tower" link on the card whose heading contains `name` (e.g. "Crest"). */
+  async clickViewTowerByName(name) {
+    const heading = this.page.getByRole('heading', { name: new RegExp(name, 'i') }).first();
+    const btn = heading.locator('xpath=following::button[contains(normalize-space(.),"View Tower")][1]');
+    await btn.scrollIntoViewIfNeeded().catch(() => {});
+    await Promise.all([
+      this.page.waitForURL(/\/admin\/towers/, { timeout: 15_000 }).catch(() => {}),
+      btn.click(),
+    ]);
+  }
+
   // ── Section 2 — Registration Status ────────────────────────────────────
 
   async uploadRegistrationStatusFile(filePath) {

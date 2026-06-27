@@ -355,10 +355,19 @@ test.describe('Config — Admin Portal E2E', () => {
     await configPage.page.waitForTimeout(400);
     const flipped = await readState(sw);
     expect(flipped).not.toBe(before); // UI reflects the unsaved flip
+    if (process.env.DEMO_PAUSE_MS) await configPage.page.waitForTimeout(Number(process.env.DEMO_PAUSE_MS)); // watch the flipped state
     await configPage.navigate(); // reload without saving
     await configPage.waitForLoad();
     const after = await readState(configPage.page.locator('[role="switch"], .ant-switch').first());
     console.log(`[ADM_CFG_005] before=${before} flipped=${flipped} afterReload=${after}`);
     expect(after).toBe(before); // reverted — unsaved change discarded
+  });
+
+  test('ADM_CFG_008 — ADMIN-FS-Config-CMS §1 — View Tower (Crest) navigates to Towers module', async ({ page }) => {
+    // Cross-module navigation — read-only.
+    await configPage.expectSectionVisible('towerConfiguration');
+    await configPage.clickViewTowerByName('Crest');
+    await expect(page).toHaveURL(/\/admin\/towers/);
+    console.log(`[ADM_CFG_008] navigated to ${page.url()}`);
   });
 });
