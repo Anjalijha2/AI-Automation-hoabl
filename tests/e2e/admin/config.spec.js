@@ -759,4 +759,33 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(after).toBe(before); // no mutation on rejection
   });
 
+  test('ADM_CFG_077 — ADMIN-FS-Config-CMS §2 — WINNER rows excluded from Registration Status update', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'Upload Forbid for -C (WINNER) + -Q (normal): WINNER skipped (unchanged), normal applied; restore -Q; ALLOW_DESTRUCTIVE=1 (campaign OFF)' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — uploads; set ALLOW_DESTRUCTIVE=1 (campaign must be inactive)');
+    const path = require('path');
+    const reg = require('../../../db/queries/registration');
+    const WINNER = 'GHNG-1000008364-C', NORMAL = 'GHNG-1000008364-Q';
+    const stateOf = async (n) => { const u = await reg.getRegistrationUnitByNumber(n); return { status: u.status, avail: Number(u.available_for_allocation) }; };
+
+    const wBefore = await stateOf(WINNER), nBefore = await stateOf(NORMAL);
+    await configPage.expectSectionVisible('registrationStatus');
+    await configPage.uploadRegStatusFile(path.resolve('automation-repository/fixtures/config-uploads/adm_cfg_077_winner_normal.xlsx'));
+    const wAfter = await stateOf(WINNER), nAfter = await stateOf(NORMAL);
+    console.log(`[ADM_CFG_077] WINNER(-C) before=${JSON.stringify(wBefore)} after=${JSON.stringify(wAfter)}`);
+    console.log(`[ADM_CFG_077] NORMAL(-Q) before=${JSON.stringify(nBefore)} after=${JSON.stringify(nAfter)}`);
+    // WINNER row excluded (skipped) — unchanged; NORMAL row applied (Forbid → avail 0 / WAITLIST).
+    expect(wAfter.status).toBe('WINNER');
+    expect(wAfter.avail).toBe(wBefore.avail);  // WINNER untouched
+    expect(nAfter.avail).toBe(0);              // normal row applied
+
+    // Restore -Q to eligible.
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('registrationStatus');
+    const restoreFp = path.resolve('automation-repository/fixtures/config-uploads/reg-status-Allow.xlsx');
+    require('xlsx').writeFile((() => { const X = require('xlsx'); const ws = X.utils.aoa_to_sheet([['Registration Number', 'Allocation Status'], [NORMAL, 'Allow']]); const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, 'S1'); return wb; })(), restoreFp);
+    await configPage.uploadRegStatusFile(restoreFp);
+    expect((await stateOf(NORMAL)).avail).toBe(1);
+  });
+
 });

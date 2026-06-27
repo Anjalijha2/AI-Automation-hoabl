@@ -229,3 +229,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_076 | ADM_CFG_076 | ✅ PASS | GHNG-1000008364-Q Forbid upload while campaign ACTIVE → expect rejection ("campaign is active"), no mutation; ALLOW_DESTRUCTIVE=1 | All assertions matched expected | 33.2s |
+
+---
+
+## Last Run: 2026-06-28 01:02 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_077 | ADM_CFG_077 | ✅ PASS | Upload Forbid for -C (WINNER) + -Q (normal): WINNER skipped (unchanged), normal applied; restore -Q; ALLOW_DESTRUCTIVE=1 (campaign OFF) | All assertions matched expected | 54.5s |
