@@ -848,4 +848,20 @@ test.describe('Config — Admin Portal E2E', () => {
     test.skip(true, 'VERIFY WITH DEV: Redis/Python /broadcast-registrations fan-out not observable from Admin portal; DB trigger verified (Goals 12-19).');
   });
 
+  // ════════════════════════════════════════════════════════════════════════
+  // Section 3 — Unit Status (Bulk Upload)
+  // ════════════════════════════════════════════════════════════════════════
+
+  test('ADM_CFG_080 — ADMIN-FS-Config-CMS §3 — Section 3 control inventory + unit counters', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only enumeration' });
+    await configPage.expectSectionVisible('unitStatus');
+    await expect(configPage.section3SampleDownload).toBeVisible();
+    await expect(configPage.section3UploadButton).toBeVisible();
+    await expect(configPage.section3SubmitButton).toBeVisible();
+    const body = (await page.locator('body').innerText()).toLowerCase();
+    const hasCounter = /active unit/.test(body) || /inactive unit/.test(body);
+    console.log(`[ADM_CFG_080] sample+upload+submit visible; unit-counter text present=${hasCounter}`);
+    expect(hasCounter).toBe(true); // "Total active/inactive unit: N"
+  });
+
 });

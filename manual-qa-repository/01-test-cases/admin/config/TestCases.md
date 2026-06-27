@@ -261,3 +261,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_079 | ADM_CFG_079 | ⏭ SKIP | N/A — cross-system side-effect; DB trigger verified by Goals 12–19 | Not executed | 3.0s |
+
+---
+
+## Last Run: 2026-06-28 01:27 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_080 | ADM_CFG_080 | ✅ PASS | none — read-only enumeration | All assertions matched expected | 3.1s |
