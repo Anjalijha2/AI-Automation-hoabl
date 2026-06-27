@@ -301,4 +301,19 @@ test.describe('Config — Admin Portal E2E', () => {
       expect(typeof visible).toBe('boolean');
     }
   });
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Section 1 — Tower Configuration (coverage gaps)
+  // ════════════════════════════════════════════════════════════════════════
+
+  test('ADM_CFG_004 — ADMIN-FS-Config-CMS §1 — tower default toggle state (record actual)', async () => {
+    // Read-only: record the live Active/Inactive state of all 18 tower toggles.
+    // xlsx flags a BRD-vs-visual CONFLICT — we record ACTUAL and surface divergence.
+    await configPage.expectSectionVisible('towerConfiguration');
+    const { total, active, inactive } = await configPage.readTowerToggleStates();
+    console.log(`[ADM_CFG_004] towers=${total} active=${active} inactive=${inactive}`);
+    expect(total).toBe(18);
+    expect(active + inactive).toBe(total);
+    expect(active).toBeGreaterThan(0); // not all towers off on the seed
+  });
 });

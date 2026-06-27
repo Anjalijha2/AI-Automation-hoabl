@@ -255,6 +255,26 @@ class ConfigPage extends BasePage {
     return this.towerCards.count();
   }
 
+  /**
+   * Read the Active/Inactive state of the tower toggles (read-only). Tower
+   * switches render before the Customer Actions master toggle, so the first
+   * `towerCount` switches are the towers. Returns { total, active, inactive }.
+   */
+  async readTowerToggleStates() {
+    const towerCount = await this.getTowerCardCount();
+    const switches = this.page.locator('[role="switch"], .ant-switch');
+    await switches.first().waitFor({ state: 'visible', timeout: 10_000 }).catch(() => {});
+    let active = 0, inactive = 0;
+    for (let i = 0; i < towerCount; i++) {
+      const sw = switches.nth(i);
+      const on = await sw.evaluate(
+        (el) => el.getAttribute('aria-checked') === 'true' || el.classList.contains('ant-switch-checked')
+      ).catch(() => false);
+      if (on) active++; else inactive++;
+    }
+    return { total: towerCount, active, inactive };
+  }
+
   async clickUpdateTowerConfiguration() {
     await this.click(this.updateTowerConfigButton);
   }
