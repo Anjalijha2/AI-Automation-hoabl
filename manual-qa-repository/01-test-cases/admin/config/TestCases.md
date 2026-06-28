@@ -425,3 +425,11 @@
 | ADM_CFG_103 | ADM_CFG_103 | ✅ PASS | none — read-only; open first §8 count select and assert it lists numeric option values (bounds of the count select) | All assertions matched expected | 4.7s |
 | ADM_CFG_106 | ADM_CFG_106 | ✅ PASS | none — read-only control enumeration | All assertions matched expected | 4.0s |
 | ADM_CFG_045 | ADM_CFG_045 | ✅ PASS | none — read-only. FINDING: UI Max-Pref dropdown offers only 1–10 (subset), not the full 0–255 (BRD §6 r10); 0–255 is the API bound (ADM_CFG_110). Assert UI options numeric ⊆ [0,255]. | All assertions matched expected | 8.3s |
+
+---
+
+## Last Run: 2026-06-28 15:12 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_064 | ADM_CFG_064 | ✅ PASS | fake registration GHNG-9999999999 with Update=1 → row error / not-found; no mutation. Non-destructive. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 7.1s |

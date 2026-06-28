@@ -122,10 +122,12 @@ class ConfigPage extends BasePage {
     this.section5SubmitButton      = this.section5Wrap.getByRole('button', { name: /^Submit$/i });
 
     // ── Section 6 — Bulk Registration Cancellation ────────────────────────
-    this.section6SampleDownload    = this._after('bulkRegistrationCancellation', SAMPLE);
-    this.section6UploadButton      = this._after('bulkRegistrationCancellation', UPLOAD);
-    this.section6FileInput         = this._after('bulkRegistrationCancellation', FILEIN);
-    this.section6SubmitButton      = this._after('bulkRegistrationCancellation', SUBMIT);
+    // §6 controls scoped to the section's own .form-section-wrapper (robust; see §3).
+    this.section6Wrap              = this._sectionWrap('bulkRegistrationCancellation');
+    this.section6SampleDownload    = this.section6Wrap.getByRole('button', { name: /Sample|Download/i });
+    this.section6UploadButton      = this.section6Wrap.getByRole('button', { name: /Upload/i });
+    this.section6FileInput         = this.section6Wrap.locator('input[type="file"]');
+    this.section6SubmitButton      = this.section6Wrap.getByRole('button', { name: /^Submit$/i });
 
     // ── Section 7 — Sales Managers Bulk Upload ────────────────────────────
     this.section7SampleDownload    = this._after('salesManagersBulkUpload', SAMPLE);
@@ -581,8 +583,44 @@ class ConfigPage extends BasePage {
 
   // ── Section 6 — Bulk Registration Cancellation ─────────────────────────
 
+  /**
+   * §6 upload. Section Submit opens a refund-confirmation modal ("Confirm Refund for
+   * the uploaded registrations … cannot be undone" — Cancel / Submit, no checkboxes);
+   * the cancellation fires only after the modal's Submit. Returns parsed contract.
+   */
   async uploadBulkRegistrationCancellationFile(filePath) {
     await this.section6FileInput.setInputFiles(filePath);
+    await this.page.waitForTimeout(900);
+    await this.section6SubmitButton.click(); // opens refund-confirmation modal
+    const modal = this.page.locator('.ant-modal, [role="dialog"]').filter({ hasText: /Refund|cancel|undone|Mavis|completed/i }).first();
+    await modal.waitFor({ state: 'visible', timeout: 8_000 }).catch(() => {});
+    const boxes = modal.locator('input[type="checkbox"]');
+    const n = await boxes.count().catch(() => 0);
+    for (let i = 0; i < n; i++) await boxes.nth(i).check({ force: true }).catch(() => {});
+    if (n) await this.page.waitForTimeout(300);
+    const respP = this.page.waitForResponse((r) => r.request().method() !== 'GET' && /admin|cancel|refund/i.test(r.url()) && !/master-config|clarity/i.test(r.url()), { timeout: 30_000 }).catch(() => null);
+    // §6 confirm button is labelled "Cancel Registration" (not "Submit").
+    const confirm = modal.locator('button').filter({ hasText: /Cancel Registration|Confirm|^Submit$/i }).last();
+    if (await confirm.count().catch(() => 0)) await confirm.click().catch(() => {});
+    const resp = await respP;
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1500);
+    let httpStatus = null, rows = null, message = null;
+    if (resp) {
+      httpStatus = resp.status();
+      try {
+        const body = await resp.body();
+        const ct = (resp.headers()['content-type'] || '');
+        if (/spreadsheet|octet|xlsx|excel/i.test(ct)) {
+          const XLSX = require('xlsx');
+          const wb = XLSX.read(body, { type: 'buffer' });
+          rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+        } else {
+          try { message = JSON.parse(body.toString()).message; } catch { message = body.toString().slice(0, 300); }
+        }
+      } catch { /* body may be unavailable */ }
+    }
+    return { resp, httpStatus, rows, message };
   }
 
   // ── Section 7 — Sales Managers Bulk Upload ─────────────────────────────

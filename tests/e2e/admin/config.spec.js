@@ -643,6 +643,43 @@ test.describe('Config — Admin Portal E2E', () => {
     await expect(configPage.section6SubmitButton).toBeVisible();
   });
 
+  test('ADM_CFG_094 — ADMIN-FS-Config-CMS §6 — control inventory (Sample/Upload/Submit)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only control enumeration' });
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    await expect(configPage.section6SampleDownload).toBeVisible();
+    await expect(configPage.section6UploadButton).toBeVisible();
+    await expect(configPage.section6SubmitButton).toBeVisible();
+  });
+
+  test('ADM_CFG_FSD_062 — FSD §6 — sample template columns (documented `upadte` typo, GAP-TL-049)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'none — download §6 sample, record actual header columns; FS documents a column-name typo "upadte" (GAP-TL-049). Assert Registration Number column present; flag whether typo present or fixed.' });
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const [dl] = await Promise.all([page.waitForEvent('download'), configPage.section6SampleDownload.click()]);
+    const os = require('os'); const path = require('path'); const X = require('xlsx');
+    const fp = path.join(os.tmpdir(), `s6-sample-${Date.now()}.xlsx`); await dl.saveAs(fp);
+    const header = (X.utils.sheet_to_json(X.readFile(fp).Sheets[X.readFile(fp).SheetNames[0]], { header: 1 })[0] || []).map((h) => String(h));
+    const hasTypo = header.some((h) => /upadte/i.test(h));
+    console.log(`[ADM_CFG_FSD_062] §6 sample header=${JSON.stringify(header)} | documented 'upadte' typo present=${hasTypo}`);
+    expect(header.some((h) => /registration number/i.test(h)), 'Registration Number column present').toBe(true);
+    expect(header.some((h) => /upadte|update/i.test(h)), 'an Update/upadte column present').toBe(true);
+  });
+
+  test('ADM_CFG_064 — ADMIN-FS-Config-CMS §6 — unknown registration number returns a row error', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'fake registration GHNG-9999999999 with Update=1 → row error / not-found; no mutation. Non-destructive. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const FAKE = 'GHNG-9999999999';
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/reg-cancel-064-unknown.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number', 'Update (1/0)'], [FAKE, 1]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const res = await configPage.uploadBulkRegistrationCancellationFile(fp);
+    const rowText = ((res.rows || []).find((r) => String(r[0]) === FAKE) || []).join(' ');
+    console.log(`[ADM_CFG_064] http=${res.httpStatus} msg="${res.message}" row="${rowText}"`);
+    const rejected = res.httpStatus >= 400 || /not found|invalid|error|unknown|no .*found|not eligible/i.test(rowText + ' ' + (res.message || ''));
+    expect(rejected, `expected error for unknown reg#; http=${res.httpStatus} msg="${res.message}" row="${rowText}"`).toBe(true);
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 7 — Sales Managers Bulk Upload (DESTRUCTIVE — creates users)
   // ════════════════════════════════════════════════════════════════════════
