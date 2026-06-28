@@ -385,3 +385,11 @@
 | ADM_CFG_057 | ADM_CFG_057 | ✅ PASS | fake registration number GHNG-9999999999-Z (does not exist) → expect row-level error / not-found; no mutation. Non-destructive. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 6.2s |
 | ADM_CFG_059 | ADM_CFG_059 | ✅ PASS | upload a .csv file (Registration Number column) → expect rejection (wrong file type). Non-destructive. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 5.7s |
 | ADM_CFG_092 | ADM_CFG_092 | ✅ PASS | non-WINNER booking GHNG-1000000001-A (status ALLOCATED) uploaded → must be SKIPPED (only WINNER cancelable per §11.4); reg_unit unchanged (status + not soft-deleted). Non-destructive. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 26.5s |
+
+---
+
+## Last Run: 2026-06-28 14:12 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_028 | ADM_CFG_028 | ✅ PASS | GHNG-1000008364-O (WINNER, 205-Aspire, Mavis cleared in LSQ by user) → bulk-cancel → reg_unit no longer an active WINNER (soft-deleted/cleared). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 31.2s |

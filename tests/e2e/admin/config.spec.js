@@ -489,6 +489,28 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(String(after.status).toUpperCase()).toBe(String(before.status).toUpperCase());
   });
 
+  test('ADM_CFG_028 — ADMIN-FS-Config-CMS §5 — uploading a cancelable booking cancels it', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-O (WINNER, 205-Aspire, Mavis cleared in LSQ by user) → bulk-cancel → reg_unit no longer an active WINNER (soft-deleted/cleared). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = 'GHNG-1000008364-O';
+    const before = await reg.getRegistrationUnitByNumber(REGNO);
+    expect(before, 'precondition: booking must exist & be active').toBeTruthy();
+    expect(String(before.status).toUpperCase(), 'precondition: must be WINNER').toBe('WINNER');
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/booking-cancel-028.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number'], [REGNO]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkBookingCancellation');
+    const res = await configPage.uploadBulkBookingCancellationFile(fp);
+    const afterActive = await reg.getRegistrationUnitByNumber(REGNO);          // null if soft-deleted
+    const afterAny = await reg.getRegistrationUnitByNumberAny(REGNO);          // includes deleted
+    console.log(`[ADM_CFG_028] http=${res.httpStatus} msg="${res.message}" activeAfter=${afterActive ? afterActive.status : 'NULL'} anyDeletedAt=${afterAny ? afterAny.deleted_at : '?'} anyStatus=${afterAny ? afterAny.status : '?'}`);
+    // Cancellation must remove the booking from the active WINNER set (soft-delete or status change).
+    const cancelled = !afterActive || String(afterActive.status).toUpperCase() !== 'WINNER' || (afterAny && afterAny.deleted_at);
+    expect(cancelled, `booking should be cancelled; activeAfter=${afterActive ? afterActive.status : 'NULL'}`).toBeTruthy();
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 6 — Bulk Registration Cancellation (DESTRUCTIVE — irreversible)
   // ════════════════════════════════════════════════════════════════════════
