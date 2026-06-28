@@ -700,6 +700,48 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(blocked, `expected campaign block; http=${res.httpStatus} msg="${res.message}"`).toBe(true);
   });
 
+  test('ADM_CFG_031 — ADMIN-FS-Config-CMS §6 — uploading a registration cancels it (blast-radius probe)', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'NEEDS a fully-disposable BASE registration (CFG_S6_BASE) — §6 refund-bulk takes the BASE reg and cancels ALL sub-units (FS §6.1); WINNER/allocated sub-units fail "Unit already allocated". -J/-I/-H (WINNER sub-units) are NOT §6-eligible. IRREVERSIBLE; campaign OFF.' });
+    test.skip(!process.env.CFG_S6_BASE, 'Needs a disposable BASE registration via CFG_S6_BASE — §6 cancels ALL sub-units of the base reg');
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = process.env.CFG_S6_BASE;
+    const st = async (n) => { const r = await reg.getRegistrationUnitByNumber(n); return r ? String(r.status).toUpperCase() : 'NULL'; };
+    const before = { J: await st('GHNG-1000008364-J'), I: await st('GHNG-1000008364-I'), H: await st('GHNG-1000008364-H') };
+    expect(before.J, 'precondition: -J WINNER').toBe('WINNER');
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/reg-cancel-031.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number', 'Update (1/0)'], [REGNO, 1]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const res = await configPage.uploadBulkRegistrationCancellationFile(fp);
+    const after = { J: await st('GHNG-1000008364-J'), I: await st('GHNG-1000008364-I'), H: await st('GHNG-1000008364-H') };
+    const anyJ = await reg.getRegistrationUnitByNumberAny(REGNO);
+    console.log(`[ADM_CFG_031] http=${res.httpStatus} msg="${res.message}" before=${JSON.stringify(before)} after=${JSON.stringify(after)} J.deleted_at=${anyJ ? anyJ.deleted_at : '?'}`);
+    // -J must be cancelled (no longer active WINNER).
+    expect(after.J === 'NULL' || after.J !== 'WINNER', `-J should be cancelled; after=${after.J}`).toBeTruthy();
+    // Blast-radius note: siblings -I/-H state logged above (per-row cancel keeps them WINNER).
+    console.log(`[ADM_CFG_031] BLAST RADIUS: -I ${before.I}->${after.I}, -H ${before.H}->${after.H}`);
+  });
+
+  test('ADM_CFG_062 — ADMIN-FS-Config-CMS §6 — rows with Update=0 are not cancelled', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-J Update=0 → §6 must NOT cancel (Update=0 skip); -J stays WINNER. Non-destructive (Update=0; WINNER also "already allocated"). ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = 'GHNG-1000008364-J';
+    const before = await reg.getRegistrationUnitByNumber(REGNO);
+    expect(before && String(before.status).toUpperCase(), 'precondition: WINNER').toBe('WINNER');
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/reg-cancel-062-update0.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number', 'Update (1/0)'], [REGNO, 0]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const res = await configPage.uploadBulkRegistrationCancellationFile(fp);
+    const after = await reg.getRegistrationUnitByNumber(REGNO);
+    console.log(`[ADM_CFG_062] http=${res.httpStatus} msg="${res.message}" status ${before.status}->${after ? after.status : 'NULL'}`);
+    expect(after && String(after.status).toUpperCase(), 'Update=0 → not cancelled').toBe('WINNER'); // unchanged
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 7 — Sales Managers Bulk Upload (DESTRUCTIVE — creates users)
   // ════════════════════════════════════════════════════════════════════════

@@ -441,3 +441,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_061 | ADM_CFG_061 | ✅ PASS | GHNG-1000008364-J (WINNER, Mavis cleared) §6 cancel attempted while campaign ACTIVE → submit-time re-check BLOCKS ("campaign is active"); booking stays WINNER. ALLOW_DESTRUCTIVE=1; campaign-active window. | All assertions matched expected | 27.2s |
+
+---
+
+## Last Run: 2026-06-28 17:52 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_062 | ADM_CFG_062 | ✅ PASS | GHNG-1000008364-J Update=0 → §6 must NOT cancel (Update=0 skip); -J stays WINNER. Non-destructive (Update=0; WINNER also "already allocated"). ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 27.8s |
