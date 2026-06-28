@@ -350,3 +350,11 @@
 | ADM_CFG_025 | ADM_CFG_025 | ✅ PASS | unit_no 302 (testUnit-547664512575) Early Bird Benefit → sentinel 7777 (Update=1); re-download inventory and confirm the unit row shows 7777; restore original. ALLOW_DESTRUCTIVE=1; capture+restore. | All assertions matched expected | 49.5s |
 | ADM_CFG_088 | ADM_CFG_088 | ✅ PASS | unit_no 302 (testUnit-547664512575) Early Bird → sentinel 3333 (Update=1) while monitoring for buyer-notification calls → expect zero; DB side-effect confirmed; restore. FS Feature 4 §8 = no notification. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 10.4s |
 | ADM_CFG_085 | ADM_CFG_085 | ✅ PASS | unit_no 302 (testUnit-547664512575): upload Allocation Calc Type=PERCENT (percent=12) then =AMOUNT (amount=27000), each Update=1; DB reflects calc type + value each time; restore original allocation fields. ALLOW_DESTRUCTIVE=1; capture+restore. | All assertions matched expected | 18.5s |
+
+---
+
+## Last Run: 2026-06-28 13:21 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_024 | ADM_CFG_024 | ✅ PASS | unit_no 302 (testUnit-547664512575) Early Bird → sentinel 8888 (Update=1): attach file → assert NOT applied yet (no draft/preview), then Submit → assert applied instantly in DB; restore. NOTE: §4 pricing upload has no §2-style campaign guard (high-risk rule); campaign-active path is environmentally gated (verified with campaign OFF). ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 32.4s |

@@ -195,6 +195,46 @@ test.describe('Config — Admin Portal E2E', () => {
     }
   });
 
+  test('ADM_CFG_024 — ADMIN-FS-Config-CMS §4 — price change applies instantly on Submit (no draft/preview)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575) Early Bird → sentinel 8888 (Update=1): attach file → assert NOT applied yet (no draft/preview), then Submit → assert applied instantly in DB; restore. NOTE: §4 pricing upload has no §2-style campaign guard (high-risk rule); campaign-active path is environmentally gated (verified with campaign OFF). ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const HEADER = ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Agreement Value', 'Early Bird Benefit', 'Allocation Amount', 'Allocation Percent', 'Allocation Calc Type', 'Status', 'Update (1/0)'];
+    const p0 = await inv.getUnitPricingByUnitId(UID);
+    const fileWith = (earlyBird, tag) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/unit-cost-024-${tag}.xlsx`);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([HEADER,
+        ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, p0.agreement_value, earlyBird, p0.allocation_amount, p0.allocation_percent, p0.allocation_calc_type, p0.status, 1],
+      ]), 'S1'); X.writeFile(wb, fp); return fp;
+    };
+    const SENTINEL = 8888;
+    try {
+      await configPage.expectSectionVisible('unitCostUpdate');
+      // Attach the file but do NOT submit — there must be no draft/preview auto-apply.
+      await configPage.section4FileInput.setInputFiles(fileWith(SENTINEL, 'change'));
+      await configPage.page.waitForTimeout(1200);
+      const pStaged = await inv.getUnitPricingByUnitId(UID);
+      console.log(`[ADM_CFG_024] after attach (no submit): earlyBird=${pStaged.early_bird_benefit} (must still be ${p0.early_bird_benefit})`);
+      expect(Number(pStaged.early_bird_benefit)).toBe(Number(p0.early_bird_benefit)); // no draft/preview applied
+      // Submit → instant apply.
+      const respP = configPage.page.waitForResponse((r) => r.request().method() !== 'GET' && /admin\//i.test(r.url()), { timeout: 30_000 }).catch(() => null);
+      await configPage.section4SubmitButton.click();
+      await respP;
+      await configPage.page.waitForLoadState('networkidle').catch(() => {});
+      await configPage.page.waitForTimeout(1200);
+      const pAfter = await inv.getUnitPricingByUnitId(UID);
+      console.log(`[ADM_CFG_024] after submit: earlyBird=${pAfter.early_bird_benefit} (expected ${SENTINEL})`);
+      expect(Number(pAfter.early_bird_benefit)).toBe(SENTINEL); // instant apply on submit
+    } finally {
+      await configPage.navigate(); await configPage.waitForLoad();
+      await configPage.expectSectionVisible('unitCostUpdate');
+      await configPage.uploadUnitCostFile(fileWith(Number(p0.early_bird_benefit), 'restore'));
+      expect(Number((await inv.getUnitPricingByUnitId(UID)).early_bird_benefit)).toBe(Number(p0.early_bird_benefit));
+    }
+  });
+
   test('ADM_CFG_025 — ADMIN-FS-Config-CMS §4 — updated early-bird benefit reflected in unit detail', async () => {
     test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575) Early Bird Benefit → sentinel 7777 (Update=1); re-download inventory and confirm the unit row shows 7777; restore original. ALLOW_DESTRUCTIVE=1; capture+restore.' });
     test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
