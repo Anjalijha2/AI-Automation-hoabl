@@ -740,6 +740,103 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(after && String(after.status).toUpperCase(), 'Update=0 → not cancelled').toBe('WINNER'); // unchanged
   });
 
+  test('ADM_CFG_032 — ADMIN-FS-Config-CMS §6 — cancellation does NOT auto-trigger a financial refund', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-G (PREALLOCATED, disposable) §6 cancel → status→REFUND but payment_refunds count UNCHANGED (refund handled offline per modal; BRD §6 r5). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = 'GHNG-1000008364-G';
+    const before = await reg.getRegistrationUnitByNumber(REGNO);
+    expect(before && !['WINNER', 'BOOKED'].includes(String(before.status).toUpperCase()), 'precondition: non-allocated').toBe(true);
+    const refundsBefore = await reg.getRefundCount();
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/reg-cancel-032.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number', 'Update (1/0)'], [REGNO, 1]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const res = await configPage.uploadBulkRegistrationCancellationFile(fp);
+    const refundsAfter = await reg.getRefundCount();
+    const after = await reg.getRegistrationUnitByNumberAny(REGNO);
+    console.log(`[ADM_CFG_032] http=${res.httpStatus} status ${before.status}->${after ? after.status : 'NULL'} refunds ${refundsBefore}->${refundsAfter}`);
+    expect(refundsAfter, 'no financial refund row auto-created').toBe(refundsBefore);
+  });
+
+  test('ADM_CFG_095 — ADMIN-FS-Config-CMS §6 — refundBulk dispatches no notification (FS §8)', async ({ page }) => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-K (PREALLOCATED, disposable) §6 cancel while monitoring network → zero buyer-notification calls (FS Feature 6 §8 — refundBulk sends none). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = 'GHNG-1000008364-K';
+    const before = await reg.getRegistrationUnitByNumber(REGNO);
+    expect(before && !['WINNER', 'BOOKED'].includes(String(before.status).toUpperCase()), 'precondition: non-allocated').toBe(true);
+    const notif = [];
+    page.on('request', (r) => { if (/kaleyra|epinet|whatsapp|sendsms|\/sms|sendmail|\/email|notif|firebase|fcm/i.test(r.url())) notif.push(`${r.method()} ${r.url()}`); });
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/reg-cancel-095.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number', 'Update (1/0)'], [REGNO, 1]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const res = await configPage.uploadBulkRegistrationCancellationFile(fp);
+    console.log(`[ADM_CFG_095] http=${res.httpStatus} notifications=${notif.length} ${JSON.stringify(notif).slice(0, 200)}`);
+    expect(notif.length, `FS §8: no notifications; saw ${JSON.stringify(notif)}`).toBe(0);
+  });
+
+  test('ADM_CFG_096 — ADMIN-FS-Config-CMS §6 — cancellation releases the associated unit', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-L (PREALLOCATED, disposable) §6 cancel → associated unit released back to inventory (no longer RESERVED/BOOKED). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration'); const inv = require('../../../db/queries/inventory');
+    const REGNO = 'GHNG-1000008364-L';
+    const ru = await reg.getRegistrationUnitByNumber(REGNO);
+    expect(ru && !['WINNER', 'BOOKED'].includes(String(ru.status).toUpperCase()), 'precondition: non-allocated').toBe(true);
+    const unitBefore = ru.unit_id ? String((await inv.getUnitByUnitId(ru.unit_id) || {}).status || 'NONE').toUpperCase() : 'NONE';
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/reg-cancel-096.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number', 'Update (1/0)'], [REGNO, 1]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const res = await configPage.uploadBulkRegistrationCancellationFile(fp);
+    const unitAfter = ru.unit_id ? String((await inv.getUnitByUnitId(ru.unit_id) || {}).status || 'NONE').toUpperCase() : 'NONE';
+    console.log(`[ADM_CFG_096] http=${res.httpStatus} unit(${ru.unit_id}) ${unitBefore}->${unitAfter}`);
+    expect(unitAfter, 'unit released (not BOOKED)').not.toBe('BOOKED');
+    if (unitBefore !== 'NONE') expect(['AVAILABLE', 'RESERVED']).toContain(unitAfter); // back in allocatable pool
+  });
+
+  test('ADM_CFG_063 — ADMIN-FS-Config-CMS §6 — sub-registration state after cancellation', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-M (PREALLOCATED, disposable) §6 cancel → reg_unit no longer active in its prior state (status→REFUND/cancelled). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = 'GHNG-1000008364-M';
+    const before = await reg.getRegistrationUnitByNumber(REGNO);
+    expect(before && !['WINNER', 'BOOKED'].includes(String(before.status).toUpperCase()), 'precondition: non-allocated').toBe(true);
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/reg-cancel-063.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number', 'Update (1/0)'], [REGNO, 1]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const res = await configPage.uploadBulkRegistrationCancellationFile(fp);
+    const after = await reg.getRegistrationUnitByNumberAny(REGNO);
+    console.log(`[ADM_CFG_063] http=${res.httpStatus} status ${before.status}->${after ? after.status : 'NULL'} deleted_at=${after ? after.deleted_at : '?'}`);
+    const changed = !after || String(after.status).toUpperCase() !== String(before.status).toUpperCase() || after.deleted_at;
+    expect(changed, `sub-reg state must change after cancel; ${before.status}->${after ? after.status : 'NULL'}`).toBeTruthy();
+  });
+
+  test('ADM_CFG_065 — ADMIN-FS-Config-CMS §6 — an already-cancelled registration cannot be re-cancelled', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-Q (already cancelled in 031 → REFUND) re-uploaded → FAILED/skipped (not re-cancelable); state unchanged. Non-destructive (already cancelled). ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = 'GHNG-1000008364-Q';
+    const before = await reg.getRegistrationUnitByNumberAny(REGNO);
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/reg-cancel-065.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number', 'Update (1/0)'], [REGNO, 1]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const res = await configPage.uploadBulkRegistrationCancellationFile(fp);
+    const after = await reg.getRegistrationUnitByNumberAny(REGNO);
+    const rowText = ((res.rows || []).find((r) => String(r[0]) === REGNO) || []).join(' ');
+    console.log(`[ADM_CFG_065] http=${res.httpStatus} row="${rowText}" status ${before ? before.status : '?'}->${after ? after.status : '?'}`);
+    const rejected = res.httpStatus >= 400 || /failed|already|cannot|not eligible|invalid|error/i.test(rowText + ' ' + (res.message || ''));
+    expect(rejected, `already-cancelled must be rejected; row="${rowText}"`).toBe(true);
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 7 — Sales Managers Bulk Upload (DESTRUCTIVE — creates users)
   // ════════════════════════════════════════════════════════════════════════

@@ -457,3 +457,15 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_031 | ADM_CFG_031 | ✅ PASS | GHNG-1000008364-Q (PREALLOCATED, non-allocated, disposable) §6 refund-bulk (campaign OFF) → -Q cancelled (refunded/soft-deleted). Captures siblings -A/-G to confirm per-row granularity. §6 rejects WINNER ("already allocated"); -Q is non-allocated so eligible. IRREVERSIBLE; user-authorised (GHNG-1000008364 fully disposable). | All assertions matched expected | 30.0s |
+
+---
+
+## Last Run: 2026-06-28 19:35 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_032 | ADM_CFG_032 | ✅ PASS | GHNG-1000008364-G (PREALLOCATED, disposable) §6 cancel → status→REFUND but payment_refunds count UNCHANGED (refund handled offline per modal; BRD §6 r5). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 28.1s |
+| ADM_CFG_095 | ADM_CFG_095 | ✅ PASS | GHNG-1000008364-K (PREALLOCATED, disposable) §6 cancel while monitoring network → zero buyer-notification calls (FS Feature 6 §8 — refundBulk sends none). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 6.6s |
+| ADM_CFG_096 | ADM_CFG_096 | ✅ PASS | GHNG-1000008364-L (PREALLOCATED, disposable) §6 cancel → associated unit released back to inventory (no longer RESERVED/BOOKED). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 7.0s |
+| ADM_CFG_063 | ADM_CFG_063 | ✅ PASS | GHNG-1000008364-M (PREALLOCATED, disposable) §6 cancel → reg_unit no longer active in its prior state (status→REFUND/cancelled). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 6.7s |
+| ADM_CFG_065 | ADM_CFG_065 | ✅ PASS | GHNG-1000008364-Q (already cancelled in 031 → REFUND) re-uploaded → FAILED/skipped (not re-cancelable); state unchanged. Non-destructive (already cancelled). ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 6.6s |
