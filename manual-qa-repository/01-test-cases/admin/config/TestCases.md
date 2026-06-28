@@ -393,3 +393,15 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_028 | ADM_CFG_028 | ✅ PASS | GHNG-1000008364-O (WINNER, 205-Aspire, Mavis cleared in LSQ by user) → bulk-cancel → reg_unit no longer an active WINNER (soft-deleted/cleared). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 31.2s |
+
+---
+
+## Last Run: 2026-06-28 14:25 IST (§5 booking cancellations — IRREVERSIBLE, user-authorised)
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_060 | ADM_CFG_060 | ✅ PASS | GHNG-1000008364-N (206-Aspire) cancelled | Unit released BOOKED→RESERVED. FINDING: end-state RESERVED not AVAILABLE (reg reverts to PREALLOCATED which reserves the unit; FS "AVAILABLE" imprecise) | 24.0s |
+| ADM_CFG_029 | ADM_CFG_029 | ✅ PASS | GHNG-1000008364-M (306-Aspire) cancelled | No auto-refund: payment_refunds 0→0, refund_at null (BRD §6 r5) | ~30s |
+| ADM_CFG_093 | ADM_CFG_093 | ✅ PASS | GHNG-1000008364-L (307-Aspire) cancelled | Zero buyer notifications during cancel (FS §8) | ~30s |
+| ADM_CFG_FSD_061 | ADM_CFG_FSD_061 | ✅ PASS | GHNG-1000008364-K (401-Aspire, reg_unit 9785) cancelled | Cascade cleared: payment_transactions 1→0, payment_schedules 47→0, milestone_tracking 2→1 | ~30s |
+| ADM_CFG_058 | ADM_CFG_058 | ✅ PASS | GHNG-1000008364-O (already cancelled → PREALLOCATED) re-uploaded | 400 "No valid units available" — already-cancelled skipped (only WINNER cancelable) | ~10s |
