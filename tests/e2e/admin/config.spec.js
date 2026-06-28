@@ -937,4 +937,46 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(await statusOf()).toBe('AVAILABLE');
   });
 
+  test('ADM_CFG_019 — ADMIN-FS-Config-CMS §3 — Update=0 rows are skipped (apply/skip routing)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'Two-row file: Row A unit_no 302 (testUnit-547664512575, 1 BHK) RESERVED/Update=1 → APPLIED; Row B unit_no 308 (testUnit-547664512577, 2 BHK Rise) RESERVED/Update=0 → SKIPPED (DB unchanged). Restore 302→AVAILABLE; ALLOW_DESTRUCTIVE=1 (campaign off)' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — unit-status upload; set ALLOW_DESTRUCTIVE=1 (campaign inactive)');
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const A = { unitId: 'testUnit-547664512575', unitNo: '302', typId: 'testtypology-1757656549935', typName: '1 BHK Growth Home' };
+    const B = { unitId: 'testUnit-547664512577', unitNo: '308', typId: 'testtypology-1757656657194', typName: '2 BHK Rise Home' };
+    const TOWER = 'Crest';
+    const statusOf = async (uid) => String((await inv.getUnitByUnitId(uid)).status).toUpperCase();
+    const HEADER = ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Status', 'Update (1/0)'];
+    const writeFile = (rows, tag) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/unit-status-${tag}.xlsx`);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([HEADER, ...rows]), 'S1'); X.writeFile(wb, fp); return fp;
+    };
+
+    // Ensure both baselines AVAILABLE so the routing is unambiguous.
+    if ((await statusOf(A.unitId)) !== 'AVAILABLE') {
+      await configPage.uploadUnitStatusFile(writeFile([[TOWER, A.typId, A.typName, A.unitId, A.unitNo, 'AVAILABLE', 1]], 'reset-A'));
+      await configPage.navigate(); await configPage.waitForLoad();
+    }
+    const bBefore = await statusOf(B.unitId);
+    await configPage.expectSectionVisible('unitStatus');
+    // Mixed file: A applies (Update=1), B is skipped (Update=0).
+    const res = await configPage.uploadUnitStatusFile(writeFile([
+      [TOWER, A.typId, A.typName, A.unitId, A.unitNo, 'RESERVED', 1],
+      [TOWER, B.typId, B.typName, B.unitId, B.unitNo, 'RESERVED', 0],
+    ], '019-mixed'));
+    const aAfter = await statusOf(A.unitId), bAfter = await statusOf(B.unitId);
+    const rowA = (res.rows || []).find((r) => String(r[3]) === A.unitId) || [];
+    const rowB = (res.rows || []).find((r) => String(r[3]) === B.unitId);
+    console.log(`[ADM_CFG_019] http=${res.httpStatus} A:${aAfter}(was AVAILABLE,"${rowA[rowA.length-1]}") B:${bBefore}->${bAfter}(rowB=${rowB ? JSON.stringify(rowB.slice(-1)) : 'absent'})`);
+    expect(res.httpStatus).toBe(200);
+    expect(aAfter).toBe('RESERVED');            // Update=1 → applied
+    expect(bAfter).toBe(bBefore);               // Update=0 → unchanged (skipped)
+    // Restore A → AVAILABLE.
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('unitStatus');
+    await configPage.uploadUnitStatusFile(writeFile([[TOWER, A.typId, A.typName, A.unitId, A.unitNo, 'AVAILABLE', 1]], 'restore-A'));
+    expect(await statusOf(A.unitId)).toBe('AVAILABLE');
+  });
+
 });

@@ -286,3 +286,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_018 | ADM_CFG_018 | ✅ PASS | unit_no 302 (unit_id testUnit-547664512575, Crest): AVAILABLE baseline → upload RESERVED/Update=1 → DB RESERVED + result row "Updated … → RESERVED"; self-restore to AVAILABLE; ALLOW_DESTRUCTIVE=1 (campaign off) | All assertions matched expected | 31.3s |
+
+---
+
+## Last Run: 2026-06-28 12:41 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_019 | ADM_CFG_019 | ✅ PASS | Two-row file: Row A unit_no 302 (testUnit-547664512575, 1 BHK) RESERVED/Update=1 → APPLIED; Row B unit_no 308 (testUnit-547664512577, 2 BHK Rise) RESERVED/Update=0 → SKIPPED (DB unchanged). Restore 302→AVAILABLE; ALLOW_DESTRUCTIVE=1 (campaign off) | All assertions matched expected | 32.4s |
