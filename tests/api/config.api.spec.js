@@ -137,4 +137,14 @@ test.describe('Config — Admin Portal API', () => {
     expect(restore.status()).toBe(200);
     expect(await statusOf(A.unitId)).toBe('AVAILABLE');
   });
+
+  test('ADM_CFG_FSD_060 — PATCH /api/v1/admin/units/:id accepts pricing + status (§11.9)', async () => {
+    // FINDING: the per-unit edit endpoint documented in FS §11.9 (BA correction
+    // GAP-TL-047, "New Feature") is NOT deployed on UAT — GET/PATCH against
+    // /api/v1/admin/units/:id (numeric PK 7007 and unit_id), /unit/:id, and the
+    // /units collection all return the API's 404 envelope {"message":"Not found"}.
+    // Cannot verify until the endpoint ships. Re-enable when available.
+    test.info().annotations.push({ type: 'testData', description: 'VERIFY-WITH-DEV — PATCH /api/v1/admin/units/:id returns 404 "Not found" on UAT (probed PK 7007 + unit_id + /unit + /units; all 404). Endpoint from FS §11.9 GAP-TL-047 "New Feature" not yet deployed. Re-test when shipped.' });
+    test.skip(true, 'VERIFY-WITH-DEV — units/:id PATCH endpoint not deployed on UAT (404 Not found)');
+  });
 });

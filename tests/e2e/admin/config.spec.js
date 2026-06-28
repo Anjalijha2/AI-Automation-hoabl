@@ -342,6 +342,11 @@ test.describe('Config — Admin Portal E2E', () => {
     }
   });
 
+  test('ADM_CFG_087 — ADMIN-FS-Config-CMS §4 — pricing processed in 250-row chunks, abort after 2 chunk failures (§11.8)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'VERIFY-WITH-DEV — chunk size (250) + abort-after-2-chunk-failures is internal backend batching (§11.8 GAP-TL-043). Reliably triggering 2 chunk-level failures requires controlled fault injection across 500+ rows and would risk mutating many live units; not safely observable from the test layer on UAT. Verify via backend logs/unit test with dev.' });
+    test.skip(true, 'VERIFY-WITH-DEV — chunk/abort batching not safely observable on UAT (needs fault injection)');
+  });
+
   test('ADM_CFG_084 — ADMIN-FS-Config-CMS §4 — Section 4 control inventory (Download/Upload/Submit)', async () => {
     test.info().annotations.push({ type: 'testData', description: 'none — read-only control enumeration' });
     await configPage.expectSectionVisible('unitCostUpdate');

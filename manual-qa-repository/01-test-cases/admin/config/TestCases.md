@@ -358,3 +358,19 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_024 | ADM_CFG_024 | ✅ PASS | unit_no 302 (testUnit-547664512575) Early Bird → sentinel 8888 (Update=1): attach file → assert NOT applied yet (no draft/preview), then Submit → assert applied instantly in DB; restore. NOTE: §4 pricing upload has no §2-style campaign guard (high-risk rule); campaign-active path is environmentally gated (verified with campaign OFF). ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 32.4s |
+
+---
+
+## Last Run: 2026-06-28 13:25 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_FSD_060 | ADM_CFG_FSD_060 | ⏭ SKIP | VERIFY-WITH-DEV — PATCH /api/v1/admin/units/:id returns 404 "Not found" on UAT (probed PK 7007 + unit_id + /unit + /units; all 404). Endpoint from FS §11.9 GAP-TL-047 "New Feature" not yet deployed. Re-test when shipped. | Not executed | 23ms |
+
+---
+
+## Last Run: 2026-06-28 13:26 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_087 | ADM_CFG_087 | ⏭ SKIP | VERIFY-WITH-DEV — chunk size (250) + abort-after-2-chunk-failures is internal backend batching (§11.8 GAP-TL-043). Reliably triggering 2 chunk-level failures requires controlled fault injection across 500+ rows and would risk mutating many live units; not safely observable from the test layer on UAT. Verify via backend logs/unit test with dev. | Not executed | 3.4s |
