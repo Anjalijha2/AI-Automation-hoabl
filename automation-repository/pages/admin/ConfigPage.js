@@ -114,10 +114,12 @@ class ConfigPage extends BasePage {
     this.section4SubmitButton           = this.section4Wrap.getByRole('button', { name: /^Submit$/i });
 
     // ── Section 5 — Bulk Booking Cancellation ─────────────────────────────
-    this.section5SampleDownload    = this._after('bulkBookingCancellation', SAMPLE);
-    this.section5UploadButton      = this._after('bulkBookingCancellation', UPLOAD);
-    this.section5FileInput         = this._after('bulkBookingCancellation', FILEIN);
-    this.section5SubmitButton      = this._after('bulkBookingCancellation', SUBMIT);
+    // §5 controls scoped to the section's own .form-section-wrapper (robust; see §3).
+    this.section5Wrap              = this._sectionWrap('bulkBookingCancellation');
+    this.section5SampleDownload    = this.section5Wrap.getByRole('button', { name: /Sample|Download/i });
+    this.section5UploadButton      = this.section5Wrap.getByRole('button', { name: /Upload/i });
+    this.section5FileInput         = this.section5Wrap.locator('input[type="file"]');
+    this.section5SubmitButton      = this.section5Wrap.getByRole('button', { name: /^Submit$/i });
 
     // ── Section 6 — Bulk Registration Cancellation ────────────────────────
     this.section6SampleDownload    = this._after('bulkRegistrationCancellation', SAMPLE);
@@ -483,10 +485,94 @@ class ConfigPage extends BasePage {
     return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
   }
 
+  /**
+   * Generic upload-and-parse for any Config bulk-upload section. Attaches the file
+   * to that section's <input type=file>, clicks its Submit, waits for the non-GET
+   * /admin/ response, and returns the parsed contract: a 200 yields a per-row
+   * result .xlsx (rows); a 4xx yields {message}. Mirrors uploadUnitStatusFile.
+   */
+  async _submitUploadAndParse(fileInput, submitButton, filePath) {
+    await fileInput.setInputFiles(filePath);
+    await this.page.waitForTimeout(900);
+    const respP = this.page.waitForResponse((r) => r.request().method() !== 'GET' && /admin\//i.test(r.url()), { timeout: 30_000 }).catch(() => null);
+    await submitButton.click();
+    const resp = await respP;
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1500);
+    let httpStatus = null, rows = null, message = null;
+    if (resp) {
+      httpStatus = resp.status();
+      try {
+        const body = await resp.body();
+        const ct = (resp.headers()['content-type'] || '');
+        if (/spreadsheet|octet|xlsx|excel/i.test(ct)) {
+          const XLSX = require('xlsx');
+          const wb = XLSX.read(body, { type: 'buffer' });
+          rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+        } else {
+          try { message = JSON.parse(body.toString()).message; } catch { message = body.toString().slice(0, 300); }
+        }
+      } catch { /* body may be unavailable */ }
+    }
+    return { resp, httpStatus, rows, message };
+  }
+
+  /** Download the §5 booking-cancellation sample template → parsed rows. */
+  async downloadBookingCancellationSample() {
+    const [dl] = await Promise.all([
+      this.page.waitForEvent('download', { timeout: 30_000 }),
+      this.section5SampleDownload.click(),
+    ]);
+    const os = require('os'); const path = require('path');
+    const fp = path.join(os.tmpdir(), `booking-cancel-sample-${Date.now()}.xlsx`);
+    await dl.saveAs(fp);
+    const XLSX = require('xlsx');
+    const wb = XLSX.readFile(fp);
+    return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+  }
+
   // ── Section 5 — Bulk Booking Cancellation ──────────────────────────────
 
+  /**
+   * §5 upload. Unlike §3/§4, the section Submit opens a DESTRUCTIVE confirmation
+   * modal ("…Booking deleted … Mavis booking entry deleted" — [Cancel] [Submit]);
+   * the cancellation request fires only after the modal's Submit is clicked.
+   * Returns the parsed contract ({httpStatus, rows, message}).
+   */
   async uploadBulkBookingCancellationFile(filePath) {
     await this.section5FileInput.setInputFiles(filePath);
+    await this.page.waitForTimeout(900);
+    await this.section5SubmitButton.click(); // opens the confirmation modal
+    const modal = this.page.locator('.ant-modal, [role="dialog"]').filter({ hasText: /Mavis|completed|Booking/i }).first();
+    await modal.waitFor({ state: 'visible', timeout: 8_000 }).catch(() => {});
+    // The modal's Submit stays disabled until BOTH acknowledgement checkboxes are ticked.
+    const boxes = modal.locator('input[type="checkbox"]');
+    const n = await boxes.count().catch(() => 0);
+    for (let i = 0; i < n; i++) await boxes.nth(i).check({ force: true }).catch(() => {});
+    await this.page.waitForTimeout(300);
+    const respP = this.page.waitForResponse((r) => r.request().method() !== 'GET' && /admin|cancel/i.test(r.url()) && !/master-config|clarity/i.test(r.url()), { timeout: 30_000 }).catch(() => null);
+    // Confirm: click the modal's now-enabled Submit (NOT Cancel).
+    const confirm = modal.locator('button').filter({ hasText: /^Submit$/i }).last();
+    if (await confirm.count().catch(() => 0)) await confirm.click().catch(() => {});
+    const resp = await respP;
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1500);
+    let httpStatus = null, rows = null, message = null;
+    if (resp) {
+      httpStatus = resp.status();
+      try {
+        const body = await resp.body();
+        const ct = (resp.headers()['content-type'] || '');
+        if (/spreadsheet|octet|xlsx|excel/i.test(ct)) {
+          const XLSX = require('xlsx');
+          const wb = XLSX.read(body, { type: 'buffer' });
+          rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+        } else {
+          try { message = JSON.parse(body.toString()).message; } catch { message = body.toString().slice(0, 300); }
+        }
+      } catch { /* body may be unavailable */ }
+    }
+    return { resp, httpStatus, rows, message };
   }
 
   // ── Section 6 — Bulk Registration Cancellation ─────────────────────────

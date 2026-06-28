@@ -427,6 +427,68 @@ test.describe('Config — Admin Portal E2E', () => {
     await configPage.expectSectionVisible('bulkBookingCancellation');
   });
 
+  test('ADM_CFG_090 — ADMIN-FS-Config-CMS §5 — Section 5 control inventory (Sample/Upload/Submit)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only control enumeration' });
+    await configPage.expectSectionVisible('bulkBookingCancellation');
+    await expect(configPage.section5SampleDownload).toBeVisible();
+    await expect(configPage.section5UploadButton).toBeVisible();
+    await expect(configPage.section5SubmitButton).toBeVisible();
+  });
+
+  test('ADM_CFG_057 — ADMIN-FS-Config-CMS §5 — unknown registration number returns a row error', async () => {
+    test.slow(); // §5 destructive-confirm modal (2 checkboxes + response) is slow
+    test.info().annotations.push({ type: 'testData', description: 'fake registration number GHNG-9999999999-Z (does not exist) → expect row-level error / not-found; no mutation. Non-destructive. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const FAKE = 'GHNG-9999999999-Z';
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/booking-cancel-057-unknown.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number'], [FAKE]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkBookingCancellation');
+    const res = await configPage.uploadBulkBookingCancellationFile(fp);
+    const row = (res.rows || []).find((r) => String(r[0]) === FAKE) || [];
+    const rowText = row.join(' ');
+    console.log(`[ADM_CFG_057] http=${res.httpStatus} message="${res.message}" row=${JSON.stringify(row)}`);
+    const rejected = res.httpStatus >= 400 || /not found|invalid|error|unknown|not eligible|no .*found/i.test(rowText + ' ' + (res.message || ''));
+    expect(rejected, `expected an error for unknown reg#; got row=${JSON.stringify(row)} msg="${res.message}"`).toBe(true);
+  });
+
+  test('ADM_CFG_059 — ADMIN-FS-Config-CMS §5 — accepts .xlsx only, rejects .csv', async () => {
+    test.slow(); // §5 destructive-confirm modal (2 checkboxes + response) is slow
+    test.info().annotations.push({ type: 'testData', description: 'upload a .csv file (Registration Number column) → expect rejection (wrong file type). Non-destructive. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const fs = require('fs');
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/booking-cancel-059.csv');
+    fs.writeFileSync(fp, 'Registration Number\nGHNG-9999999999-Z\n');
+    await configPage.expectSectionVisible('bulkBookingCancellation');
+    const res = await configPage.uploadBulkBookingCancellationFile(fp);
+    console.log(`[ADM_CFG_059] http=${res.httpStatus} message="${res.message}" rows=${res.rows ? res.rows.length : 'none'}`);
+    // A .csv must be rejected: 4xx, or an error message; it must NOT return a success result file.
+    const rejected = (res.httpStatus && res.httpStatus >= 400) || /invalid|type|xlsx|excel|format|not allowed|only/i.test(String(res.message || ''));
+    expect(rejected, `expected .csv rejection; got http=${res.httpStatus} msg="${res.message}"`).toBe(true);
+  });
+
+  test('ADM_CFG_092 — ADMIN-FS-Config-CMS §5 — only WINNER cancelable, other statuses skipped', async () => {
+    test.slow(); // §5 destructive-confirm modal (2 checkboxes + response) is slow
+    test.info().annotations.push({ type: 'testData', description: 'non-WINNER booking GHNG-1000000001-A (status ALLOCATED) uploaded → must be SKIPPED (only WINNER cancelable per §11.4); reg_unit unchanged (status + not soft-deleted). Non-destructive. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = 'GHNG-1000000001-A';
+    const before = await reg.getRegistrationUnitByNumber(REGNO);
+    expect(before, 'precondition: booking must exist').toBeTruthy();
+    expect(String(before.status).toUpperCase(), 'precondition: must be non-WINNER').not.toBe('WINNER');
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/booking-cancel-092-nonwinner.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number'], [REGNO]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkBookingCancellation');
+    const res = await configPage.uploadBulkBookingCancellationFile(fp);
+    const after = await reg.getRegistrationUnitByNumber(REGNO);
+    const row = (res.rows || []).find((r) => String(r[0]) === REGNO) || [];
+    console.log(`[ADM_CFG_092] http=${res.httpStatus} status ${before.status}->${after ? after.status : 'DELETED'} row=${JSON.stringify(row)}`);
+    // Non-WINNER must NOT be cancelled: still present, same status, not soft-deleted.
+    expect(after, 'non-WINNER booking must not be soft-deleted').toBeTruthy();
+    expect(String(after.status).toUpperCase()).toBe(String(before.status).toUpperCase());
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 6 — Bulk Registration Cancellation (DESTRUCTIVE — irreversible)
   // ════════════════════════════════════════════════════════════════════════

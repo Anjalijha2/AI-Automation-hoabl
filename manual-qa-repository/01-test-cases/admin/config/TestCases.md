@@ -374,3 +374,14 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_087 | ADM_CFG_087 | ⏭ SKIP | VERIFY-WITH-DEV — chunk size (250) + abort-after-2-chunk-failures is internal backend batching (§11.8 GAP-TL-043). Reliably triggering 2 chunk-level failures requires controlled fault injection across 500+ rows and would risk mutating many live units; not safely observable from the test layer on UAT. Verify via backend logs/unit test with dev. | Not executed | 3.4s |
+
+---
+
+## Last Run: 2026-06-28 13:50 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_090 | ADM_CFG_090 | ✅ PASS | none — read-only control enumeration | All assertions matched expected | 3.2s |
+| ADM_CFG_057 | ADM_CFG_057 | ✅ PASS | fake registration number GHNG-9999999999-Z (does not exist) → expect row-level error / not-found; no mutation. Non-destructive. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 6.2s |
+| ADM_CFG_059 | ADM_CFG_059 | ✅ PASS | upload a .csv file (Registration Number column) → expect rejection (wrong file type). Non-destructive. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 5.7s |
+| ADM_CFG_092 | ADM_CFG_092 | ✅ PASS | non-WINNER booking GHNG-1000000001-A (status ALLOCATED) uploaded → must be SKIPPED (only WINNER cancelable per §11.4); reg_unit unchanged (status + not soft-deleted). Non-destructive. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 26.5s |
