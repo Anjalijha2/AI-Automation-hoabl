@@ -1023,6 +1023,39 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(after).toBe(before); // value unchanged
   });
 
+  test('ADM_CFG_109 — ADMIN-FS-Config-CMS §9 — Max Preferences update dispatches no notification (FS §8)', async ({ page }) => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'Max Preferences change + Update while monitoring network → zero buyer-notification calls (FS Feature 9 §8); restore. Project-wide config, capture+restore. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const sel = configPage.maxPreferencesSelect;
+    const readVal = async () => (await sel.locator('.ant-select-selection-item').innerText().catch(() => '')).trim();
+    const pick = async (val) => { await sel.click(); await page.waitForTimeout(400); await page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item').filter({ hasText: new RegExp(`^${val}$`) }).first().click(); await page.waitForTimeout(300); };
+    const notif = [];
+    page.on('request', (r) => { if (/kaleyra|epinet|whatsapp|sendsms|\/sms|sendmail|\/email|notif|firebase|fcm/i.test(r.url())) notif.push(`${r.method()} ${r.url()}`); });
+    await configPage.expectSectionVisible('maxPreferencesPerUnit');
+    const orig = await readVal(); const target = orig === '7' ? '6' : '7';
+    try {
+      await pick(target);
+      await configPage.maxPreferencesUpdateButton.click();
+      await page.waitForLoadState('networkidle').catch(() => {}); await page.waitForTimeout(1000);
+      console.log(`[ADM_CFG_109] set ${orig}->${target} notifications=${notif.length} ${JSON.stringify(notif).slice(0, 150)}`);
+      expect(notif.length, `FS §8: no notifications; saw ${JSON.stringify(notif)}`).toBe(0);
+    } finally {
+      await configPage.expectSectionVisible('maxPreferencesPerUnit');
+      await pick(orig); await configPage.maxPreferencesUpdateButton.click(); await page.waitForTimeout(800);
+    }
+  });
+
+  test('ADM_CFG_046 — ADMIN-FS-Config-CMS §9 — lowering Max Preferences does not retroactively remove submitted preferences', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'VERIFY-WITH-DEV — retroactive effect on buyers who already submitted preferences is a downstream/buyer-side behaviour, not observable from the admin Config layer. Requires buyer-side data + dev/DB verification.' });
+    test.skip(true, 'VERIFY-WITH-DEV — retroactive buyer-preference effect not observable from admin test layer');
+  });
+
+  test('ADM_CFG_111 — ADMIN-FS-Config-CMS §9 — Max Preferences caps buyer preference selection', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'VERIFY-WITH-DEV — enforcement of the cap during a buyer allocation/preference flow is a Buyer-portal behaviour, out of admin Config scope. Cross-portal; verify in Buyer portal + dev.' });
+    test.skip(true, 'VERIFY-WITH-DEV — buyer-side cap enforcement is cross-portal (Buyer), not admin Config');
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Cross-section edge cases
   // ════════════════════════════════════════════════════════════════════════

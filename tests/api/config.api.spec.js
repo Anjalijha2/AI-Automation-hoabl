@@ -147,4 +147,45 @@ test.describe('Config — Admin Portal API', () => {
     test.info().annotations.push({ type: 'testData', description: 'VERIFY-WITH-DEV — PATCH /api/v1/admin/units/:id returns 404 "Not found" on UAT (probed PK 7007 + unit_id + /unit + /units; all 404). Endpoint from FS §11.9 GAP-TL-047 "New Feature" not yet deployed. Re-test when shipped.' });
     test.skip(true, 'VERIFY-WITH-DEV — units/:id PATCH endpoint not deployed on UAT (404 Not found)');
   });
+
+  const MAXPREF_PID = 'project-1708669316677';
+  const maxPrefUrl = `${API_BASE_URL}/api/v1/admin/max-preferences-per-unit/${MAXPREF_PID}`;
+  const getMaxPref = async (api2, token2) => {
+    const r = await api2.get('/api/v1/admin/max-preferences-per-unit', { token: token2, params: { projectId: MAXPREF_PID }, timeout: 30_000 });
+    const d = r.body || {};
+    const v = d.maxPreferencesPerUnit ?? (d.data && (d.data.maxPreferencesPerUnit ?? d.data.value ?? (typeof d.data === 'number' ? d.data : undefined)));
+    return { status: r.status, value: v, raw: JSON.stringify(r.body).slice(0, 200) };
+  };
+
+  test('ADM_CFG_110 — PUT /admin/max-preferences-per-unit/:projectId persists the value', async ({ request }) => {
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, 'Skipped on UAT — changes project config; set ALLOW_DESTRUCTIVE=1');
+    test.info().annotations.push({ type: 'testData', description: `PUT ${maxPrefUrl} body {maxPreferencesPerUnit:N}: capture current → PUT a different value → GET verify persisted → restore. projectId=${MAXPREF_PID}. admin JWT; ALLOW_DESTRUCTIVE=1.` });
+    const before = await getMaxPref(api, token);
+    const orig = Number(before.value);
+    console.log(`[ADM_CFG_110] GET before status=${before.status} value=${before.value} raw=${before.raw}`);
+    expect(Number.isFinite(orig), `current max-pref readable (raw=${before.raw})`).toBe(true);
+    const target = orig === 8 ? 7 : 8;
+    try {
+      const put = await api.put(`/api/v1/admin/max-preferences-per-unit/${MAXPREF_PID}`, { maxPreferencesPerUnit: target }, { token, timeout: 30_000 });
+      expect(put.status, `PUT ok (got ${put.status})`).toBeGreaterThanOrEqual(200);
+      expect(put.status).toBeLessThan(300);
+      const after = await getMaxPref(api, token);
+      console.log(`[ADM_CFG_110] orig=${orig} put=${target} after=${after.value}`);
+      expect(Number(after.value)).toBe(target);
+    } finally {
+      await api.put(`/api/v1/admin/max-preferences-per-unit/${MAXPREF_PID}`, { maxPreferencesPerUnit: orig }, { token, timeout: 30_000 });
+      expect(Number((await getMaxPref(api, token)).value)).toBe(orig);
+    }
+  });
+
+  test('ADM_CFG_108 — max-preferences-per-unit rejects a value above 255 (BRD §6 r10)', async ({ request }) => {
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, 'Skipped on UAT — exercises project config; set ALLOW_DESTRUCTIVE=1');
+    test.info().annotations.push({ type: 'testData', description: `PUT ${maxPrefUrl} {maxPreferencesPerUnit:256} → expect 4xx reject (>255 out of 0–255 bound, BRD §6 r10); current value unchanged. admin JWT; ALLOW_DESTRUCTIVE=1.` });
+    const before = await getMaxPref(api, token);
+    const res = await api.put(`/api/v1/admin/max-preferences-per-unit/${MAXPREF_PID}`, { maxPreferencesPerUnit: 256 }, { token, timeout: 30_000 });
+    const after = await getMaxPref(api, token);
+    console.log(`[ADM_CFG_108] PUT 256 → status=${res.status} msg=${JSON.stringify(res.body).slice(0, 150)} value ${before.value}->${after.value}`);
+    expect(res.status, '256 must be rejected (>255)').toBeGreaterThanOrEqual(400);
+    expect(Number(after.value)).toBe(Number(before.value)); // unchanged
+  });
 });

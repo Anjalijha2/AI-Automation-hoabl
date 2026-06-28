@@ -478,3 +478,15 @@
 |---|---|---|---|---|---|
 | ADM_CFG_044 | ADM_CFG_044 | ✅ PASS | Max Preferences: capture current value → set a different value → Update → reload & verify persisted → restore original. Project-wide config, capture+restore. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 10.4s |
 | ADM_CFG_107 | ADM_CFG_107 | ✅ PASS | Max Preferences: click Update WITHOUT changing the value → no error, value unchanged (idempotent save). Non-mutating. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 5.3s |
+
+---
+
+## Last Run: 2026-06-28 19:55 IST (§9 Max Preferences — mutations + API)
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_109 | ADM_CFG_109 | ✅ PASS | max-pref change + Update, network-monitored | Zero buyer notifications (FS §8); restored | 7.0s |
+| ADM_CFG_046 | ADM_CFG_046 | ⏭ SKIP | VERIFY-WITH-DEV | Retroactive buyer-preference effect not observable from admin layer | — |
+| ADM_CFG_111 | ADM_CFG_111 | ⏭ SKIP | VERIFY-WITH-DEV | Buyer-side cap enforcement is cross-portal (Buyer), not admin Config | — |
+| ADM_CFG_108 | ADM_CFG_108 | ✅ PASS | PUT max-preferences-per-unit {256} | 4xx reject (>255 out of 0–255 bound, BRD §6 r10); value unchanged | 0.4s |
+| ADM_CFG_110 | ADM_CFG_110 | ✅ PASS | PUT /admin/max-preferences-per-unit/project-1708669316677 {maxPreferencesPerUnit:N} | 0→8 persisted (GET ?projectId verifies), restored 0 | 0.4s |
