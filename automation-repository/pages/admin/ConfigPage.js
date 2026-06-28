@@ -364,7 +364,25 @@ class ConfigPage extends BasePage {
     const resp = await respP;
     await this.page.waitForLoadState('networkidle').catch(() => {});
     await this.page.waitForTimeout(1500);
-    return resp;
+    // Parse the §3 contract: a 200 returns a per-row result .xlsx (last column =
+    // "Result"); a 4xx returns a JSON {success,message}. Surface both so §3 tests
+    // can assert the row-level outcome ("Updated X → Y", "Invalid Unit ID", …).
+    let httpStatus = null, rows = null, message = null;
+    if (resp) {
+      httpStatus = resp.status();
+      try {
+        const body = await resp.body();
+        const ct = (resp.headers()['content-type'] || '');
+        if (/spreadsheet|octet|xlsx|excel/i.test(ct)) {
+          const XLSX = require('xlsx');
+          const wb = XLSX.read(body, { type: 'buffer' });
+          rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+        } else {
+          try { message = JSON.parse(body.toString()).message; } catch { message = body.toString().slice(0, 300); }
+        }
+      } catch { /* response body may be unavailable */ }
+    }
+    return { resp, httpStatus, rows, message };
   }
 
   /** The Active/Inactive toggle on the tower card whose heading contains `name`. */

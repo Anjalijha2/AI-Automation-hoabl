@@ -898,4 +898,43 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(afterA).toBe('AVAILABLE'); // Status=AVAILABLE applied; unit restored
   });
 
+  test('ADM_CFG_018 — ADMIN-FS-Config-CMS §3 — upload Status=RESERVED Update=1 sets unit Reserved', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (unit_id testUnit-547664512575, Crest): AVAILABLE baseline → upload RESERVED/Update=1 → DB RESERVED + result row "Updated … → RESERVED"; self-restore to AVAILABLE; ALLOW_DESTRUCTIVE=1 (campaign off)' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — unit-status upload; set ALLOW_DESTRUCTIVE=1 (campaign inactive)');
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UNIT_ID = process.env.CFG_UNIT_ID || 'testUnit-547664512575', UNIT_NO = process.env.CFG_UNIT_NO || '302';
+    const TOWER = 'Crest', TYPID = 'testtypology-1757656549935', TYPNAME = '1 BHK Growth Home';
+    const statusOf = async () => String((await inv.getUnitByUnitId(UNIT_ID)).status).toUpperCase();
+    const fileFor = (status) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/unit-status-${status}.xlsx`);
+      const ws = X.utils.aoa_to_sheet([
+        ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Status', 'Update (1/0)'],
+        [TOWER, TYPID, TYPNAME, UNIT_ID, UNIT_NO, status, 1],
+      ]);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, 'S1'); X.writeFile(wb, fp); return fp;
+    };
+
+    // Ensure AVAILABLE baseline so the RESERVED transition is observable.
+    if ((await statusOf()) !== 'AVAILABLE') {
+      await configPage.uploadUnitStatusFile(fileFor('AVAILABLE'));
+      await configPage.navigate(); await configPage.waitForLoad();
+    }
+    await configPage.expectSectionVisible('unitStatus');
+    // Core 018 assertion: RESERVED/Update=1 → unit Reserved (UI contract + DB).
+    const res = await configPage.uploadUnitStatusFile(fileFor('RESERVED'));
+    const resultRow = (res.rows || []).find((r) => String(r[3]) === UNIT_ID) || [];
+    const dbAfter = await statusOf();
+    console.log(`[ADM_CFG_018] http=${res.httpStatus} result="${resultRow[resultRow.length - 1]}" db=${dbAfter}`);
+    expect(res.httpStatus).toBe(200);
+    expect(String(resultRow[resultRow.length - 1] || '')).toMatch(/RESERVED/i);
+    expect(dbAfter).toBe('RESERVED');
+    // Self-restore → AVAILABLE.
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('unitStatus');
+    await configPage.uploadUnitStatusFile(fileFor('AVAILABLE'));
+    expect(await statusOf()).toBe('AVAILABLE');
+  });
+
 });
