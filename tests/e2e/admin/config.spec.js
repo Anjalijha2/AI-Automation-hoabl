@@ -973,12 +973,54 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(Math.max(...nums), 'all UI options within the 0–255 bound').toBeLessThanOrEqual(255);
   });
 
-  test('ADM_CFG_044 — ADMIN-FS-Config-CMS §9 — Update Max Preferences fires save', async ({ page }) => {
+  test('ADM_CFG_044 — ADMIN-FS-Config-CMS §9 — selecting a new value and Update persists it', async ({ page }) => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'Max Preferences: capture current value → set a different value → Update → reload & verify persisted → restore original. Project-wide config, capture+restore. ALLOW_DESTRUCTIVE=1.' });
     test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const sel = configPage.maxPreferencesSelect;
+    const readVal = async () => (await sel.locator('.ant-select-selection-item').innerText().catch(() => '')).trim();
+    const pick = async (val) => {
+      await sel.click(); await page.waitForTimeout(400);
+      await page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item').filter({ hasText: new RegExp(`^${val}$`) }).first().click();
+      await page.waitForTimeout(300);
+    };
+    const save = async () => {
+      const respP = page.waitForResponse((r) => r.request().method() !== 'GET' && /admin|max-pref/i.test(r.url()) && !/master-config|clarity/i.test(r.url()), { timeout: 20_000 }).catch(() => null);
+      await configPage.maxPreferencesUpdateButton.click();
+      await respP; await page.waitForLoadState('networkidle').catch(() => {}); await page.waitForTimeout(800);
+    };
     await configPage.expectSectionVisible('maxPreferencesPerUnit');
-    // We do not change the value (avoid mutating UAT) — we just confirm the
-    // Update control is clickable.
-    await expect(configPage.maxPreferencesUpdateButton).toBeEnabled();
+    const orig = await readVal();
+    const target = orig === '7' ? '6' : '7';
+    try {
+      await pick(target); await save();
+      await configPage.navigate(); await configPage.waitForLoad(); await configPage.expectSectionVisible('maxPreferencesPerUnit');
+      const after = await readVal();
+      console.log(`[ADM_CFG_044] orig=${orig} set=${target} afterReload=${after}`);
+      expect(after).toBe(target); // persisted across reload
+    } finally {
+      await configPage.expectSectionVisible('maxPreferencesPerUnit');
+      await pick(orig); await save();
+      await configPage.navigate(); await configPage.waitForLoad(); await configPage.expectSectionVisible('maxPreferencesPerUnit');
+      expect(await readVal()).toBe(orig); // restored
+    }
+  });
+
+  test('ADM_CFG_107 — ADMIN-FS-Config-CMS §9 — clicking Update without changing the value', async ({ page }) => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'Max Preferences: click Update WITHOUT changing the value → no error, value unchanged (idempotent save). Non-mutating. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const sel = configPage.maxPreferencesSelect;
+    const readVal = async () => (await sel.locator('.ant-select-selection-item').innerText().catch(() => '')).trim();
+    await configPage.expectSectionVisible('maxPreferencesPerUnit');
+    const before = await readVal();
+    const respP = page.waitForResponse((r) => r.request().method() !== 'GET' && /admin|max-pref/i.test(r.url()) && !/master-config|clarity/i.test(r.url()), { timeout: 15_000 }).catch(() => null);
+    await configPage.maxPreferencesUpdateButton.click();
+    const resp = await respP; await page.waitForTimeout(800);
+    await configPage.navigate(); await configPage.waitForLoad(); await configPage.expectSectionVisible('maxPreferencesPerUnit');
+    const after = await readVal();
+    console.log(`[ADM_CFG_107] no-change Update: http=${resp ? resp.status() : 'none'} value ${before}->${after}`);
+    expect(after).toBe(before); // value unchanged
   });
 
   // ════════════════════════════════════════════════════════════════════════

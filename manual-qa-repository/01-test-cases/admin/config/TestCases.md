@@ -469,3 +469,12 @@
 | ADM_CFG_096 | ADM_CFG_096 | ✅ PASS | GHNG-1000008364-L (PREALLOCATED, disposable) §6 cancel → associated unit released back to inventory (no longer RESERVED/BOOKED). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 7.0s |
 | ADM_CFG_063 | ADM_CFG_063 | ✅ PASS | GHNG-1000008364-M (PREALLOCATED, disposable) §6 cancel → reg_unit no longer active in its prior state (status→REFUND/cancelled). IRREVERSIBLE; user-authorised. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 6.7s |
 | ADM_CFG_065 | ADM_CFG_065 | ✅ PASS | GHNG-1000008364-Q (already cancelled in 031 → REFUND) re-uploaded → FAILED/skipped (not re-cancelable); state unchanged. Non-destructive (already cancelled). ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 6.6s |
+
+---
+
+## Last Run: 2026-06-28 19:38 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_044 | ADM_CFG_044 | ✅ PASS | Max Preferences: capture current value → set a different value → Update → reload & verify persisted → restore original. Project-wide config, capture+restore. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 10.4s |
+| ADM_CFG_107 | ADM_CFG_107 | ✅ PASS | Max Preferences: click Update WITHOUT changing the value → no error, value unchanged (idempotent save). Non-mutating. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 5.3s |
