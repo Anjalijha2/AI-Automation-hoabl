@@ -51,4 +51,11 @@ async function getTowerByName(name) {
   ).then((r) => r[0] || null);
 }
 
-module.exports = { getUnitById, getUnitsByTower, getUnitsByStatus, getTowers, getTypologies, getTowerByName, getUnitByUnitId };
+async function getUnitPricingByUnitId(unitId) {
+  return sequelize.query(
+    'SELECT unit_id, unit_no, status, agreement_value, early_bird_benefit, allocation_amount, allocation_percent, allocation_calc_type FROM units WHERE unit_id = :unitId AND deleted_at IS NULL LIMIT 1',
+    { replacements: { unitId }, type: sequelize.QueryTypes.SELECT }
+  ).then((r) => r[0] || null);
+}
+
+module.exports = { getUnitById, getUnitsByTower, getUnitsByStatus, getTowers, getTypologies, getTowerByName, getUnitByUnitId, getUnitPricingByUnitId };

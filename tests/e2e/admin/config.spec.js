@@ -172,6 +172,68 @@ test.describe('Config — Admin Portal E2E', () => {
     // tests/api/config.api.spec.js where we have HTTP control.
   });
 
+  test('ADM_CFG_084 — ADMIN-FS-Config-CMS §4 — Section 4 control inventory (Download/Upload/Submit)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only control enumeration' });
+    await configPage.expectSectionVisible('unitCostUpdate');
+    await expect(configPage.availableUnitInventoryDownload).toBeVisible();
+    await expect(configPage.section4UploadButton).toBeVisible();
+    await expect(configPage.section4SubmitButton).toBeVisible();
+  });
+
+  test('ADM_CFG_089 — ADMIN-FS-Config-CMS §4 — inventory download excludes BOOKED/HOLD/REFUGE', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — download Available Unit Inventory; assert Status column contains only AVAILABLE/RESERVED (BOOKED/HOLD/PBT/REFUGE excluded per §4 download scope)' });
+    await configPage.expectSectionVisible('unitCostUpdate');
+    const rows = await configPage.downloadUnitInventory();
+    const hdr = (rows[0] || []).map((h) => String(h).toLowerCase());
+    const sIdx = hdr.findIndex((h) => /status/.test(h));
+    expect(sIdx, 'download must have a Status column').toBeGreaterThanOrEqual(0);
+    const statuses = new Set(rows.slice(1).filter((r) => r && r.length).map((r) => String(r[sIdx]).toUpperCase()));
+    console.log(`[ADM_CFG_089] download statuses present: ${JSON.stringify([...statuses])}`);
+    for (const bad of ['BOOKED', 'HOLD', 'REFUGE', 'PBT']) expect(statuses.has(bad), `download must exclude ${bad}`).toBe(false);
+    expect(statuses.has('AVAILABLE') || statuses.has('RESERVED')).toBe(true);
+  });
+
+  test('ADM_CFG_026 — ADMIN-FS-Config-CMS §4 — pricing rows with Update=0 are not applied', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575) Early Bird Benefit changed +999 but Update=0 → DB pricing UNCHANGED (non-mutating). ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const p0 = await inv.getUnitPricingByUnitId(UID);
+    const newEarly = Number(p0.early_bird_benefit || 0) + 999;
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/unit-cost-026-update0.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([
+      ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Agreement Value', 'Early Bird Benefit', 'Allocation Amount', 'Allocation Percent', 'Allocation Calc Type', 'Status', 'Update (1/0)'],
+      ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, p0.agreement_value, newEarly, p0.allocation_amount, p0.allocation_percent, p0.allocation_calc_type, p0.status, 0],
+    ]), 'S1'); X.writeFile(wb, fp);
+
+    await configPage.expectSectionVisible('unitCostUpdate');
+    const res = await configPage.uploadUnitCostFile(fp);
+    const p1 = await inv.getUnitPricingByUnitId(UID);
+    console.log(`[ADM_CFG_026] http=${res.httpStatus} msg="${res.message}" early ${p0.early_bird_benefit}->${p1.early_bird_benefit} (sent ${newEarly}, Update=0)`);
+    expect(Number(p1.early_bird_benefit)).toBe(Number(p0.early_bird_benefit)); // unchanged — Update=0 skipped
+  });
+
+  test('ADM_CFG_086 — ADMIN-FS-Config-CMS §4 — no rows marked for update returns documented error (§11.8)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 single pricing row Update=0 → expect HTTP 400 "No rows marked for update"; no DB write (non-mutating). ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const p0 = await inv.getUnitPricingByUnitId(UID);
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/unit-cost-086-norows.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([
+      ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Agreement Value', 'Early Bird Benefit', 'Allocation Amount', 'Allocation Percent', 'Allocation Calc Type', 'Status', 'Update (1/0)'],
+      ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, p0.agreement_value, p0.early_bird_benefit, p0.allocation_amount, p0.allocation_percent, p0.allocation_calc_type, p0.status, 0],
+    ]), 'S1'); X.writeFile(wb, fp);
+
+    await configPage.expectSectionVisible('unitCostUpdate');
+    const res = await configPage.uploadUnitCostFile(fp);
+    console.log(`[ADM_CFG_086] http=${res.httpStatus} message="${res.message}"`);
+    expect(res.httpStatus).toBe(400);
+    expect(String(res.message || '')).toMatch(/no rows marked for update/i);
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 5 — Bulk Booking Cancellation (DESTRUCTIVE — cancels real bookings)
   // ════════════════════════════════════════════════════════════════════════

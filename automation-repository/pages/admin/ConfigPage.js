@@ -106,10 +106,12 @@ class ConfigPage extends BasePage {
     this.section3SubmitButton      = this.section3Wrap.getByRole('button', { name: /^Submit$/i });
 
     // ── Section 4 — Unit Cost Update ──────────────────────────────────────
-    this.availableUnitInventoryDownload = this._after('unitCostUpdate', SAMPLE);
-    this.section4UploadButton           = this._after('unitCostUpdate', UPLOAD);
-    this.section4FileInput              = this._after('unitCostUpdate', FILEIN);
-    this.section4SubmitButton           = this._after('unitCostUpdate', SUBMIT);
+    // §4 controls scoped to the section's own .form-section-wrapper (robust; see §3).
+    this.section4Wrap                   = this._sectionWrap('unitCostUpdate');
+    this.availableUnitInventoryDownload = this.section4Wrap.getByRole('button', { name: /Download/i });
+    this.section4UploadButton           = this.section4Wrap.getByRole('button', { name: /Upload/i });
+    this.section4FileInput              = this.section4Wrap.locator('input[type="file"]');
+    this.section4SubmitButton           = this.section4Wrap.getByRole('button', { name: /^Submit$/i });
 
     // ── Section 5 — Bulk Booking Cancellation ─────────────────────────────
     this.section5SampleDownload    = this._after('bulkBookingCancellation', SAMPLE);
@@ -443,6 +445,42 @@ class ConfigPage extends BasePage {
 
   async uploadUnitCostFile(filePath) {
     await this.section4FileInput.setInputFiles(filePath);
+    await this.page.waitForTimeout(900);
+    const respP = this.page.waitForResponse((r) => r.request().method() !== 'GET' && /admin\//i.test(r.url()), { timeout: 30_000 }).catch(() => null);
+    await this.section4SubmitButton.click();
+    const resp = await respP;
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1500);
+    let httpStatus = null, rows = null, message = null;
+    if (resp) {
+      httpStatus = resp.status();
+      try {
+        const body = await resp.body();
+        const ct = (resp.headers()['content-type'] || '');
+        if (/spreadsheet|octet|xlsx|excel/i.test(ct)) {
+          const XLSX = require('xlsx');
+          const wb = XLSX.read(body, { type: 'buffer' });
+          rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+        } else {
+          try { message = JSON.parse(body.toString()).message; } catch { message = body.toString().slice(0, 300); }
+        }
+      } catch { /* body may be unavailable */ }
+    }
+    return { resp, httpStatus, rows, message };
+  }
+
+  /** Download the §4 "Available Unit Inventory" pricing spreadsheet → returns parsed rows. */
+  async downloadUnitInventory() {
+    const [dl] = await Promise.all([
+      this.page.waitForEvent('download', { timeout: 30_000 }),
+      this.availableUnitInventoryDownload.click(),
+    ]);
+    const os = require('os'); const path = require('path');
+    const fp = path.join(os.tmpdir(), `unit-inventory-${Date.now()}.xlsx`);
+    await dl.saveAs(fp);
+    const XLSX = require('xlsx');
+    const wb = XLSX.readFile(fp);
+    return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
   }
 
   // ── Section 5 — Bulk Booking Cancellation ──────────────────────────────
