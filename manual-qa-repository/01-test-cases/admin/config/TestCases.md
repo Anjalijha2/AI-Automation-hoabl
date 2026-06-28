@@ -490,3 +490,11 @@
 | ADM_CFG_111 | ADM_CFG_111 | ⏭ SKIP | VERIFY-WITH-DEV | Buyer-side cap enforcement is cross-portal (Buyer), not admin Config | — |
 | ADM_CFG_108 | ADM_CFG_108 | ✅ PASS | PUT max-preferences-per-unit {256} | 4xx reject (>255 out of 0–255 bound, BRD §6 r10); value unchanged | 0.4s |
 | ADM_CFG_110 | ADM_CFG_110 | ✅ PASS | PUT /admin/max-preferences-per-unit/project-1708669316677 {maxPreferencesPerUnit:N} | 0→8 persisted (GET ?projectId verifies), restored 0 | 0.4s |
+
+---
+
+## Last Run: 2026-06-28 20:00 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_104 | ADM_CFG_104 | ✅ PASS | §8 count change + Submit while monitoring network → zero buyer notifications (FS Feature 8 §8); restore. Project-wide config, capture+restore. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 10.5s |

@@ -930,6 +930,104 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(opts.every((o) => /^\d+$/.test(o)), 'all options numeric').toBe(true);
   });
 
+  test('ADM_CFG_041 — ADMIN-FS-Config-CMS §8 — changing a typology count + Submit persists the new limit', async ({ page }) => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: '§8 first typology (1 Bed Growth Home) count: capture current → set a different value → Submit → reload & verify persisted → restore. Project-wide config, capture+restore. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const sel0 = configPage.section8CountSelects.first();
+    const read = async () => (await sel0.locator('.ant-select-selection-item').innerText().catch(() => '')).trim();
+    const pick = async (val) => { await sel0.click(); await page.waitForTimeout(400); await page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item').filter({ hasText: new RegExp(`^${val}$`) }).first().click(); await page.waitForTimeout(300); };
+    const save = async () => {
+      const respP = page.waitForResponse((r) => r.request().method() !== 'GET' && /admin|master-config|customer/i.test(r.url()) && !/fetch|clarity/i.test(r.url()), { timeout: 20_000 }).catch(() => null);
+      await configPage.section8SubmitButton.click();
+      const resp = await respP; await page.waitForLoadState('networkidle').catch(() => {}); await page.waitForTimeout(800);
+      return resp ? `${resp.status()} ${resp.url()}` : 'no-response';
+    };
+    await configPage.expectSectionVisible('customerActionsCard');
+    const orig = await read();
+    const target = orig === '16' ? '15' : '16';
+    try {
+      await pick(target);
+      console.log(`[ADM_CFG_041] save → ${await save()}`);
+      await configPage.navigate(); await configPage.waitForLoad(); await configPage.expectSectionVisible('customerActionsCard');
+      const after = await read();
+      console.log(`[ADM_CFG_041] orig=${orig} set=${target} afterReload=${after}`);
+      expect(after).toBe(target);
+    } finally {
+      await configPage.expectSectionVisible('customerActionsCard');
+      await pick(orig); await save();
+      await configPage.navigate(); await configPage.waitForLoad(); await configPage.expectSectionVisible('customerActionsCard');
+      expect(await read()).toBe(orig);
+    }
+  });
+
+  test('ADM_CFG_042 — ADMIN-FS-Config-CMS §8 — unchecking one typology blocks only that type (master ON)', async ({ page }) => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: '§8 master ON: uncheck first typology (1 Bed Growth Home) → Submit → reload & verify that typology unchecked while others stay checked → restore (re-check). Project-wide config, capture+restore. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const cb = configPage.section8Checkboxes;
+    const isChecked = async (i) => cb.nth(i).evaluate((el) => el.checked === true || el.getAttribute('aria-checked') === 'true' || (el.closest('.ant-checkbox') || {}).classList?.contains('ant-checkbox-checked')).catch(() => null);
+    const save = async () => {
+      const respP = page.waitForResponse((r) => r.request().method() !== 'GET' && /admin|master-config|customer/i.test(r.url()) && !/fetch|clarity/i.test(r.url()), { timeout: 20_000 }).catch(() => null);
+      await configPage.section8SubmitButton.click();
+      await respP; await page.waitForLoadState('networkidle').catch(() => {}); await page.waitForTimeout(800);
+    };
+    await configPage.expectSectionVisible('customerActionsCard');
+    const masterOn = await configPage.toggleState(configPage.allowAdditionalRegToggle).catch(() => true);
+    test.skip(!masterOn, 'master toggle is OFF — 042 requires master ON');
+    const before0 = await isChecked(0), before1 = await isChecked(1);
+    try {
+      await cb.nth(0).click({ force: true }); await page.waitForTimeout(300);
+      await save();
+      await configPage.navigate(); await configPage.waitForLoad(); await configPage.expectSectionVisible('customerActionsCard');
+      const after0 = await isChecked(0), after1 = await isChecked(1);
+      console.log(`[ADM_CFG_042] typ0 ${before0}->${after0} (toggled), typ1 ${before1}->${after1} (unchanged)`);
+      expect(after0).toBe(!before0);   // toggled typology changed
+      expect(after1).toBe(before1);    // other typology unchanged
+    } finally {
+      await configPage.expectSectionVisible('customerActionsCard');
+      if ((await isChecked(0)) !== before0) { await cb.nth(0).click({ force: true }); await page.waitForTimeout(300); await save(); }
+      await configPage.navigate(); await configPage.waitForLoad(); await configPage.expectSectionVisible('customerActionsCard');
+      expect(await isChecked(0)).toBe(before0); // restored
+    }
+  });
+
+  test('ADM_CFG_104 — ADMIN-FS-Config-CMS §8 — Customer Actions update is silent (FS §8)', async ({ page }) => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: '§8 count change + Submit while monitoring network → zero buyer notifications (FS Feature 8 §8); restore. Project-wide config, capture+restore. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const sel0 = configPage.section8CountSelects.first();
+    const read = async () => (await sel0.locator('.ant-select-selection-item').innerText().catch(() => '')).trim();
+    const pick = async (val) => {
+      await sel0.click(); await page.waitForTimeout(400);
+      const opt = page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item').filter({ hasText: new RegExp(`^${val}$`) }).first();
+      const holder = page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .rc-virtual-list-holder').first();
+      for (let i = 0; i < 30 && !(await opt.count().catch(() => 0)); i++) { await holder.evaluate((e) => { e.scrollTop += 200; }).catch(() => {}); await page.waitForTimeout(60); }
+      await opt.scrollIntoViewIfNeeded().catch(() => {});
+      await opt.click();
+      await page.waitForTimeout(300);
+    };
+    const notif = [];
+    page.on('request', (r) => { if (/kaleyra|epinet|whatsapp|sendsms|\/sms|sendmail|\/email|notif|firebase|fcm/i.test(r.url())) notif.push(`${r.method()} ${r.url()}`); });
+    await configPage.expectSectionVisible('customerActionsCard');
+    const orig = await read(); const target = orig === '16' ? '15' : '16';
+    try {
+      await pick(target);
+      await configPage.section8SubmitButton.click();
+      await page.waitForLoadState('networkidle').catch(() => {}); await page.waitForTimeout(1000);
+      console.log(`[ADM_CFG_104] set ${orig}->${target} notifications=${notif.length} ${JSON.stringify(notif).slice(0, 150)}`);
+      expect(notif.length, `FS §8: no notifications; saw ${JSON.stringify(notif)}`).toBe(0);
+    } finally {
+      // Best-effort restore — the §8 count limit is a harmless disposable value; a flaky
+      // dropdown re-pick must not fail the silent-update assertion above.
+      try {
+        await configPage.navigate(); await configPage.waitForLoad(); await configPage.expectSectionVisible('customerActionsCard');
+        if ((await read()) !== orig) { await pick(orig); await configPage.section8SubmitButton.click(); await page.waitForTimeout(800); }
+        console.log(`[ADM_CFG_104] restore → ${await read()} (orig ${orig})`);
+      } catch (e) { console.log(`[ADM_CFG_104] restore best-effort failed: ${e.message.slice(0, 80)}`); }
+    }
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 9 — Max Preferences Per Unit
   // ════════════════════════════════════════════════════════════════════════
