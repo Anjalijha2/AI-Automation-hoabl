@@ -449,3 +449,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_062 | ADM_CFG_062 | ✅ PASS | GHNG-1000008364-J Update=0 → §6 must NOT cancel (Update=0 skip); -J stays WINNER. Non-destructive (Update=0; WINNER also "already allocated"). ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 27.8s |
+
+---
+
+## Last Run: 2026-06-28 19:28 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_031 | ADM_CFG_031 | ✅ PASS | GHNG-1000008364-Q (PREALLOCATED, non-allocated, disposable) §6 refund-bulk (campaign OFF) → -Q cancelled (refunded/soft-deleted). Captures siblings -A/-G to confirm per-row granularity. §6 rejects WINNER ("already allocated"); -Q is non-allocated so eligible. IRREVERSIBLE; user-authorised (GHNG-1000008364 fully disposable). | All assertions matched expected | 30.0s |
