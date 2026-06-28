@@ -1028,6 +1028,11 @@ test.describe('Config — Admin Portal E2E', () => {
     }
   });
 
+  test('ADM_CFG_105 — ADMIN-FS-Config-CMS §8 — saved Customer Actions config is enforced on the customer side', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'VERIFY-WITH-DEV — enforcement of the Customer Actions config during a buyer additional-registration flow is a Buyer-portal/downstream behaviour, out of admin Config scope (cross-portal). Verify in Buyer portal + dev.' });
+    test.skip(true, 'VERIFY-WITH-DEV — customer-side enforcement is cross-portal (Buyer), not admin Config');
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 9 — Max Preferences Per Unit
   // ════════════════════════════════════════════════════════════════════════

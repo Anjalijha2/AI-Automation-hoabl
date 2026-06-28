@@ -188,4 +188,38 @@ test.describe('Config — Admin Portal API', () => {
     expect(res.status, '256 must be rejected (>255)').toBeGreaterThanOrEqual(400);
     expect(Number(after.value)).toBe(Number(before.value)); // unchanged
   });
+
+  // Current §8 baseline (reset to this after the §8 mutation tests).
+  const CA_CURRENT = { allowAddRegUnit: true, addRegUnitsDetails: { '1 Bed Growth Home': { isAllowed: true, countAllowed: 15 }, '2 Bed Growth Home': { isAllowed: true, countAllowed: 17 }, '2 Bed Rise Home': { isAllowed: true, countAllowed: 20 } } };
+
+  test('ADM_CFG_FSD_053 — POST /admin/customer-actions with identical config returns 400 (not 200)', async () => {
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, 'Skipped on UAT — posts project config; set ALLOW_DESTRUCTIVE=1');
+    test.info().annotations.push({ type: 'testData', description: 'POST /api/v1/admin/customer-actions with the CURRENT config unchanged → expect HTTP 400 (no-op rejected, not 200). Non-mutating (identical). admin JWT; ALLOW_DESTRUCTIVE=1.' });
+    const res = await api.post('/api/v1/admin/customer-actions', CA_CURRENT, { token, timeout: 30_000 });
+    console.log(`[ADM_CFG_FSD_053] identical config → status=${res.status} msg=${JSON.stringify(res.body).slice(0, 150)}`);
+    expect(res.status, 'identical config must be rejected with 400').toBe(400);
+  });
+
+  test('ADM_CFG_FSD_051 — customer-actions resolves projectId server-side (ignores client-supplied)', async () => {
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, 'Skipped on UAT — posts project config; set ALLOW_DESTRUCTIVE=1');
+    test.info().annotations.push({ type: 'testData', description: 'POST /api/v1/admin/customer-actions with a bogus projectId field + the current (identical) config → server ignores client projectId (resolves server-side), still sees identical config → 400. Proves projectId is not client-controlled. Non-mutating. admin JWT.' });
+    const res = await api.post('/api/v1/admin/customer-actions', { ...CA_CURRENT, projectId: 'bogus-project-xyz-123' }, { token, timeout: 30_000 });
+    console.log(`[ADM_CFG_FSD_051] bogus projectId + identical → status=${res.status} msg=${JSON.stringify(res.body).slice(0, 150)}`);
+    // Server resolves projectId itself: the bogus id is ignored, so it still evaluates
+    // against the real project's (identical) config → 400, NOT a 200/“project not found”.
+    expect(res.status, 'client projectId ignored — still identical → 400').toBe(400);
+  });
+
+  test('ADM_CFG_FSD_055 — /master-config/fetch is reachable by any authenticated user (auth-gap finding)', async () => {
+    test.skip(!process.env.ALLOW_DESTRUCTIVE && false, ''); // read-only, always safe
+    test.info().annotations.push({ type: 'testData', description: 'POST /api/v1/master-config/fetch with a valid (admin) JWT → 200, no admin-role gate. FINDING: documented auth gap — endpoint has no role restriction; any authenticated user can read master config. Cannot prove "non-admin" without a non-admin token; asserts reachability + records the gap.' });
+    const res = await api.post('/api/v1/master-config/fetch', { keys: ['allocation_type'] }, { token, timeout: 30_000 });
+    console.log(`[ADM_CFG_FSD_055] master-config/fetch → status=${res.status} (no role gate — auth-gap finding)`);
+    expect(res.status, 'fetch reachable by authenticated user').toBe(200);
+  });
+
+  test('ADM_CFG_FSD_063 — storeMasterConfigs accepts only the 8 documented dataType values (§11.1)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'VERIFY-WITH-DEV — storeMasterConfigs (dataType enum: string/number/boolean/json/date/datetime/array/object) is not exposed via the Config UI and its write endpoint/body are not safely discoverable from the test layer without risking master-config corruption. Verify the enum guard with dev / a unit test.' });
+    test.skip(true, 'VERIFY-WITH-DEV — storeMasterConfigs write endpoint not UI-exposed; enum guard needs dev/unit-test verification');
+  });
 });

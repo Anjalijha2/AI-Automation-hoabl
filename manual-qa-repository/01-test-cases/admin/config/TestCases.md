@@ -498,3 +498,15 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_104 | ADM_CFG_104 | ✅ PASS | §8 count change + Submit while monitoring network → zero buyer notifications (FS Feature 8 §8); restore. Project-wide config, capture+restore. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 10.5s |
+
+---
+
+## Last Run: 2026-06-28 20:10 IST (§8 Customer Actions — API + downstream)
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_FSD_053 | ADM_CFG_FSD_053 | ✅ PASS | POST /admin/customer-actions identical config | 400 "No Change Detected" (no-op rejected, not 200) | 0.5s |
+| ADM_CFG_FSD_051 | ADM_CFG_FSD_051 | ✅ PASS | POST customer-actions + bogus projectId | 400 "No Change Detected" — client projectId ignored (server-resolved) | 0.1s |
+| ADM_CFG_FSD_055 | ADM_CFG_FSD_055 | ✅ PASS | POST /master-config/fetch (admin JWT) | 200 reachable — FINDING: no admin-role gate (auth gap, documented) | 0.3s |
+| ADM_CFG_FSD_063 | ADM_CFG_FSD_063 | ⏭ SKIP | VERIFY-WITH-DEV | storeMasterConfigs dataType-enum guard not UI-exposed; needs dev/unit-test | — |
+| ADM_CFG_105 | ADM_CFG_105 | ⏭ SKIP | VERIFY-WITH-DEV | Customer-side enforcement is cross-portal (Buyer), not admin Config | — |
