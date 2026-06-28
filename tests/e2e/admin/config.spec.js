@@ -680,6 +680,26 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(rejected, `expected error for unknown reg#; http=${res.httpStatus} msg="${res.message}" row="${rowText}"`).toBe(true);
   });
 
+  test('ADM_CFG_061 — ADMIN-FS-Config-CMS §6 — registration cancellation blocked during active campaign', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-J (WINNER, Mavis cleared) §6 cancel attempted while campaign ACTIVE → submit-time re-check BLOCKS ("campaign is active"); booking stays WINNER. ALLOW_DESTRUCTIVE=1; campaign-active window.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = 'GHNG-1000008364-J';
+    const before = await reg.getRegistrationUnitByNumber(REGNO);
+    expect(before && String(before.status).toUpperCase(), 'precondition: WINNER').toBe('WINNER');
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/reg-cancel-061.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number', 'Update (1/0)'], [REGNO, 1]]), 'S1'); X.writeFile(wb, fp);
+    await configPage.expectSectionVisible('bulkRegistrationCancellation');
+    const res = await configPage.uploadBulkRegistrationCancellationFile(fp);
+    const after = await reg.getRegistrationUnitByNumber(REGNO);
+    console.log(`[ADM_CFG_061] http=${res.httpStatus} msg="${res.message}" status ${before.status}->${after ? after.status : 'NULL'}`);
+    expect(after && String(after.status).toUpperCase(), 'booking must remain WINNER — campaign must block').toBe('WINNER');
+    const blocked = res.httpStatus >= 400 || /campaign|active|cannot|blocked|not allowed/i.test(String(res.message || ''));
+    expect(blocked, `expected campaign block; http=${res.httpStatus} msg="${res.message}"`).toBe(true);
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 7 — Sales Managers Bulk Upload (DESTRUCTIVE — creates users)
   // ════════════════════════════════════════════════════════════════════════

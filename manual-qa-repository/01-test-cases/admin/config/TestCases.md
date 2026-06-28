@@ -433,3 +433,11 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_064 | ADM_CFG_064 | ✅ PASS | fake registration GHNG-9999999999 with Update=1 → row error / not-found; no mutation. Non-destructive. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 7.1s |
+
+---
+
+## Last Run: 2026-06-28 15:24 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_061 | ADM_CFG_061 | ✅ PASS | GHNG-1000008364-J (WINNER, Mavis cleared) §6 cancel attempted while campaign ACTIVE → submit-time re-check BLOCKS ("campaign is active"); booking stays WINNER. ALLOW_DESTRUCTIVE=1; campaign-active window. | All assertions matched expected | 27.2s |
