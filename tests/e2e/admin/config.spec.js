@@ -162,14 +162,37 @@ test.describe('Config — Admin Portal E2E', () => {
     await expect(configPage.availableUnitInventoryDownload).toBeVisible();
   });
 
-  test('ADM_CFG_023 — ADMIN-FS-Config-CMS §4 — Unit Cost XLSX upload submits to backend', async ({ page }) => {
+  test('ADM_CFG_023 — ADMIN-FS-Config-CMS §4 — re-upload with changed prices + Update=1 updates units', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575) Early Bird Benefit captured → set sentinel 5000 (Update=1) → DB reflects 5000 → restore to original (DB-verified). ALLOW_DESTRUCTIVE=1; user-authorised pricing change with capture+restore.' });
     test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
-
-    await configPage.expectSectionVisible('unitCostUpdate');
-    await expect(configPage.section4SubmitButton).toBeVisible();
-    // We do NOT actually fire the upload here without a controlled test XLSX —
-    // we just confirm the submit control is wired. Full upload runs in
-    // tests/api/config.api.spec.js where we have HTTP control.
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const HEADER = ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Agreement Value', 'Early Bird Benefit', 'Allocation Amount', 'Allocation Percent', 'Allocation Calc Type', 'Status', 'Update (1/0)'];
+    const p0 = await inv.getUnitPricingByUnitId(UID);
+    const fileWith = (earlyBird, tag) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/unit-cost-023-${tag}.xlsx`);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([HEADER,
+        ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, p0.agreement_value, earlyBird, p0.allocation_amount, p0.allocation_percent, p0.allocation_calc_type, p0.status, 1],
+      ]), 'S1'); X.writeFile(wb, fp); return fp;
+    };
+    const SENTINEL = 5000;
+    try {
+      await configPage.expectSectionVisible('unitCostUpdate');
+      const res = await configPage.uploadUnitCostFile(fileWith(SENTINEL, 'change'));
+      const p1 = await inv.getUnitPricingByUnitId(UID);
+      console.log(`[ADM_CFG_023] http=${res.httpStatus} earlyBird ${p0.early_bird_benefit}->${p1.early_bird_benefit} (sent ${SENTINEL})`);
+      expect(res.httpStatus).toBe(200);
+      expect(Number(p1.early_bird_benefit)).toBe(SENTINEL); // changed price applied
+    } finally {
+      // Restore original early-bird regardless of assertion outcome.
+      await configPage.navigate(); await configPage.waitForLoad();
+      await configPage.expectSectionVisible('unitCostUpdate');
+      await configPage.uploadUnitCostFile(fileWith(Number(p0.early_bird_benefit), 'restore'));
+      const pr = await inv.getUnitPricingByUnitId(UID);
+      console.log(`[ADM_CFG_023] restored earlyBird=${pr.early_bird_benefit} (orig ${p0.early_bird_benefit})`);
+      expect(Number(pr.early_bird_benefit)).toBe(Number(p0.early_bird_benefit));
+    }
   });
 
   test('ADM_CFG_084 — ADMIN-FS-Config-CMS §4 — Section 4 control inventory (Download/Upload/Submit)', async () => {

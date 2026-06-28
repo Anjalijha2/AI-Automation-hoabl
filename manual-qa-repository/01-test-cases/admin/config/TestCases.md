@@ -332,3 +332,11 @@
 | ADM_CFG_089 | ADM_CFG_089 | ✅ PASS | none — download Available Unit Inventory; assert Status column contains only AVAILABLE/RESERVED (BOOKED/HOLD/PBT/REFUGE excluded per §4 download scope) | All assertions matched expected | 4.5s |
 | ADM_CFG_026 | ADM_CFG_026 | ✅ PASS | unit_no 302 (testUnit-547664512575) Early Bird Benefit changed +999 but Update=0 → DB pricing UNCHANGED (non-mutating). ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 27.5s |
 | ADM_CFG_086 | ADM_CFG_086 | ✅ PASS | unit_no 302 single pricing row Update=0 → expect HTTP 400 "No rows marked for update"; no DB write (non-mutating). ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 7.2s |
+
+---
+
+## Last Run: 2026-06-28 13:16 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_023 | ADM_CFG_023 | ✅ PASS | unit_no 302 (testUnit-547664512575) Early Bird Benefit captured → set sentinel 5000 (Update=1) → DB reflects 5000 → restore to original (DB-verified). ALLOW_DESTRUCTIVE=1; user-authorised pricing change with capture+restore. | All assertions matched expected | 36.2s |
