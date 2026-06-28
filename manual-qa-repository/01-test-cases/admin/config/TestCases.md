@@ -405,3 +405,11 @@
 | ADM_CFG_093 | ADM_CFG_093 | ✅ PASS | GHNG-1000008364-L (307-Aspire) cancelled | Zero buyer notifications during cancel (FS §8) | ~30s |
 | ADM_CFG_FSD_061 | ADM_CFG_FSD_061 | ✅ PASS | GHNG-1000008364-K (401-Aspire, reg_unit 9785) cancelled | Cascade cleared: payment_transactions 1→0, payment_schedules 47→0, milestone_tracking 2→1 | ~30s |
 | ADM_CFG_058 | ADM_CFG_058 | ✅ PASS | GHNG-1000008364-O (already cancelled → PREALLOCATED) re-uploaded | 400 "No valid units available" — already-cancelled skipped (only WINNER cancelable) | ~10s |
+
+---
+
+## Last Run: 2026-06-28 14:52 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_056 | ADM_CFG_056 | ✅ PASS | GHNG-1000008364-H (WINNER, Mavis intact) bulk-cancel attempted while an allocation campaign is ACTIVE → submit-time re-check (§11.4) must BLOCK; booking stays WINNER (double-guarded: campaign + unresolved Mavis). ALLOW_DESTRUCTIVE=1; campaign-active window. | All assertions matched expected | 26.9s |

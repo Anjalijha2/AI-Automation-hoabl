@@ -419,12 +419,26 @@ test.describe('Config — Admin Portal E2E', () => {
     await expect(configPage.section5SubmitButton).toBeVisible();
   });
 
-  test('ADM_CFG_056 — FSD Customers §4.2 — Bulk booking cancellation is blocked during active campaign', async () => {
+  test('ADM_CFG_056 — FSD Customers §4.2 §11.4 — booking cancellation blocked during active campaign', async () => {
+    test.slow();
+    test.info().annotations.push({ type: 'testData', description: 'GHNG-1000008364-H (WINNER, Mavis intact) bulk-cancel attempted while an allocation campaign is ACTIVE → submit-time re-check (§11.4) must BLOCK; booking stays WINNER (double-guarded: campaign + unresolved Mavis). ALLOW_DESTRUCTIVE=1; campaign-active window.' });
     test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
-    // BIZ invariant: this test only fires if an Active campaign exists AND
-    // disposable XLSX is available. We assert the submit endpoint returns
-    // a campaign-active error path. Full verification sits in API tests.
+    const path = require('path'); const X = require('xlsx');
+    const reg = require('../../../db/queries/registration');
+    const REGNO = 'GHNG-1000008364-H';
+    const before = await reg.getRegistrationUnitByNumber(REGNO);
+    expect(before && String(before.status).toUpperCase(), 'precondition: WINNER').toBe('WINNER');
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/booking-cancel-056.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([['Registration Number'], [REGNO]]), 'S1'); X.writeFile(wb, fp);
     await configPage.expectSectionVisible('bulkBookingCancellation');
+    const res = await configPage.uploadBulkBookingCancellationFile(fp);
+    const after = await reg.getRegistrationUnitByNumber(REGNO);
+    const rowText = ((res.rows || []).find((r) => String(r[0]) === REGNO) || []).join(' ');
+    console.log(`[ADM_CFG_056] http=${res.httpStatus} msg="${res.message}" row="${rowText}" status ${before.status}->${after ? after.status : 'NULL'}`);
+    // SAFETY: booking must NOT be cancelled (campaign guard blocks it).
+    expect(after && String(after.status).toUpperCase(), 'booking must remain WINNER — campaign must block cancel').toBe('WINNER');
+    const blocked = res.httpStatus >= 400 || /campaign|active|not allowed|cannot|blocked/i.test(rowText + ' ' + (res.message || ''));
+    expect(blocked, `expected campaign block; got http=${res.httpStatus} msg="${res.message}" row="${rowText}"`).toBe(true);
   });
 
   test('ADM_CFG_090 — ADMIN-FS-Config-CMS §5 — Section 5 control inventory (Sample/Upload/Submit)', async () => {
