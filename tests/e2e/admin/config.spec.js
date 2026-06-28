@@ -195,6 +195,113 @@ test.describe('Config — Admin Portal E2E', () => {
     }
   });
 
+  test('ADM_CFG_025 — ADMIN-FS-Config-CMS §4 — updated early-bird benefit reflected in unit detail', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575) Early Bird Benefit → sentinel 7777 (Update=1); re-download inventory and confirm the unit row shows 7777; restore original. ALLOW_DESTRUCTIVE=1; capture+restore.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const HEADER = ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Agreement Value', 'Early Bird Benefit', 'Allocation Amount', 'Allocation Percent', 'Allocation Calc Type', 'Status', 'Update (1/0)'];
+    const p0 = await inv.getUnitPricingByUnitId(UID);
+    const fileWith = (earlyBird, tag) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/unit-cost-025-${tag}.xlsx`);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([HEADER,
+        ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, p0.agreement_value, earlyBird, p0.allocation_amount, p0.allocation_percent, p0.allocation_calc_type, p0.status, 1],
+      ]), 'S1'); X.writeFile(wb, fp); return fp;
+    };
+    const SENTINEL = 7777;
+    try {
+      await configPage.expectSectionVisible('unitCostUpdate');
+      await configPage.uploadUnitCostFile(fileWith(SENTINEL, 'change'));
+      await configPage.navigate(); await configPage.waitForLoad();
+      await configPage.expectSectionVisible('unitCostUpdate');
+      const rows = await configPage.downloadUnitInventory();
+      const hdr = (rows[0] || []).map((h) => String(h).toLowerCase());
+      const ebIdx = hdr.findIndex((h) => /early\s*bird/.test(h)), uidIdx = hdr.findIndex((h) => /unit id/.test(h));
+      const row = rows.find((r) => String(r[uidIdx]) === UID) || [];
+      console.log(`[ADM_CFG_025] downloaded earlyBird for ${UID} = ${row[ebIdx]} (expected ${SENTINEL})`);
+      expect(Number(row[ebIdx])).toBe(SENTINEL); // reflected in the inventory detail
+    } finally {
+      await configPage.navigate(); await configPage.waitForLoad();
+      await configPage.expectSectionVisible('unitCostUpdate');
+      await configPage.uploadUnitCostFile(fileWith(Number(p0.early_bird_benefit), 'restore'));
+      const pr = await inv.getUnitPricingByUnitId(UID);
+      expect(Number(pr.early_bird_benefit)).toBe(Number(p0.early_bird_benefit));
+    }
+  });
+
+  test('ADM_CFG_088 — ADMIN-FS-Config-CMS §4 — price change dispatches no buyer notification (FS §8)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575) Early Bird → sentinel 3333 (Update=1) while monitoring for buyer-notification calls → expect zero; DB side-effect confirmed; restore. FS Feature 4 §8 = no notification. ALLOW_DESTRUCTIVE=1.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const HEADER = ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Agreement Value', 'Early Bird Benefit', 'Allocation Amount', 'Allocation Percent', 'Allocation Calc Type', 'Status', 'Update (1/0)'];
+    const p0 = await inv.getUnitPricingByUnitId(UID);
+    const fileWith = (earlyBird, tag) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/unit-cost-088-${tag}.xlsx`);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([HEADER,
+        ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, p0.agreement_value, earlyBird, p0.allocation_amount, p0.allocation_percent, p0.allocation_calc_type, p0.status, 1],
+      ]), 'S1'); X.writeFile(wb, fp); return fp;
+    };
+    const notif = [];
+    page.on('request', (req) => { if (/kaleyra|epinet|whatsapp|sendsms|\/sms|sendmail|\/email|notif|firebase|fcm/i.test(req.url())) notif.push(`${req.method()} ${req.url()}`); });
+    try {
+      await configPage.expectSectionVisible('unitCostUpdate');
+      const res = await configPage.uploadUnitCostFile(fileWith(3333, 'change'));
+      const p1 = await inv.getUnitPricingByUnitId(UID);
+      console.log(`[ADM_CFG_088] http=${res.httpStatus} earlyBird→${p1.early_bird_benefit} notifications=${notif.length} ${JSON.stringify(notif).slice(0, 200)}`);
+      expect(res.httpStatus).toBe(200);
+      expect(Number(p1.early_bird_benefit)).toBe(3333);     // side-effect confirmed
+      expect(notif.length, `FS §8: no notifications; saw ${JSON.stringify(notif)}`).toBe(0);
+    } finally {
+      await configPage.navigate(); await configPage.waitForLoad();
+      await configPage.expectSectionVisible('unitCostUpdate');
+      await configPage.uploadUnitCostFile(fileWith(Number(p0.early_bird_benefit), 'restore'));
+      expect(Number((await inv.getUnitPricingByUnitId(UID)).early_bird_benefit)).toBe(Number(p0.early_bird_benefit));
+    }
+  });
+
+  test('ADM_CFG_085 — ADMIN-FS-Config-CMS §4 — allocation PERCENT vs AMOUNT calc types apply', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575): upload Allocation Calc Type=PERCENT (percent=12) then =AMOUNT (amount=27000), each Update=1; DB reflects calc type + value each time; restore original allocation fields. ALLOW_DESTRUCTIVE=1; capture+restore.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE, DESTRUCTIVE_SKIP_REASON);
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const HEADER = ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Agreement Value', 'Early Bird Benefit', 'Allocation Amount', 'Allocation Percent', 'Allocation Calc Type', 'Status', 'Update (1/0)'];
+    const p0 = await inv.getUnitPricingByUnitId(UID);
+    const file = (amount, percent, calcType, tag) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/unit-cost-085-${tag}.xlsx`);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([HEADER,
+        ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, p0.agreement_value, p0.early_bird_benefit, amount, percent, calcType, p0.status, 1],
+      ]), 'S1'); X.writeFile(wb, fp); return fp;
+    };
+    try {
+      await configPage.expectSectionVisible('unitCostUpdate');
+      // PERCENT mode.
+      await configPage.uploadUnitCostFile(file(p0.allocation_amount, 12, 'PERCENT', 'percent'));
+      const pPct = await inv.getUnitPricingByUnitId(UID);
+      console.log(`[ADM_CFG_085] PERCENT → calc=${pPct.allocation_calc_type} percent=${pPct.allocation_percent}`);
+      expect(String(pPct.allocation_calc_type).toUpperCase()).toBe('PERCENT');
+      expect(Number(pPct.allocation_percent)).toBe(12);
+      // AMOUNT mode.
+      await configPage.navigate(); await configPage.waitForLoad();
+      await configPage.expectSectionVisible('unitCostUpdate');
+      await configPage.uploadUnitCostFile(file(27000, p0.allocation_percent, 'AMOUNT', 'amount'));
+      const pAmt = await inv.getUnitPricingByUnitId(UID);
+      console.log(`[ADM_CFG_085] AMOUNT → calc=${pAmt.allocation_calc_type} amount=${pAmt.allocation_amount}`);
+      expect(String(pAmt.allocation_calc_type).toUpperCase()).toBe('AMOUNT');
+      expect(Number(pAmt.allocation_amount)).toBe(27000);
+    } finally {
+      await configPage.navigate(); await configPage.waitForLoad();
+      await configPage.expectSectionVisible('unitCostUpdate');
+      await configPage.uploadUnitCostFile(file(p0.allocation_amount, p0.allocation_percent, p0.allocation_calc_type, 'restore'));
+      const pr = await inv.getUnitPricingByUnitId(UID);
+      console.log(`[ADM_CFG_085] restored calc=${pr.allocation_calc_type} amount=${pr.allocation_amount} percent=${pr.allocation_percent}`);
+      expect(String(pr.allocation_calc_type || '').toUpperCase()).toBe(String(p0.allocation_calc_type || '').toUpperCase());
+    }
+  });
+
   test('ADM_CFG_084 — ADMIN-FS-Config-CMS §4 — Section 4 control inventory (Download/Upload/Submit)', async () => {
     test.info().annotations.push({ type: 'testData', description: 'none — read-only control enumeration' });
     await configPage.expectSectionVisible('unitCostUpdate');

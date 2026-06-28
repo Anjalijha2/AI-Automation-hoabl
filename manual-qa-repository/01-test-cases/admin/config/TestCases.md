@@ -340,3 +340,13 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_023 | ADM_CFG_023 | ✅ PASS | unit_no 302 (testUnit-547664512575) Early Bird Benefit captured → set sentinel 5000 (Update=1) → DB reflects 5000 → restore to original (DB-verified). ALLOW_DESTRUCTIVE=1; user-authorised pricing change with capture+restore. | All assertions matched expected | 36.2s |
+
+---
+
+## Last Run: 2026-06-28 13:19 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_025 | ADM_CFG_025 | ✅ PASS | unit_no 302 (testUnit-547664512575) Early Bird Benefit → sentinel 7777 (Update=1); re-download inventory and confirm the unit row shows 7777; restore original. ALLOW_DESTRUCTIVE=1; capture+restore. | All assertions matched expected | 49.5s |
+| ADM_CFG_088 | ADM_CFG_088 | ✅ PASS | unit_no 302 (testUnit-547664512575) Early Bird → sentinel 3333 (Update=1) while monitoring for buyer-notification calls → expect zero; DB side-effect confirmed; restore. FS Feature 4 §8 = no notification. ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 10.4s |
+| ADM_CFG_085 | ADM_CFG_085 | ✅ PASS | unit_no 302 (testUnit-547664512575): upload Allocation Calc Type=PERCENT (percent=12) then =AMOUNT (amount=27000), each Update=1; DB reflects calc type + value each time; restore original allocation fields. ALLOW_DESTRUCTIVE=1; capture+restore. | All assertions matched expected | 18.5s |
