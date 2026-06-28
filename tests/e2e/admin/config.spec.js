@@ -979,4 +979,55 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(await statusOf(A.unitId)).toBe('AVAILABLE');
   });
 
+  test('ADM_CFG_020 — ADMIN-FS-Config-CMS §3 — all rows Update=0 → "No rows marked for update"', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575) single row Status=RESERVED Update=0 → expect HTTP 400 "No rows marked for update"; no DB write; ALLOW_DESTRUCTIVE=1 (non-mutating)' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — unit-status upload; set ALLOW_DESTRUCTIVE=1 (campaign inactive)');
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const statusOf = async () => String((await inv.getUnitByUnitId(UID)).status).toUpperCase();
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/unit-status-020-allzero.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([
+      ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Status', 'Update (1/0)'],
+      ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, 'RESERVED', 0],
+    ]), 'S1'); X.writeFile(wb, fp);
+
+    const before = await statusOf();
+    await configPage.expectSectionVisible('unitStatus');
+    const res = await configPage.uploadUnitStatusFile(fp);
+    const after = await statusOf();
+    console.log(`[ADM_CFG_020] http=${res.httpStatus} message="${res.message}" db=${before}->${after}`);
+    expect(res.httpStatus).toBe(400);
+    expect(String(res.message || '')).toMatch(/no rows marked for update/i);
+    expect(after).toBe(before); // no mutation
+  });
+
+  test('ADM_CFG_021 — ADMIN-FS-Config-CMS §3 — unrecognised Status value flagged as row error', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575) Status=BLOCKED Update=1 → expect row-level error in result file (invalid status); no DB write; ALLOW_DESTRUCTIVE=1 (non-mutating)' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — unit-status upload; set ALLOW_DESTRUCTIVE=1 (campaign inactive)');
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const statusOf = async () => String((await inv.getUnitByUnitId(UID)).status).toUpperCase();
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/unit-status-021-invalid.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([
+      ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Status', 'Update (1/0)'],
+      ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, 'BLOCKED', 1],
+    ]), 'S1'); X.writeFile(wb, fp);
+
+    const before = await statusOf();
+    await configPage.expectSectionVisible('unitStatus');
+    const res = await configPage.uploadUnitStatusFile(fp);
+    const after = await statusOf();
+    const row = (res.rows || []).find((r) => String(r[3]) === UID) || [];
+    const rowResult = String(row[row.length - 1] || '');
+    console.log(`[ADM_CFG_021] http=${res.httpStatus} rowResult="${rowResult}" message="${res.message}" db=${before}->${after}`);
+    // Invalid status must be rejected: either a 4xx OR a row-level error, and no mutation.
+    const rejected = res.httpStatus >= 400 || /invalid|error|not\s|unsupported|fail/i.test(rowResult + ' ' + (res.message || ''));
+    expect(rejected).toBe(true);
+    expect(after).toBe(before); // BLOCKED never applied
+  });
+
 });

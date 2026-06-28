@@ -294,3 +294,12 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_019 | ADM_CFG_019 | ✅ PASS | Two-row file: Row A unit_no 302 (testUnit-547664512575, 1 BHK) RESERVED/Update=1 → APPLIED; Row B unit_no 308 (testUnit-547664512577, 2 BHK Rise) RESERVED/Update=0 → SKIPPED (DB unchanged). Restore 302→AVAILABLE; ALLOW_DESTRUCTIVE=1 (campaign off) | All assertions matched expected | 32.4s |
+
+---
+
+## Last Run: 2026-06-28 12:45 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_020 | ADM_CFG_020 | ✅ PASS | unit_no 302 (testUnit-547664512575) single row Status=RESERVED Update=0 → expect HTTP 400 "No rows marked for update"; no DB write; ALLOW_DESTRUCTIVE=1 (non-mutating) | All assertions matched expected | 28.4s |
+| ADM_CFG_021 | ADM_CFG_021 | ✅ PASS | unit_no 302 (testUnit-547664512575) Status=BLOCKED Update=1 → expect row-level error in result file (invalid status); no DB write; ALLOW_DESTRUCTIVE=1 (non-mutating) | All assertions matched expected | 6.0s |
