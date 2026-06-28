@@ -1030,4 +1030,71 @@ test.describe('Config — Admin Portal E2E', () => {
     expect(after).toBe(before); // BLOCKED never applied
   });
 
+  test('ADM_CFG_081 — ADMIN-FS-Config-CMS §3 — BOOKED→AVAILABLE transition rejected (§11.8)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 1001 (testUnit-547664514703, Crest, BOOKED) upload Status=AVAILABLE Update=1 → expect rejection (only AVAILABLE↔RESERVED per §11.8); DB must stay BOOKED (asserted + guarded). ALLOW_DESTRUCTIVE=1; user-authorised touch of a BOOKED unit.' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — unit-status upload; set ALLOW_DESTRUCTIVE=1 (campaign inactive)');
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664514703', UNO = '1001';
+    const statusOf = async () => String((await inv.getUnitByUnitId(UID)).status).toUpperCase();
+    const fp = path.resolve('automation-repository/fixtures/config-uploads/unit-status-081-booked.xlsx');
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([
+      ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Status', 'Update (1/0)'],
+      ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, 'AVAILABLE', 1],
+    ]), 'S1'); X.writeFile(wb, fp);
+
+    const before = await statusOf();
+    expect(before, 'precondition: unit must be BOOKED').toBe('BOOKED');
+    await configPage.expectSectionVisible('unitStatus');
+    const res = await configPage.uploadUnitStatusFile(fp);
+    const after = await statusOf();
+    const row = (res.rows || []).find((r) => String(r[3]) === UID) || [];
+    const rowResult = String(row[row.length - 1] || '');
+    console.log(`[ADM_CFG_081] http=${res.httpStatus} rowResult="${rowResult}" message="${res.message}" db=${before}->${after}`);
+    // SAFETY GUARD: a BOOKED unit must NOT have been flipped.
+    expect(after, 'BOOKED unit must remain BOOKED — transition should be rejected').toBe('BOOKED');
+    const rejected = res.httpStatus >= 400 || /invalid|error|not\s|unsupported|fail|booked/i.test(rowResult + ' ' + (res.message || ''));
+    expect(rejected, `expected a rejection; got row="${rowResult}"`).toBe(true);
+  });
+
+  test('ADM_CFG_082 — ADMIN-FS-Config-CMS §3 — Unit Status update sends no notifications (silent, FS §8)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'unit_no 302 (testUnit-547664512575) valid AVAILABLE→RESERVED→restore; FS Feature 3 §8 = "Notifications: None" — verify DB side-effect occurs AND zero buyer-notification calls fire (mirrors 078). Admin success toast is expected, not a notification. ALLOW_DESTRUCTIVE=1 (self-restore).' });
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — unit-status upload; set ALLOW_DESTRUCTIVE=1 (campaign inactive)');
+    const path = require('path'); const X = require('xlsx');
+    const inv = require('../../../db/queries/inventory');
+    const UID = 'testUnit-547664512575', UNO = '302';
+    const statusOf = async () => String((await inv.getUnitByUnitId(UID)).status).toUpperCase();
+    const fileFor = (status) => {
+      const fp = path.resolve(`automation-repository/fixtures/config-uploads/unit-status-082-${status}.xlsx`);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([
+        ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Status', 'Update (1/0)'],
+        ['Crest', 'testtypology-1757656549935', '1 BHK Growth Home', UID, UNO, status, 1],
+      ]), 'S1'); X.writeFile(wb, fp); return fp;
+    };
+
+    if ((await statusOf()) !== 'AVAILABLE') { await configPage.uploadUnitStatusFile(fileFor('AVAILABLE')); await configPage.navigate(); await configPage.waitForLoad(); }
+    await configPage.expectSectionVisible('unitStatus');
+    // FS §8 "Notifications: None" — monitor for any buyer-notification dispatch.
+    const notif = [];
+    page.on('request', (req) => { if (/kaleyra|epinet|whatsapp|sendsms|\/sms|sendmail|\/email|notif|firebase|fcm/i.test(req.url())) notif.push(`${req.method()} ${req.url()}`); });
+    const res = await configPage.uploadUnitStatusFile(fileFor('RESERVED'));
+    const after = await statusOf();
+    console.log(`[ADM_CFG_082] http=${res.httpStatus} db→${after} notifications=${notif.length} ${JSON.stringify(notif).slice(0, 200)}`);
+    expect(res.httpStatus).toBe(200);       // operation succeeded
+    expect(after).toBe('RESERVED');         // backend side-effect confirmed (rule #6)
+    expect(notif.length, `FS §8: no notifications expected; saw ${JSON.stringify(notif)}`).toBe(0); // silent downstream
+    // Restore.
+    await configPage.navigate(); await configPage.waitForLoad();
+    await configPage.expectSectionVisible('unitStatus');
+    await configPage.uploadUnitStatusFile(fileFor('AVAILABLE'));
+    expect(await statusOf()).toBe('AVAILABLE');
+  });
+
+  test('ADM_CFG_083 — ADMIN-FS-Config-CMS §3 — Unit Status update triggers Python cache refresh (FS §7)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'VERIFY-WITH-DEV — Python real-time unit-cache fan-out (FS Feature 3 §7) is not observable from the UI/DB test layer (no Redis/Python log access). Mirrors ADM_CFG_079. Requires backend log verification with dev.' });
+    test.skip(true, 'VERIFY-WITH-DEV — Python cache refresh not observable from test layer (mirrors 079)');
+  });
+
 });
