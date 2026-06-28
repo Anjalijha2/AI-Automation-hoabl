@@ -313,3 +313,11 @@
 | ADM_CFG_081 | ADM_CFG_081 | ✅ PASS | unit_no 1001 (testUnit-547664514703, Crest, BOOKED) upload Status=AVAILABLE Update=1 → expect rejection (only AVAILABLE↔RESERVED per §11.8); DB must stay BOOKED (asserted + guarded). ALLOW_DESTRUCTIVE=1; user-authorised touch of a BOOKED unit. | All assertions matched expected | 27.0s |
 | ADM_CFG_082 | ADM_CFG_082 | ✅ PASS | unit_no 302 (testUnit-547664512575) valid AVAILABLE→RESERVED→restore; FS Feature 3 §8 = "Notifications: None" — verify DB side-effect occurs AND zero buyer-notification calls fire (mirrors 078). Admin success toast is expected, not a notification. ALLOW_DESTRUCTIVE=1 (self-restore). | All assertions matched expected | 15.6s |
 | ADM_CFG_083 | ADM_CFG_083 | ⏭ SKIP | VERIFY-WITH-DEV — Python real-time unit-cache fan-out (FS Feature 3 §7) is not observable from the UI/DB test layer (no Redis/Python log access). Mirrors ADM_CFG_079. Requires backend log verification with dev. | Not executed | 3.0s |
+
+---
+
+## Last Run: 2026-06-28 13:05 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_FSD_059 | ADM_CFG_FSD_059 | ✅ PASS | POST /api/v1/admin/update-units-status multipart: Row A 302 (testUnit-547664512575) AVAILABLE→RESERVED = allowed; Row B 1001 (testUnit-547664514703, BOOKED)→AVAILABLE = rejected. Verify result file + DB; restore 302→AVAILABLE. admin JWT; ALLOW_DESTRUCTIVE=1. | All assertions matched expected | 22.2s |

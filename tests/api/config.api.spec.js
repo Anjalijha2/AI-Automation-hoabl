@@ -76,4 +76,65 @@ test.describe('Config — Admin Portal API', () => {
     console.log(`[ADM_CFG_FSD_057] ${TARGET} restored db=${afterRestore} (expected ${before})`);
     expect(afterRestore).toBe(before);
   });
+
+  test('ADM_CFG_FSD_059 — update-units-status enforces only AVAILABLE↔RESERVED (§11.8)', async ({ request }) => {
+    // ⛔ DESTRUCTIVE (self-restoring): flips disposable Crest unit 302 AVAILABLE→RESERVED
+    // via the API and restores it. Also sends a BOOKED→AVAILABLE row expected to be REJECTED
+    // (no mutation). Proves the endpoint allows only AVAILABLE↔RESERVED at the API layer.
+    test.skip(process.env.ENV === 'uat' && !process.env.ALLOW_DESTRUCTIVE,
+      'Skipped on UAT — flips a unit via API; set ALLOW_DESTRUCTIVE=1');
+    test.info().annotations.push({ type: 'testData', description: 'POST /api/v1/admin/update-units-status multipart: Row A 302 (testUnit-547664512575) AVAILABLE→RESERVED = allowed; Row B 1001 (testUnit-547664514703, BOOKED)→AVAILABLE = rejected. Verify result file + DB; restore 302→AVAILABLE. admin JWT; ALLOW_DESTRUCTIVE=1.' });
+    const X = require('xlsx');
+    const inv = require('../../db/queries/inventory');
+    const A = { unitId: 'testUnit-547664512575', unitNo: '302', typId: 'testtypology-1757656549935', typName: '1 BHK Growth Home' };
+    const B = { unitId: 'testUnit-547664514703', unitNo: '1001', typId: 'testtypology-1757656549935', typName: '1 BHK Growth Home' };
+    const URL = `${API_BASE_URL}/api/v1/admin/update-units-status`;
+    const statusOf = async (uid) => String((await inv.getUnitByUnitId(uid)).status).toUpperCase();
+    const buildBuf = (rows) => {
+      const wb = X.utils.book_new();
+      X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([
+        ['Tower Name', 'Typology Id', 'Typology Name', 'Unit Id', 'Unit No', 'Status', 'Update (1/0)'], ...rows,
+      ]), 'S1');
+      return X.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    };
+    const post = async (buf) => request.post(URL, {
+      headers: { Authorization: `Bearer ${token}` },
+      multipart: { doc: { name: 'units.xlsx', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', buffer: buf } },
+      timeout: 60_000,
+    });
+    const parseRows = async (res) => {
+      try {
+        const wb = X.read(Buffer.from(await res.body()), { type: 'buffer' });
+        return X.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+      } catch { return null; }
+    };
+
+    // Preconditions.
+    expect(await statusOf(A.unitId), 'A must start AVAILABLE').toBe('AVAILABLE');
+    expect(await statusOf(B.unitId), 'B must start BOOKED').toBe('BOOKED');
+
+    // Mixed file: allowed (A) + disallowed (B).
+    const res = await post(buildBuf([
+      ['Crest', A.typId, A.typName, A.unitId, A.unitNo, 'RESERVED', 1],
+      ['Crest', B.typId, B.typName, B.unitId, B.unitNo, 'AVAILABLE', 1],
+    ]));
+    expect(res.status(), `expected 200 (got ${res.status()})`).toBe(200);
+    const rows = await parseRows(res);
+    const rowA = (rows || []).find((r) => String(r[3]) === A.unitId) || [];
+    const rowB = (rows || []).find((r) => String(r[3]) === B.unitId) || [];
+    const aRes = String(rowA[rowA.length - 1] || ''), bRes = String(rowB[rowB.length - 1] || '');
+    const aDb = await statusOf(A.unitId), bDb = await statusOf(B.unitId);
+    console.log(`[ADM_CFG_FSD_059] A:"${aRes}" db=${aDb} | B:"${bRes}" db=${bDb}`);
+    // Allowed transition applied.
+    expect(aRes).toMatch(/RESERVED/i);
+    expect(aDb).toBe('RESERVED');
+    // Disallowed transition rejected — no mutation.
+    expect(bRes).toMatch(/cannot change|invalid|not\s|error|booked/i);
+    expect(bDb).toBe('BOOKED');
+
+    // Restore A → AVAILABLE.
+    const restore = await post(buildBuf([['Crest', A.typId, A.typName, A.unitId, A.unitNo, 'AVAILABLE', 1]]));
+    expect(restore.status()).toBe(200);
+    expect(await statusOf(A.unitId)).toBe('AVAILABLE');
+  });
 });
