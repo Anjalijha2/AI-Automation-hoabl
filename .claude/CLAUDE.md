@@ -336,3 +336,36 @@ Set inline: `ENV=uat npm run test:e2e:admin`
 - Execution summaries: `manual-qa-repository/06-test-runs/`
 - Sprint log: `manual-qa-repository/SPRINT_LOG.md`
 - Task tracker: `manual-qa-repository/TASK_TRACKER.md`
+
+---
+
+## Troubleshooting
+
+### `PreToolUse:Bash` / `PostToolUse:Bash` hook errors — "Python was not found"
+
+**Symptom:** every Bash tool call prints two red lines:
+
+```
+PreToolUse:Bash hook error
+PostToolUse:Bash hook error
+Failed with non-blocking status code: Python was not found; run without arguments
+to install from the Microsoft Store, or disable this shortcut from
+Settings > Apps > Advanced app settings > App execution aliases
+```
+
+**Cause:** the `hookify` plugin registers matcher-less `PreToolUse`/`PostToolUse` hooks
+that run `python3 …`. On Windows `python3` resolves to the WindowsApps **Store stub**
+(`%LOCALAPPDATA%\Microsoft\WindowsApps\python3.exe`), which errors out. Real Python is
+installed as `python.exe` / `py.exe` only (no real `python3.exe`). Errors are
+non-blocking — work continues — but spam the output.
+
+**Fix:** create a real `python3.exe` shim in the Python install dir (already ahead of
+WindowsApps on PATH):
+
+```bash
+cp "/c/Users/<user>/AppData/Local/Programs/Python/Python312/python.exe" \
+   "/c/Users/<user>/AppData/Local/Programs/Python/Python312/python3.exe"
+```
+
+Verify: `where python3` lists the Programs path first; `python3 --version` prints the
+real version. The shim is an OS-level file outside this repo — not git-tracked.
