@@ -133,19 +133,23 @@ class ConfigPage extends BasePage {
     this.section7FileInput         = this._after('salesManagersBulkUpload', FILEIN);
     this.section7SubmitButton      = this._after('salesManagersBulkUpload', SUBMIT);
 
-    // ── Section 8 — Customer Actions Card ─────────────────────────────────
-    this.allowAdditionalRegToggle       = this._after('customerActionsCard', '*[@role="switch"]');
+    // ── Section 8 — Customer Actions Card (wrapper-scoped) ────────────────
+    this.section8Wrap                   = this._sectionWrap('customerActionsCard');
+    this.allowAdditionalRegToggle       = this.section8Wrap.locator('[role="switch"], .ant-switch').first();
+    this.section8Checkboxes             = this.section8Wrap.locator('.ant-checkbox-input, input[type="checkbox"]');
+    this.section8CountSelects           = this.section8Wrap.locator('.ant-select');
     // Checkboxes are role=checkbox named "Allow <typology>" (not raw inputs).
     this.oneBedGrowthCheckbox           = page.getByRole('checkbox', { name: /1 Bed Growth Home/i });
     this.twoBedGrowthCheckbox           = page.getByRole('checkbox', { name: /2 Bed Growth Home/i });
     this.twoBedRiseCheckbox             = page.getByRole('checkbox', { name: /2 Bed Rise Home/i });
-    this.section8SubmitButton           = this._after('customerActionsCard', SUBMIT);
+    this.section8SubmitButton           = this.section8Wrap.getByRole('button', { name: /^Submit$/i });
     // [BUG-REF: BUG-CFG-001] '2 Bed Peak Home' is server-side force-disabled (often absent from UI).
     this.twoBedPeakHomeCheckbox         = page.getByRole('checkbox', { name: /2 Bed Peak Home/i });
 
-    // ── Section 9 — Max Preferences Per Unit ──────────────────────────────
-    this.maxPreferencesSelect           = this._after('maxPreferencesPerUnit', '*[@role="combobox" or self::select]');
-    this.maxPreferencesUpdateButton     = this._after('maxPreferencesPerUnit', 'button[contains(normalize-space(.),"Update")]');
+    // ── Section 9 — Max Preferences Per Unit (wrapper-scoped) ─────────────
+    this.section9Wrap                   = this._sectionWrap('maxPreferencesPerUnit');
+    this.maxPreferencesSelect           = this.section9Wrap.locator('.ant-select, select').first();
+    this.maxPreferencesUpdateButton     = this.section9Wrap.getByRole('button', { name: /Update/i });
 
     // ── Generic validation / toast surfaces ───────────────────────────────
     this.toast                = page.locator('.ant-message, [role="alert"], .Toastify__toast');

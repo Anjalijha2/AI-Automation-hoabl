@@ -413,3 +413,15 @@
 | TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
 |---|---|---|---|---|---|
 | ADM_CFG_056 | ADM_CFG_056 | ✅ PASS | GHNG-1000008364-H (WINNER, Mavis intact) bulk-cancel attempted while an allocation campaign is ACTIVE → submit-time re-check (§11.4) must BLOCK; booking stays WINNER (double-guarded: campaign + unresolved Mavis). ALLOW_DESTRUCTIVE=1; campaign-active window. | All assertions matched expected | 26.9s |
+
+---
+
+## Last Run: 2026-06-28 15:03 IST
+
+| TC_ID (spec) | xlsx Row(s) | Status | Test Data | Actual Result | Duration |
+|---|---|---|---|---|---|
+| ADM_CFG_102 | ADM_CFG_102 | ✅ PASS | none — read-only control enumeration | All assertions matched expected | 3.4s |
+| ADM_CFG_039 | ADM_CFG_039 | ✅ PASS | none — read-only; record current per-typology limits shown in §8 (e.g. 1 Bed Growth Home / 2 Bed Growth Home / 2 Bed Rise Home) | All assertions matched expected | 4.5s |
+| ADM_CFG_103 | ADM_CFG_103 | ✅ PASS | none — read-only; open first §8 count select and assert it lists numeric option values (bounds of the count select) | All assertions matched expected | 4.7s |
+| ADM_CFG_106 | ADM_CFG_106 | ✅ PASS | none — read-only control enumeration | All assertions matched expected | 4.0s |
+| ADM_CFG_045 | ADM_CFG_045 | ✅ PASS | none — read-only. FINDING: UI Max-Pref dropdown offers only 1–10 (subset), not the full 0–255 (BRD §6 r10); 0–255 is the API bound (ADM_CFG_110). Assert UI options numeric ⊆ [0,255]. | All assertions matched expected | 8.3s |

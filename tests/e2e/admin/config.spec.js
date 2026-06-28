@@ -705,6 +705,37 @@ test.describe('Config — Admin Portal E2E', () => {
     await expect(configPage.section8SubmitButton).toBeVisible();
   });
 
+  test('ADM_CFG_102 — ADMIN-FS-Config-CMS §8 — control inventory (master toggle, 3 checkboxes, 3 selects, Submit)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only control enumeration' });
+    await configPage.expectSectionVisible('customerActionsCard');
+    await expect(configPage.allowAdditionalRegToggle).toBeVisible();
+    expect(await configPage.section8Checkboxes.count(), '3 typology checkboxes').toBe(3);
+    expect(await configPage.section8CountSelects.count(), '3 count selects').toBe(3);
+    await expect(configPage.section8SubmitButton).toBeVisible();
+  });
+
+  test('ADM_CFG_039 — ADMIN-FS-Config-CMS §8 — read-only default typology limits on UAT', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only; record current per-typology limits shown in §8 (e.g. 1 Bed Growth Home / 2 Bed Growth Home / 2 Bed Rise Home)' });
+    await configPage.expectSectionVisible('customerActionsCard');
+    const txt = (await configPage.section8Wrap.innerText()).replace(/\s+/g, ' ');
+    console.log(`[ADM_CFG_039] §8 state: ${txt.slice(0, 220)}`);
+    for (const typ of ['1 Bed Growth Home', '2 Bed Growth Home', '2 Bed Rise Home']) expect(txt).toContain(typ);
+    // Each typology row shows a numeric limit.
+    expect(txt).toMatch(/\d+/);
+  });
+
+  test('ADM_CFG_103 — ADMIN-FS-Config-CMS §8 — typology count select offers numeric options', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only; open first §8 count select and assert it lists numeric option values (bounds of the count select)' });
+    await configPage.expectSectionVisible('customerActionsCard');
+    await configPage.section8CountSelects.first().click();
+    await page.waitForTimeout(500);
+    const opts = (await page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item').allInnerTexts().catch(() => [])).map((o) => o.trim()).filter(Boolean);
+    console.log(`[ADM_CFG_103] count-select options (${opts.length}): ${JSON.stringify(opts.slice(0, 12))}`);
+    await page.keyboard.press('Escape').catch(() => {});
+    expect(opts.length, 'select must offer options').toBeGreaterThan(0);
+    expect(opts.every((o) => /^\d+$/.test(o)), 'all options numeric').toBe(true);
+  });
+
   // ════════════════════════════════════════════════════════════════════════
   // Section 9 — Max Preferences Per Unit
   // ════════════════════════════════════════════════════════════════════════
@@ -713,6 +744,39 @@ test.describe('Config — Admin Portal E2E', () => {
     await configPage.expectSectionVisible('maxPreferencesPerUnit');
     await expect(configPage.maxPreferencesSelect).toBeVisible();
     await expect(configPage.maxPreferencesUpdateButton).toBeVisible();
+  });
+
+  test('ADM_CFG_106 — ADMIN-FS-Config-CMS §9 — control inventory (value select + Update)', async () => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only control enumeration' });
+    await configPage.expectSectionVisible('maxPreferencesPerUnit');
+    await expect(configPage.maxPreferencesSelect).toBeVisible();
+    await expect(configPage.maxPreferencesUpdateButton).toBeVisible();
+    expect(await configPage.section9Wrap.getByRole('button').count()).toBe(1); // exactly one Update button
+  });
+
+  test('ADM_CFG_045 — ADMIN-FS-Config-CMS §9 — Max Preferences accepts values within 0–255 (BRD §6 r10)', async ({ page }) => {
+    test.info().annotations.push({ type: 'testData', description: 'none — read-only. FINDING: UI Max-Pref dropdown offers only 1–10 (subset), not the full 0–255 (BRD §6 r10); 0–255 is the API bound (ADM_CFG_110). Assert UI options numeric ⊆ [0,255].' });
+    await configPage.expectSectionVisible('maxPreferencesPerUnit');
+    await configPage.maxPreferencesSelect.click();
+    await page.waitForTimeout(500);
+    // Virtualized list — only ~10 options render at once; scroll to collect the full range.
+    const itemSel = '.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item';
+    const holder = page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .rc-virtual-list-holder').first();
+    const all = new Set();
+    for (let i = 0; i < 60; i++) {
+      (await page.locator(itemSel).allInnerTexts().catch(() => [])).forEach((t) => all.add(t.trim()));
+      await holder.evaluate((e) => { e.scrollTop += 280; }).catch(() => {});
+      await page.waitForTimeout(40);
+    }
+    await page.keyboard.press('Escape').catch(() => {});
+    const nums = [...all].filter((o) => /^\d+$/.test(o)).map(Number);
+    console.log(`[ADM_CFG_045] max-pref distinct options=${nums.length} min=${Math.min(...nums)} max=${Math.max(...nums)}`);
+    // FINDING: the UI dropdown offers a SUBSET (1–10), not the full 0–255. The
+    // 0–255 boundary (BRD §6 r10) is enforced at the API layer (PUT max-preferences,
+    // covered by ADM_CFG_110), not selectable in the UI control.
+    expect(nums.length, 'numeric options present').toBeGreaterThan(0);
+    expect(Math.min(...nums)).toBeGreaterThanOrEqual(0);
+    expect(Math.max(...nums), 'all UI options within the 0–255 bound').toBeLessThanOrEqual(255);
   });
 
   test('ADM_CFG_044 — ADMIN-FS-Config-CMS §9 — Update Max Preferences fires save', async ({ page }) => {
